@@ -2,38 +2,31 @@ package ru.autosome.jMacroape;
 
 import java.util.ArrayList;
 
-/**
- * Created with IntelliJ IDEA.
- * User: MSI
- * Date: 7/25/13
- * Time: 6:26 AM
- * To change this template use File | Settings | File Templates.
- */
 public class ArrayExtensions {
-  public static double max(double[] array) throws IllegalArgumentException {
+  public static Double max(Double[] array) throws IllegalArgumentException {
     if (array.length == 0) {
       throw new IllegalArgumentException("Can't calculate maximum of empty array");
     }
-    double result = array[0];
-    for (double pos: array) {
+    Double result = array[0];
+    for (Double pos: array) {
       result = Math.max(result, pos);
     }
     return result;
   }
-  public static double min(double[] array) throws IllegalArgumentException {
+  public static Double min(Double[] array) throws IllegalArgumentException {
     if (array.length == 0) {
       throw new IllegalArgumentException("Can't calculate minimum of empty array");
     }
-    double result = array[0];
-    for (double pos: array) {
+    Double result = array[0];
+    for (Double pos: array) {
       result = Math.min(result, pos);
     }
     return result;
   }
 
-  public static double sum(double[] array) {
-    double result = 0;
-    for(double el: array) {
+  public static Double sum(Double[] array) {
+    Double result = 0.0;
+    for(Double el: array) {
       result += el;
     }
     return result;
@@ -47,9 +40,9 @@ public class ArrayExtensions {
     return result;
   }
 
-  public static double[] partial_sums(double array[], double initial) {
-    double result[] = new double[array.length];
-    double sums = initial;
+  public static Double[] partial_sums(Double array[], Double initial) {
+    Double result[] = new Double[array.length];
+    Double sums = initial;
     for (int i = 0; i < array.length; ++i) {
       sums += array[i];
       result[i] = sums;

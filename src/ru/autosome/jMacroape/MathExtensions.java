@@ -1,12 +1,5 @@
 package ru.autosome.jMacroape;
 
-/**
- * Created with IntelliJ IDEA.
- * User: MSI
- * Date: 7/25/13
- * Time: 6:20 AM
- * To change this template use File | Settings | File Templates.
- */
 public class MathExtensions {
   static double inverf(double x) {
     int sign = x < 0 ? -1 : 1;
