@@ -11,12 +11,12 @@ public class PCM2PWMConverter {
       default_parameters.put(key, parameters.get(key));
     }
     parameters = default_parameters;
-    Double probability[] = (Double[]) parameters.get("probability");
-    Double pseudocount = (Double) parameters.get("pseudocount");
+    double probability[] = (double[]) parameters.get("probability");
+    double pseudocount = (Double) parameters.get("pseudocount");
 
-    Double new_matrix[][] = new Double[pcm.matrix.length][];
+    double new_matrix[][] = new double[pcm.matrix.length][];
     for (int i = 0; i < pcm.matrix.length; ++i) {
-      new_matrix[i] = new Double[4];
+      new_matrix[i] = new double[4];
       for (int j = 0; j < 4; ++j) {
         new_matrix[i][j] = Math.log((pcm.matrix[i][j] + probability[j] * pseudocount) / (probability[j]*(pcm.count() + pseudocount)) );
       }

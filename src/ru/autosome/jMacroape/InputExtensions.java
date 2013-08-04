@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InputExtensions {
-  static public ArrayList<String> readLinesFromInputStream(InputStream in, Charset cs) {
+  static public ArrayList<String> readLinesFromInputStream(InputStream in) {
     ArrayList<String> lines    = new ArrayList();
-    BufferedReader reader = new BufferedReader(new InputStreamReader(in, cs));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
     String line;
     String newline = System.getProperty("line.separator");
     try {

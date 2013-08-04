@@ -37,16 +37,15 @@ public class OutputInformation {
     parameter_value_infos.add("# " + param_name + " = " + value.toString());
   }
 
-  public static Double[] background_identity() {
-    Double result[] = new Double[4];
+  public static boolean is_background_wordwise(double[] bckgr) {
     for (int i = 0; i < 4; ++i) {
-      result[i] = 1.0;
+      if (bckgr[i] != 1.0)  return false;
     }
-    return result;
+    return true;
   }
 
-  void background_parameter(String param_name, String description, Double[] value) {
-    if (value != background_identity()) {
+  void background_parameter(String param_name, String description, double[] value) {
+    if (! is_background_wordwise(value)) {
       String val_string = "";
       for (int i = 0; i < 3; ++i) {
         val_string += value[i] + ",";

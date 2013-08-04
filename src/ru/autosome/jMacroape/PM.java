@@ -6,16 +6,16 @@ import java.util.HashMap;
 import static java.lang.Math.ceil;
 
 public class PM {
-  Double[][] matrix;
-  Double[] background;
+  double[][] matrix;
+  double[] background;
   String name;
 
   public PM(PM pm) throws IllegalArgumentException {
     this.matrix = pm.matrix;
     this.background = pm.background;
   }
-  public PM(Double[][] matrix, Double[] background, String name) throws IllegalArgumentException {
-    for(Double[] pos: matrix) {
+  public PM(double[][] matrix, double[] background, String name) throws IllegalArgumentException {
+    for (double[] pos: matrix) {
       if (pos.length != 4) {
         throw new IllegalArgumentException("Matrix must have 4 elements in each position");
       }
@@ -32,9 +32,9 @@ public class PM {
     return matrix.length;
   }
 
-  public Double[] probabilities() {
-    Double sum = ArrayExtensions.sum(background);
-    Double[] probabilities = new Double[4];
+  public double[] probabilities() {
+    double sum = ArrayExtensions.sum(background);
+    double[] probabilities = new double[4];
     for (int i = 0; i < 4; ++i) {
       probabilities[i] = background[i] / sum;
     }
@@ -43,17 +43,17 @@ public class PM {
   public String toString() {
     String result;
     result = name + "\n";
-    for (Double[] pos: matrix) {
+    for (double[] pos: matrix) {
       result = result + pos[0] + "\t" + pos[1] + "\t" + pos[2] + "\t" + pos[3] + "\n";
     }
     return result;
   }
 
   public PM reverse_complement() {
-    Double[][] mat_result;
-    mat_result = new Double[length()][];
+    double[][] mat_result;
+    mat_result = new double[length()][];
     for (int i = 0; i < length(); ++i) {
-      mat_result[i] = new Double[4];
+      mat_result[i] = new double[4];
       for (int j = 0; j < 4; ++j) {
         mat_result[i][j] = matrix[length() - 1  - i][4 - 1 - j];
       }
@@ -61,48 +61,7 @@ public class PM {
     return new PM(mat_result, background, name);
   }
 
-  Double[] zero_column() {
-    Double[] result = {0.0,0.0,0.0,0.0};
-    return result;
-  }
-
-  public PM left_augment(int n) {
-    Double[][] mat_result;
-    mat_result = new Double[length() + n][];
-    for (int i = 0; i < n; ++i) {
-      mat_result[i] = zero_column();
-    }
-    for (int i = 0; i < length(); ++i) {
-      mat_result[n + i] = matrix[i].clone();
-    }
-    return new PM(mat_result, background, name);
-  }
-
-  public PM right_augment(int n) {
-    Double[][] mat_result;
-    mat_result = new Double[length() + n][];
-    for (int i = 0; i < length(); ++i) {
-      mat_result[i] =  matrix[i].clone();
-    }
-    for (int i = 0; i < n; ++i) {
-      mat_result[length() + i] = zero_column();
-    }
-    return new PM(mat_result, background, name);
-  }
-
-  public PM discrete(Double rate) {
-    Double[][] mat_result;
-    mat_result = new Double[length()][];
-    for (int i = 0; i < length(); ++i) {
-      mat_result[i] = new Double[4];
-      for (int j = 0; j < 4; ++j){
-        mat_result[i][j] = ceil(matrix[i][j] * rate);
-      }
-    }
-    return new PM(mat_result, background, name);
-  }
-
-  public Double vocabulary_volume() {
+  public double vocabulary_volume() {
     return Math.pow(ArrayExtensions.sum(background), length());
   }
 
