@@ -7,6 +7,37 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 public class FindThreshold {
+
+  public static ArrayList<HashMap<String, Double>> find_thresholds_by_pvalues(PWM pwm, double[] pvalues, Map<String,Object> parameters){
+    Double discretization = (Double)parameters.get("discretization");
+    if (discretization != null) {
+      pwm = pwm.discrete(discretization);
+    }
+    pwm.max_hash_size = (Integer)parameters.get("max_hash_size"); // not int because it can be null
+    pwm.background = (double[])parameters.get("background");
+    String pvalue_boundary = (String)parameters.get("pvalue_boundary");
+
+    HashMap<Double, double[]> threshold_infos;
+    if (pvalue_boundary.equals("lower")) {
+      threshold_infos = pwm.thresholds(pvalues);
+    } else {
+      threshold_infos = pwm.weak_thresholds(pvalues);
+    }
+
+    ArrayList<HashMap<String, Double>> infos = new ArrayList<HashMap<String, Double>>();
+    for (double pvalue: threshold_infos.keySet()) {
+      double threshold = threshold_infos.get(pvalue)[0];
+      double real_pvalue = threshold_infos.get(pvalue)[1];
+      HashMap<String,Double> tmp = new HashMap<String,Double>();
+      tmp.put("expected_pvalue", pvalue);
+      tmp.put("threshold", threshold / discretization);
+      tmp.put("real_pvalue", real_pvalue);
+      tmp.put("recognized_words", pwm.vocabulary_volume() * real_pvalue);
+      infos.add(tmp);
+    }
+    return infos;
+  }
+
   static String DOC =
           "Command-line format:\n" +
           "java ru.autosome.jMacroape.FindThreshold <pat-file> [<list of P-values>...] [options]\n" +
@@ -80,7 +111,6 @@ public class FindThreshold {
         }
       }
 
-
       InputStream reader;
       if (filename.equals(".stdin")) {
         reader = System.in;
@@ -96,7 +126,6 @@ public class FindThreshold {
       double[][] matrix = matrix_parser.matrix();
       String name = matrix_parser.name();
 
-
       PWM pwm;
       if (data_model.equals("pwm")) {
         pwm = new PWM(matrix, background, name);
@@ -105,33 +134,12 @@ public class FindThreshold {
         pwm = pcm.to_pwm();
       }
 
-      pwm = pwm.discrete(discretization);
-      pwm.max_hash_size = max_hash_size;
-
-      HashMap<Double, double[]> results;
-      if (pvalue_boundary.equals("lower")) {
-        results = pwm.thresholds(ArrayExtensions.toPrimitiveArray(pvalues));
-      } else {
-        results = pwm.weak_thresholds(ArrayExtensions.toPrimitiveArray(pvalues));
-      }
-
-      ArrayList<HashMap<String, Double>> infos = new ArrayList<HashMap<String, Double>>();
-      for (double pvalue: results.keySet()) {
-        double threshold = results.get(pvalue)[0];
-        double real_pvalue = results.get(pvalue)[1];
-        HashMap<String,Double> tmp = new HashMap<String,Double>();
-        tmp.put("expected_pvalue", pvalue);
-        tmp.put("threshold", threshold / discretization);
-        tmp.put("real_pvalue", real_pvalue);
-        tmp.put("recognized_words", pwm.vocabulary_volume() * real_pvalue);
-        infos.add(tmp);
-      }
-
-
       HashMap<String, Object> parameters = new HashMap<String,Object>();
       parameters.put("discretization", discretization);
       parameters.put("background", background);
       parameters.put("pvalue_boundary", pvalue_boundary);
+      parameters.put("max_hash_size", max_hash_size);
+      ArrayList<HashMap<String, Double>> infos = find_thresholds_by_pvalues(pwm, ArrayExtensions.toPrimitiveArray(pvalues), parameters);
 
       System.out.println(Helper.threshold_infos_string(infos, parameters));
     } catch(Exception err) {

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ArrayExtensions {
-  public static double max(double[] array) throws IllegalArgumentException {
+  public static double max(double... array) throws IllegalArgumentException {
     if (array.length == 0) {
       throw new IllegalArgumentException("Can't calculate maximum of empty array");
     }
@@ -15,7 +15,7 @@ public class ArrayExtensions {
     }
     return result;
   }
-  public static double min(double[] array) throws IllegalArgumentException {
+  public static double min(double... array) throws IllegalArgumentException {
     if (array.length == 0) {
       throw new IllegalArgumentException("Can't calculate minimum of empty array");
     }
@@ -26,7 +26,7 @@ public class ArrayExtensions {
     return result;
   }
 
-  public static double sum(double[] array) {
+  public static double sum(double... array) {
     double result = 0.0;
     for(double el: array) {
       result += el;
