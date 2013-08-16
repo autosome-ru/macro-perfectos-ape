@@ -66,10 +66,9 @@ public class FindThreshold {
       double[] background = {1.0, 1.0, 1.0, 1.0};
       ArrayList<Double> default_pvalues = new ArrayList<Double>();
       default_pvalues.add(0.0005);
-      double discretization = 10000.0;
+      double discretization = 10000;
       Integer max_hash_size = 10000000;
       String pvalue_boundary = "lower";
-
       String data_model = "pwm";
 
       if (argv.isEmpty()) {
@@ -121,18 +120,8 @@ public class FindThreshold {
         reader = new FileInputStream(filename);
       }
 
-      PMParser matrix_parser = new PMParser(InputExtensions.readLinesFromInputStream(reader));
-
-      double[][] matrix = matrix_parser.matrix();
-      String name = matrix_parser.name();
-
       PWM pwm;
-      if (data_model.equals("pwm")) {
-        pwm = new PWM(matrix, background, name);
-      } else {
-        PCM pcm = new PCM(matrix, background, name);
-        pwm = pcm.to_pwm();
-      }
+      pwm = PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, data_model.equals("pcm"));
 
       HashMap<String, Object> parameters = new HashMap<String,Object>();
       parameters.put("discretization", discretization);

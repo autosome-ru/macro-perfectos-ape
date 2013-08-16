@@ -22,4 +22,14 @@ public class InputExtensions {
     }
     return lines;
   }
+
+  public static ArrayList<String> filter_empty_strings(ArrayList<String> list) {
+    ArrayList<String> result = new ArrayList<String>();
+    for (String str: list) {
+      if (!str.trim().isEmpty()) {
+        result.add(str);
+      }
+    }
+    return result;
+  }
 }

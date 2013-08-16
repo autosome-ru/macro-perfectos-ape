@@ -66,6 +66,12 @@ public class ArrayExtensions {
     }
     return false;
   }
+  public static Integer indexOf(double el, double[] list) {
+    for (int i = 0; i < list.length; ++i) {
+      if (list[i] == el) return i;
+    }
+    return null;
+  }
 
   public static double[] toPrimitiveArray(Double[] wrappedArray) {
     double[] array = new double[wrappedArray.length];

@@ -19,7 +19,7 @@ public class PMParser {
     try {
       Double.valueOf(inp_strings.get(0).replaceAll("\\s+"," ").split(" ")[0]);
     } catch (NumberFormatException e) {
-      name = inp_strings.get(0);
+      name = inp_strings.get(0).trim();
       while (name.charAt(0) == '>' || name.charAt(0) == ' ' || name.charAt(0) == '\t') {
         name = name.substring(1, name.length());
       }

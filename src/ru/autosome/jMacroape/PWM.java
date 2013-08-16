@@ -13,6 +13,19 @@ public class PWM extends PM {
   public PWM(double[][] matrix, double[] background, String name) throws IllegalArgumentException {
     super(matrix, background, name);
   }
+  public static PWM new_from_text(ArrayList<String> input_lines, double[] background, boolean from_pcm) {
+    PMParser matrix_parser = new PMParser(input_lines);
+
+    double[][] matrix = matrix_parser.matrix();
+    String name = matrix_parser.name();
+
+    if (from_pcm) {
+      PCM pcm = new PCM(matrix, background, name);
+      return pcm.to_pwm();
+    } else {
+      return new PWM(matrix, background, name);
+    }
+  }
   public double score_mean() {
     double result = 0.0;
     double probabilities[] = probabilities();
@@ -74,6 +87,17 @@ public class PWM extends PM {
       }
     }
     return sum;
+  }
+
+  public double[] scores_on_sequence(String seq) throws IllegalArgumentException {
+    if (seq.length() < length()){
+      throw new IllegalArgumentException("seq in PWM#scores_on_sequence(seq) should have length not less than length of PWM");
+    }
+    double[] result = new double[seq.length() - length() + 1];
+    for (int i = 0; i < result.length; ++i) {
+      result[i] = score(seq.substring(i,i + length()));
+    }
+    return result;
   }
 
   public double best_score() {

@@ -34,6 +34,11 @@ public class FindPvalue {
     return infos;
   }
 
+  static public HashMap<String, Double> pvalue_by_threshold(PWM pwm, double threshold, HashMap<String, Object> parameters) {
+    double[] thresholds = {threshold};
+    return pvalues_by_thresholds(pwm, thresholds, parameters).get(0);
+  }
+
   static String DOC =
         "Command-line format:\n" +
         "java ru.autosome.jMacroape.FindPvalue <pat-file> <threshold list>... [options]\n" +
@@ -108,17 +113,8 @@ public class FindPvalue {
         reader = new FileInputStream(filename);
       }
 
-      PMParser matrix_parser = new PMParser(InputExtensions.readLinesFromInputStream(reader));
-      double[][] matrix = matrix_parser.matrix();
-      String name = matrix_parser.name();
-
       PWM pwm;
-      if (data_model.equals("pwm")) {
-        pwm = new PWM(matrix, background, name);
-      } else {
-        PCM pcm = new PCM(matrix, background, name);
-        pwm = pcm.to_pwm();
-      }
+      pwm = PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, data_model.equals("pcm"));
 
       HashMap<String, Object> parameters = new HashMap<String,Object>();
       parameters.put("discretization", discretization);
