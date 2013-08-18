@@ -8,35 +8,32 @@ import java.util.*;
 public class FindPvalue {
 
   // In some cases (when discretization is null) pwm can be altered by background and max_hash_size
-  static public ArrayList<HashMap<String, Double>> pvalues_by_thresholds(PWM pwm, double[] thresholds, HashMap<String, Object> parameters) {
-    Double discretization = (Double)parameters.get("discretization");
+  public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
     if (discretization != null) {
       pwm = pwm.discrete(discretization);
     }
-    pwm.max_hash_size = (Integer)parameters.get("max_hash_size"); // not int because it can be null
-    pwm.background = (double[])parameters.get("background");
+    pwm.max_hash_size = max_hash_size; // not int because it can be null
+    pwm.background = background;
+
     double[] thresholds_discreeted = new double[thresholds.length];
     for (int i = 0; i < thresholds.length; ++i) {
       thresholds_discreeted[i] = thresholds[i] * discretization;
     }
 
     HashMap<Double,Double> counts = pwm.counts_by_thresholds(thresholds_discreeted);
-    ArrayList<HashMap<String, Double>> infos = new ArrayList<HashMap<String, Double>>();
+    ArrayList<PvalueInfo> infos = new ArrayList<PvalueInfo>();
     for (double threshold: thresholds) {
       double count = counts.get(threshold * discretization);
       double pvalue = count / pwm.vocabulary_volume();
-      HashMap<String,Double> tmp = new HashMap<String,Double>();
-      tmp.put("threshold", threshold);
-      tmp.put("pvalue", pvalue);
-      tmp.put("number_of_recognized_words", count);
-      infos.add(tmp);
+
+      infos.add(new PvalueInfo(threshold, pvalue, (int)count));
     }
     return infos;
   }
 
-  static public HashMap<String, Double> pvalue_by_threshold(PWM pwm, double threshold, HashMap<String, Object> parameters) {
+  public PvalueInfo pvalue_by_threshold(double threshold) {
     double[] thresholds = {threshold};
-    return pvalues_by_thresholds(pwm, thresholds, parameters).get(0);
+    return pvalues_by_thresholds(thresholds).get(0);
   }
 
   static String DOC =
@@ -52,6 +49,37 @@ public class FindPvalue {
         "  java ru.autosome.jMacroape.FindPvalue motifs/KLF4_f2.pat 7.32\n" +
         "  java ru.autosome.jMacroape.FindPvalue motifs/KLF4_f2.pat 7.32 4.31 5.42 -d 1000 -b 0.2,0.3,0.3,0.2\n";
 
+  PWM pwm;
+  Double discretization;
+  double[] background;
+  Integer max_hash_size;
+
+  public FindPvalue(PWM pwm) {
+    this.pwm = pwm;
+    this.discretization = 10000.0;
+    this.background = Helper.wordwise_background();
+    this.max_hash_size = 10000000;
+  }
+  public HashMap<String, Object> parameters() {
+    HashMap<String, Object> parameters = new HashMap<String,Object>();
+    parameters.put("discretization", discretization);
+    parameters.put("background", background);
+    parameters.put("max_hash_size", max_hash_size);
+    return parameters;
+  }
+  public void set_parameters(HashMap<String, Object> parameters) {
+    if(parameters.containsKey("discretization")) {
+      discretization = (Double)parameters.get("discretization");
+    }
+    if(parameters.containsKey("background")) {
+      background = (double[])parameters.get("background");
+    }
+    if(parameters.containsKey("max_hash_size")) {
+      max_hash_size = (Integer)parameters.get("max_hash_size");
+    }
+  }
+
+
   public static void main(String[] args) {
     try{
       ArrayList<String> argv = new ArrayList<String>();
@@ -63,11 +91,13 @@ public class FindPvalue {
         System.exit(1);
       }
 
+
       double discretization = 10000.0;
-      double[] background = {1.0, 1.0, 1.0, 1.0};
+      double[] background = Helper.wordwise_background();
       ArrayList<Double>thresholds_list = new ArrayList<Double>();
       Integer max_hash_size = 10000000;
       String data_model = "pwm";
+  //    boolean fast_mode = false;
 
       if (argv.isEmpty()) {
         throw new IllegalArgumentException("No input. You should specify input file");
@@ -103,25 +133,15 @@ public class FindPvalue {
         }
       }
 
-      InputStream reader;
-      if (filename.equals(".stdin")) {
-        reader = System.in;
-      } else {
-        if(!(new File(filename).exists())) {
-          throw new RuntimeException("Error! File #{filename} doesn't exist");
-        }
-        reader = new FileInputStream(filename);
-      }
+      PWM pwm = PWM.new_from_file_or_stdin(filename, background, data_model.equals("pcm"));
+      FindPvalue calculation = new FindPvalue(pwm);
+      calculation.discretization = discretization;
+      calculation.background = background;
+      calculation.max_hash_size = max_hash_size;
 
-      PWM pwm;
-      pwm = PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, data_model.equals("pcm"));
+      HashMap<String, Object> parameters = calculation.parameters();
 
-      HashMap<String, Object> parameters = new HashMap<String,Object>();
-      parameters.put("discretization", discretization);
-      parameters.put("background", background);
-      parameters.put("max_hash_size", max_hash_size);
-
-      ArrayList<HashMap<String, Double>> infos = pvalues_by_thresholds(pwm, thresholds, parameters);
+      ArrayList<PvalueInfo> infos = calculation.pvalues_by_thresholds(thresholds);
 
       System.out.println(Helper.find_pvalue_info_string(infos, parameters));
 

@@ -2,6 +2,10 @@ package ru.autosome.jMacroape;
 
 import com.sun.javaws.exceptions.InvalidArgumentException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.*;
 
 import static java.lang.Math.ceil;
@@ -26,6 +30,40 @@ public class PWM extends PM {
       return new PWM(matrix, background, name);
     }
   }
+  public static PWM new_from_file(String filename, double[] background, boolean from_pcm) {
+    try {
+      InputStream reader = new FileInputStream(filename);
+      return PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, from_pcm);
+    } catch (FileNotFoundException err) {
+      return null;
+    }
+  }
+  public static PWM new_from_file(File file, double[] background, boolean from_pcm) {
+    try{
+      InputStream reader = new FileInputStream(file);
+      return PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, from_pcm);
+    } catch (FileNotFoundException err) {
+      return null;
+    }
+  }
+  public static PWM new_from_file_or_stdin(String filename, double[] background, boolean from_pcm) {
+    try{
+      InputStream reader;
+      if (filename.equals(".stdin")) {
+        reader = System.in;
+      } else {
+        if(!(new File(filename).exists())) {
+          throw new RuntimeException("Error! File #{filename} doesn't exist");
+        }
+        reader = new FileInputStream(filename);
+      }
+      return PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, from_pcm);
+    } catch (FileNotFoundException err) {
+      return null;
+    }
+  }
+
+
   public double score_mean() {
     double result = 0.0;
     double probabilities[] = probabilities();

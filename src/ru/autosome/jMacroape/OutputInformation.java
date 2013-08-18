@@ -14,9 +14,9 @@ public class OutputInformation {
   ArrayList<String> table_rows;
   ArrayList<String> table_rows_callbacks;
 
-  ArrayList<HashMap<String, Double>> data;
+  ArrayList<? extends ResultInfo> data;
 
-  OutputInformation(ArrayList<HashMap<String, Double>> data) {
+  OutputInformation(ArrayList<? extends ResultInfo> data) {
     table_parameter_descriptions = new ArrayList<String>();
 
     parameter_descriptions = new ArrayList<String>();
@@ -128,7 +128,7 @@ public class OutputInformation {
 
   ArrayList<String> table_content() {
     ArrayList<String> result = new ArrayList<String>();
-    for (HashMap<String, Double> info: data) {
+    for (ResultInfo info: data) {
       ArrayList<String> tmp = new ArrayList<String>();
       for(String row: table_rows) {
         tmp.add(info.get(row).toString());

@@ -8,7 +8,7 @@ import java.util.*;
 
 public class FindThreshold {
 
-  public static ArrayList<HashMap<String, Double>> find_thresholds_by_pvalues(PWM pwm, double[] pvalues, Map<String,Object> parameters){
+  public static ArrayList<ThresholdInfo> find_thresholds_by_pvalues(PWM pwm, double[] pvalues, Map<String,Object> parameters){
     Double discretization = (Double)parameters.get("discretization");
     if (discretization != null) {
       pwm = pwm.discrete(discretization);
@@ -24,16 +24,11 @@ public class FindThreshold {
       threshold_infos = pwm.weak_thresholds(pvalues);
     }
 
-    ArrayList<HashMap<String, Double>> infos = new ArrayList<HashMap<String, Double>>();
+    ArrayList<ThresholdInfo> infos = new ArrayList<ThresholdInfo>();
     for (double pvalue: threshold_infos.keySet()) {
       double threshold = threshold_infos.get(pvalue)[0];
       double real_pvalue = threshold_infos.get(pvalue)[1];
-      HashMap<String,Double> tmp = new HashMap<String,Double>();
-      tmp.put("expected_pvalue", pvalue);
-      tmp.put("threshold", threshold / discretization);
-      tmp.put("real_pvalue", real_pvalue);
-      tmp.put("recognized_words", pwm.vocabulary_volume() * real_pvalue);
-      infos.add(tmp);
+      infos.add(new ThresholdInfo(threshold / discretization, real_pvalue, pvalue, (int)(pwm.vocabulary_volume() * real_pvalue)));
     }
     return infos;
   }
@@ -110,25 +105,14 @@ public class FindThreshold {
         }
       }
 
-      InputStream reader;
-      if (filename.equals(".stdin")) {
-        reader = System.in;
-      } else {
-        if(!(new File(filename).exists())) {
-          throw new RuntimeException("Error! File #{filename} doesn't exist");
-        }
-        reader = new FileInputStream(filename);
-      }
-
-      PWM pwm;
-      pwm = PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, data_model.equals("pcm"));
+      PWM pwm = PWM.new_from_file_or_stdin(filename, background, data_model.equals("pcm"));
 
       HashMap<String, Object> parameters = new HashMap<String,Object>();
       parameters.put("discretization", discretization);
       parameters.put("background", background);
       parameters.put("pvalue_boundary", pvalue_boundary);
       parameters.put("max_hash_size", max_hash_size);
-      ArrayList<HashMap<String, Double>> infos = find_thresholds_by_pvalues(pwm, ArrayExtensions.toPrimitiveArray(pvalues), parameters);
+      ArrayList<ThresholdInfo> infos = find_thresholds_by_pvalues(pwm, ArrayExtensions.toPrimitiveArray(pvalues), parameters);
 
       System.out.println(Helper.threshold_infos_string(infos, parameters));
     } catch(Exception err) {

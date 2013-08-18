@@ -7,6 +7,23 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class SnpScan {
+  double[] background;
+  double discretization;
+  Integer max_hash_size;
+
+  public SnpScan() {
+    background = Helper.wordwise_background();
+    discretization = 100;
+    max_hash_size = 10000000;
+  }
+
+  public HashMap<String, Object> parameters() {
+    HashMap<String, Object> result = new HashMap<String,Object>();
+    result.put("discretization", discretization);
+    result.put("background", background);
+    result.put("max_hash_size", max_hash_size);
+    return result;
+  }
 
 
   // line should finish with sequence (which doesn't have spaces).
@@ -94,7 +111,7 @@ public class SnpScan {
     return sequence_variants(seq_w_snp)[0].length();
   }
 
-  public static String pwm_influence_infos(String seq_w_snp, PWM pwm, HashMap<String, Object> parameters) {
+  public String pwm_influence_infos(String seq_w_snp, PWM pwm) {
     String[] trimmed_sequence_variants = trimmed_sequence_variants(seq_w_snp, pwm);
 
     if(trimmed_sequence_variants.length != 2) return null; // Unable to process more than two variants(which fractions to return)
@@ -103,14 +120,16 @@ public class SnpScan {
     int pos_of_snp = pos_of_snp(seq_w_snp);
     int seq_len = length_of_sequence_w_snp(seq_w_snp);
     int left_shift = left_shift(seq_len, pos_of_snp, pwm.length());
+    FindPvalue calculation = new FindPvalue(pwm);
+    calculation.set_parameters(parameters());
 
     ScanSequence scan_seq_1 = new ScanSequence(trimmed_sequence_variants[0], pwm);
     double score_1 = scan_seq_1.best_score_on_sequence();
-    double pvalue_1 = FindPvalue.pvalue_by_threshold(pwm, score_1, parameters).get("pvalue");
+    double pvalue_1 = calculation.pvalue_by_threshold(score_1).pvalue;
 
     ScanSequence scan_seq_2 = new ScanSequence(trimmed_sequence_variants[1], pwm);
     double score_2 = scan_seq_2.best_score_on_sequence();
-    double pvalue_2 = FindPvalue.pvalue_by_threshold(pwm, score_2, parameters).get("pvalue");
+    double pvalue_2 = calculation.pvalue_by_threshold(score_2).pvalue;
 
     result = scan_seq_1.best_match_info_string(left_shift) + "\t" + pvalue_1 + "\t";
     result += scan_seq_2.best_match_info_string(left_shift) + "\t" + pvalue_2 + "\t";
@@ -122,17 +141,11 @@ public class SnpScan {
     ArrayList<PWM> result = new ArrayList<PWM>();
     java.io.File dir = new java.io.File(dir_name);
     for(File file: dir.listFiles()) {
-      try {
-        InputStream reader = new FileInputStream(file);
-        PWM pwm = PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, from_pcm);
-        if (pwm.name == null || pwm.name.isEmpty()) {
-          pwm.name = file.getName();
-        }
-        result.add(pwm);
-      }  catch(FileNotFoundException e) {
-        System.err.println("PWM file " + file.getName() + " can't be read");
-        throw e;
+      PWM pwm = PWM.new_from_file(file, background, from_pcm);
+      if (pwm.name == null || pwm.name.isEmpty()) {
+        pwm.name = file.getName();
       }
+      result.add(pwm);
     }
     return result;
   }
@@ -171,10 +184,9 @@ public class SnpScan {
       }
 
       double[] background = {1.0, 1.0, 1.0, 1.0};
-      double discretization = 100;
-      Integer max_hash_size = 10000000;
-      String data_model = "pwm";
+      SnpScan calculation = new SnpScan();
 
+      String data_model = "pwm";
 
       while (argv.size() > 0) {
         String opt = argv.remove(0);
@@ -184,9 +196,9 @@ public class SnpScan {
             background[i] = Double.valueOf(parser.nextToken(","));
           }
         } else if (opt.equals("--max-hash-size")) {
-          max_hash_size = Integer.valueOf(argv.remove(0));
+          calculation.max_hash_size = Integer.valueOf(argv.remove(0));
         } else if (opt.equals("-d")) {
-          discretization = Double.valueOf(argv.remove(0));
+          calculation.discretization = Double.valueOf(argv.remove(0));
         } else if (opt.equals("--pcm")) {
           data_model = "pcm";
         } else {
@@ -194,11 +206,7 @@ public class SnpScan {
         }
       }
 
-      HashMap<String, Object> parameters = new HashMap<String,Object>();
-      parameters.put("discretization", discretization);
-      parameters.put("background", background);
-      parameters.put("max_hash_size", max_hash_size);
-
+      calculation.background = background;
       ArrayList<PWM> collection = load_collection_of_pwms(path_to_collection_of_pwms, background, data_model.equals("pcm"));
 
       InputStream reader = new FileInputStream(path_to_file_w_snps);
@@ -216,7 +224,7 @@ public class SnpScan {
           fw.write("PWM-name\t||Normal pos\torientation\tword\tpvalue\t||Changed pos\torientation\tword\tpvalue\t||changed_pvalue/normal_pvalue\n");
 
           for(PWM pwm: collection) {
-            String infos = pwm_influence_infos(seq_w_snp, pwm, parameters);
+            String infos = calculation.pwm_influence_infos(seq_w_snp, pwm);
             if (infos != null) {
               fw.write(pwm.name + "\t" + infos + "\n");
             }

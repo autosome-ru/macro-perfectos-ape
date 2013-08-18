@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Helper {
-  public static String threshold_infos_string(ArrayList<HashMap<String, Double>> data, HashMap<String, Object> parameters) {
+  public static double[] wordwise_background() {
+    double[] result = {1, 1, 1, 1};
+    return result;
+  }
+  public static String threshold_infos_string(ArrayList<ThresholdInfo> data, HashMap<String, Object> parameters) {
     OutputInformation infos = new OutputInformation(data);
 
     infos.add_parameter("V", "discretization value", parameters.get("discretization"));
@@ -24,7 +28,7 @@ public class Helper {
     return infos.result();
   }
 
-  public static String find_pvalue_info_string(ArrayList<HashMap<String,Double>> data, HashMap<String,Object> parameters) {
+  public static String find_pvalue_info_string(ArrayList<PvalueInfo> data, HashMap<String,Object> parameters) {
     OutputInformation infos = new OutputInformation(data);
     infos.add_parameter("V", "discretization value", parameters.get("discretization"));
     double[] bckgr = (double[])parameters.get("background");
@@ -39,4 +43,18 @@ public class Helper {
     return infos.result();
   }
 
+  public static double[] values_in_range(double from, double to, double step) {
+    ArrayList<Double> results = new ArrayList<Double>();
+    for(double x = from; x <= to; x+=step) {
+      results.add(x);
+    }
+    return ArrayExtensions.toPrimitiveArray(results);
+  }
+  public static double[] values_in_range_mul(double from, double to, double mul_step) {
+    ArrayList<Double> results = new ArrayList<Double>();
+    for(double x = from; x <= to; x*=mul_step) {
+      results.add(x);
+    }
+    return ArrayExtensions.toPrimitiveArray(results);
+  }
 }
