@@ -7,30 +7,59 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 public class FindThreshold {
-
-  public static ArrayList<ThresholdInfo> find_thresholds_by_pvalues(PWM pwm, double[] pvalues, Map<String,Object> parameters){
-    Double discretization = (Double)parameters.get("discretization");
+  double[] background;
+  Double discretization;
+  Integer max_hash_size;
+  String pvalue_boundary;
+  public FindThreshold() {
+    background = Helper.wordwise_background();
+    discretization = 10000.0;
+    max_hash_size = 10000000; // not int because it can be null
+    pvalue_boundary = "lower";
+  }
+  public HashMap<String, Object> parameters() {
+    HashMap<String, Object> result = new HashMap<String,Object>();
+    result.put("discretization", discretization);
+    result.put("background", background);
+    result.put("pvalue_boundary", pvalue_boundary);
+    result.put("max_hash_size", max_hash_size);
+    return result;
+  }
+  public void set_parameters(HashMap<String, Object> params) {
+    discretization = (Double)params.get("discretization");
+    background = (double[])params.get("background");
+    pvalue_boundary = (String)params.get("pvalue_boundary");
+    max_hash_size = (Integer)params.get("max_hash_size");
+  }
+  public ArrayList<ThresholdInfo> find_thresholds_by_pvalues(PWM pwm, double[] pvalues) {
     if (discretization != null) {
       pwm = pwm.discrete(discretization);
     }
-    pwm.max_hash_size = (Integer)parameters.get("max_hash_size"); // not int because it can be null
-    pwm.background = (double[])parameters.get("background");
-    String pvalue_boundary = (String)parameters.get("pvalue_boundary");
+    pwm.max_hash_size = max_hash_size;
+    pwm.background = background;
 
-    HashMap<Double, double[]> threshold_infos;
+    ArrayList<ThresholdInfo> threshold_infos;
     if (pvalue_boundary.equals("lower")) {
       threshold_infos = pwm.thresholds(pvalues);
     } else {
       threshold_infos = pwm.weak_thresholds(pvalues);
     }
 
-    ArrayList<ThresholdInfo> infos = new ArrayList<ThresholdInfo>();
-    for (double pvalue: threshold_infos.keySet()) {
-      double threshold = threshold_infos.get(pvalue)[0];
-      double real_pvalue = threshold_infos.get(pvalue)[1];
-      infos.add(new ThresholdInfo(threshold / discretization, real_pvalue, pvalue, (int)(pwm.vocabulary_volume() * real_pvalue)));
+    if (discretization == null) {
+      return threshold_infos;
+    } else {
+      ArrayList<ThresholdInfo> infos = new ArrayList<ThresholdInfo>();
+      for (ThresholdInfo info: threshold_infos) {
+        ThresholdInfo nondiscreet_info;
+        nondiscreet_info = new ThresholdInfo(info.threshold / discretization,
+                info.real_pvalue,
+                info.expected_pvalue,
+                info.recognized_words);
+        infos.add(nondiscreet_info);
+      }
+      return infos;
     }
-    return infos;
+
   }
 
   static String DOC =
@@ -61,9 +90,6 @@ public class FindThreshold {
       double[] background = {1.0, 1.0, 1.0, 1.0};
       ArrayList<Double> default_pvalues = new ArrayList<Double>();
       default_pvalues.add(0.0005);
-      double discretization = 10000;
-      Integer max_hash_size = 10000000;
-      String pvalue_boundary = "lower";
       String data_model = "pwm";
 
       if (argv.isEmpty()) {
@@ -80,6 +106,9 @@ public class FindThreshold {
         }
       } catch(NumberFormatException e) { }
 
+
+      FindThreshold calculation = new FindThreshold();
+
       if (pvalues.size() == 0) { pvalues = default_pvalues; }
 
       while (argv.size() > 0) {
@@ -90,12 +119,13 @@ public class FindThreshold {
             background[i] = Double.valueOf(parser.nextToken(","));
           }
         } else if (opt.equals("--max-hash-size")) {
-          max_hash_size = Integer.valueOf(argv.remove(0));
+          calculation.max_hash_size = Integer.valueOf(argv.remove(0));
         } else if (opt.equals("-d")) {
-          discretization = Double.valueOf(argv.remove(0));
+          calculation.discretization = Double.valueOf(argv.remove(0));
         } else if (opt.equals("--boundary")) {
-          pvalue_boundary = argv.remove(0);
-          if (! pvalue_boundary.equalsIgnoreCase("lower") && ! pvalue_boundary.equalsIgnoreCase("upper")) {
+          calculation.pvalue_boundary = argv.remove(0);
+          if (! calculation.pvalue_boundary.equalsIgnoreCase("lower") &&
+              ! calculation.pvalue_boundary.equalsIgnoreCase("upper")) {
             throw new IllegalArgumentException("boundary should be either lower or upper");
           }
         } else if (opt.equals("--pcm")) {
@@ -107,14 +137,9 @@ public class FindThreshold {
 
       PWM pwm = PWM.new_from_file_or_stdin(filename, background, data_model.equals("pcm"));
 
-      HashMap<String, Object> parameters = new HashMap<String,Object>();
-      parameters.put("discretization", discretization);
-      parameters.put("background", background);
-      parameters.put("pvalue_boundary", pvalue_boundary);
-      parameters.put("max_hash_size", max_hash_size);
-      ArrayList<ThresholdInfo> infos = find_thresholds_by_pvalues(pwm, ArrayExtensions.toPrimitiveArray(pvalues), parameters);
+      ArrayList<ThresholdInfo> infos = calculation.find_thresholds_by_pvalues(pwm, ArrayExtensions.toPrimitiveArray(pvalues));
 
-      System.out.println(Helper.threshold_infos_string(infos, parameters));
+      System.out.println(Helper.threshold_infos_string(infos, calculation.parameters()));
     } catch(Exception err) {
       System.err.println("\n" + err + "\n");
       err.printStackTrace();

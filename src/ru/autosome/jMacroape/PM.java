@@ -1,19 +1,12 @@
 package ru.autosome.jMacroape;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import static java.lang.Math.ceil;
 
 public class PM {
   double[][] matrix;
   double[] background;
   String name;
 
-  public PM(PM pm) throws IllegalArgumentException {
-    this.matrix = pm.matrix;
-    this.background = pm.background;
-  }
   public PM(double[][] matrix, double[] background, String name) throws IllegalArgumentException {
     for (double[] pos: matrix) {
       if (pos.length != 4) {

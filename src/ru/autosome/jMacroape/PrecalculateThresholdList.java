@@ -19,6 +19,7 @@ public class PrecalculateThresholdList {
     result.put("max_hash_size", max_hash_size);
     return result;
   }
+
   public void calculate_thresholds_for_collection(
           String collection_folder,
           String results_folder,
@@ -31,7 +32,9 @@ public class PrecalculateThresholdList {
     for(File filename: dir.listFiles()) {
       System.err.println(filename);
       PWM pwm = PWM.new_from_file(filename.getPath(), background, from_pcm);
-      ArrayList<ThresholdInfo> infos = FindThreshold.find_thresholds_by_pvalues(pwm, pvalues, parameters());
+      FindThreshold calculation = new FindThreshold();
+      calculation.set_parameters(parameters());
+      ArrayList<ThresholdInfo> infos = calculation.find_thresholds_by_pvalues(pwm, pvalues);
       File result_filename = new File(results_dir + File.separator + "thresholds_" + filename.getName());
       FindPvalueBsearch.new_from_threshold_infos(infos).save_to_file(result_filename.getPath());
     }

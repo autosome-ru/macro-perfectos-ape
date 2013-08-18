@@ -1,7 +1,5 @@
 package ru.autosome.jMacroape;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -249,39 +247,29 @@ public class PWM extends PM {
     return result;
   }
 
-  public double count_by_threshold(double threshold) {
-    return counts_by_thresholds(threshold).get(threshold);
-  }
-
-  public double pvalue_by_threshold(double threshold) {
-    return count_by_threshold(threshold) / vocabulary_volume();
-  }
-
-  public HashMap<Double, double[]> thresholds(double ... pvalues) {
-    HashMap<Double, double[]> results = new HashMap<Double, double[]>();
+  public ArrayList<ThresholdInfo> thresholds(double ... pvalues) {
+    ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
     HashMap<Double,double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     for (double pvalue: thresholds_by_pvalues.keySet()) {
       double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
       double counts[] = thresholds_by_pvalues.get(pvalue)[1];
       double threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
-      double real_pvalue = (double)counts[1] / vocabulary_volume();
-      double result_entries[] = {threshold, real_pvalue};
-      results.put(pvalue, result_entries);
+      double real_pvalue = counts[1] / vocabulary_volume();
+      results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int)counts[1]));
     }
     return results;
   }
 
   // "weak" means that threshold has real pvalue not less than given pvalue, while usual threshold not greater
-  public HashMap<Double, double[]> weak_thresholds(double ... pvalues) {
-    HashMap<Double, double[]> results = new HashMap<Double, double[]>();
+  public ArrayList<ThresholdInfo> weak_thresholds(double ... pvalues) {
+    ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
     HashMap<Double,double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     for (double pvalue: thresholds_by_pvalues.keySet()) {
       double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
       double counts[] = thresholds_by_pvalues.get(pvalue)[1];
       double threshold = thresholds[0];
-      double real_pvalue = (double)counts[0] / vocabulary_volume();
-      double result_entries[] = {threshold, real_pvalue};
-      results.put(pvalue, result_entries);
+      double real_pvalue = counts[0] / vocabulary_volume();
+      results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int)counts[0]));
     }
     return results;
   }
@@ -337,18 +325,6 @@ public class PWM extends PM {
     return results;
   }
 
-  double threshold(double pvalue) {
-    return threshold_and_real_pvalue(pvalue)[0];
-  }
-  double[] threshold_and_real_pvalue(double pvalue) {
-    return thresholds(pvalue).get(pvalue);
-  }
-  double weak_threshold(double pvalue) {
-    return weak_threshold_and_real_pvalue(pvalue)[0];
-  }
-  double[] weak_threshold_and_real_pvalue(double pvalue) {
-    return weak_thresholds(pvalue).get(pvalue);
-  }
   public PWM discrete(double rate) {
     double[][] mat_result;
     mat_result = new double[length()][];
@@ -360,7 +336,7 @@ public class PWM extends PM {
     }
     return new PWM(mat_result, background, name);
   }
-
+  /*
   double[] zero_column() {
     double[] result = {0.0,0.0,0.0,0.0};
     return result;
@@ -389,4 +365,5 @@ public class PWM extends PM {
     }
     return new PWM(mat_result, background, name);
   }
+  */
 }
