@@ -3,41 +3,14 @@ package ru.autosome.jMacroape;
 import java.util.HashMap;
 
 public class ScanSequence {
-  private static HashMap<Character,Character> complements_cache;
-  String sequence;
+
+  Sequence sequence;
   PWM pwm;
   double[] scores_on_direct_strand_cache;
   double[] scores_on_reverse_strand_cache;
   ScanSequence(String sequence, PWM pwm) {
-    this.sequence = sequence;
+    this.sequence = new Sequence(sequence);
     this.pwm = pwm;
-  }
-
-  public static HashMap<Character,Character> complements(){
-    if (complements_cache == null) {
-      HashMap<Character,Character> complements = new HashMap<Character,Character>();
-      complements.put('a','t');complements.put('c','g');complements.put('g','c');complements.put('t','a');
-      complements.put('A','T');complements.put('C','G');complements.put('G','C');complements.put('T','A');
-      complements_cache = complements;
-    }
-    return complements_cache;
-  }
-
-  public static String complement(String seq){
-    HashMap<Character,Character> complements = complements();
-    String result = "";
-    for (int i = 0; i < seq.length(); ++i) {
-      result += complements.get(seq.charAt(i));
-    }
-    return result;
-  }
-
-  public static String reverse(String seq){
-    String result = "";
-    for (int i = 0; i < seq.length(); ++i) {
-      result += seq.charAt(seq.length() - i - 1);
-    }
-    return result;
   }
 
   public double[] scores_on_direct_strand() {
@@ -49,7 +22,7 @@ public class ScanSequence {
 
   public double[] scores_on_reverse_strand() {
     if (scores_on_reverse_strand_cache == null) {
-      scores_on_reverse_strand_cache = pwm.scores_on_sequence(reverse(complement(sequence)));
+      scores_on_reverse_strand_cache = pwm.scores_on_sequence(sequence.reverse().complement());
     }
     return scores_on_reverse_strand_cache;
   }
@@ -89,15 +62,15 @@ public class ScanSequence {
     int pos = best_score_position();
     int pos_original = pos + shift; // pos in non-trimmed sequence
     if (strand.equals("revcomp")) pos_original += 1-pwm.length(); // leftmost but not most upstream
-    String word = get_word(strand, pos);
+    Sequence word = get_word(strand, pos);
     return "" + pos_original + "\t" + strand + "\t" + word;
   }
-  public String get_word(String strand, int pos) {
+  public Sequence get_word(String strand, int pos) {
     if (strand.equals("direct")) {
       return sequence.substring(pos, pos + pwm.length());
     } else {
       pos = sequence.length() - 1 - pos;
-      return reverse(complement(sequence)).substring(pos, pos + pwm.length());
+      return sequence.reverse().complement().substring(pos, pos + pwm.length());
     }
   }
 }

@@ -124,8 +124,11 @@ public class PWM extends PM {
     }
     return sum;
   }
+  double score(Sequence word) throws IllegalArgumentException{
+    return score(word.sequence);
+  }
 
-  public double[] scores_on_sequence(String seq) throws IllegalArgumentException {
+  public double[] scores_on_sequence(Sequence seq) throws IllegalArgumentException {
     if (seq.length() < length()){
       throw new IllegalArgumentException("seq in PWM#scores_on_sequence(seq) should have length not less than length of PWM");
     }
