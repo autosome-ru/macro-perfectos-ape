@@ -8,8 +8,8 @@ public class ScanSequence {
   PWM pwm;
   double[] scores_on_direct_strand_cache;
   double[] scores_on_reverse_strand_cache;
-  ScanSequence(String sequence, PWM pwm) {
-    this.sequence = new Sequence(sequence);
+  ScanSequence(Sequence sequence, PWM pwm) {
+    this.sequence = sequence;
     this.pwm = pwm;
   }
 
