@@ -9,16 +9,23 @@ import java.util.HashMap;
 // Looks for rough pValue of motif under given threshold
 // using a sorted list of predefined threshold-pvalues pairs
 // by performing binary search
-public class FindPvalueBsearch {
+public class FindPvalueBsearch implements CanFindPvalue {
   ArrayList<ThresholdPvaluePair> list_of_pvalues_by_thresholds;
-  PWM pwm;
+  final PWM pwm;
   Double discretization;
   double[] background;
   Integer max_hash_size;
 
-  public FindPvalueBsearch(ArrayList<ThresholdPvaluePair> infos) {
-    list_of_pvalues_by_thresholds = infos;
-    Collections.sort(list_of_pvalues_by_thresholds);
+  public FindPvalueBsearch(PWM pwm, ArrayList<ThresholdPvaluePair> infos) {
+    this.pwm = pwm;
+    Collections.sort(infos);
+    list_of_pvalues_by_thresholds = new ArrayList<ThresholdPvaluePair>();
+    list_of_pvalues_by_thresholds.add(infos.get(0));
+    for (int i = 1; i < infos.size(); ++i) {
+      if (! infos.get(i).equals( infos.get(i-1) )) {
+        list_of_pvalues_by_thresholds.add( infos.get(i) );
+      }
+    }
   }
 
   public FindPvalueBsearch(PWM pwm) {
@@ -46,12 +53,16 @@ public class FindPvalueBsearch {
     }
   }
 
-  public static FindPvalueBsearch new_from_threshold_infos(ArrayList<ThresholdInfo> infos) {
+  public void set_discretization(Double discretization) { this.discretization = discretization; }
+  public void set_background(double[] background) { this.background = background; }
+  public void set_max_hash_size(Integer max_hash_size) {this.max_hash_size = max_hash_size; }
+
+  public static FindPvalueBsearch new_from_threshold_infos(PWM pwm, ArrayList<ThresholdInfo> infos) {
     ArrayList<ThresholdPvaluePair> pvalue_by_threshold_list = new ArrayList<ThresholdPvaluePair>();
     for (ThresholdInfo info: infos) {
       pvalue_by_threshold_list.add(new ThresholdPvaluePair(info));
     }
-    return new FindPvalueBsearch(pvalue_by_threshold_list);
+    return new FindPvalueBsearch(pwm, pvalue_by_threshold_list);
   }
 
   public PvalueInfo pvalue_by_threshold(double threshold) {
@@ -115,7 +126,7 @@ public class FindPvalueBsearch {
   public void save_to_file(String filename) {
     save_thresholds_list(list_of_pvalues_by_thresholds, filename);
   }
-  public static FindPvalueBsearch load_from_file(String filename) {
-    return new FindPvalueBsearch(load_thresholds_list(filename));
+  public static FindPvalueBsearch load_from_file(PWM pwm, String filename) {
+    return new FindPvalueBsearch(pwm, load_thresholds_list(filename));
   }
 }

@@ -3,7 +3,7 @@ package ru.autosome.jMacroape;
 import java.util.HashMap;
 
 public class PM {
-  double[][] matrix;
+  final double[][] matrix;
   double[] background;
   String name;
 

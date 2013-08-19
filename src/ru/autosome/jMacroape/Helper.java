@@ -43,7 +43,7 @@ public class Helper {
     return infos.result();
   }
 
-  public static double[] values_in_range(double from, double to, double step) {
+  public static double[] values_in_range_add(double from, double to, double step) {
     ArrayList<Double> results = new ArrayList<Double>();
     for(double x = from; x <= to; x+=step) {
       results.add(x);

@@ -3,19 +3,7 @@ package ru.autosome.jMacroape;
 import java.util.HashMap;
 
 public class Sequence {
-  private static HashMap<Character,Character> complements_cache;
-  public static HashMap<Character,Character> complements(){
-    if (complements_cache == null) {
-      HashMap<Character,Character> complements = new HashMap<Character,Character>();
-      complements.put('a','t');complements.put('c','g');complements.put('g','c');complements.put('t','a');
-      complements.put('A','T');complements.put('C','G');complements.put('G','C');complements.put('T','A');
-      complements_cache = complements;
-    }
-    return complements_cache;
-  }
-
-
-  public String sequence;
+  final public String sequence;
   public Sequence(String sequence) {
     this.sequence = sequence;
   }
@@ -45,4 +33,14 @@ public class Sequence {
     return sequence;
   }
 
+  private static HashMap<Character,Character> complements_cache;
+  public static HashMap<Character,Character> complements(){
+    if (complements_cache == null) {
+      HashMap<Character,Character> complements = new HashMap<Character,Character>();
+      complements.put('a','t');complements.put('c','g');complements.put('g','c');complements.put('t','a');
+      complements.put('A','T');complements.put('C','G');complements.put('G','C');complements.put('T','A');
+      complements_cache = complements;
+    }
+    return complements_cache;
+  }
 }

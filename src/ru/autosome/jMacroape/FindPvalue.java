@@ -5,51 +5,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
 
-public class FindPvalue {
-
-  // In some cases (when discretization is null) pwm can be altered by background and max_hash_size
-  public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
-    if (discretization != null) {
-      pwm = pwm.discrete(discretization);
-    }
-    pwm.max_hash_size = max_hash_size; // not int because it can be null
-    pwm.background = background;
-
-    double[] thresholds_discreeted = new double[thresholds.length];
-    for (int i = 0; i < thresholds.length; ++i) {
-      thresholds_discreeted[i] = thresholds[i] * discretization;
-    }
-
-    HashMap<Double,Double> counts = pwm.counts_by_thresholds(thresholds_discreeted);
-    ArrayList<PvalueInfo> infos = new ArrayList<PvalueInfo>();
-    for (double threshold: thresholds) {
-      double count = counts.get(threshold * discretization);
-      double pvalue = count / pwm.vocabulary_volume();
-
-      infos.add(new PvalueInfo(threshold, pvalue, (int)count));
-    }
-    return infos;
-  }
-
-  public PvalueInfo pvalue_by_threshold(double threshold) {
-    double[] thresholds = {threshold};
-    return pvalues_by_thresholds(thresholds).get(0);
-  }
-
-  static String DOC =
-        "Command-line format:\n" +
-        "java ru.autosome.jMacroape.FindPvalue <pat-file> <threshold list>... [options]\n" +
-        "\n" +
-        "Options:\n" +
-        "  [-d <discretization level>]\n" +
-        "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
-        "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
-        "\n" +
-        "Examples:\n" +
-        "  java ru.autosome.jMacroape.FindPvalue motifs/KLF4_f2.pat 7.32\n" +
-        "  java ru.autosome.jMacroape.FindPvalue motifs/KLF4_f2.pat 7.32 4.31 5.42 -d 1000 -b 0.2,0.3,0.3,0.2\n";
-
-  PWM pwm;
+public class FindPvalue implements CanFindPvalue {
+  final PWM pwm;
   Double discretization;
   double[] background;
   Integer max_hash_size;
@@ -79,6 +36,62 @@ public class FindPvalue {
     }
   }
 
+  public void set_discretization(Double discretization) { this.discretization = discretization; }
+  public void set_background(double[] background) { this.background = background; }
+  public void set_max_hash_size(Integer max_hash_size) {this.max_hash_size = max_hash_size; }
+
+  // In some cases (when discretization is null) pwm can be altered by background and max_hash_size
+  public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
+    PWM pwm = this.pwm;
+    if (discretization != null) {
+      pwm = pwm.discrete(discretization);
+    }
+    pwm.max_hash_size = max_hash_size; // not int because it can be null
+    pwm.background = background;
+
+    double[] thresholds_discreeted = new double[thresholds.length];
+    for (int i = 0; i < thresholds.length; ++i) {
+      if (discretization != null) {
+       thresholds_discreeted[i] = thresholds[i] * discretization;
+      } else {
+        thresholds_discreeted[i] = thresholds[i];
+      }
+    }
+
+    HashMap<Double,Double> counts = pwm.counts_by_thresholds(thresholds_discreeted);
+    ArrayList<PvalueInfo> infos = new ArrayList<PvalueInfo>();
+    for (double threshold: thresholds) {
+      double count;
+      if(discretization != null) {
+        count = counts.get(threshold * discretization);
+      } else {
+        count = counts.get(threshold);
+      }
+      double pvalue = count / pwm.vocabulary_volume();
+
+      infos.add(new PvalueInfo(threshold, pvalue, (int)count));
+    }
+    return infos;
+  }
+
+  public PvalueInfo pvalue_by_threshold(double threshold) {
+    double[] thresholds = {threshold};
+    return pvalues_by_thresholds(thresholds).get(0);
+  }
+
+  static String DOC =
+        "Command-line format:\n" +
+        "java ru.autosome.jMacroape.FindPvalue <pat-file> <threshold list>... [options]\n" +
+        "\n" +
+        "Options:\n" +
+        "  [-d <discretization level>]\n" +
+        "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+        "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
+        "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
+        "\n" +
+        "Examples:\n" +
+        "  java ru.autosome.jMacroape.FindPvalue motifs/KLF4_f2.pat 7.32\n" +
+        "  java ru.autosome.jMacroape.FindPvalue motifs/KLF4_f2.pat 7.32 4.31 5.42 -d 1000 -b 0.2,0.3,0.3,0.2\n";
 
   public static void main(String[] args) {
     try{
@@ -91,13 +104,12 @@ public class FindPvalue {
         System.exit(1);
       }
 
-
       double discretization = 10000.0;
       double[] background = Helper.wordwise_background();
       ArrayList<Double>thresholds_list = new ArrayList<Double>();
       Integer max_hash_size = 10000000;
       String data_model = "pwm";
-  //    boolean fast_mode = false;
+      String thresholds_folder = null;
 
       if (argv.isEmpty()) {
         throw new IllegalArgumentException("No input. You should specify input file");
@@ -128,16 +140,26 @@ public class FindPvalue {
           discretization = Double.valueOf(argv.remove(0));
         } else if (opt.equals("--pcm")) {
           data_model = "pcm";
+        } else if (opt.equals("--precalc")) {
+          thresholds_folder = argv.remove(0);
         } else {
           throw new IllegalArgumentException("Unknown option '" + opt + "'");
         }
       }
 
       PWM pwm = PWM.new_from_file_or_stdin(filename, background, data_model.equals("pcm"));
-      FindPvalue calculation = new FindPvalue(pwm);
-      calculation.discretization = discretization;
-      calculation.background = background;
-      calculation.max_hash_size = max_hash_size;
+
+      CanFindPvalue calculation;
+      if (thresholds_folder != null) {
+        filename = thresholds_folder + File.separator + "thresholds_" + (new File(filename)).getName();
+        calculation = FindPvalueBsearch.load_from_file(pwm, filename);
+      } else {
+        calculation = new FindPvalue(pwm);
+      }
+
+      calculation.set_discretization(discretization);
+      calculation.set_background(background);
+      calculation.set_max_hash_size(max_hash_size);
 
       HashMap<String, Object> parameters = calculation.parameters();
 

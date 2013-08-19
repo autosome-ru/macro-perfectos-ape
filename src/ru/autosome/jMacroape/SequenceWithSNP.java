@@ -1,10 +1,10 @@
 package ru.autosome.jMacroape;
 
 public class SequenceWithSNP {
-  //public String seq_w_snp;
-  private String left;
-  private String right;
-  private char[] mid;
+
+  final private String left;
+  final private String right;
+  final private char[] mid;
 
   // line should finish with sequence (which doesn't have spaces).
   // Example:

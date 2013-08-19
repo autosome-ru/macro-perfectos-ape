@@ -2,7 +2,9 @@ package ru.autosome.jMacroape;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 public class PrecalculateThresholdList {
   double discretization;
@@ -10,6 +12,14 @@ public class PrecalculateThresholdList {
   String pvalue_boundary;
   int max_hash_size;
   boolean from_pcm;
+
+  public PrecalculateThresholdList() {
+    discretization = 1000;
+    background = Helper.wordwise_background();
+    pvalue_boundary = "lower";
+    max_hash_size = 10000000;
+    from_pcm = false;
+  }
 
   public HashMap<String, Object> parameters() {
     HashMap<String, Object> result = new HashMap<String,Object>();
@@ -36,32 +46,88 @@ public class PrecalculateThresholdList {
       calculation.set_parameters(parameters());
       ArrayList<ThresholdInfo> infos = calculation.find_thresholds_by_pvalues(pwm, pvalues);
       File result_filename = new File(results_dir + File.separator + "thresholds_" + filename.getName());
-      FindPvalueBsearch.new_from_threshold_infos(infos).save_to_file(result_filename.getPath());
+      FindPvalueBsearch.new_from_threshold_infos(pwm, infos).save_to_file(result_filename.getPath());
     }
   }
 
+  static String DOC =
+          "Command-line format:\n" +
+          "java ru.autosome.jMacroape.PrecalculateThresholdList <pat-file> <threshold list>... [options]\n" +
+          "\n" +
+          "Options:\n" +
+          "  [-d <discretization level>]\n" +
+          "  [--pcm] - treat the input files as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+          "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
+          "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
+          "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
+          "\n" +
+          "Examples:\n" +
+          "  java ru.autosome.jMacroape.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/\n" +
+          "  java ru.autosome.jMacroape.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
+
   public static void main(String[] args) {
     try {
-      double discretization = 1000;
-      double[] background = {1, 1, 1, 1};
-      String pvalue_boundary = "lower";
-      int max_hash_size = 10000000;
-      String data_model = "pwm";
+      ArrayList<String> argv = new ArrayList<String>();
+      Collections.addAll(argv, args);
+
+      if (argv.isEmpty()  || ArrayExtensions.contain(argv,"-h") || ArrayExtensions.contain(argv,"--h")
+              || ArrayExtensions.contain(argv,"-help") || ArrayExtensions.contain(argv,"--help")) {
+        System.err.println(DOC);
+        System.exit(1);
+      }
+
+      String collection_folder = argv.remove(0);
+      String output_folder = argv.remove(0);
+      double[] pvalue_list = Helper.values_in_range_mul(1E-6, 0.3, 1.1);
 
       PrecalculateThresholdList calculation = new PrecalculateThresholdList();
-      calculation.discretization = discretization;
-      calculation.background = background;
-      calculation.pvalue_boundary = pvalue_boundary;
-      calculation.max_hash_size = max_hash_size;
-      calculation.from_pcm = data_model.equals("pcm");
 
-      calculation.calculate_thresholds_for_collection(
-              "d:/iogen/hocomoco/v9/hocomoco_ad_uniform",
-              "d:/iogen/hocomoco/v9/hocomoco_ad_uniform_thresholds",
-              Helper.values_in_range_mul(1E-6, 0.3, 1.1));
+      while (argv.size() > 0) {
+        String opt = argv.remove(0);
+        if (opt.equals("-b")) {
+          double[] background = Helper.wordwise_background();
+          StringTokenizer parser = new StringTokenizer(argv.remove(0));
+          for (int i = 0; i < 4; ++i) {
+            background[i] = Double.valueOf(parser.nextToken(","));
+          }
+          calculation.background = background;
+        } else if (opt.equals("--pvalues")) {
+          StringTokenizer parser = new StringTokenizer(argv.remove(0));
+          double min_pvalue = Double.valueOf(parser.nextToken(","));
+          double max_pvalue = Double.valueOf(parser.nextToken(","));
+          double step = Double.valueOf(parser.nextToken(","));
+          String progression_method = parser.nextToken();
+          if (progression_method.equals("mul")) {
+            pvalue_list = Helper.values_in_range_mul(min_pvalue, max_pvalue, step);
+          } else if (progression_method.equals("add")) {
+            pvalue_list = Helper.values_in_range_add(min_pvalue, max_pvalue, step);
+          } else {
+            throw new IllegalArgumentException("Progression method for pvalue-list is either add or mul, but you specified " + progression_method);
+          }
+        }
+        else if (opt.equals("--max-hash-size")) {
+          calculation.max_hash_size = Integer.valueOf(argv.remove(0));
+        } else if (opt.equals("-d")) {
+          calculation.discretization = Double.valueOf(argv.remove(0));
+        } else if (opt.equals("--boundary")) {
+          calculation.pvalue_boundary = argv.remove(0);
+          if (! calculation.pvalue_boundary.equalsIgnoreCase("lower") &&
+              ! calculation.pvalue_boundary.equalsIgnoreCase("upper")) {
+            throw new IllegalArgumentException("boundary should be either lower or upper");
+          }
+        } else if (opt.equals("--pcm")) {
+          calculation.from_pcm = true;
+        } else {
+          throw new IllegalArgumentException("Unknown option '" + opt + "'");
+        }
+      }
+
+      calculation.calculate_thresholds_for_collection(collection_folder, output_folder, pvalue_list);
+
     } catch (Exception err) {
-      System.err.println("Error:\n" + err);
-      System.exit(1);
+      System.err.println("\n" + err + "\n");
+      err.printStackTrace();
+      System.err.println("\n\nUse --help option for help\n\n" + DOC);
     }
   }
 }

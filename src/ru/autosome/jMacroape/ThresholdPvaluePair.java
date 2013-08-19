@@ -10,6 +10,14 @@ public class ThresholdPvaluePair implements Comparable {
     this.threshold = threshold;
     this.pvalue = pvalue;
   }
+
+  @Override
+  public boolean equals(Object other) {
+    if (! (other instanceof ThresholdPvaluePair)) {
+      return false;
+    }
+    return threshold == ((ThresholdPvaluePair)other).threshold && pvalue == ((ThresholdPvaluePair)other).pvalue;
+  }
   ThresholdPvaluePair(ThresholdInfo info) {
     this.threshold = info.threshold;
     this.pvalue = info.real_pvalue;

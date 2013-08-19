@@ -3,9 +3,8 @@ package ru.autosome.jMacroape;
 import java.util.HashMap;
 
 public class ScanSequence {
-
-  Sequence sequence;
-  PWM pwm;
+  final Sequence sequence;
+  final PWM pwm;
   double[] scores_on_direct_strand_cache;
   double[] scores_on_reverse_strand_cache;
   ScanSequence(Sequence sequence, PWM pwm) {

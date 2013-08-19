@@ -14,7 +14,7 @@ public class OutputInformation {
   ArrayList<String> table_rows;
   ArrayList<String> table_rows_callbacks;
 
-  ArrayList<? extends ResultInfo> data;
+  final ArrayList<? extends ResultInfo> data;
 
   OutputInformation(ArrayList<? extends ResultInfo> data) {
     table_parameter_descriptions = new ArrayList<String>();
