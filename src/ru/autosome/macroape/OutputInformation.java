@@ -36,21 +36,9 @@ public class OutputInformation {
     parameter_value_infos.add("# " + param_name + " = " + value.toString());
   }
 
-  public static boolean is_background_wordwise(double[] bckgr) {
-    for (int i = 0; i < 4; ++i) {
-      if (bckgr[i] != 1.0)  return false;
-    }
-    return true;
-  }
-
-  void background_parameter(String param_name, String description, double[] value) {
-    if (! is_background_wordwise(value)) {
-      String val_string = "";
-      for (int i = 0; i < 3; ++i) {
-        val_string += value[i] + ",";
-      }
-      val_string += value[3];
-      add_parameter(param_name, description, val_string);
+  void background_parameter(String param_name, String description, BackgroundModel background) {
+    if (!background.is_wordwise()) {
+      add_parameter(param_name, description, background.toString());
     }
   }
 

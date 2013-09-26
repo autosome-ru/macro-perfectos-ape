@@ -3,7 +3,7 @@ package ru.autosome.macroape;
 import java.util.HashMap;
 
 public class PCM extends PM {
-    public PCM(double[][] matrix, double[] background, String name) throws IllegalArgumentException {
+    public PCM(double[][] matrix, BackgroundModel background, String name) throws IllegalArgumentException {
         super(matrix, background, name);
     }
 

@@ -12,10 +12,10 @@ public class PWM extends PM {
   private HashMap<Double,Double> count_distribution;
   public Integer max_hash_size;
 
-  public PWM(double[][] matrix, double[] background, String name) throws IllegalArgumentException {
+  public PWM(double[][] matrix, BackgroundModel background, String name) throws IllegalArgumentException {
     super(matrix, background, name);
   }
-  public static PWM new_from_text(ArrayList<String> input_lines, double[] background, boolean from_pcm) {
+  public static PWM new_from_text(ArrayList<String> input_lines, BackgroundModel background, boolean from_pcm) {
     PMParser matrix_parser = new PMParser(input_lines);
 
     double[][] matrix = matrix_parser.matrix();
@@ -28,7 +28,7 @@ public class PWM extends PM {
       return new PWM(matrix, background, name);
     }
   }
-  public static PWM new_from_file(String filename, double[] background, boolean from_pcm) {
+  public static PWM new_from_file(String filename, BackgroundModel background, boolean from_pcm) {
     try {
       InputStream reader = new FileInputStream(filename);
       return PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, from_pcm);
@@ -36,7 +36,7 @@ public class PWM extends PM {
       return null;
     }
   }
-  public static PWM new_from_file(File file, double[] background, boolean from_pcm) {
+  public static PWM new_from_file(File file, BackgroundModel background, boolean from_pcm) {
     try{
       InputStream reader = new FileInputStream(file);
       return PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, from_pcm);
@@ -44,7 +44,7 @@ public class PWM extends PM {
       return null;
     }
   }
-  public static PWM new_from_file_or_stdin(String filename, double[] background, boolean from_pcm) {
+  public static PWM new_from_file_or_stdin(String filename, BackgroundModel background, boolean from_pcm) {
     try{
       InputStream reader;
       if (filename.equals(".stdin")) {
@@ -219,7 +219,7 @@ public class PWM extends PM {
           if (! new_scores.containsKey(new_score) ) {
             new_scores.put(new_score, 0.0);
           }
-          new_scores.put(new_score, new_scores.get(new_score) + count * background[letter]);
+          new_scores.put(new_score, new_scores.get(new_score) + count * background.probability(letter));
         }
       }
     }

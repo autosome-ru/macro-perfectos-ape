@@ -4,17 +4,14 @@ import java.util.HashMap;
 
 public class PM {
   final double[][] matrix;
-  double[] background;
+  BackgroundModel background;
   String name;
 
-  public PM(double[][] matrix, double[] background, String name) throws IllegalArgumentException {
+  public PM(double[][] matrix, BackgroundModel background, String name) throws IllegalArgumentException {
     for (double[] pos: matrix) {
       if (pos.length != 4) {
         throw new IllegalArgumentException("Matrix must have 4 elements in each position");
       }
-    }
-    if (background.length != 4) {
-      throw new IllegalArgumentException("Background should contain exactly 4 nucleotides");
     }
     this.matrix = matrix;
     this.background = background;
@@ -26,12 +23,7 @@ public class PM {
   }
 
   public double[] probabilities() {
-    double sum = ArrayExtensions.sum(background);
-    double[] probabilities = new double[4];
-    for (int i = 0; i < 4; ++i) {
-      probabilities[i] = background[i] / sum;
-    }
-    return probabilities;
+    return background.probability();
   }
   public String toString() {
     String result;
@@ -55,7 +47,7 @@ public class PM {
   }
 
   public double vocabularyVolume() {
-    return Math.pow(ArrayExtensions.sum(background), length());
+    return Math.pow(background.volume(), length());
   }
 
   public static HashMap<Character, Integer> indexByLetter() {

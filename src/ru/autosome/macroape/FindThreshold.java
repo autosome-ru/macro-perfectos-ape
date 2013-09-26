@@ -3,12 +3,12 @@ package ru.autosome.macroape;
 import java.util.*;
 
 public class FindThreshold {
-  double[] background;
+  BackgroundModel background;
   Double discretization;
   Integer max_hash_size;
   String pvalue_boundary;
   public FindThreshold() {
-    background = Helper.wordwise_background();
+    background = new WordwiseBackground();
     discretization = 10000.0;
     max_hash_size = 10000000; // not int because it can be null
     pvalue_boundary = "lower";
@@ -23,7 +23,7 @@ public class FindThreshold {
   }
   public void set_parameters(HashMap<String, Object> params) {
     discretization = (Double)params.get("discretization");
-    background = (double[])params.get("background");
+    background = (BackgroundModel)params.get("background");
     pvalue_boundary = (String)params.get("pvalue_boundary");
     max_hash_size = (Integer)params.get("max_hash_size");
   }
@@ -83,7 +83,7 @@ public class FindThreshold {
         System.exit(1);
       }
 
-      double[] background = {1.0, 1.0, 1.0, 1.0};
+      BackgroundModel background = new WordwiseBackground();
       ArrayList<Double> default_pvalues = new ArrayList<Double>();
       default_pvalues.add(0.0005);
       String data_model = "pwm";
@@ -110,10 +110,7 @@ public class FindThreshold {
       while (argv.size() > 0) {
         String opt = argv.remove(0);
         if (opt.equals("-b")) {
-          StringTokenizer parser = new StringTokenizer(argv.remove(0));
-          for (int i = 0; i < 4; ++i) {
-            background[i] = Double.valueOf(parser.nextToken(","));
-          }
+          background = Background.fromString(argv.remove(0));
         } else if (opt.equals("--max-hash-size")) {
           calculation.max_hash_size = Integer.valueOf(argv.remove(0));
         } else if (opt.equals("-d")) {

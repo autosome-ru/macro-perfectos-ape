@@ -8,14 +8,14 @@ import java.util.StringTokenizer;
 
 public class PrecalculateThresholdList {
   double discretization;
-  double[] background;
+  BackgroundModel background;
   String pvalue_boundary;
   int max_hash_size;
   boolean from_pcm;
 
   public PrecalculateThresholdList() {
     discretization = 1000;
-    background = Helper.wordwise_background();
+    background = new WordwiseBackground();
     pvalue_boundary = "lower";
     max_hash_size = 10000000;
     from_pcm = false;
@@ -94,12 +94,7 @@ public class PrecalculateThresholdList {
       while (argv.size() > 0) {
         String opt = argv.remove(0);
         if (opt.equals("-b")) {
-          double[] background = Helper.wordwise_background();
-          StringTokenizer parser = new StringTokenizer(argv.remove(0));
-          for (int i = 0; i < 4; ++i) {
-            background[i] = Double.valueOf(parser.nextToken(","));
-          }
-          calculation.background = background;
+          calculation.background = Background.fromString(argv.remove(0));
         } else if (opt.equals("--pvalues")) {
           StringTokenizer parser = new StringTokenizer(argv.remove(0));
           double min_pvalue = Double.valueOf(parser.nextToken(","));

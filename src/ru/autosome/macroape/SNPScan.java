@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class SNPScan {
-  double[] background;
+  BackgroundModel background;
   double discretization;
   Integer max_hash_size;
 
   public SNPScan() {
-    background = Helper.wordwise_background();
+    background = new WordwiseBackground();
     discretization = 100;
     max_hash_size = 10000000;
   }
@@ -64,7 +64,7 @@ public class SNPScan {
     return result;
   }
 
-  public static ArrayList<PwmWithFilename> load_collection_of_pwms(String dir_name, double[] background, boolean from_pcm) throws FileNotFoundException {
+  public static ArrayList<PwmWithFilename> load_collection_of_pwms(String dir_name, BackgroundModel background, boolean from_pcm) throws FileNotFoundException {
     ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
     java.io.File dir = new java.io.File(dir_name);
     for(File file: dir.listFiles()) {
@@ -127,7 +127,7 @@ public class SNPScan {
         results_folder.mkdir();
       }
 
-      double[] background = {1.0, 1.0, 1.0, 1.0};
+      BackgroundModel background = new WordwiseBackground();
       SNPScan calculation = new SNPScan();
 
       String data_model = "pwm";
@@ -137,10 +137,7 @@ public class SNPScan {
       while (argv.size() > 0) {
         String opt = argv.remove(0);
         if (opt.equals("-b")) {
-          StringTokenizer parser = new StringTokenizer(argv.remove(0));
-          for (int i = 0; i < 4; ++i) {
-            background[i] = Double.valueOf(parser.nextToken(","));
-          }
+          background = Background.fromString(argv.remove(0));
         } else if (opt.equals("--max-hash-size")) {
           calculation.max_hash_size = Integer.valueOf(argv.remove(0));
         } else if (opt.equals("-d")) {

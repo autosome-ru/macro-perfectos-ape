@@ -6,13 +6,13 @@ import java.util.*;
 public class FindPvalue implements CanFindPvalue {
   final PWM pwm;
   Double discretization;
-  double[] background;
+  BackgroundModel background;
   Integer max_hash_size;
 
   public FindPvalue(PWM pwm) {
     this.pwm = pwm;
     this.discretization = 10000.0;
-    this.background = Helper.wordwise_background();
+    this.background = new WordwiseBackground();
     this.max_hash_size = 10000000;
   }
   public HashMap<String, Object> parameters() {
@@ -27,7 +27,7 @@ public class FindPvalue implements CanFindPvalue {
       discretization = (Double)parameters.get("discretization");
     }
     if(parameters.containsKey("background")) {
-      background = (double[])parameters.get("background");
+      background = (BackgroundModel)parameters.get("background");
     }
     if(parameters.containsKey("max_hash_size")) {
       max_hash_size = (Integer)parameters.get("max_hash_size");
@@ -35,7 +35,7 @@ public class FindPvalue implements CanFindPvalue {
   }
 
   public void set_discretization(Double discretization) { this.discretization = discretization; }
-  public void set_background(double[] background) { this.background = background; }
+  public void set_background(BackgroundModel background) { this.background = background; }
   public void set_max_hash_size(Integer max_hash_size) {this.max_hash_size = max_hash_size; }
 
   // In some cases (when discretization is null) pwm can be altered by background and max_hash_size
@@ -103,7 +103,7 @@ public class FindPvalue implements CanFindPvalue {
       }
 
       double discretization = 10000.0;
-      double[] background = Helper.wordwise_background();
+      BackgroundModel background = new WordwiseBackground();
       ArrayList<Double>thresholds_list = new ArrayList<Double>();
       Integer max_hash_size = 10000000;
       String data_model = "pwm";
@@ -128,10 +128,7 @@ public class FindPvalue implements CanFindPvalue {
       while (argv.size() > 0) {
         String opt = argv.remove(0);
         if (opt.equals("-b")) {
-          StringTokenizer parser = new StringTokenizer(argv.remove(0));
-          for (int i = 0; i < 4; ++i) {
-            background[i] = Double.valueOf(parser.nextToken(","));
-          }
+          background = Background.fromString(argv.remove(0));
         } else if (opt.equals("--max-hash-size")) {
           max_hash_size = Integer.valueOf(argv.remove(0));
         } else if (opt.equals("-d")) {
