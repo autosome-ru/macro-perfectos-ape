@@ -22,6 +22,6 @@ public class PCM2PWMConverter {
                 new_matrix[pos][letter] = Math.log(numerator / denominator);
             }
         }
-        return new PWM(new_matrix, pcm.background, pcm.name);
+        return new PWM(new_matrix, background, pcm.name);
     }
 }

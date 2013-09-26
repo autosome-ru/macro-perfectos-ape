@@ -1,8 +1,8 @@
 package ru.autosome.macroape;
 
 public class PCM extends PM {
-    public PCM(double[][] matrix, BackgroundModel background, String name) throws IllegalArgumentException {
-        super(matrix, background, name);
+    public PCM(double[][] matrix, String name) throws IllegalArgumentException {
+        super(matrix, name);
     }
 
     public double count() {
@@ -10,7 +10,7 @@ public class PCM extends PM {
         return pos[0] + pos[1] + pos[2] + pos[3];
     }
 
-    public PWM to_pwm() {
+    public PWM to_pwm(BackgroundModel background) {
         PCM2PWMConverter converter = new PCM2PWMConverter(this);
         converter.background = background;
         return converter.convert();

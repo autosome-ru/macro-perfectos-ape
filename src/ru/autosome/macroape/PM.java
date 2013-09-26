@@ -4,17 +4,15 @@ import java.util.HashMap;
 
 public class PM {
     final double[][] matrix;
-    BackgroundModel background;
     String name;
 
-    public PM(double[][] matrix, BackgroundModel background, String name) throws IllegalArgumentException {
+    public PM(double[][] matrix, String name) throws IllegalArgumentException {
         for (double[] pos : matrix) {
             if (pos.length != 4) {
                 throw new IllegalArgumentException("Matrix must have 4 elements in each position");
             }
         }
         this.matrix = matrix;
-        this.background = background;
         this.name = name;
     }
 
@@ -37,7 +35,7 @@ public class PM {
         for (int i = 0; i < length(); ++i) {
             complement[i] = ArrayExtensions.reverse(matrix[i]);
         }
-        return new PM(ArrayExtensions.reverse(complement), background, name);
+        return new PM(ArrayExtensions.reverse(complement), name);
     }
 
     public static HashMap<Character, Integer> indexByLetter() {

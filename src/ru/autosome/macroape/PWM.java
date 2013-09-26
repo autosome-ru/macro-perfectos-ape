@@ -14,9 +14,11 @@ import static java.lang.Math.ceil;
 public class PWM extends PM {
     private HashMap<Double, Double> count_distribution;
     public Integer max_hash_size;
+    BackgroundModel background;
 
     public PWM(double[][] matrix, BackgroundModel background, String name) throws IllegalArgumentException {
-        super(matrix, background, name);
+        super(matrix, name);
+        this.background = background;
     }
 
     public static PWM new_from_text(ArrayList<String> input_lines, BackgroundModel background, boolean from_pcm) {
@@ -26,8 +28,8 @@ public class PWM extends PM {
         String name = matrix_parser.name();
 
         if (from_pcm) {
-            PCM pcm = new PCM(matrix, background, name);
-            return pcm.to_pwm();
+            PCM pcm = new PCM(matrix, name);
+            return pcm.to_pwm(background);
         } else {
             return new PWM(matrix, background, name);
         }
