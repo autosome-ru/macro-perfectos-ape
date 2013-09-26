@@ -369,4 +369,7 @@ public class PWM extends PM {
     return new PWM(mat_result, background, name);
   }
   */
+  public double         vocabularyVolume() {
+      return Math.pow(background.volume(), length());
+  }
 }

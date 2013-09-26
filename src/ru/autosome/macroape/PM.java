@@ -46,10 +46,6 @@ public class PM {
     return new PM(mat_result, background, name);
   }
 
-  public double vocabularyVolume() {
-    return Math.pow(background.volume(), length());
-  }
-
   public static HashMap<Character, Integer> indexByLetter() {
     HashMap<Character, Integer> result = new HashMap<Character,Integer>();
     result.put('A', 0);
