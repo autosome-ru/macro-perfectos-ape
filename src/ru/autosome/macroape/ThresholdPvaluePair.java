@@ -1,7 +1,6 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 import java.util.Comparator;
-import java.util.HashMap;
 
 public class ThresholdPvaluePair implements Comparable {
   public double threshold;

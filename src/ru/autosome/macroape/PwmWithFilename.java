@@ -1,4 +1,4 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 public class PwmWithFilename {
   public PWM pwm;

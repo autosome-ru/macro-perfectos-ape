@@ -1,7 +1,6 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class OutputInformation {
   ArrayList<String> table_parameter_descriptions;

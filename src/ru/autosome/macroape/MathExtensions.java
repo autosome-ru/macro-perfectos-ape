@@ -1,4 +1,4 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 public class MathExtensions {
   static double inverf(double x) {

@@ -1,4 +1,4 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 public class ThresholdInfo extends ResultInfo{
   public double threshold;

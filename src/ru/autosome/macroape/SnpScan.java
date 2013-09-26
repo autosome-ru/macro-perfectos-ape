@@ -1,4 +1,4 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -6,12 +6,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-public class SnpScan {
+public class SNPScan {
   double[] background;
   double discretization;
   Integer max_hash_size;
 
-  public SnpScan() {
+  public SNPScan() {
     background = Helper.wordwise_background();
     discretization = 100;
     max_hash_size = 10000000;
@@ -79,7 +79,7 @@ public class SnpScan {
 
   static String DOC =
           "Command-line format:\n" +
-          "java ru.autosome.jMacroape.SnpScan <folder with pwms> <file with SNPs> <folder for results>\n"+
+          "java ru.autosome.macroape.SNPScan <folder with pwms> <file with SNPs> <folder for results>\n"+
           "\n" +
           "Options:\n" +
           "  [-d <discretization level>]\n" +
@@ -88,8 +88,8 @@ public class SnpScan {
           "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
           "\n" +
           "Example:\n" +
-          "  java ru.autosome.jMacroape.SnpScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
-          "  java ru.autosome.jMacroape.SnpScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
+          "  java ru.autosome.macroape.SNPScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
+          "  java ru.autosome.macroape.SNPScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
 
   public static void main(String[] args) {
     try{
@@ -102,9 +102,25 @@ public class SnpScan {
         System.exit(1);
       }
 
-      String path_to_collection_of_pwms = argv.remove(0);
-      String path_to_file_w_snps = argv.remove(0);
-      String path_to_results_folder = argv.remove(0);
+      String path_to_collection_of_pwms;
+      String path_to_file_w_snps;
+      String path_to_results_folder;
+      try {
+        path_to_collection_of_pwms = argv.remove(0);
+      } catch (IndexOutOfBoundsException e) {
+        throw new IllegalArgumentException("Specify PWM-collection folder", e);
+      }
+      try {
+        path_to_file_w_snps = argv.remove(0);
+      } catch (IndexOutOfBoundsException e) {
+        throw new IllegalArgumentException("Specify file with SNPs", e);
+      }
+
+      try {
+        path_to_results_folder = argv.remove(0);
+      } catch (IndexOutOfBoundsException e) {
+        throw new IllegalArgumentException("Specify output folder", e);
+      }
 
       File results_folder = new File(path_to_results_folder);
       if (!results_folder.exists()) {
@@ -112,7 +128,7 @@ public class SnpScan {
       }
 
       double[] background = {1.0, 1.0, 1.0, 1.0};
-      SnpScan calculation = new SnpScan();
+      SNPScan calculation = new SNPScan();
 
       String data_model = "pwm";
       String thresholds_folder = null;
@@ -139,7 +155,12 @@ public class SnpScan {
       }
 
       calculation.background = background;
-      ArrayList<PwmWithFilename> collection = load_collection_of_pwms(path_to_collection_of_pwms, background, data_model.equals("pcm"));
+      ArrayList<PwmWithFilename> collection;
+      try {
+        collection = load_collection_of_pwms(path_to_collection_of_pwms, background, data_model.equals("pcm"));
+      } catch (Exception e) {
+        throw new IllegalArgumentException("Failed to load collection of PWMs", e);
+      }
       for(PwmWithFilename pwm: collection) {
         CanFindPvalue pvalue_calculation;
         if (thresholds_folder == null){
@@ -152,8 +173,13 @@ public class SnpScan {
         pwm.pvalue_calculation = pvalue_calculation;
       }
 
-      InputStream reader = new FileInputStream(path_to_file_w_snps);
-      ArrayList<String> snp_list = InputExtensions.filter_empty_strings(InputExtensions.readLinesFromInputStream(reader));
+      ArrayList<String> snp_list;
+      try {
+        InputStream reader = new FileInputStream(path_to_file_w_snps);
+        snp_list = InputExtensions.filter_empty_strings(InputExtensions.readLinesFromInputStream(reader));
+      } catch (Exception e) {
+        throw new IllegalArgumentException("Failed to load pack of SNPs", e);
+      }
 
       for(String snp_input: snp_list) {
         String snp_name = first_part_of_string(snp_input);
@@ -177,9 +203,11 @@ public class SnpScan {
         }
       }
     } catch(Exception err) {
-      System.err.println("\n" + err + "\n");
+      System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n\nUse --help option for help\n\n" + DOC);
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + DOC);
+      System.exit(1);
+
     }
   }
 

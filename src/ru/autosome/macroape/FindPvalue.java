@@ -1,8 +1,6 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.*;
 
 public class FindPvalue implements CanFindPvalue {
@@ -67,7 +65,7 @@ public class FindPvalue implements CanFindPvalue {
       } else {
         count = counts.get(threshold);
       }
-      double pvalue = count / pwm.vocabulary_volume();
+      double pvalue = count / pwm.vocabularyVolume();
 
       infos.add(new PvalueInfo(threshold, pvalue, (int)count));
     }
@@ -81,7 +79,7 @@ public class FindPvalue implements CanFindPvalue {
 
   static String DOC =
         "Command-line format:\n" +
-        "java ru.autosome.jMacroape.FindPvalue <pat-file> <threshold list>... [options]\n" +
+        "java ru.autosome.macroape.FindPvalue <pat-file> <threshold list>... [options]\n" +
         "\n" +
         "Options:\n" +
         "  [-d <discretization level>]\n" +
@@ -90,8 +88,8 @@ public class FindPvalue implements CanFindPvalue {
         "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
         "\n" +
         "Examples:\n" +
-        "  java ru.autosome.jMacroape.FindPvalue motifs/KLF4_f2.pat 7.32\n" +
-        "  java ru.autosome.jMacroape.FindPvalue motifs/KLF4_f2.pat 7.32 4.31 5.42 -d 1000 -b 0.2,0.3,0.3,0.2\n";
+        "  java ru.autosome.macroape.FindPvalue motifs/KLF4_f2.pat 7.32\n" +
+        "  java ru.autosome.macroape.FindPvalue motifs/KLF4_f2.pat 7.32 4.31 5.42 -d 1000 -b 0.2,0.3,0.3,0.2\n";
 
   public static void main(String[] args) {
     try{
@@ -168,9 +166,10 @@ public class FindPvalue implements CanFindPvalue {
       System.out.println(Helper.find_pvalue_info_string(infos, parameters));
 
     } catch (Exception err) {
-      System.err.println("\n" + err + "\n");
+      System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n\nUse --help option for help\n\n" + DOC);
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + DOC);
+      System.exit(1);
     }
 
   }

@@ -1,4 +1,4 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class PrecalculateThresholdList {
 
   static String DOC =
           "Command-line format:\n" +
-          "java ru.autosome.jMacroape.PrecalculateThresholdList <pat-file> <threshold list>... [options]\n" +
+          "java ru.autosome.macroape.PrecalculateThresholdList <collection folder> <output folder>... [options]\n" +
           "\n" +
           "Options:\n" +
           "  [-d <discretization level>]\n" +
@@ -62,8 +62,8 @@ public class PrecalculateThresholdList {
           "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
           "\n" +
           "Examples:\n" +
-          "  java ru.autosome.jMacroape.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/\n" +
-          "  java ru.autosome.jMacroape.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
+          "  java ru.autosome.macroape.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/\n" +
+          "  java ru.autosome.macroape.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
 
   public static void main(String[] args) {
     try {
@@ -75,9 +75,18 @@ public class PrecalculateThresholdList {
         System.err.println(DOC);
         System.exit(1);
       }
-
-      String collection_folder = argv.remove(0);
-      String output_folder = argv.remove(0);
+      String collection_folder;
+      String output_folder;
+      try {
+        collection_folder = argv.remove(0);
+      } catch (IndexOutOfBoundsException e) {
+        throw new IllegalArgumentException("Specify PWM-collection folder", e);
+      }
+      try {
+        output_folder = argv.remove(0);
+      } catch (IndexOutOfBoundsException e) {
+        throw new IllegalArgumentException("Specify output folder", e);
+      }
       double[] pvalue_list = Helper.values_in_range_mul(1E-6, 0.3, 1.1);
 
       PrecalculateThresholdList calculation = new PrecalculateThresholdList();
@@ -125,9 +134,10 @@ public class PrecalculateThresholdList {
       calculation.calculate_thresholds_for_collection(collection_folder, output_folder, pvalue_list);
 
     } catch (Exception err) {
-      System.err.println("\n" + err + "\n");
+      System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n\nUse --help option for help\n\n" + DOC);
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + DOC);
+      System.exit(1);
     }
   }
 }

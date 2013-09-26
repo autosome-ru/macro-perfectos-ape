@@ -1,6 +1,4 @@
-package ru.autosome.jMacroape;
-
-import java.util.HashMap;
+package ru.autosome.macroape;
 
 public class ScanSequence {
   final Sequence sequence;

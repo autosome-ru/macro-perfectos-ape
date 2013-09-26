@@ -1,9 +1,8 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 
 // Looks for rough pValue of motif under given threshold
@@ -80,7 +79,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
         pvalue = list_of_pvalues_by_thresholds.get(list_of_pvalues_by_thresholds.size() - 1).pvalue;
       }
     }
-    return new PvalueInfo(threshold, pvalue, (int)(pwm.vocabulary_volume() * pvalue));
+    return new PvalueInfo(threshold, pvalue, (int)(pwm.vocabularyVolume() * pvalue));
   }
 
   public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {

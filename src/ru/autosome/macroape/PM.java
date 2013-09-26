@@ -1,4 +1,4 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 import java.util.HashMap;
 
@@ -42,7 +42,7 @@ public class PM {
     return result;
   }
 
-  public PM reverse_complement() {
+  public PM reverseComplement() {
     double[][] mat_result;
     mat_result = new double[length()][];
     for (int i = 0; i < length(); ++i) {
@@ -54,11 +54,11 @@ public class PM {
     return new PM(mat_result, background, name);
   }
 
-  public double vocabulary_volume() {
+  public double vocabularyVolume() {
     return Math.pow(ArrayExtensions.sum(background), length());
   }
 
-  public static HashMap<Character, Integer> index_by_letter() {
+  public static HashMap<Character, Integer> indexByLetter() {
     HashMap<Character, Integer> result = new HashMap<Character,Integer>();
     result.put('A', 0);
     result.put('C', 1);

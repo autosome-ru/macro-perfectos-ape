@@ -1,9 +1,5 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
-import com.sun.deploy.util.StringUtils;
-
-import java.io.*;
-import java.nio.charset.Charset;
 import java.util.*;
 
 public class FindThreshold {
@@ -64,7 +60,7 @@ public class FindThreshold {
 
   static String DOC =
           "Command-line format:\n" +
-          "java ru.autosome.jMacroape.FindThreshold <pat-file> [<list of P-values>...] [options]\n" +
+          "java ru.autosome.macroape.FindThreshold <pat-file> [<list of P-values>...] [options]\n" +
           "\n" +
           "Options:\n" +
           "  [-d <discretization level>]\n" +
@@ -73,8 +69,8 @@ public class FindThreshold {
           "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
           "\n" +
           "Example:\n" +
-          "  java ru.autosome.jMacroape.FindThreshold motifs/KLF4_f2.pat\n" +
-          "  java ru.autosome.jMacroape.FindThreshold  motifs/KLF4_f2.pat 0.001 0.0001 0.0005 -d 1000 -b 0.4,0.3,0.2,0.1\n";
+          "  java ru.autosome.macroape.FindThreshold motifs/KLF4_f2.pat\n" +
+          "  java ru.autosome.macroape.FindThreshold  motifs/KLF4_f2.pat 0.001 0.0001 0.0005 -d 1000 -b 0.4,0.3,0.2,0.1\n";
 
   public static void main(String args[]){
     try {
@@ -141,9 +137,10 @@ public class FindThreshold {
 
       System.out.println(Helper.threshold_infos_string(infos, calculation.parameters()));
     } catch(Exception err) {
-      System.err.println("\n" + err + "\n");
+      System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n\nUse --help option for help\n\n" + DOC);
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + DOC);
+      System.exit(1);
     }
   }
 }

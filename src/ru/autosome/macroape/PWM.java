@@ -1,4 +1,4 @@
-package ru.autosome.jMacroape;
+package ru.autosome.macroape;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -102,7 +102,7 @@ public class PWM extends PM {
   double score(String word) throws IllegalArgumentException {
     double probabilities[] = probabilities();
     word = word.toUpperCase();
-    HashMap<Character, Integer> index_by_letter = index_by_letter();
+    HashMap<Character, Integer> index_by_letter = indexByLetter();
     if (word.length() != length()){
       throw new IllegalArgumentException("word in PWM#score(word) should have the same length as matrix");
     }
@@ -168,7 +168,7 @@ public class PWM extends PM {
 
   HashMap<Double, Double> count_distribution_under_pvalue(double max_pvalue) {
     HashMap<Double, Double> cnt_distribution = new HashMap<Double, Double>();
-    double look_for_count = max_pvalue * vocabulary_volume();
+    double look_for_count = max_pvalue * vocabularyVolume();
 
     while(!( HashExtensions.sum_values(cnt_distribution) >= look_for_count )) {
       double approximate_threshold;
@@ -257,7 +257,7 @@ public class PWM extends PM {
       double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
       double counts[] = thresholds_by_pvalues.get(pvalue)[1];
       double threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
-      double real_pvalue = counts[1] / vocabulary_volume();
+      double real_pvalue = counts[1] / vocabularyVolume();
       results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int)counts[1]));
     }
     return results;
@@ -271,7 +271,7 @@ public class PWM extends PM {
       double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
       double counts[] = thresholds_by_pvalues.get(pvalue)[1];
       double threshold = thresholds[0];
-      double real_pvalue = counts[0] / vocabulary_volume();
+      double real_pvalue = counts[0] / vocabularyVolume();
       results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int)counts[0]));
     }
     return results;
@@ -298,7 +298,7 @@ public class PWM extends PM {
     Arrays.sort(sorted_pvalues);
     HashMap<Double, Double> pvalue_counts = new HashMap<Double, Double>();
     for (double pvalue: sorted_pvalues) {
-      pvalue_counts.put(pvalue, pvalue * vocabulary_volume());
+      pvalue_counts.put(pvalue, pvalue * vocabularyVolume());
     }
     for (Map.Entry<Double, Double> entry: pvalue_counts.entrySet()) {
       double pvalue = entry.getKey();
