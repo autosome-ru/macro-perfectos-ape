@@ -4,12 +4,14 @@ import java.util.StringTokenizer;
 
 public class Background implements BackgroundModel {
     double[] background;
+
     private Background(double[] background) {
         if (Math.abs(ArrayExtensions.sum(background) - 1.0) > 0.0001) {
             throw new IllegalArgumentException("Background probabilities should be 1.0 being summarized");
         }
         this.background = background;
     }
+
     public static BackgroundModel fromArray(double[] background) {
         if (background.length != 4) {
             throw new IllegalArgumentException("Background constructor accepts double array of length 4");
@@ -26,15 +28,19 @@ public class Background implements BackgroundModel {
             return new Background(background);
         }
     }
+
     public double[] probability() {
         return background;
     }
+
     public double probability(int index) {
         return background[index];
     }
+
     public double volume() {
         return 1;
     }
+
     public static BackgroundModel fromString(String s) {
         double[] background = new double[4];
         StringTokenizer parser = new StringTokenizer(s);
@@ -47,6 +53,7 @@ public class Background implements BackgroundModel {
     public String toString() {
         return background[0] + "," + background[1] + "," + background[2] + "," + background[3];
     }
+
     public boolean is_wordwise() {
         return true;
     }

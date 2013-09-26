@@ -1,7 +1,5 @@
 package ru.autosome.macroape;
 
-import java.util.HashMap;
-
 // TODO: extract interface for converters
 public class PCM2PWMConverter {
     public BackgroundModel background;
