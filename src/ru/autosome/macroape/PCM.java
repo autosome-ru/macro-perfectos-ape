@@ -10,7 +10,9 @@ public class PCM extends PM {
     public double count() {
       return matrix[0][0] + matrix[0][1] + matrix[0][2] + matrix[0][3];
     }
-    public PWM to_pwm(){
-      return PCM2PWMConverter.convert(this,new HashMap<String,Object>());
+    public PWM to_pwm() {
+        PCM2PWMConverter converter = new PCM2PWMConverter(this);
+        converter.background = background;
+        return converter.convert();
     }
 }
