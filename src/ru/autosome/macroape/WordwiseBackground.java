@@ -25,4 +25,20 @@ public class WordwiseBackground implements BackgroundModel {
     public boolean is_wordwise() {
         return false;
     }
+
+    public double mean_value(double[] values) {
+        double sum = 0;
+        for (int letter = 0; letter < 4; ++letter) {
+            sum += values[letter];
+        }
+        return sum / 4.0;
+    }
+
+    public double mean_square_value(double[] values) {
+        double sum_square = 0.0;
+        for (int letter = 0; letter < 4; ++letter) {
+            sum_square += values[letter] * values[letter];
+        }
+        return sum_square / 4.0;
+    }
 }

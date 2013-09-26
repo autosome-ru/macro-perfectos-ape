@@ -10,4 +10,8 @@ interface BackgroundModel {
     public String toString();
 
     public boolean is_wordwise();
+
+    public double mean_value(double[] values);
+
+    public double mean_square_value(double[] values);
 }

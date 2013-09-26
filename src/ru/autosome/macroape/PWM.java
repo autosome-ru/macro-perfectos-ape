@@ -69,45 +69,32 @@ public class PWM extends PM {
     }
 
 
-    public double score_mean() {
+    private double score_mean(BackgroundModel background) {
         double result = 0.0;
-        double probabilities[] = probabilities();
         for (double[] pos : matrix) {
-            double mean_score_at_pos = 0.0;
-            for (int letter = 0; letter < 4; ++letter) {
-                mean_score_at_pos += pos[letter] * probabilities[letter];
-            }
-            result += mean_score_at_pos;
+            result += background.mean_value(pos);
         }
         return result;
     }
 
-    public double score_variance() {
+    private double score_variance(BackgroundModel background) {
         double variance = 0.0;
-        double probabilities[] = probabilities();
         for (double[] pos : matrix) {
-            double mean_sqare = 0.0;
-            for (int letter = 0; letter < 4; ++letter) {
-                mean_sqare += pos[letter] * pos[letter] * probabilities[letter];
-            }
-            double mean = 0.0;
-            for (int letter = 0; letter < 4; ++letter) {
-                mean += pos[letter] * probabilities[letter];
-            }
+            double mean_square = background.mean_square_value(pos);
+            double mean = background.mean_value(pos);
             double squared_mean = mean * mean;
-            variance += mean_sqare - squared_mean;
+            variance += mean_square - squared_mean;
         }
         return variance;
     }
 
-    double threshold_gauss_estimation(double pvalue) {
-        double sigma = Math.sqrt(score_variance());
+    double threshold_gauss_estimation(double pvalue, BackgroundModel background) {
+        double sigma = Math.sqrt(score_variance(background));
         double n_ = MathExtensions.inverf(1 - 2 * pvalue) * Math.sqrt(2);
-        return score_mean() + n_ * sigma;
+        return score_mean(background) + n_ * sigma;
     }
 
-    double score(String word) throws IllegalArgumentException {
-        double probabilities[] = probabilities();
+    public double score(String word) throws IllegalArgumentException {
         word = word.toUpperCase();
         HashMap<Character, Integer> index_by_letter = indexByLetter();
         if (word.length() != length()) {
@@ -120,11 +107,7 @@ public class PWM extends PM {
             if (letter_index != null) {
                 sum += matrix[pos_index][letter_index];
             } else if (letter == 'N') {
-                double temp_accum = 0.0;
-                for (int i = 0; i < 4; ++i) {
-                    temp_accum += matrix[pos_index][i] * probabilities[i];
-                }
-                sum += temp_accum;
+                sum += background.mean_value(matrix[pos_index]);
             } else {
                 throw new IllegalArgumentException("word in PWM#score(#{word}) should have only ACGT or N letters, but have '" + letter + "' letter");
             }
@@ -132,7 +115,7 @@ public class PWM extends PM {
         return sum;
     }
 
-    double score(Sequence word) throws IllegalArgumentException {
+    public double score(Sequence word) throws IllegalArgumentException {
         return score(word.sequence);
     }
 
@@ -177,12 +160,12 @@ public class PWM extends PM {
 
     HashMap<Double, Double> count_distribution_under_pvalue(double max_pvalue) {
         HashMap<Double, Double> cnt_distribution = new HashMap<Double, Double>();
-        double look_for_count = max_pvalue * vocabularyVolume();
+        double look_for_count = max_pvalue * vocabularyVolume(background);
 
         while (!(HashExtensions.sum_values(cnt_distribution) >= look_for_count)) {
             double approximate_threshold;
             try {
-                approximate_threshold = threshold_gauss_estimation(max_pvalue);
+                approximate_threshold = threshold_gauss_estimation(max_pvalue, background);
             } catch (ArithmeticException e) {
                 approximate_threshold = worst_score();
             }
@@ -266,7 +249,7 @@ public class PWM extends PM {
             double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
             double counts[] = thresholds_by_pvalues.get(pvalue)[1];
             double threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
-            double real_pvalue = counts[1] / vocabularyVolume();
+            double real_pvalue = counts[1] / vocabularyVolume(background);
             results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[1]));
         }
         return results;
@@ -280,7 +263,7 @@ public class PWM extends PM {
             double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
             double counts[] = thresholds_by_pvalues.get(pvalue)[1];
             double threshold = thresholds[0];
-            double real_pvalue = counts[0] / vocabularyVolume();
+            double real_pvalue = counts[0] / vocabularyVolume(background);
             results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[0]));
         }
         return results;
@@ -307,7 +290,7 @@ public class PWM extends PM {
         Arrays.sort(sorted_pvalues);
         HashMap<Double, Double> pvalue_counts = new HashMap<Double, Double>();
         for (double pvalue : sorted_pvalues) {
-            pvalue_counts.put(pvalue, pvalue * vocabularyVolume());
+            pvalue_counts.put(pvalue, pvalue * vocabularyVolume(background));
         }
         for (Map.Entry<Double, Double> entry : pvalue_counts.entrySet()) {
             double pvalue = entry.getKey();
@@ -379,7 +362,7 @@ public class PWM extends PM {
       return new PWM(mat_result, background, name);
     }
     */
-    public double vocabularyVolume() {
+    public double vocabularyVolume(BackgroundModel background) {
         return Math.pow(background.volume(), length());
     }
 }

@@ -22,10 +22,6 @@ public class PM {
         return matrix.length;
     }
 
-    public double[] probabilities() {
-        return background.probability();
-    }
-
     public String toString() {
         String result;
         result = name + "\n";
@@ -36,15 +32,12 @@ public class PM {
     }
 
     public PM reverseComplement() {
-        double[][] mat_result;
-        mat_result = new double[length()][];
+        double[][] complement;
+        complement = new double[length()][];
         for (int i = 0; i < length(); ++i) {
-            mat_result[i] = new double[4];
-            for (int j = 0; j < 4; ++j) {
-                mat_result[i][j] = matrix[length() - 1 - i][4 - 1 - j];
-            }
+            complement[i] = ArrayExtensions.reverse(matrix[i]);
         }
-        return new PM(mat_result, background, name);
+        return new PM(ArrayExtensions.reverse(complement), background, name);
     }
 
     public static HashMap<Character, Integer> indexByLetter() {

@@ -77,7 +77,7 @@ public class FindPvalue implements CanFindPvalue {
             } else {
                 count = counts.get(threshold);
             }
-            double pvalue = count / pwm.vocabularyVolume();
+            double pvalue = count / pwm.vocabularyVolume(background);
 
             infos.add(new PvalueInfo(threshold, pvalue, (int) count));
         }

@@ -36,7 +36,14 @@ public class ArrayExtensions {
     }
 
     public static <T> T[] reverse(T[] array) {
-        T result[] = array.clone();
+        T[] result = array.clone();
+        for (int i = 0; i < array.length; ++i) {
+            result[i] = array[array.length - 1 - i];
+        }
+        return result;
+    }
+    public static double[] reverse(double[] array) {
+        double[] result = array.clone();
         for (int i = 0; i < array.length; ++i) {
             result[i] = array[array.length - 1 - i];
         }

@@ -6,7 +6,8 @@ public class PCM extends PM {
     }
 
     public double count() {
-        return matrix[0][0] + matrix[0][1] + matrix[0][2] + matrix[0][3];
+        double[] pos = matrix[0];
+        return pos[0] + pos[1] + pos[2] + pos[3];
     }
 
     public PWM to_pwm() {

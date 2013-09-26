@@ -57,4 +57,20 @@ public class Background implements BackgroundModel {
     public boolean is_wordwise() {
         return true;
     }
+
+    public double mean_value(double[] values) {
+        double result = 0;
+        for (int letter = 0; letter < 4; ++letter) {
+            result += values[letter] * probability(letter);
+        }
+        return result;
+    }
+
+    public double mean_square_value(double[] values) {
+        double mean_square = 0.0;
+        for (int letter = 0; letter < 4; ++letter) {
+            mean_square += values[letter] * values[letter] * probability(letter);
+        }
+        return mean_square;
+    }
 }
