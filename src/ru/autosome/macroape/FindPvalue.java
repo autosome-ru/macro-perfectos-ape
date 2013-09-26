@@ -56,8 +56,9 @@ public class FindPvalue implements CanFindPvalue {
         if (discretization != null) {
             pwm = pwm.discrete(discretization);
         }
-        pwm.max_hash_size = max_hash_size; // not int because it can be null
-        pwm.background = background;
+        CountingPWM countingPWM = new CountingPWM(pwm, background);
+        countingPWM.max_hash_size = max_hash_size; // not int because it can be null
+
 
         double[] thresholds_discreeted = new double[thresholds.length];
         for (int i = 0; i < thresholds.length; ++i) {
@@ -68,7 +69,7 @@ public class FindPvalue implements CanFindPvalue {
             }
         }
 
-        HashMap<Double, Double> counts = pwm.counts_by_thresholds(thresholds_discreeted);
+        HashMap<Double, Double> counts = countingPWM.counts_by_thresholds(thresholds_discreeted);
         ArrayList<PvalueInfo> infos = new ArrayList<PvalueInfo>();
         for (double threshold : thresholds) {
             double count;
@@ -77,7 +78,7 @@ public class FindPvalue implements CanFindPvalue {
             } else {
                 count = counts.get(threshold);
             }
-            double pvalue = count / pwm.vocabularyVolume(background);
+            double pvalue = count / countingPWM.vocabularyVolume();
 
             infos.add(new PvalueInfo(threshold, pvalue, (int) count));
         }

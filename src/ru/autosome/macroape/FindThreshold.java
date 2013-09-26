@@ -37,14 +37,14 @@ public class FindThreshold {
         if (discretization != null) {
             pwm = pwm.discrete(discretization);
         }
-        pwm.max_hash_size = max_hash_size;
-        pwm.background = background;
+        CountingPWM countingPWM = new CountingPWM(pwm, background);
+        countingPWM.max_hash_size = max_hash_size;
 
         ArrayList<ThresholdInfo> threshold_infos;
         if (pvalue_boundary.equals("lower")) {
-            threshold_infos = pwm.thresholds(pvalues);
+            threshold_infos = countingPWM.thresholds(pvalues);
         } else {
-            threshold_infos = pwm.weak_thresholds(pvalues);
+            threshold_infos = countingPWM.weak_thresholds(pvalues);
         }
 
         if (discretization == null) {

@@ -89,7 +89,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
                 pvalue = list_of_pvalues_by_thresholds.get(list_of_pvalues_by_thresholds.size() - 1).pvalue;
             }
         }
-        return new PvalueInfo(threshold, pvalue, (int) (pwm.vocabularyVolume(background) * pvalue));
+        return new PvalueInfo(threshold, pvalue, (int) (pvalue * new CountingPWM(pwm, background).vocabularyVolume()));
     }
 
     public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
