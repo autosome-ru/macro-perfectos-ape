@@ -10,9 +10,7 @@ import java.util.HashMap;
 public class FindPvalueBsearch implements CanFindPvalue {
     ArrayList<ThresholdPvaluePair> list_of_pvalues_by_thresholds;
     final PWM pwm;
-    Double discretization;
     BackgroundModel background;
-    Integer max_hash_size;
 
     public FindPvalueBsearch(PWM pwm, ArrayList<ThresholdPvaluePair> infos) {
         this.pwm = pwm;
@@ -28,41 +26,13 @@ public class FindPvalueBsearch implements CanFindPvalue {
 
     public FindPvalueBsearch(PWM pwm) {
         this.pwm = pwm;
-        this.discretization = 10000.0;
         this.background = new WordwiseBackground();
-        this.max_hash_size = 10000000;
     }
 
     public HashMap<String, Object> parameters() {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("discretization", discretization);
         parameters.put("background", background);
-        parameters.put("max_hash_size", max_hash_size);
         return parameters;
-    }
-
-    public void set_parameters(HashMap<String, Object> parameters) {
-        if (parameters.containsKey("discretization")) {
-            discretization = (Double) parameters.get("discretization");
-        }
-        if (parameters.containsKey("background")) {
-            background = (BackgroundModel) parameters.get("background");
-        }
-        if (parameters.containsKey("max_hash_size")) {
-            max_hash_size = (Integer) parameters.get("max_hash_size");
-        }
-    }
-
-    public void set_discretization(Double discretization) {
-        this.discretization = discretization;
-    }
-
-    public void set_background(BackgroundModel background) {
-        this.background = background;
-    }
-
-    public void set_max_hash_size(Integer max_hash_size) {
-        this.max_hash_size = max_hash_size;
     }
 
     public static FindPvalueBsearch new_from_threshold_infos(PWM pwm, ArrayList<ThresholdInfo> infos) {

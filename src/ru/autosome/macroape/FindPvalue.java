@@ -79,21 +79,22 @@ public class FindPvalue {
                 pwm = PWM.new_from_file_or_stdin(filename);
             }
 
-            CanFindPvalue calculation;
+            HashMap<String, Object> parameters;
+            ArrayList<PvalueInfo> infos;
             if (thresholds_folder != null) {
                 filename = thresholds_folder + File.separator + "thresholds_" + (new File(filename)).getName();
-                calculation = FindPvalueBsearch.load_from_file(pwm, filename);
+                FindPvalueBsearch calculation = FindPvalueBsearch.load_from_file(pwm, filename);
+                calculation.background = background;
+                parameters = calculation.parameters();
+                infos = calculation.pvalues_by_thresholds(thresholds);
             } else {
-                calculation = new FindPvalueAPE(pwm);
+                FindPvalueAPE calculation = new FindPvalueAPE(pwm);
+                calculation.background = background;
+                calculation.discretization = discretization;
+                calculation.max_hash_size = max_hash_size;
+                parameters = calculation.parameters();
+                infos = calculation.pvalues_by_thresholds(thresholds);
             }
-
-            calculation.set_discretization(discretization);
-            calculation.set_background(background);
-            calculation.set_max_hash_size(max_hash_size);
-
-            HashMap<String, Object> parameters = calculation.parameters();
-
-            ArrayList<PvalueInfo> infos = calculation.pvalues_by_thresholds(thresholds);
 
             System.out.println(Helper.find_pvalue_info_string(infos, parameters));
 

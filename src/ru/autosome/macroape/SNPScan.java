@@ -177,15 +177,18 @@ public class SNPScan {
                 throw new IllegalArgumentException("Failed to load collection of PWMs", e);
             }
             for (PwmWithFilename pwm : collection) {
-                CanFindPvalue pvalue_calculation;
                 if (thresholds_folder == null) {
-                    pvalue_calculation = new FindPvalueAPE(pwm.pwm);
+                    FindPvalueAPE pvalue_calculation = new FindPvalueAPE(pwm.pwm);
+                    pvalue_calculation.background = calculation.background;
+                    pvalue_calculation.discretization = calculation.discretization;
+                    pvalue_calculation.max_hash_size = calculation.max_hash_size;
+                    pwm.pvalue_calculation = pvalue_calculation;
                 } else {
                     String filename = thresholds_folder + File.separator + "thresholds_" + (new File(pwm.filename)).getName();
-                    pvalue_calculation = FindPvalueBsearch.load_from_file(pwm.pwm, filename);
+                    FindPvalueBsearch pvalue_calculation = FindPvalueBsearch.load_from_file(pwm.pwm, filename);
+                    pvalue_calculation.background = calculation.background;
+                    pwm.pvalue_calculation = pvalue_calculation;
                 }
-                pvalue_calculation.set_parameters(calculation.parameters());
-                pwm.pvalue_calculation = pvalue_calculation;
             }
 
             ArrayList<String> snp_list;

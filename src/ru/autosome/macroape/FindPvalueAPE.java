@@ -16,36 +16,13 @@ public class FindPvalueAPE implements CanFindPvalue {
         this.max_hash_size = 10000000;
     }
 
+
     public HashMap<String, Object> parameters() {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("discretization", discretization);
         parameters.put("background", background);
         parameters.put("max_hash_size", max_hash_size);
         return parameters;
-    }
-
-    public void set_parameters(HashMap<String, Object> parameters) {
-        if (parameters.containsKey("discretization")) {
-            discretization = (Double) parameters.get("discretization");
-        }
-        if (parameters.containsKey("background")) {
-            background = (BackgroundModel) parameters.get("background");
-        }
-        if (parameters.containsKey("max_hash_size")) {
-            max_hash_size = (Integer) parameters.get("max_hash_size");
-        }
-    }
-
-    public void set_discretization(Double discretization) {
-        this.discretization = discretization;
-    }
-
-    public void set_background(BackgroundModel background) {
-        this.background = background;
-    }
-
-    public void set_max_hash_size(Integer max_hash_size) {
-        this.max_hash_size = max_hash_size;
     }
 
     // In some cases (when discretization is null) pwm can be altered by background and max_hash_size
@@ -55,7 +32,7 @@ public class FindPvalueAPE implements CanFindPvalue {
             pwm = pwm.discrete(discretization);
         }
         CountingPWM countingPWM = new CountingPWM(pwm, background);
-        countingPWM.max_hash_size = max_hash_size; // not int because it can be null
+        countingPWM.max_hash_size = max_hash_size;
 
 
         double[] thresholds_discreeted = new double[thresholds.length];
