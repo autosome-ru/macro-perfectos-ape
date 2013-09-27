@@ -100,45 +100,11 @@ public class FindPvalueBsearch implements CanFindPvalue {
         return results;
     }
 
-    public static ArrayList<ThresholdPvaluePair> load_thresholds_list(ArrayList<String> lines) {
-        ArrayList<ThresholdPvaluePair> result = new ArrayList<ThresholdPvaluePair>();
-        for (String s : lines) {
-            String[] line_tokens = s.replaceAll("\\s+", "\t").split("\t");
-            if (line_tokens.length < 2) continue;
-            double threshold = Double.valueOf(line_tokens[0]);
-            double pvalue = Double.valueOf(line_tokens[1]);
-            result.add(new ThresholdPvaluePair(threshold, pvalue));
-        }
-        return result;
-    }
-
-    public static ArrayList<ThresholdPvaluePair> load_thresholds_list(String filename) {
-        try {
-            InputStream reader = new FileInputStream(filename);
-            ArrayList<String> lines = InputExtensions.readLinesFromInputStream(reader);
-            return load_thresholds_list(lines);
-        } catch (FileNotFoundException e) {
-            return null;
-        }
-    }
-
-    public static void save_thresholds_list(ArrayList<ThresholdPvaluePair> infos, String filename) {
-        try {
-            FileWriter fw = new FileWriter(new java.io.File(filename));
-            for (ThresholdPvaluePair info : infos) {
-                fw.write(info + "\n");
-            }
-            fw.close();
-        } catch (IOException err) {
-            System.err.println("Error:\n" + err);
-        }
-    }
-
     public void save_to_file(String filename) {
-        save_thresholds_list(list_of_pvalues_by_thresholds, filename);
+        ThresholdPvaluePair.save_thresholds_list(list_of_pvalues_by_thresholds, filename);
     }
 
     public static FindPvalueBsearch load_from_file(PWM pwm, String filename) {
-        return new FindPvalueBsearch(pwm, load_thresholds_list(filename));
+        return new FindPvalueBsearch(pwm, ThresholdPvaluePair.load_thresholds_list(filename));
     }
 }
