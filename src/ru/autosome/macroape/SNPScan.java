@@ -77,6 +77,7 @@ public class SNPScan {
         }
         return result;
     }
+
     public static ArrayList<PwmWithFilename> load_collection_of_pwms_from_pcms(String dir_name, BackgroundModel background) throws FileNotFoundException {
         ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
         java.io.File dir = new java.io.File(dir_name);
@@ -178,7 +179,7 @@ public class SNPScan {
             for (PwmWithFilename pwm : collection) {
                 CanFindPvalue pvalue_calculation;
                 if (thresholds_folder == null) {
-                    pvalue_calculation = new FindPvalue(pwm.pwm);
+                    pvalue_calculation = new FindPvalueAPE(pwm.pwm);
                 } else {
                     String filename = thresholds_folder + File.separator + "thresholds_" + (new File(pwm.filename)).getName();
                     pvalue_calculation = FindPvalueBsearch.load_from_file(pwm.pwm, filename);

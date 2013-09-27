@@ -42,6 +42,7 @@ public class ArrayExtensions {
         }
         return result;
     }
+
     public static double[] reverse(double[] array) {
         double[] result = array.clone();
         for (int i = 0; i < array.length; ++i) {

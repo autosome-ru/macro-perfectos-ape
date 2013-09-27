@@ -11,6 +11,7 @@ public class CountingPWM {
 
     PWM pwm;
     BackgroundModel background;
+
     CountingPWM(PWM pwm, BackgroundModel background) {
         this.pwm = pwm;
         this.background = background;
