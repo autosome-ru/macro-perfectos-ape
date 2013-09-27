@@ -156,7 +156,12 @@ public class FindPvalue implements CanFindPvalue {
                 }
             }
 
-            PWM pwm = PWM.new_from_file_or_stdin(filename, background, data_model.equals("pcm"));
+            PWM pwm;
+            if (data_model.equals("pcm")) {
+                pwm = PCM.new_from_file_or_stdin(filename).to_pwm(background);
+            } else {
+                pwm = PWM.new_from_file_or_stdin(filename);
+            }
 
             CanFindPvalue calculation;
             if (thresholds_folder != null) {

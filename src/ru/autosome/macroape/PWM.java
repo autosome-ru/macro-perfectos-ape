@@ -16,39 +16,35 @@ public class PWM extends PM {
         super(matrix, name);
     }
 
-    public static PWM new_from_text(ArrayList<String> input_lines, BackgroundModel background, boolean from_pcm) {
+    // instead of from_pcm argument one should create new_from_* family of methods for PCM
+    public static PWM new_from_text(ArrayList<String> input_lines) {
         PMParser matrix_parser = new PMParser(input_lines);
 
         double[][] matrix = matrix_parser.matrix();
         String name = matrix_parser.name();
 
-        if (from_pcm) {
-            PCM pcm = new PCM(matrix, name);
-            return pcm.to_pwm(background);
-        } else {
-            return new PWM(matrix, name);
-        }
+        return new PWM(matrix, name);
     }
 
-    public static PWM new_from_file(String filename, BackgroundModel background, boolean from_pcm) {
+    public static PWM new_from_file(String filename) {
         try {
             InputStream reader = new FileInputStream(filename);
-            return PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, from_pcm);
+            return new_from_text(InputExtensions.readLinesFromInputStream(reader));
         } catch (FileNotFoundException err) {
             return null;
         }
     }
 
-    public static PWM new_from_file(File file, BackgroundModel background, boolean from_pcm) {
+    public static PWM new_from_file(File file) {
         try {
             InputStream reader = new FileInputStream(file);
-            return PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, from_pcm);
+            return new_from_text(InputExtensions.readLinesFromInputStream(reader));
         } catch (FileNotFoundException err) {
             return null;
         }
     }
 
-    public static PWM new_from_file_or_stdin(String filename, BackgroundModel background, boolean from_pcm) {
+    public static PWM new_from_file_or_stdin(String filename) {
         try {
             InputStream reader;
             if (filename.equals(".stdin")) {
@@ -59,7 +55,7 @@ public class PWM extends PM {
                 }
                 reader = new FileInputStream(filename);
             }
-            return PWM.new_from_text(InputExtensions.readLinesFromInputStream(reader), background, from_pcm);
+            return new_from_text(InputExtensions.readLinesFromInputStream(reader));
         } catch (FileNotFoundException err) {
             return null;
         }

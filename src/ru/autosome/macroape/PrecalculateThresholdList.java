@@ -41,7 +41,12 @@ public class PrecalculateThresholdList {
         }
         for (File filename : dir.listFiles()) {
             System.err.println(filename);
-            PWM pwm = PWM.new_from_file(filename.getPath(), background, from_pcm);
+            PWM pwm;
+            if (from_pcm) {
+                pwm = PCM.new_from_file(filename.getPath()).to_pwm(background);
+            } else {
+                pwm = PWM.new_from_file(filename.getPath());
+            }
             FindThreshold calculation = new FindThreshold();
             calculation.set_parameters(parameters());
             ArrayList<ThresholdInfo> infos = calculation.find_thresholds_by_pvalues(pwm, pvalues);

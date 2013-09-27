@@ -65,11 +65,23 @@ public class SNPScan {
         return result;
     }
 
-    public static ArrayList<PwmWithFilename> load_collection_of_pwms(String dir_name, BackgroundModel background, boolean from_pcm) throws FileNotFoundException {
+    public static ArrayList<PwmWithFilename> load_collection_of_pwms(String dir_name) throws FileNotFoundException {
         ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
         java.io.File dir = new java.io.File(dir_name);
         for (File file : dir.listFiles()) {
-            PWM pwm = PWM.new_from_file(file, background, from_pcm);
+            PWM pwm = PWM.new_from_file(file);
+            if (pwm.name == null || pwm.name.isEmpty()) {
+                pwm.name = file.getName();
+            }
+            result.add(new PwmWithFilename(pwm, file.getPath()));
+        }
+        return result;
+    }
+    public static ArrayList<PwmWithFilename> load_collection_of_pwms_from_pcms(String dir_name, BackgroundModel background) throws FileNotFoundException {
+        ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
+        java.io.File dir = new java.io.File(dir_name);
+        for (File file : dir.listFiles()) {
+            PWM pwm = PCM.new_from_file(file).to_pwm(background);
             if (pwm.name == null || pwm.name.isEmpty()) {
                 pwm.name = file.getName();
             }
@@ -155,7 +167,11 @@ public class SNPScan {
             calculation.background = background;
             ArrayList<PwmWithFilename> collection;
             try {
-                collection = load_collection_of_pwms(path_to_collection_of_pwms, background, data_model.equals("pcm"));
+                if (data_model.equals("pcm")) {
+                    collection = load_collection_of_pwms_from_pcms(path_to_collection_of_pwms, background);
+                } else {
+                    collection = load_collection_of_pwms(path_to_collection_of_pwms);
+                }
             } catch (Exception e) {
                 throw new IllegalArgumentException("Failed to load collection of PWMs", e);
             }
