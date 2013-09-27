@@ -13,9 +13,9 @@ public class OutputInformation {
     ArrayList<String> table_rows;
     ArrayList<String> table_rows_callbacks;
 
-    final ArrayList<? extends ResultInfo> data;
+    public ArrayList<? extends ResultInfo> data;
 
-    OutputInformation(ArrayList<? extends ResultInfo> data) {
+    private void initialize() {
         table_parameter_descriptions = new ArrayList<String>();
 
         parameter_descriptions = new ArrayList<String>();
@@ -27,7 +27,14 @@ public class OutputInformation {
         table_headers = new ArrayList<String>();
         table_rows = new ArrayList<String>();
         table_rows_callbacks = new ArrayList<String>();
+    }
 
+    OutputInformation() {
+        initialize();
+    }
+
+    OutputInformation(ArrayList<? extends ResultInfo> data) {
+        initialize();
         this.data = data;
     }
 

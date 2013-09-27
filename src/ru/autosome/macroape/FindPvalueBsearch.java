@@ -2,7 +2,6 @@ package ru.autosome.macroape;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 // Looks for rough pValue of motif under given threshold
 // using a sorted list of predefined threshold-pvalues pairs
@@ -27,12 +26,6 @@ public class FindPvalueBsearch implements CanFindPvalue {
     public FindPvalueBsearch(PWM pwm) {
         this.pwm = pwm;
         this.background = new WordwiseBackground();
-    }
-
-    public HashMap<String, Object> parameters() {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("background", background);
-        return parameters;
     }
 
     public static FindPvalueBsearch new_from_threshold_infos(PWM pwm, ArrayList<ThresholdInfo> infos) {
@@ -75,5 +68,19 @@ public class FindPvalueBsearch implements CanFindPvalue {
 
     public static FindPvalueBsearch load_from_file(PWM pwm, String filename) {
         return new FindPvalueBsearch(pwm, ThresholdPvaluePair.load_thresholds_list(filename));
+    }
+
+    // TODO: decide which parameters are relevant
+    public OutputInformation report_table_layout() {
+        OutputInformation infos = new OutputInformation();
+        infos.background_parameter("B", "background", background);
+
+        infos.add_table_parameter("T", "threshold", "threshold");
+        if (background.is_wordwise()) {
+            infos.add_table_parameter("W", "number of recognized words", "number_of_recognized_words");
+        }
+        infos.add_table_parameter("P", "P-value", "pvalue");
+
+        return infos;
     }
 }

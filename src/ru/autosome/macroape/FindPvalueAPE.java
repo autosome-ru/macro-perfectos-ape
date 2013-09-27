@@ -16,15 +16,6 @@ public class FindPvalueAPE implements CanFindPvalue {
         this.max_hash_size = 10000000;
     }
 
-
-    public HashMap<String, Object> parameters() {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("discretization", discretization);
-        parameters.put("background", background);
-        parameters.put("max_hash_size", max_hash_size);
-        return parameters;
-    }
-
     // In some cases (when discretization is null) pwm can be altered by background and max_hash_size
     public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
         PWM pwm = this.pwm;
@@ -63,5 +54,19 @@ public class FindPvalueAPE implements CanFindPvalue {
     public PvalueInfo pvalue_by_threshold(double threshold) {
         double[] thresholds = {threshold};
         return pvalues_by_thresholds(thresholds).get(0);
+    }
+
+    public OutputInformation report_table_layout() {
+        OutputInformation infos = new OutputInformation();
+        infos.add_parameter("V", "discretization value", discretization);
+        infos.background_parameter("B", "background", background);
+
+        infos.add_table_parameter("T", "threshold", "threshold");
+        if (background.is_wordwise()) {
+            infos.add_table_parameter("W", "number of recognized words", "number_of_recognized_words");
+        }
+        infos.add_table_parameter("P", "P-value", "pvalue");
+
+        return infos;
     }
 }

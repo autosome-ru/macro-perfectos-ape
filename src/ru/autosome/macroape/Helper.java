@@ -25,21 +25,6 @@ public class Helper {
         return infos.result();
     }
 
-    public static String find_pvalue_info_string(ArrayList<PvalueInfo> data, HashMap<String, Object> parameters) {
-        OutputInformation infos = new OutputInformation(data);
-        infos.add_parameter("V", "discretization value", parameters.get("discretization"));
-        BackgroundModel bckgr = (BackgroundModel) parameters.get("background");
-        infos.background_parameter("B", "background", bckgr);
-
-        infos.add_table_parameter("T", "threshold", "threshold");
-        if (bckgr.is_wordwise()) {
-            infos.add_table_parameter("W", "number of recognized words", "number_of_recognized_words");
-        }
-        infos.add_table_parameter("P", "P-value", "pvalue");
-
-        return infos.result();
-    }
-
     public static double[] values_in_range_add(double from, double to, double step) {
         ArrayList<Double> results = new ArrayList<Double>();
         for (double x = from; x <= to; x += step) {
