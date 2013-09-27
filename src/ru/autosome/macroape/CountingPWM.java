@@ -96,7 +96,7 @@ public class CountingPWM {
                     if (!new_scores.containsKey(new_score)) {
                         new_scores.put(new_score, 0.0);
                     }
-                    new_scores.put(new_score, new_scores.get(new_score) + count * background.probability(letter));
+                    new_scores.put(new_score, new_scores.get(new_score) + count * background.count(letter));
                 }
             }
         }

@@ -37,6 +37,14 @@ public class Background implements BackgroundModel {
         return background[index];
     }
 
+    public double[] count() {
+        return background;
+    }
+
+    public double count(int index) {
+        return background[index];
+    }
+
     public double volume() {
         return 1;
     }

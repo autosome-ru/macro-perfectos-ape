@@ -14,6 +14,16 @@ public class WordwiseBackground implements BackgroundModel {
         return 0.25;
     }
 
+    public double[] count() {
+        double[] result;
+        result = new double[]{1.0, 1.0, 1.0, 1.0};
+        return result;
+    }
+
+    public double count(int index) {
+        return 1.0;
+    }
+
     public double volume() {
         return 4;
     }
