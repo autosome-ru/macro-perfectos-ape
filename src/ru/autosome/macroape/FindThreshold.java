@@ -2,38 +2,109 @@ package ru.autosome.macroape;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class FindThreshold {
     BackgroundModel background;
     Double discretization;
-    Integer max_hash_size;
     String pvalue_boundary;
+    Integer max_hash_size; // not int because it can be null
 
-    public FindThreshold() {
+    PWM pwm;
+    double[] pvalues;
+
+    String pm_filename; // temporary variable
+    String data_model; // temporary variable
+
+    public void initialize_defaults() {
         background = new WordwiseBackground();
         discretization = 10000.0;
-        max_hash_size = 10000000; // not int because it can be null
         pvalue_boundary = "lower";
+        max_hash_size = 10000000;
+
+        data_model = "pwm";
+
+        pvalues = new double[1];
+        pvalues[0] = 0.0005;
     }
 
-    public HashMap<String, Object> parameters() {
-        HashMap<String, Object> result = new HashMap<String, Object>();
-        result.put("discretization", discretization);
-        result.put("background", background);
-        result.put("pvalue_boundary", pvalue_boundary);
-        result.put("max_hash_size", max_hash_size);
+    public FindThreshold() {
+        initialize_defaults();
+    }
+
+    public static FindThreshold from_arglist(ArrayList<String> argv) {
+        FindThreshold result = new FindThreshold();
+        Helper.print_help_if_requested(argv, DOC);
+        result.setup_from_arglist(argv);
         return result;
     }
 
-    public void set_parameters(HashMap<String, Object> params) {
-        discretization = (Double) params.get("discretization");
-        background = (BackgroundModel) params.get("background");
-        pvalue_boundary = (String) params.get("pvalue_boundary");
-        max_hash_size = (Integer) params.get("max_hash_size");
+    public static FindThreshold from_arglist(String[] args) {
+        ArrayList<String> argv = new ArrayList<String>();
+        Collections.addAll(argv, args);
+        return from_arglist(argv);
     }
 
-    public ArrayList<ThresholdInfo> find_thresholds_by_pvalues(PWM pwm, double[] pvalues) {
+    public void setup_from_arglist(ArrayList<String> argv) {
+        extract_pm_filename(argv);
+        extract_pvalue_list(argv);
+        while (argv.size() > 0) {
+            extract_option(argv);
+        }
+        load_pwm();
+    }
+
+    private void extract_option(ArrayList<String> argv) {
+        String opt = argv.remove(0);
+        if (opt.equals("-b")) {
+            background = Background.fromString(argv.remove(0));
+        } else if (opt.equals("--max-hash-size")) {
+            max_hash_size = Integer.valueOf(argv.remove(0));
+        } else if (opt.equals("-d")) {
+            discretization = Double.valueOf(argv.remove(0));
+        } else if (opt.equals("--boundary")) {
+            pvalue_boundary = argv.remove(0);
+            if (!pvalue_boundary.equalsIgnoreCase("lower") &&
+                    !pvalue_boundary.equalsIgnoreCase("upper")) {
+                throw new IllegalArgumentException("boundary should be either lower or upper");
+            }
+        } else if (opt.equals("--pcm")) {
+            data_model = "pcm";
+        } else {
+            throw new IllegalArgumentException("Unknown option '" + opt + "'");
+        }
+    }
+
+    private void extract_pm_filename(ArrayList<String> argv) {
+        if (argv.isEmpty()) {
+            throw new IllegalArgumentException("No input. You should specify input file");
+        }
+        pm_filename = argv.remove(0);
+    }
+
+    private void extract_pvalue_list(ArrayList<String> argv) {
+        ArrayList<Double> pvalues_tmp = new ArrayList<Double>();
+
+        try {
+            while (!argv.isEmpty()) {
+                pvalues_tmp.add(Double.valueOf(argv.get(0)));
+                argv.remove(0);
+            }
+        } catch (NumberFormatException e) {
+        }
+        if (pvalues_tmp.size() != 0) {
+            pvalues = ArrayExtensions.toPrimitiveArray(pvalues_tmp);
+        }
+    }
+
+    private void load_pwm() {
+        if (data_model.equals("pcm")) {
+            pwm = PCM.new_from_file_or_stdin(pm_filename).to_pwm(background);
+        } else {
+            pwm = PWM.new_from_file_or_stdin(pm_filename);
+        }
+    }
+
+    public ArrayList<ThresholdInfo> find_thresholds_by_pvalues() {
         if (discretization != null) {
             pwm = pwm.discrete(discretization);
         }
@@ -50,18 +121,32 @@ public class FindThreshold {
         if (discretization == null) {
             return threshold_infos;
         } else {
-            ArrayList<ThresholdInfo> infos = new ArrayList<ThresholdInfo>();
+            ArrayList<ThresholdInfo> downscaled_infos = new ArrayList<ThresholdInfo>();
             for (ThresholdInfo info : threshold_infos) {
-                ThresholdInfo nondiscreet_info;
-                nondiscreet_info = new ThresholdInfo(info.threshold / discretization,
-                        info.real_pvalue,
-                        info.expected_pvalue,
-                        info.recognized_words);
-                infos.add(nondiscreet_info);
+                downscaled_infos.add(info.downscale(discretization));
             }
-            return infos;
+            return downscaled_infos;
         }
 
+    }
+
+    public OutputInformation report_table_layout() {
+        OutputInformation infos = new OutputInformation();
+
+        infos.add_parameter("V", "discretization value", discretization);
+        infos.add_parameter("PB", "P-value boundary", pvalue_boundary);
+
+        infos.background_parameter("B", "background", background);
+
+        infos.add_table_parameter("P", "requested P-value", "expected_pvalue");
+        infos.add_table_parameter("AP", "actual P-value", "real_pvalue");
+
+        if (background.is_wordwise()) {
+            infos.add_table_parameter("W", "number of recognized words", "recognized_words");
+        }
+        infos.add_table_parameter("T", "threshold", "threshold");
+
+        return infos;
     }
 
     static String DOC =
@@ -80,73 +165,11 @@ public class FindThreshold {
 
     public static void main(String args[]) {
         try {
-            ArrayList<String> argv = new ArrayList<String>();
-            Collections.addAll(argv, args);
-
-            if (argv.isEmpty() || ArrayExtensions.contain(argv, "-h") || ArrayExtensions.contain(argv, "--h")
-                    || ArrayExtensions.contain(argv, "-help") || ArrayExtensions.contain(argv, "--help")) {
-                System.err.println(DOC);
-                System.exit(1);
-            }
-
-            BackgroundModel background = new WordwiseBackground();
-            ArrayList<Double> default_pvalues = new ArrayList<Double>();
-            default_pvalues.add(0.0005);
-            String data_model = "pwm";
-
-            if (argv.isEmpty()) {
-                throw new IllegalArgumentException("No input. You should specify input file");
-            }
-            String filename = argv.remove(0);
-
-            ArrayList<Double> pvalues = new ArrayList<Double>();
-
-            try {
-                while (!argv.isEmpty()) {
-                    pvalues.add(Double.valueOf(argv.get(0)));
-                    argv.remove(0);
-                }
-            } catch (NumberFormatException e) {
-            }
-
-
-            FindThreshold calculation = new FindThreshold();
-
-            if (pvalues.size() == 0) {
-                pvalues = default_pvalues;
-            }
-
-            while (argv.size() > 0) {
-                String opt = argv.remove(0);
-                if (opt.equals("-b")) {
-                    background = Background.fromString(argv.remove(0));
-                } else if (opt.equals("--max-hash-size")) {
-                    calculation.max_hash_size = Integer.valueOf(argv.remove(0));
-                } else if (opt.equals("-d")) {
-                    calculation.discretization = Double.valueOf(argv.remove(0));
-                } else if (opt.equals("--boundary")) {
-                    calculation.pvalue_boundary = argv.remove(0);
-                    if (!calculation.pvalue_boundary.equalsIgnoreCase("lower") &&
-                            !calculation.pvalue_boundary.equalsIgnoreCase("upper")) {
-                        throw new IllegalArgumentException("boundary should be either lower or upper");
-                    }
-                } else if (opt.equals("--pcm")) {
-                    data_model = "pcm";
-                } else {
-                    throw new IllegalArgumentException("Unknown option '" + opt + "'");
-                }
-            }
-
-            PWM pwm;
-            if (data_model.equals("pcm")) {
-                pwm = PCM.new_from_file_or_stdin(filename).to_pwm(background);
-            } else {
-                pwm = PWM.new_from_file_or_stdin(filename);
-            }
-
-            ArrayList<ThresholdInfo> infos = calculation.find_thresholds_by_pvalues(pwm, ArrayExtensions.toPrimitiveArray(pvalues));
-
-            System.out.println(Helper.threshold_infos_string(infos, calculation.parameters()));
+            FindThreshold calculation = FindThreshold.from_arglist(args);
+            ArrayList<ThresholdInfo> results = calculation.find_thresholds_by_pvalues();
+            OutputInformation report_table = calculation.report_table_layout();
+            report_table.data = results;
+            System.out.println(report_table.result());
         } catch (Exception err) {
             System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
             err.printStackTrace();

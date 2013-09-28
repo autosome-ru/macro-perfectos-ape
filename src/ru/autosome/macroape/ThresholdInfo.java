@@ -12,4 +12,9 @@ public class ThresholdInfo extends ResultInfo {
         this.expected_pvalue = expected_pvalue;
         this.recognized_words = recognized_words;
     }
+
+    // generate infos for non-disreeted matrix from infos for discreeted matrix
+    public ThresholdInfo downscale(double discretization) {
+        return new ThresholdInfo(threshold / discretization, real_pvalue, expected_pvalue, recognized_words);
+    }
 }

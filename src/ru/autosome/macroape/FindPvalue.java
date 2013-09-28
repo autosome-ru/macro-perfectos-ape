@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class FindPvalue {
-    String filename; // file with PM
+    String pm_filename; // file with PM
     Double discretization;
     BackgroundModel background;
     double[] thresholds;
@@ -17,26 +17,17 @@ public class FindPvalue {
     private void initialize_defaults() {
         discretization = 10000.0;
         background = new WordwiseBackground();
-
         thresholds = new double[0];
         max_hash_size = 10000000;
         data_model = "pwm";
         thresholds_folder = null;
     }
 
-    private static void print_help_if_requested(ArrayList<String> argv) {
-        if (argv.isEmpty() || ArrayExtensions.contain(argv, "-h") || ArrayExtensions.contain(argv, "--h")
-                || ArrayExtensions.contain(argv, "-help") || ArrayExtensions.contain(argv, "--help")) {
-            System.err.println(DOC);
-            System.exit(1);
-        }
-    }
-
     private void extract_pm_filename(ArrayList<String> argv) {
         if (argv.isEmpty()) {
             throw new IllegalArgumentException("No input. You should specify input file");
         }
-        filename = argv.remove(0);
+        pm_filename = argv.remove(0);
     }
 
     private void extract_threshold_lists(ArrayList<String> argv) {
@@ -73,9 +64,9 @@ public class FindPvalue {
 
     private void load_pwm() {
         if (data_model.equals("pcm")) {
-            pwm = PCM.new_from_file_or_stdin(filename).to_pwm(background);
+            pwm = PCM.new_from_file_or_stdin(pm_filename).to_pwm(background);
         } else {
-            pwm = PWM.new_from_file_or_stdin(filename);
+            pwm = PWM.new_from_file_or_stdin(pm_filename);
         }
     }
 
@@ -94,7 +85,7 @@ public class FindPvalue {
 
     public static FindPvalue from_arglist(ArrayList<String> argv) {
         FindPvalue result = new FindPvalue();
-        print_help_if_requested(argv);
+        Helper.print_help_if_requested(argv, DOC);
         result.setup_from_arglist(argv);
         return result;
     }
@@ -114,7 +105,7 @@ public class FindPvalue {
     }
 
     private FindPvalueBsearch bsearch_calculation() {
-        String thresholds_filename = thresholds_folder + File.separator + "thresholds_" + (new File(filename)).getName();
+        String thresholds_filename = thresholds_folder + File.separator + "thresholds_" + (new File(pm_filename)).getName();
         FindPvalueBsearch calculation = FindPvalueBsearch.load_from_file(pwm, thresholds_filename);
         calculation.background = background;
         return calculation;
@@ -156,9 +147,9 @@ public class FindPvalue {
         try {
             FindPvalue calculation = FindPvalue.from_arglist(args);
             ArrayList<PvalueInfo> results = calculation.pvalues_by_thresholds();
-            OutputInformation report_table_layout = calculation.report_table_layout();
-            report_table_layout.data = results;
-            System.out.println(report_table_layout.result());
+            OutputInformation report_table = calculation.report_table_layout();
+            report_table.data = results;
+            System.out.println(report_table.result());
 
         } catch (Exception err) {
             System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");

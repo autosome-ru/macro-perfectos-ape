@@ -2,28 +2,8 @@ package ru.autosome.macroape;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Helper {
-
-    public static String threshold_infos_string(ArrayList<ThresholdInfo> data, HashMap<String, Object> parameters) {
-        OutputInformation infos = new OutputInformation(data);
-
-        infos.add_parameter("V", "discretization value", parameters.get("discretization"));
-        infos.add_parameter("PB", "P-value boundary", parameters.get("pvalue_boundary"));
-        BackgroundModel bckgr = (BackgroundModel) parameters.get("background");
-        infos.background_parameter("B", "background", bckgr);
-
-        infos.add_table_parameter("P", "requested P-value", "expected_pvalue");
-        infos.add_table_parameter("AP", "actual P-value", "real_pvalue");
-
-        if (bckgr.is_wordwise()) {
-            infos.add_table_parameter("W", "number of recognized words", "recognized_words");
-        }
-        infos.add_table_parameter("T", "threshold", "threshold");
-
-        return infos.result();
-    }
 
     public static double[] values_in_range_add(double from, double to, double step) {
         ArrayList<Double> results = new ArrayList<Double>();
@@ -39,5 +19,13 @@ public class Helper {
             results.add(x);
         }
         return ArrayExtensions.toPrimitiveArray(results);
+    }
+
+    static void print_help_if_requested(ArrayList<String> argv, String doc) {
+        if (argv.isEmpty() || ArrayExtensions.contain(argv, "-h") || ArrayExtensions.contain(argv, "--h")
+                || ArrayExtensions.contain(argv, "-help") || ArrayExtensions.contain(argv, "--help")) {
+            System.err.println(doc);
+            System.exit(1);
+        }
     }
 }
