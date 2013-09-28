@@ -127,7 +127,6 @@ public class FindThreshold {
             }
             return downscaled_infos;
         }
-
     }
 
     public OutputInformation report_table_layout() {
