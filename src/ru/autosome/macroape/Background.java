@@ -16,7 +16,7 @@ public class Background implements BackgroundModel {
         if (background.length != 4) {
             throw new IllegalArgumentException("Background constructor accepts double array of length 4");
         }
-        boolean wordwise = false;
+        boolean wordwise = true;
         for (int i = 0; i < 4; ++i) {
             if (Math.abs(background[i] - 1) > 0.0001) {
                 wordwise = false;
