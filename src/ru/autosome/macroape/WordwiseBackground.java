@@ -33,7 +33,7 @@ public class WordwiseBackground implements BackgroundModel {
     }
 
     public boolean is_wordwise() {
-        return false;
+        return true;
     }
 
     public double mean_value(double[] values) {
