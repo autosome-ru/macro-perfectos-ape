@@ -2,7 +2,7 @@ package ru.autosome.macroape;
 
 import java.util.ArrayList;
 
-public class StringExtensions {
+class StringExtensions {
     public static String join(ArrayList<? extends Object> array, String separator) {
         if (array.isEmpty()) {
             return "";

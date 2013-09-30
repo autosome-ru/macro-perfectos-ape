@@ -1,6 +1,6 @@
 package ru.autosome.macroape;
 
-public class ResultInfo {
+class ResultInfo {
     public Object get(String key) {
         try {
             return this.getClass().getDeclaredField(key).get(this);

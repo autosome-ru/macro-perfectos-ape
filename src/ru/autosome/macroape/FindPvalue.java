@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class FindPvalue {
-    String pm_filename; // file with PM
-    Double discretization;
-    BackgroundModel background;
-    double[] thresholds;
-    Integer max_hash_size;
-    String data_model;
-    String thresholds_folder;
-    PWM pwm;
+    private String pm_filename; // file with PM
+    private Double discretization;
+    private BackgroundModel background;
+    private double[] thresholds;
+    private Integer max_hash_size;
+    private String data_model;
+    private String thresholds_folder;
+    private PWM pwm;
 
     private void initialize_defaults() {
         discretization = 10000.0;
@@ -70,7 +70,7 @@ public class FindPvalue {
         }
     }
 
-    public void setup_from_arglist(ArrayList<String> argv) {
+    void setup_from_arglist(ArrayList<String> argv) {
         extract_pm_filename(argv);
         extract_threshold_lists(argv);
         while (argv.size() > 0) {
@@ -79,18 +79,18 @@ public class FindPvalue {
         load_pwm();
     }
 
-    public FindPvalue() {
+    private FindPvalue() {
         initialize_defaults();
     }
 
-    public static FindPvalue from_arglist(ArrayList<String> argv) {
+    private static FindPvalue from_arglist(ArrayList<String> argv) {
         FindPvalue result = new FindPvalue();
         Helper.print_help_if_requested(argv, DOC);
         result.setup_from_arglist(argv);
         return result;
     }
 
-    public static FindPvalue from_arglist(String[] args) {
+    private static FindPvalue from_arglist(String[] args) {
         ArrayList<String> argv = new ArrayList<String>();
         Collections.addAll(argv, args);
         return from_arglist(argv);
@@ -121,15 +121,15 @@ public class FindPvalue {
         return result;
     }
 
-    public ArrayList<PvalueInfo> pvalues_by_thresholds() {
+    ArrayList<PvalueInfo> pvalues_by_thresholds() {
         return calculation().pvalues_by_thresholds(thresholds);
     }
 
-    public OutputInformation report_table_layout() {
+    OutputInformation report_table_layout() {
         return calculation().report_table_layout();
     }
 
-    static String DOC =
+    private static final String DOC =
             "Command-line format:\n" +
                     "java ru.autosome.macroape.FindPvalue <pat-file> <threshold list>... [options]\n" +
                     "\n" +

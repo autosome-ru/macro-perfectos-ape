@@ -3,29 +3,28 @@ package ru.autosome.macroape;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class SNPScan {
-    BackgroundModel background;
-    double discretization;
-    Integer max_hash_size;
+    private BackgroundModel background;
+    private double discretization;
+    private Integer max_hash_size;
 
-    String path_to_collection_of_pwms;
-    String path_to_file_w_snps;
-    String path_to_results_folder;
+    private String path_to_collection_of_pwms;
+    private String path_to_file_w_snps;
+    private String path_to_results_folder;
 
-    SNPScan calculation;
-    String data_model;
-    String thresholds_folder;
+    private SNPScan calculation;
+    private String data_model;
+    private String thresholds_folder;
 
-    ArrayList<PwmWithFilename> collection;
-    ArrayList<String> snp_list;
+    private ArrayList<PwmWithFilename> collection;
+    private ArrayList<String> snp_list;
 
 
     // Split by spaces and return last part
     // Input: "rs9929218 [Homo sapiens] GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
     // Output: "GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
-    public static String last_part_of_string(String s) {
+    private static String last_part_of_string(String s) {
         String[] string_parts = s.replaceAll("\\s+", " ").split(" ");
         String result = string_parts[string_parts.length - 1];
         if (result.matches("[ACGT]+(/[ACGT]+)+") || result.matches("[ACGT]+\\[(/?[ACGT]+)+\\][ACGT]+")) {
@@ -36,17 +35,17 @@ public class SNPScan {
     }
 
     // Output: "rs9929218"
-    public static String first_part_of_string(String s) {
+    private static String first_part_of_string(String s) {
         return s.replaceAll("\\s+", " ").split(" ")[0];
     }
 
-    public String pwm_influence_infos(SequenceWithSNP seq_w_snp, PWM pwm, CanFindPvalue pvalue_calculation) {
+    String pwm_influence_infos(SequenceWithSNP seq_w_snp, PWM pwm, CanFindPvalue pvalue_calculation) {
         Sequence[] trimmed_sequence_variants = seq_w_snp.trimmed_sequence_variants(pwm);
 
         if (seq_w_snp.num_cases() != 2)
             return null; // Unable to process more than two variants(which fractions to return)
 
-        String result = "";
+        String result;
 
         ScanSequence scan_seq_1 = new ScanSequence(trimmed_sequence_variants[0], pwm);
         double score_1 = scan_seq_1.best_score_on_sequence();
@@ -63,7 +62,7 @@ public class SNPScan {
         return result;
     }
 
-    public static ArrayList<PwmWithFilename> load_collection_of_pwms(String dir_name) throws FileNotFoundException {
+    private static ArrayList<PwmWithFilename> load_collection_of_pwms(String dir_name) {
         ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
         java.io.File dir = new java.io.File(dir_name);
         for (File file : dir.listFiles()) {
@@ -76,7 +75,7 @@ public class SNPScan {
         return result;
     }
 
-    public static ArrayList<PwmWithFilename> load_collection_of_pwms_from_pcms(String dir_name, BackgroundModel background) throws FileNotFoundException {
+    private static ArrayList<PwmWithFilename> load_collection_of_pwms_from_pcms(String dir_name, BackgroundModel background) {
         ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
         java.io.File dir = new java.io.File(dir_name);
         for (File file : dir.listFiles()) {
@@ -89,7 +88,7 @@ public class SNPScan {
         return result;
     }
 
-    static String DOC =
+    private static final String DOC =
             "Command-line format:\n" +
                     "java ru.autosome.macroape.SNPScan <folder with pwms> <file with SNPs> <folder for results>\n" +
                     "\n" +
@@ -103,7 +102,7 @@ public class SNPScan {
                     "  java ru.autosome.macroape.SNPScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
                     "  java ru.autosome.macroape.SNPScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
 
-    public void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
+    void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
         try {
             path_to_collection_of_pwms = argv.remove(0);
         } catch (IndexOutOfBoundsException e) {
@@ -111,7 +110,7 @@ public class SNPScan {
         }
     }
 
-    public void extract_path_to_file_w_snps(ArrayList<String> argv) {
+    void extract_path_to_file_w_snps(ArrayList<String> argv) {
         try {
             path_to_file_w_snps = argv.remove(0);
         } catch (IndexOutOfBoundsException e) {
@@ -119,7 +118,7 @@ public class SNPScan {
         }
     }
 
-    public void extract_path_to_results_folder(ArrayList<String> argv) {
+    void extract_path_to_results_folder(ArrayList<String> argv) {
         try {
             path_to_results_folder = argv.remove(0);
         } catch (IndexOutOfBoundsException e) {
@@ -137,24 +136,24 @@ public class SNPScan {
         thresholds_folder = null;
     }
 
-    public SNPScan() {
+    private SNPScan() {
         initialize_defaults();
     }
 
-    public static SNPScan from_arglist(ArrayList<String> argv) {
+    private static SNPScan from_arglist(ArrayList<String> argv) {
         SNPScan result = new SNPScan();
         Helper.print_help_if_requested(argv, DOC);
         result.setup_from_arglist(argv);
         return result;
     }
 
-    public static SNPScan from_arglist(String[] args) {
+    private static SNPScan from_arglist(String[] args) {
         ArrayList<String> argv = new ArrayList<String>();
         Collections.addAll(argv, args);
         return from_arglist(argv);
     }
 
-    public void setup_from_arglist(ArrayList<String> argv) {
+    void setup_from_arglist(ArrayList<String> argv) {
         extract_path_to_collection_of_pwms(argv);
         extract_path_to_file_w_snps(argv);
         extract_path_to_results_folder(argv);
@@ -256,7 +255,7 @@ public class SNPScan {
         }
     }
 
-    public void process() {
+    void process() {
         for (String snp_input : snp_list) {
             try {
                 process_snp(snp_input);

@@ -3,15 +3,15 @@ package ru.autosome.macroape;
 import java.util.ArrayList;
 
 public class OutputInformation {
-    ArrayList<String> table_parameter_descriptions;
-    ArrayList<String> parameter_descriptions;
-    ArrayList<String> parameter_value_infos;
-    ArrayList<String> resulting_value_descriptions;
-    ArrayList<String> resulting_value_infos;
+    private ArrayList<String> table_parameter_descriptions;
+    private ArrayList<String> parameter_descriptions;
+    private ArrayList<String> parameter_value_infos;
+    private ArrayList<String> resulting_value_descriptions;
+    private ArrayList<String> resulting_value_infos;
 
-    ArrayList<String> table_headers;
-    ArrayList<String> table_rows;
-    ArrayList<String> table_rows_callbacks;
+    private ArrayList<String> table_headers;
+    private ArrayList<String> table_rows;
+    private ArrayList<String> table_rows_callbacks;
 
     public ArrayList<? extends ResultInfo> data;
 

@@ -1,39 +1,39 @@
 package ru.autosome.macroape;
 
-public class ScanSequence {
-    final Sequence sequence;
-    final PWM pwm;
-    double[] scores_on_direct_strand_cache;
-    double[] scores_on_reverse_strand_cache;
+class ScanSequence {
+    private final Sequence sequence;
+    private final PWM pwm;
+    private double[] scores_on_direct_strand_cache;
+    private double[] scores_on_reverse_strand_cache;
 
     ScanSequence(Sequence sequence, PWM pwm) {
         this.sequence = sequence;
         this.pwm = pwm;
     }
 
-    public double[] scores_on_direct_strand() {
+    double[] scores_on_direct_strand() {
         if (scores_on_direct_strand_cache == null) {
             scores_on_direct_strand_cache = pwm.scores_on_sequence(sequence);
         }
         return scores_on_direct_strand_cache;
     }
 
-    public double[] scores_on_reverse_strand() {
+    double[] scores_on_reverse_strand() {
         if (scores_on_reverse_strand_cache == null) {
             scores_on_reverse_strand_cache = pwm.scores_on_sequence(sequence.reverse().complement());
         }
         return scores_on_reverse_strand_cache;
     }
 
-    public double best_score_on_direct_strand() {
+    double best_score_on_direct_strand() {
         return ArrayExtensions.max(scores_on_direct_strand());
     }
 
-    public double best_score_on_reverse_strand() {
+    double best_score_on_reverse_strand() {
         return ArrayExtensions.max(scores_on_reverse_strand());
     }
 
-    public String best_score_strand() {
+    String best_score_strand() {
         if (best_score_on_direct_strand() >= best_score_on_reverse_strand()) {
             return "direct";
         } else {
@@ -46,7 +46,7 @@ public class ScanSequence {
     }
 
     // position of motif start (most upstream position, not the leftmost)
-    public int best_score_position() {
+    int best_score_position() {
         if (best_score_strand().equals("direct")) {
             return ArrayExtensions.indexOf(best_score_on_direct_strand(), scores_on_direct_strand());
         } else {
@@ -64,7 +64,7 @@ public class ScanSequence {
         return "" + pos_original + "\t" + strand + "\t" + word;
     }
 
-    public Sequence get_word(String strand, int pos) {
+    Sequence get_word(String strand, int pos) {
         if (strand.equals("direct")) {
             return sequence.substring(pos, pos + pwm.length());
         } else {

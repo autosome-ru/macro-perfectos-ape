@@ -1,6 +1,6 @@
 package ru.autosome.macroape;
 
-public class MathExtensions {
+class MathExtensions {
     static double inverf(double x) {
         int sign = x < 0 ? -1 : 1;
         x = Math.abs(x);

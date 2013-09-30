@@ -6,7 +6,7 @@ public class PM {
     final double[][] matrix;
     String name;
 
-    public PM(double[][] matrix, String name) throws IllegalArgumentException {
+    PM(double[][] matrix, String name) throws IllegalArgumentException {
         for (double[] pos : matrix) {
             if (pos.length != 4) {
                 throw new IllegalArgumentException("Matrix must have 4 elements in each position");
@@ -38,7 +38,7 @@ public class PM {
         return new PM(ArrayExtensions.reverse(complement), name);
     }
 
-    public static HashMap<Character, Integer> indexByLetter() {
+    static HashMap<Character, Integer> indexByLetter() {
         HashMap<Character, Integer> result = new HashMap<Character, Integer>();
         result.put('A', 0);
         result.put('C', 1);

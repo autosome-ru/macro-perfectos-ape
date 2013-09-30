@@ -6,9 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class InputExtensions {
+class InputExtensions {
     static public ArrayList<String> readLinesFromInputStream(InputStream in) {
-        ArrayList<String> lines = new ArrayList();
+        ArrayList<String> lines = new ArrayList<String>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line;
         String newline = System.getProperty("line.separator");

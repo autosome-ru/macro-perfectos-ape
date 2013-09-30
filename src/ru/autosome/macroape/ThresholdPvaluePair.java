@@ -4,11 +4,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class ThresholdPvaluePair implements Comparable {
-    public double threshold;
-    public double pvalue;
+class ThresholdPvaluePair implements Comparable {
+    private final double threshold;
+    public final double pvalue;
 
-    ThresholdPvaluePair(double threshold, double pvalue) {
+    private ThresholdPvaluePair(double threshold, double pvalue) {
         this.threshold = threshold;
         this.pvalue = pvalue;
     }
@@ -44,7 +44,7 @@ public class ThresholdPvaluePair implements Comparable {
 
     }
 
-    public static ArrayList<ThresholdPvaluePair> load_thresholds_list(ArrayList<String> lines) {
+    private static ArrayList<ThresholdPvaluePair> load_thresholds_list(ArrayList<String> lines) {
         ArrayList<ThresholdPvaluePair> result = new ArrayList<ThresholdPvaluePair>();
         for (String s : lines) {
             String[] line_tokens = s.replaceAll("\\s+", "\t").split("\t");
@@ -105,17 +105,7 @@ public class ThresholdPvaluePair implements Comparable {
         }
     }
 
-    public int compareTo(Double other) {
-        if (threshold > other) {
-            return 1;
-        } else if (threshold < other) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
+  @Override
     public String toString() {
         return threshold + "\t" + pvalue;
     }

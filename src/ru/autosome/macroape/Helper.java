@@ -3,7 +3,7 @@ package ru.autosome.macroape;
 
 import java.util.ArrayList;
 
-public class Helper {
+class Helper {
 
     public static double[] values_in_range_add(double from, double to, double step) {
         ArrayList<Double> results = new ArrayList<Double>();

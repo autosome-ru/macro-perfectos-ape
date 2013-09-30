@@ -1,10 +1,10 @@
 package ru.autosome.macroape;
 
 public class ThresholdInfo extends ResultInfo {
-    public double threshold;
-    public double real_pvalue;
-    public double expected_pvalue;
-    public int recognized_words;
+    public final double threshold;
+    public final double real_pvalue;
+    private final double expected_pvalue;
+    private final int recognized_words;
 
     public ThresholdInfo(double threshold, double real_pvalue, double expected_pvalue, int recognized_words) {
         this.threshold = threshold;

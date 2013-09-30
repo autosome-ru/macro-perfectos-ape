@@ -5,12 +5,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CountingPWM {
-    private HashMap<Double, Double> count_distribution;
-    public Integer max_hash_size;
+class CountingPWM {
+  public Integer max_hash_size;
 
-    PWM pwm;
-    BackgroundModel background;
+    private final PWM pwm;
+    private final BackgroundModel background;
 
     CountingPWM(PWM pwm, BackgroundModel background) {
         this.pwm = pwm;
@@ -62,18 +61,6 @@ public class CountingPWM {
     }
 
     private HashMap<Double, Double> count_distribution_after_threshold(double threshold) {
-        if (count_distribution != null) {
-            HashMap<Double, Double> result = new HashMap<Double, Double>();
-            for (Map.Entry<Double, Double> entry : count_distribution.entrySet()) {
-                double score = entry.getKey();
-                double count = entry.getValue();
-                if (score >= threshold) {
-                    result.put(score, count);
-                }
-            }
-            return result;
-        }
-
         HashMap<Double, Double> scores = new HashMap<Double, Double>();
         scores.put(0.0, 1.0);
         for (int column = 0; column < pwm.length(); ++column) {
@@ -103,14 +90,7 @@ public class CountingPWM {
         return new_scores;
     }
 
-    private HashMap<Double, Double> count_distribution() {
-        if (this.count_distribution == null) {
-            this.count_distribution = count_distribution_after_threshold(pwm.worst_score());
-        }
-        return this.count_distribution;
-    }
-
-    HashMap<Double, Double> counts_by_thresholds(double... thresholds) {
+  HashMap<Double, Double> counts_by_thresholds(double... thresholds) {
         HashMap<Double, Double> scores = count_distribution_after_threshold(ArrayExtensions.min(thresholds));
         HashMap<Double, Double> result = new HashMap<Double, Double>();
         for (double threshold : thresholds) {
@@ -154,10 +134,10 @@ public class CountingPWM {
         return results;
     }
 
-    public HashMap<Double, double[][]> thresholds_by_pvalues(double... pvalues) {
+    HashMap<Double, double[][]> thresholds_by_pvalues(double... pvalues) {
         HashMap<Double, Double> scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
-
-        Double[] scores_keys = scores_hash.keySet().toArray(new Double[0]);
+        Double[] scores_keys = new Double[scores_hash.size()];
+        scores_hash.keySet().toArray(scores_keys);
         java.util.Arrays.sort(scores_keys);
         Double[] sorted_scores_keys = ArrayExtensions.reverse(scores_keys);
         double scores[] = ArrayExtensions.toPrimitiveArray(sorted_scores_keys);

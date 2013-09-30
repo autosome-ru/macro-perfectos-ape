@@ -12,10 +12,10 @@ public class FindThreshold {
     PWM pwm;
     double[] pvalues;
 
-    String pm_filename; // temporary variable
-    String data_model; // temporary variable
+    private String pm_filename; // temporary variable
+    private String data_model; // temporary variable
 
-    public void initialize_defaults() {
+    void initialize_defaults() {
         background = new WordwiseBackground();
         discretization = 10000.0;
         pvalue_boundary = "lower";
@@ -31,20 +31,20 @@ public class FindThreshold {
         initialize_defaults();
     }
 
-    public static FindThreshold from_arglist(ArrayList<String> argv) {
+    private static FindThreshold from_arglist(ArrayList<String> argv) {
         FindThreshold result = new FindThreshold();
         Helper.print_help_if_requested(argv, DOC);
         result.setup_from_arglist(argv);
         return result;
     }
 
-    public static FindThreshold from_arglist(String[] args) {
+    private static FindThreshold from_arglist(String[] args) {
         ArrayList<String> argv = new ArrayList<String>();
         Collections.addAll(argv, args);
         return from_arglist(argv);
     }
 
-    public void setup_from_arglist(ArrayList<String> argv) {
+    void setup_from_arglist(ArrayList<String> argv) {
         extract_pm_filename(argv);
         extract_pvalue_list(argv);
         while (argv.size() > 0) {
@@ -129,7 +129,7 @@ public class FindThreshold {
         }
     }
 
-    public OutputInformation report_table_layout() {
+    OutputInformation report_table_layout() {
         OutputInformation infos = new OutputInformation();
 
         infos.add_parameter("V", "discretization value", discretization);
@@ -148,7 +148,7 @@ public class FindThreshold {
         return infos;
     }
 
-    static String DOC =
+    private static final String DOC =
             "Command-line format:\n" +
                     "java ru.autosome.macroape.FindThreshold <pat-file> [<list of P-values>...] [options]\n" +
                     "\n" +

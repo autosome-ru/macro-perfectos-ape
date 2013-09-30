@@ -7,11 +7,11 @@ import java.util.Collections;
 // using a sorted list of predefined threshold-pvalues pairs
 // by performing binary search
 public class FindPvalueBsearch implements CanFindPvalue {
-    ArrayList<ThresholdPvaluePair> list_of_pvalues_by_thresholds;
-    final PWM pwm;
+    private ArrayList<ThresholdPvaluePair> list_of_pvalues_by_thresholds;
+    private final PWM pwm;
     BackgroundModel background;
 
-    public FindPvalueBsearch(PWM pwm, ArrayList<ThresholdPvaluePair> infos) {
+    private FindPvalueBsearch(PWM pwm, ArrayList<ThresholdPvaluePair> infos) {
         this.pwm = pwm;
         Collections.sort(infos);
         list_of_pvalues_by_thresholds = new ArrayList<ThresholdPvaluePair>();

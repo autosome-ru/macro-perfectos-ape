@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class PCM extends PM {
-    public PCM(double[][] matrix, String name) throws IllegalArgumentException {
+    private PCM(double[][] matrix, String name) throws IllegalArgumentException {
         super(matrix, name);
     }
 
@@ -22,7 +22,7 @@ public class PCM extends PM {
         return converter.convert();
     }
 
-    public static PCM new_from_text(ArrayList<String> input_lines) {
+    private static PCM new_from_text(ArrayList<String> input_lines) {
         PMParser matrix_parser = new PMParser(input_lines);
 
         double[][] matrix = matrix_parser.matrix();

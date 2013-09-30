@@ -15,7 +15,7 @@ public class PWM extends PM {
     }
 
     // instead of from_pcm argument one should create new_from_* family of methods for PCM
-    public static PWM new_from_text(ArrayList<String> input_lines) {
+    private static PWM new_from_text(ArrayList<String> input_lines) {
         PMParser matrix_parser = new PMParser(input_lines);
 
         double[][] matrix = matrix_parser.matrix();
@@ -59,11 +59,11 @@ public class PWM extends PM {
         }
     }
 
-    public double score(String word) throws IllegalArgumentException {
+    double score(String word) throws IllegalArgumentException {
         return score(word, new WordwiseBackground());
     }
 
-    public double score(String word, BackgroundModel background) throws IllegalArgumentException {
+    double score(String word, BackgroundModel background) throws IllegalArgumentException {
         word = word.toUpperCase();
         HashMap<Character, Integer> index_by_letter = indexByLetter();
         if (word.length() != length()) {
@@ -88,7 +88,7 @@ public class PWM extends PM {
         return score(word.sequence, background);
     }
 
-    public double score(Sequence word) throws IllegalArgumentException {
+    double score(Sequence word) throws IllegalArgumentException {
         return score(word.sequence);
     }
 

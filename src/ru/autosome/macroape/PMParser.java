@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 // Usual parser of 4-column matrix with or without name
-public class PMParser {
-    ArrayList<String> inp_strings;
-    double[][] matrix;
-    String name;
+class PMParser {
+    private final ArrayList<String> inp_strings;
+    private double[][] matrix;
+    private String name;
 
     PMParser(ArrayList<String> input) {
         inp_strings = input;

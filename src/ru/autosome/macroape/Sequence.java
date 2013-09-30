@@ -41,7 +41,7 @@ public class Sequence {
 
     private static HashMap<Character, Character> complements_cache;
 
-    public static HashMap<Character, Character> complements() {
+    private static HashMap<Character, Character> complements() {
         if (complements_cache == null) {
             HashMap<Character, Character> complements = new HashMap<Character, Character>();
             complements.put('a', 't');

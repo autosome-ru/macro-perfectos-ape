@@ -1,6 +1,6 @@
 package ru.autosome.macroape;
 
-public class SequenceWithSNP {
+class SequenceWithSNP {
 
     final private String left;
     final private String right;
@@ -28,7 +28,7 @@ public class SequenceWithSNP {
         }
     }
 
-    public int pos_of_snp() {
+    int pos_of_snp() {
         return left.length();
     }
 
@@ -38,7 +38,7 @@ public class SequenceWithSNP {
 
     // output: ["GATTCAAAGGTTCTGAATTCCACAACaGCTTTCCTGTGTTTTTGCAGCCAGA",
     //          "GATTCAAAGGTTCTGAATTCCACAACgGCTTTCCTGTGTTTTTGCAGCCAGA"]
-    public Sequence[] sequence_variants() {
+    Sequence[] sequence_variants() {
         Sequence[] result = new Sequence[num_cases()];
         for (int i = 0; i < num_cases(); ++i) {
             result[i] = new Sequence(left + mid[i] + right);
@@ -54,7 +54,7 @@ public class SequenceWithSNP {
         return Math.max(0, pos_of_snp() - motif_length + 1);
     }
 
-    public static Sequence trim_to_motif_length(Sequence seq, int snp_position, int motif_length) {
+    private static Sequence trim_to_motif_length(Sequence seq, int snp_position, int motif_length) {
         return seq.substring(Math.max(0, snp_position - motif_length + 1),
                 Math.min(seq.length(), snp_position + motif_length)); // end point not included
     }

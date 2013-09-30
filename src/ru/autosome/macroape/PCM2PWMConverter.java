@@ -1,10 +1,10 @@
 package ru.autosome.macroape;
 
 // TODO: extract interface for converters
-public class PCM2PWMConverter {
+class PCM2PWMConverter {
     public BackgroundModel background;
-    public double pseudocount;
-    PCM pcm;
+    private final double pseudocount;
+    private final PCM pcm;
 
     public PCM2PWMConverter(PCM pcm) {
         this.pcm = pcm;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FindPvalueAPE implements CanFindPvalue {
-    final PWM pwm;
+    private final PWM pwm;
     Double discretization;
     BackgroundModel background;
     Integer max_hash_size;

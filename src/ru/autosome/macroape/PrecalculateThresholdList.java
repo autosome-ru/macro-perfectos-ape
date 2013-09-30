@@ -6,15 +6,15 @@ import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class PrecalculateThresholdList {
-    double discretization;
-    BackgroundModel background;
-    String pvalue_boundary;
-    int max_hash_size;
-    String data_model;
+    private double discretization;
+    private BackgroundModel background;
+    private String pvalue_boundary;
+    private int max_hash_size;
+    private String data_model;
 
-    String collection_folder;
-    String output_folder;
-    double[] pvalues;
+    private String collection_folder;
+    private String output_folder;
+    private double[] pvalues;
 
     private void initialize_defaults() {
         discretization = 1000;
@@ -26,24 +26,24 @@ public class PrecalculateThresholdList {
         data_model = "pwm";
     }
 
-    public PrecalculateThresholdList() {
+    private PrecalculateThresholdList() {
         initialize_defaults();
     }
 
-    public static PrecalculateThresholdList from_arglist(ArrayList<String> argv) {
+    private static PrecalculateThresholdList from_arglist(ArrayList<String> argv) {
         PrecalculateThresholdList result = new PrecalculateThresholdList();
         Helper.print_help_if_requested(argv, DOC);
         result.setup_from_arglist(argv);
         return result;
     }
 
-    public static PrecalculateThresholdList from_arglist(String[] args) {
+    private static PrecalculateThresholdList from_arglist(String[] args) {
         ArrayList<String> argv = new ArrayList<String>();
         Collections.addAll(argv, args);
         return from_arglist(argv);
     }
 
-    public void setup_from_arglist(ArrayList<String> argv) {
+    void setup_from_arglist(ArrayList<String> argv) {
         extract_collection_folder_name(argv);
         extract_output_folder_name(argv);
 
@@ -113,7 +113,7 @@ public class PrecalculateThresholdList {
         }
     }
 
-    public void calculate_thresholds_for_collection() {
+    void calculate_thresholds_for_collection() {
         java.io.File dir = new File(collection_folder);
         java.io.File results_dir = new File(output_folder);
         if (!results_dir.exists()) {
@@ -137,7 +137,7 @@ public class PrecalculateThresholdList {
         }
     }
 
-    static String DOC =
+    private static final String DOC =
             "Command-line format:\n" +
                     "java ru.autosome.macroape.PrecalculateThresholdList <collection folder> <output folder>... [options]\n" +
                     "\n" +

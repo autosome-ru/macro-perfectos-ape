@@ -3,7 +3,7 @@ package ru.autosome.macroape;
 import java.util.StringTokenizer;
 
 public class Background implements BackgroundModel {
-    double[] background;
+    private double[] background;
 
     private Background(double[] background) {
         if (Math.abs(ArrayExtensions.sum(background) - 1.0) > 0.0001) {
@@ -12,7 +12,7 @@ public class Background implements BackgroundModel {
         this.background = background;
     }
 
-    public static BackgroundModel fromArray(double[] background) {
+    private static BackgroundModel fromArray(double[] background) {
         if (background.length != 4) {
             throw new IllegalArgumentException("Background constructor accepts double array of length 4");
         }
