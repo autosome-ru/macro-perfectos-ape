@@ -34,7 +34,7 @@ public class OutputInformation {
     table_rows_callbacks = new HashMap<String, Callback>();
   }
 
-  OutputInformation() {
+  public OutputInformation() {
     initialize();
   }
 
@@ -43,21 +43,22 @@ public class OutputInformation {
     this.data = data;
   }
 
-  void add_parameter(String param_name, String description, Object value) {
+  public void add_parameter(String param_name, String description, Object value) {
     parameter_descriptions.add(parameter_description_string(param_name, description));
     parameter_value_infos.add("# " + param_name + " = " + value.toString());
   }
 
-  void background_parameter(String param_name, String description, BackgroundModel background) {
+  public void background_parameter(String param_name, String description, BackgroundModel background) {
     if (!background.is_wordwise()) {
       add_parameter(param_name, description, background.toString());
     }
   }
 
-  void add_table_parameter(String param_name, String description, String key_in_hash) {
+  public void add_table_parameter(String param_name, String description, String key_in_hash) {
     table_parameter_descriptions.add(parameter_description_string(param_name, description));
     add_table_parameter_without_description(param_name, key_in_hash);
   }
+
   void add_table_parameter(String param_name, String description, String key_in_hash, Callback callback) {
     table_parameter_descriptions.add(parameter_description_string(param_name, description));
     add_table_parameter_without_description(param_name, key_in_hash, callback);
@@ -67,6 +68,7 @@ public class OutputInformation {
     table_headers.add(param_name);
     table_rows.add(key_in_hash);
   }
+
   void add_table_parameter_without_description(String param_name, String key_in_hash, Callback callback) {
     add_table_parameter_without_description(param_name, key_in_hash);
     table_rows_callbacks.put(key_in_hash, callback);
@@ -76,7 +78,7 @@ public class OutputInformation {
     return "# " + param_name + ": " + description;
   }
 
-  String result() {
+  public String report() {
     ArrayList<ArrayList<String>> tmp = new ArrayList<ArrayList<String>>();
     tmp.add(parameters_info());
     tmp.add(resulting_values_info());
