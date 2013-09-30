@@ -7,27 +7,27 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 class InputExtensions {
-    static public ArrayList<String> readLinesFromInputStream(InputStream in) {
-        ArrayList<String> lines = new ArrayList<String>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        String line;
-        String newline = System.getProperty("line.separator");
-        try {
-            while ((line = reader.readLine()) != null) {
-                lines.add(line + newline);
-            }
-        } catch (IOException e) {
-        }
-        return lines;
+  static public ArrayList<String> readLinesFromInputStream(InputStream in) {
+    ArrayList<String> lines = new ArrayList<String>();
+    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+    String line;
+    String newline = System.getProperty("line.separator");
+    try {
+      while ((line = reader.readLine()) != null) {
+        lines.add(line + newline);
+      }
+    } catch (IOException e) {
     }
+    return lines;
+  }
 
-    public static ArrayList<String> filter_empty_strings(ArrayList<String> list) {
-        ArrayList<String> result = new ArrayList<String>();
-        for (String str : list) {
-            if (!str.trim().isEmpty()) {
-                result.add(str);
-            }
-        }
-        return result;
+  public static ArrayList<String> filter_empty_strings(ArrayList<String> list) {
+    ArrayList<String> result = new ArrayList<String>();
+    for (String str : list) {
+      if (!str.trim().isEmpty()) {
+        result.add(str);
+      }
     }
+    return result;
+  }
 }
