@@ -13,6 +13,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
 
   private FindPvalueBsearch(PWM pwm, ArrayList<ThresholdPvaluePair> infos) {
     this.pwm = pwm;
+    this.background = new WordwiseBackground();
     Collections.sort(infos);
     list_of_pvalues_by_thresholds = new ArrayList<ThresholdPvaluePair>();
     list_of_pvalues_by_thresholds.add(infos.get(0));
@@ -21,11 +22,6 @@ public class FindPvalueBsearch implements CanFindPvalue {
         list_of_pvalues_by_thresholds.add(infos.get(i));
       }
     }
-  }
-
-  public FindPvalueBsearch(PWM pwm) {
-    this.pwm = pwm;
-    this.background = new WordwiseBackground();
   }
 
   public static FindPvalueBsearch new_from_threshold_infos(PWM pwm, ArrayList<ThresholdInfo> infos) {

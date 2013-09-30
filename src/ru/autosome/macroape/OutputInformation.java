@@ -1,8 +1,13 @@
 package ru.autosome.macroape;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OutputInformation {
+  public interface Callback {
+    String run(Object cell);
+  }
   private ArrayList<String> table_parameter_descriptions;
   private ArrayList<String> parameter_descriptions;
   private ArrayList<String> parameter_value_infos;
@@ -11,7 +16,7 @@ public class OutputInformation {
 
   private ArrayList<String> table_headers;
   private ArrayList<String> table_rows;
-  private ArrayList<String> table_rows_callbacks;
+  private Map<String, Callback> table_rows_callbacks;
 
   public ArrayList<? extends ResultInfo> data;
 
@@ -26,7 +31,7 @@ public class OutputInformation {
 
     table_headers = new ArrayList<String>();
     table_rows = new ArrayList<String>();
-    table_rows_callbacks = new ArrayList<String>();
+    table_rows_callbacks = new HashMap<String, Callback>();
   }
 
   OutputInformation() {
@@ -53,10 +58,18 @@ public class OutputInformation {
     table_parameter_descriptions.add(parameter_description_string(param_name, description));
     add_table_parameter_without_description(param_name, key_in_hash);
   }
+  void add_table_parameter(String param_name, String description, String key_in_hash, Callback callback) {
+    table_parameter_descriptions.add(parameter_description_string(param_name, description));
+    add_table_parameter_without_description(param_name, key_in_hash, callback);
+  }
 
   void add_table_parameter_without_description(String param_name, String key_in_hash) {
     table_headers.add(param_name);
     table_rows.add(key_in_hash);
+  }
+  void add_table_parameter_without_description(String param_name, String key_in_hash, Callback callback) {
+    add_table_parameter_without_description(param_name, key_in_hash);
+    table_rows_callbacks.put(key_in_hash, callback);
   }
 
   String parameter_description_string(String param_name, String description) {
@@ -126,7 +139,12 @@ public class OutputInformation {
     for (ResultInfo info : data) {
       ArrayList<String> tmp = new ArrayList<String>();
       for (String row : table_rows) {
-        tmp.add(info.get(row).toString());
+        if (table_rows_callbacks.containsKey(row)) {
+          Callback callback = table_rows_callbacks.get(row);
+          tmp.add( callback.run(info.get(row)).toString());
+        } else {
+          tmp.add(info.get(row).toString());
+        }
       }
       result.add(StringExtensions.join(tmp, "\t"));
     }
