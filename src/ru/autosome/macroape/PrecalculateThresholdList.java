@@ -53,12 +53,12 @@ public class PrecalculateThresholdList {
     //load_pwm();
   }
 
-  private FindThresholdParameters find_threshold_parameters(PWM pwm) {
-    return new FindThresholdParameters(pwm, pvalues, background, discretization, pvalue_boundary, max_hash_size);
+  private FindThresholdAPEParameters find_threshold_parameters(PWM pwm) {
+    return new FindThresholdAPEParameters(pwm, pvalues, background, discretization, pvalue_boundary, max_hash_size);
   }
 
-  private FindThreshold find_threshold_calculator(PWM pwm) {
-    return new FindThreshold(find_threshold_parameters(pwm));
+  private FindThresholdAPE find_threshold_calculator(PWM pwm) {
+    return new FindThresholdAPE(find_threshold_parameters(pwm));
   }
 
   private void extract_collection_folder_name(ArrayList<String> argv) {
@@ -126,7 +126,7 @@ public class PrecalculateThresholdList {
         pwm = PWM.new_from_file(filename.getPath());
       }
 
-      FindThreshold calculation = find_threshold_calculator(pwm);
+      FindThresholdAPE calculation = find_threshold_calculator(pwm);
 
       ArrayList<ThresholdPvaluePair> pairs = new ArrayList<ThresholdPvaluePair>();
       for (ThresholdInfo info: calculation.find_thresholds_by_pvalues()) {

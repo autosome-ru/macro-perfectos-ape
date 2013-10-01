@@ -1,6 +1,6 @@
 package ru.autosome.macroape;
 
-public class FindThresholdParameters {
+public class FindThresholdAPEParameters {
   public BackgroundModel background;
   public Double discretization; // if discretization is null - it's not applied
   public String pvalue_boundary;
@@ -8,9 +8,9 @@ public class FindThresholdParameters {
   public PWM pwm;
   public double[] pvalues;
 
-  public FindThresholdParameters() { }
-  public FindThresholdParameters(PWM pwm, double[] pvalues, BackgroundModel background,
-                          Double discretization, String pvalue_boundary, Integer max_hash_size) {
+  public FindThresholdAPEParameters() { }
+  public FindThresholdAPEParameters(PWM pwm, double[] pvalues, BackgroundModel background,
+                                    Double discretization, String pvalue_boundary, Integer max_hash_size) {
     this.pwm = pwm;
     this.pvalues = pvalues;
     this.background = background;

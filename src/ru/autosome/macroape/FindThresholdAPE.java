@@ -2,10 +2,10 @@ package ru.autosome.macroape;
 
 import java.util.ArrayList;
 
-public class FindThreshold {
-  FindThresholdParameters parameters;
+public class FindThresholdAPE {
+  FindThresholdAPEParameters parameters;
 
-  public FindThreshold(FindThresholdParameters parameters) {
+  public FindThresholdAPE(FindThresholdAPEParameters parameters) {
     this.parameters = parameters;
   }
 

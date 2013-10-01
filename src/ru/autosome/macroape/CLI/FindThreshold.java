@@ -120,12 +120,12 @@ public class FindThreshold {
     }
   }
 
-  FindThresholdParameters parameters() {
-    return new FindThresholdParameters(pwm, pvalues, background, discretization, pvalue_boundary, max_hash_size);
+  FindThresholdAPEParameters parameters() {
+    return new FindThresholdAPEParameters(pwm, pvalues, background, discretization, pvalue_boundary, max_hash_size);
   }
 
-  ru.autosome.macroape.FindThreshold calculator() {
-    return new ru.autosome.macroape.FindThreshold(parameters());
+  FindThresholdAPE calculator() {
+    return new FindThresholdAPE(parameters());
   }
 
   OutputInformation report_table_layout() {
