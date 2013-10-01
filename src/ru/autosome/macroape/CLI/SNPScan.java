@@ -11,7 +11,7 @@ public class SNPScan {
   private double discretization;
   private Integer max_hash_size;
 
-  private String path_to_collection_of_pwms;
+  private File path_to_collection_of_pwms;
   private String path_to_file_w_snps;
   private String path_to_results_folder;
 
@@ -67,10 +67,9 @@ public class SNPScan {
     return result;
   }
 
-  private ArrayList<PwmWithFilename> load_collection_of_pwms(String dir_name) {
+  private ArrayList<PwmWithFilename> load_collection_of_pwms() {
     ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
-    java.io.File dir = new java.io.File(dir_name);
-    for (File file : dir.listFiles()) {
+    for (File file : path_to_collection_of_pwms.listFiles()) {
       result.add(new PwmWithFilename(load_pwm(file), file.getPath()));
     }
     return result;
@@ -92,7 +91,7 @@ public class SNPScan {
 
   void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
     try {
-      path_to_collection_of_pwms = argv.remove(0);
+      path_to_collection_of_pwms = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Specify PWM-collection folder", e);
     }
@@ -187,7 +186,7 @@ public class SNPScan {
 
   private void load_collection() {
     try {
-      collection = load_collection_of_pwms(path_to_collection_of_pwms);
+      collection = load_collection_of_pwms();
     } catch (Exception e) {
       throw new IllegalArgumentException("Failed to load collection of PWMs", e);
     }
@@ -229,7 +228,7 @@ public class SNPScan {
       return new FindPvalueAPE(parameters);
     } else {
       FindPvalueBsearchParameters parameters = new FindPvalueBsearchParameters(pwm_w_filename.pwm,
-                                                                               thresholds,background,
+                                                                               thresholds, background,
                                                                                pwm_w_filename.bsearchList);
       return new FindPvalueBsearch(parameters);
     }
@@ -240,7 +239,7 @@ public class SNPScan {
     SequenceWithSNP seq_w_snp = new SequenceWithSNP(last_part_of_string(snp_input));
     FileWriter fw;
     String resulting_filename = (path_to_results_folder + File.separator + snp_name + ".txt");
-    fw = new FileWriter(new java.io.File(resulting_filename));
+    fw = new FileWriter(new File(resulting_filename));
     try {
       System.out.println(snp_name);
       fw.write(seq_w_snp + "\n");
