@@ -59,9 +59,9 @@ public class ArrayExtensions {
     return result;
   }
 
-  public static <T extends Object> boolean contain(Iterable<T> list, T obj) {
-    for (T el : list) {
-      if (el == obj) return true;
+  public static boolean contain(Iterable<String> list, String obj) {
+    for (String el : list) {
+      if (el.equals(obj)) return true;
     }
     return false;
   }

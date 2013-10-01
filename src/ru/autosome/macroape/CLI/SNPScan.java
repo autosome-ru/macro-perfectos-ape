@@ -67,28 +67,11 @@ public class SNPScan {
     return result;
   }
 
-  private static ArrayList<PwmWithFilename> load_collection_of_pwms(String dir_name) {
+  private ArrayList<PwmWithFilename> load_collection_of_pwms(String dir_name) {
     ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
     java.io.File dir = new java.io.File(dir_name);
     for (File file : dir.listFiles()) {
-      PWM pwm = PWM.new_from_file(file);
-      if (pwm.name == null || pwm.name.isEmpty()) {
-        pwm.name = file.getName();
-      }
-      result.add(new PwmWithFilename(pwm, file.getPath()));
-    }
-    return result;
-  }
-
-  private static ArrayList<PwmWithFilename> load_collection_of_pwms_from_pcms(String dir_name, BackgroundModel background) {
-    ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
-    java.io.File dir = new java.io.File(dir_name);
-    for (File file : dir.listFiles()) {
-      PWM pwm = PCM.new_from_file(file).to_pwm(background);
-      if (pwm.name == null || pwm.name.isEmpty()) {
-        pwm.name = file.getName();
-      }
-      result.add(new PwmWithFilename(pwm, file.getPath()));
+      result.add(new PwmWithFilename(load_pwm(file), file.getPath()));
     }
     return result;
   }
@@ -189,13 +172,22 @@ public class SNPScan {
     }
   }
 
+  PWM load_pwm(File file) {
+    PWM pwm;
+    if (data_model.equals("pcm")) {
+      pwm = PCM.new_from_file(file).to_pwm(background);
+    } else {
+      pwm = PWM.new_from_file(file);
+    }
+    if (pwm.name == null || pwm.name.isEmpty()) {
+      pwm.name = file.getName();
+    }
+    return pwm;
+  }
+
   private void load_collection() {
     try {
-      if (data_model.equals("pcm")) {
-        collection = load_collection_of_pwms_from_pcms(path_to_collection_of_pwms, background);
-      } else {
-        collection = load_collection_of_pwms(path_to_collection_of_pwms);
-      }
+      collection = load_collection_of_pwms(path_to_collection_of_pwms);
     } catch (Exception e) {
       throw new IllegalArgumentException("Failed to load collection of PWMs", e);
     }
