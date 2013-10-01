@@ -1,6 +1,6 @@
 package ru.autosome.macroape;
 
-class PwmWithFilename {
+public class PwmWithFilename {
   public final PWM pwm;
   public final String filename;
   //public CanFindPvalue pvalue_calculation;

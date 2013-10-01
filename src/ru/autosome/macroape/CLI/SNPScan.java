@@ -1,4 +1,6 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.CLI;
+
+import ru.autosome.macroape.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -93,7 +95,7 @@ public class SNPScan {
 
   private static final String DOC =
           "Command-line format:\n" +
-                  "java ru.autosome.macroape.SNPScan <folder with pwms> <file with SNPs> <folder for results>\n" +
+                  "java ru.autosome.macroape.CLI.SNPScan <folder with pwms> <file with SNPs> <folder for results>\n" +
                   "\n" +
                   "Options:\n" +
                   "  [-d <discretization level>]\n" +
@@ -102,8 +104,8 @@ public class SNPScan {
                   "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
                   "\n" +
                   "Example:\n" +
-                  "  java ru.autosome.macroape.SNPScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
-                  "  java ru.autosome.macroape.SNPScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
+                  "  java ru.autosome.macroape.CLI.SNPScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
+                  "  java ru.autosome.macroape.CLI.SNPScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
 
   void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
     try {
@@ -240,22 +242,6 @@ public class SNPScan {
       return new FindPvalueBsearch(parameters);
     }
   }
-
-  /*private CanFindPvalue find_pvalue_calculator(PwmWithFilename pwm_w_filename) {
-    if (thresholds_folder == null) {
-      FindPvalueAPE pvalue_calculation = new FindPvalueAPE(pwm_w_filename.pwm);
-      pvalue_calculation.background = calculation.background;
-      pvalue_calculation.discretization = calculation.discretization;
-      pvalue_calculation.max_hash_size = calculation.max_hash_size;
-      return pvalue_calculation;
-    } else {
-      String filename = thresholds_folder + File.separator + "thresholds_" + (new File(pwm_w_filename.filename)).getName();
-
-      FindPvalueBsearch pvalue_calculation = FindPvalueBsearch.load_from_file(pwm_w_filename.pwm, filename);
-      pvalue_calculation.background = calculation.background;
-      return pvalue_calculation;
-    }
-  } */
 
   void process_snp(String snp_input) throws IOException {
     String snp_name = first_part_of_string(snp_input);

@@ -1,12 +1,12 @@
 package ru.autosome.macroape;
 
-class ScanSequence {
+public class ScanSequence {
   private final Sequence sequence;
   private final PWM pwm;
   private double[] scores_on_direct_strand_cache;
   private double[] scores_on_reverse_strand_cache;
 
-  ScanSequence(Sequence sequence, PWM pwm) {
+  public ScanSequence(Sequence sequence, PWM pwm) {
     this.sequence = sequence;
     this.pwm = pwm;
   }

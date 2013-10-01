@@ -1,6 +1,6 @@
 package ru.autosome.macroape;
 
-class SequenceWithSNP {
+public class SequenceWithSNP {
 
   final private String left;
   final private String right;

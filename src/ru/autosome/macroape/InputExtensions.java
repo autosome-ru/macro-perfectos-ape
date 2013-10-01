@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-class InputExtensions {
+public class InputExtensions {
   static public ArrayList<String> readLinesFromInputStream(InputStream in) {
     ArrayList<String> lines = new ArrayList<String>();
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));

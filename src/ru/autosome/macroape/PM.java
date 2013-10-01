@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class PM {
   final double[][] matrix;
-  String name;
+  public String name;
 
   PM(double[][] matrix, String name) throws IllegalArgumentException {
     for (double[] pos : matrix) {
