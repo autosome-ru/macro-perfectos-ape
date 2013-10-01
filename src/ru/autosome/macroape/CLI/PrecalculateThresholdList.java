@@ -1,9 +1,10 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.CLI;
+
+import ru.autosome.macroape.*;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.StringTokenizer;
 
 public class PrecalculateThresholdList {
   private double discretization;
@@ -21,7 +22,7 @@ public class PrecalculateThresholdList {
     background = new WordwiseBackground();
     pvalue_boundary = "lower";
     max_hash_size = 10000000;
-    pvalues = new GeometricProgression(1E-6, 0.3, 1.1).values(); // Helper.values_in_range_mul(1E-6, 0.3, 1.1);
+    pvalues = new GeometricProgression(1E-6, 0.3, 1.1).values();
 
     data_model = "pwm";
   }
@@ -133,7 +134,7 @@ public class PrecalculateThresholdList {
 
   private static final String DOC =
           "Command-line format:\n" +
-                  "java ru.autosome.macroape.PrecalculateThresholdList <collection folder> <output folder>... [options]\n" +
+                  "java ru.autosome.macroape.CLI.PrecalculateThresholdList <collection folder> <output folder>... [options]\n" +
                   "\n" +
                   "Options:\n" +
                   "  [-d <discretization level>]\n" +
@@ -143,8 +144,8 @@ public class PrecalculateThresholdList {
                   "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
                   "\n" +
                   "Examples:\n" +
-                  "  java ru.autosome.macroape.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/\n" +
-                  "  java ru.autosome.macroape.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
+                  "  java ru.autosome.macroape.CLI.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/\n" +
+                  "  java ru.autosome.macroape.CLI.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
 
   public static void main(String[] args) {
     try {

@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-class ThresholdPvaluePair implements Comparable {
+public class ThresholdPvaluePair implements Comparable {
   private final double threshold;
   public final double pvalue;
 
@@ -13,7 +13,7 @@ class ThresholdPvaluePair implements Comparable {
     this.pvalue = pvalue;
   }
 
-  ThresholdPvaluePair(ThresholdInfo info) {
+  public ThresholdPvaluePair(ThresholdInfo info) {
     this.threshold = info.threshold;
     this.pvalue = info.real_pvalue;
   }

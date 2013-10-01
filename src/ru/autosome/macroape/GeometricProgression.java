@@ -6,7 +6,7 @@ public class GeometricProgression extends Progression {
   double from;
   double to;
   double step ;
-  double[] values() {
+  public double[] values() {
     ArrayList<Double> results = new ArrayList<Double>();
     for (double x = from; x <= to; x *= step) {
       results.add(x);
@@ -14,7 +14,7 @@ public class GeometricProgression extends Progression {
     return ArrayExtensions.toPrimitiveArray(results);
   }
 
-  GeometricProgression(double min, double to, double step) {
+  public GeometricProgression(double min, double to, double step) {
     this.from = min;
     this.to = to;
     this.step = step;

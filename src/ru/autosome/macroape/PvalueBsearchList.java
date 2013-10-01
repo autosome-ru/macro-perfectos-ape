@@ -6,7 +6,7 @@ import java.util.Collections;
 public class PvalueBsearchList {
   private ArrayList<ThresholdPvaluePair> list;
   PvalueBsearchList () { }
-  PvalueBsearchList (ArrayList<ThresholdPvaluePair> list) {
+  public PvalueBsearchList(ArrayList<ThresholdPvaluePair> list) {
     this.list = sort_list(list);
   }
 

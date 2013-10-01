@@ -6,7 +6,7 @@ public class ArithmeticProgression extends Progression {
   double from;
   double to;
   double step ;
-  double[] values() {
+  public double[] values() {
     ArrayList<Double> results = new ArrayList<Double>();
     for (double x = from; x <= to; x += step) {
       results.add(x);
