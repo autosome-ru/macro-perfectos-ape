@@ -53,14 +53,12 @@ public class PrecalculateThresholdList {
     //load_pwm();
   }
 
-  private FindThreshold find_threshold_calculator() {
-    FindThreshold calculation = new FindThreshold();
-    calculation.discretization = discretization;
-    calculation.background = background;
-    calculation.pvalue_boundary = pvalue_boundary;
-    calculation.max_hash_size = max_hash_size;
-    calculation.pvalues = pvalues;
-    return calculation;
+  private FindThresholdParameters find_threshold_parameters(PWM pwm) {
+    return new FindThresholdParameters(pwm, pvalues, background, discretization, pvalue_boundary, max_hash_size);
+  }
+
+  private FindThreshold find_threshold_calculator(PWM pwm) {
+    return new FindThreshold(find_threshold_parameters(pwm));
   }
 
   private void extract_collection_folder_name(ArrayList<String> argv) {
@@ -128,12 +126,15 @@ public class PrecalculateThresholdList {
         pwm = PWM.new_from_file(filename.getPath());
       }
 
-      FindThreshold calculation = find_threshold_calculator();
-      calculation.pwm = pwm;
+      FindThreshold calculation = find_threshold_calculator(pwm);
 
-      ArrayList<ThresholdInfo> infos = calculation.find_thresholds_by_pvalues();
+      ArrayList<ThresholdPvaluePair> pairs = new ArrayList<ThresholdPvaluePair>();
+      for (ThresholdInfo info: calculation.find_thresholds_by_pvalues()) {
+        pairs.add(new ThresholdPvaluePair(info));
+      }
+
       File result_filename = new File(results_dir + File.separator + "thresholds_" + filename.getName());
-      FindPvalueBsearch.new_from_threshold_infos(pwm, infos).save_to_file(result_filename.getPath());
+      new PvalueBsearchList(pairs).save_to_file(result_filename.getPath());
     }
   }
 

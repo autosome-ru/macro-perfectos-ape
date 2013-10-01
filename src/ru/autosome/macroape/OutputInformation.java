@@ -15,8 +15,8 @@ public class OutputInformation {
   private ArrayList<String> resulting_value_infos;
 
   private ArrayList<String> table_headers;
-  private ArrayList<String> table_rows;
-  private Map<String, Callback> table_rows_callbacks;
+  private ArrayList<String> table_columns;
+  private Map<String, Callback> table_column_callbacks;
 
   public ArrayList<? extends ResultInfo> data;
 
@@ -30,8 +30,8 @@ public class OutputInformation {
     resulting_value_infos = new ArrayList<String>();
 
     table_headers = new ArrayList<String>();
-    table_rows = new ArrayList<String>();
-    table_rows_callbacks = new HashMap<String, Callback>();
+    table_columns = new ArrayList<String>();
+    table_column_callbacks = new HashMap<String, Callback>();
   }
 
   public OutputInformation() {
@@ -66,12 +66,12 @@ public class OutputInformation {
 
   void add_table_parameter_without_description(String param_name, String key_in_hash) {
     table_headers.add(param_name);
-    table_rows.add(key_in_hash);
+    table_columns.add(key_in_hash);
   }
 
   void add_table_parameter_without_description(String param_name, String key_in_hash, Callback callback) {
     add_table_parameter_without_description(param_name, key_in_hash);
-    table_rows_callbacks.put(key_in_hash, callback);
+    table_column_callbacks.put(key_in_hash, callback);
   }
 
   String parameter_description_string(String param_name, String description) {
@@ -136,19 +136,22 @@ public class OutputInformation {
     return "# " + StringExtensions.join(table_headers, "\t");
   }
 
+  String row_content(ResultInfo info) {
+    ArrayList<String> cell_contents = new ArrayList<String>();
+    for (String column_name : table_columns) {
+      if (table_column_callbacks.containsKey(column_name)) {
+        Callback callback = table_column_callbacks.get(column_name);
+        cell_contents.add( callback.run(info.get(column_name)).toString());
+      } else {
+        cell_contents.add(info.get(column_name).toString());
+      }
+    }
+    return StringExtensions.join(cell_contents, "\t");
+  }
   ArrayList<String> table_content() {
     ArrayList<String> result = new ArrayList<String>();
     for (ResultInfo info : data) {
-      ArrayList<String> tmp = new ArrayList<String>();
-      for (String row : table_rows) {
-        if (table_rows_callbacks.containsKey(row)) {
-          Callback callback = table_rows_callbacks.get(row);
-          tmp.add( callback.run(info.get(row)).toString());
-        } else {
-          tmp.add(info.get(row).toString());
-        }
-      }
-      result.add(StringExtensions.join(tmp, "\t"));
+      result.add(row_content(info));
     }
     return result;
   }

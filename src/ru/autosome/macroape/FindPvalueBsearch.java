@@ -7,72 +7,37 @@ import java.util.Collections;
 // using a sorted list of predefined threshold-pvalues pairs
 // by performing binary search
 public class FindPvalueBsearch implements CanFindPvalue {
-  private ArrayList<ThresholdPvaluePair> list_of_pvalues_by_thresholds;
-  private final PWM pwm;
-  BackgroundModel background;
+  FindPvalueBsearchParameters parameters;
 
-  private FindPvalueBsearch(PWM pwm, ArrayList<ThresholdPvaluePair> infos) {
-    this.pwm = pwm;
-    this.background = new WordwiseBackground();
-    Collections.sort(infos);
-    list_of_pvalues_by_thresholds = new ArrayList<ThresholdPvaluePair>();
-    list_of_pvalues_by_thresholds.add(infos.get(0));
-    for (int i = 1; i < infos.size(); ++i) {
-      if (!infos.get(i).equals(infos.get(i - 1))) {
-        list_of_pvalues_by_thresholds.add(infos.get(i));
-      }
-    }
+  public FindPvalueBsearch(FindPvalueBsearchParameters parameters) {
+    this.parameters = parameters;
   }
 
-  public static FindPvalueBsearch new_from_threshold_infos(PWM pwm, ArrayList<ThresholdInfo> infos) {
-    ArrayList<ThresholdPvaluePair> pvalue_by_threshold_list = new ArrayList<ThresholdPvaluePair>();
-    for (ThresholdInfo info : infos) {
-      pvalue_by_threshold_list.add(new ThresholdPvaluePair(info));
-    }
-    return new FindPvalueBsearch(pwm, pvalue_by_threshold_list);
-  }
-
-  public PvalueInfo pvalue_by_threshold(double threshold) {
-    int index = Collections.binarySearch(list_of_pvalues_by_thresholds, threshold, ThresholdPvaluePair.double_comparator());
-    double pvalue;
-    if (index >= 0) {
-      pvalue = list_of_pvalues_by_thresholds.get(index).pvalue;
-    } else {
-      int insertion_point = -index - 1;
-      if (insertion_point > 0 && insertion_point < list_of_pvalues_by_thresholds.size()) {
-        pvalue = Math.sqrt(list_of_pvalues_by_thresholds.get(insertion_point).pvalue * list_of_pvalues_by_thresholds.get(insertion_point - 1).pvalue);
-      } else if (insertion_point == 0) {
-        pvalue = list_of_pvalues_by_thresholds.get(0).pvalue;
-      } else {
-        pvalue = list_of_pvalues_by_thresholds.get(list_of_pvalues_by_thresholds.size() - 1).pvalue;
-      }
-    }
-    return new PvalueInfo(threshold, pvalue, (int) (pvalue * new CountingPWM(pwm, background).vocabularyVolume()));
-  }
-
-  public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
+  public ArrayList<PvalueInfo> pvalues_by_thresholds() {
     ArrayList<PvalueInfo> results = new ArrayList<PvalueInfo>();
-    for (double threshold : thresholds) {
+    for (double threshold : parameters.thresholds) {
       results.add(pvalue_by_threshold(threshold));
     }
     return results;
   }
 
-  public void save_to_file(String filename) {
-    ThresholdPvaluePair.save_thresholds_list(list_of_pvalues_by_thresholds, filename);
+  double vocabularyVolume() {
+    return new CountingPWM(parameters.pwm, parameters.background).vocabularyVolume();
   }
 
-  public static FindPvalueBsearch load_from_file(PWM pwm, String filename) {
-    return new FindPvalueBsearch(pwm, ThresholdPvaluePair.load_thresholds_list(filename));
+  public PvalueInfo pvalue_by_threshold(double threshold) {
+    double pvalue = parameters.bsearchList.pvalue_by_threshold(threshold);
+    int count = (int) (pvalue * vocabularyVolume());
+    return new PvalueInfo(threshold, pvalue, count);
   }
 
   // TODO: decide which parameters are relevant
   public OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
-    infos.background_parameter("B", "background", background);
+    infos.background_parameter("B", "background", parameters.background);
 
     infos.add_table_parameter("T", "threshold", "threshold");
-    if (background.is_wordwise()) {
+    if (parameters.background.is_wordwise()) {
       infos.add_table_parameter("W", "number of recognized words", "number_of_recognized_words");
     }
     infos.add_table_parameter("P", "P-value", "pvalue");

@@ -131,7 +131,10 @@ public class PWM extends PM {
 
   /////////////////////////////
 
-  public PWM discrete(double rate) {
+  public PWM discrete(Double rate) {
+    if (rate == null) {
+      return this;
+    }
     double[][] mat_result;
     mat_result = new double[length()][];
     for (int i = 0; i < length(); ++i) {

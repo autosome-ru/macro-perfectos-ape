@@ -1,6 +1,6 @@
 package ru.autosome.macroape;
 
-interface BackgroundModel {
+public interface BackgroundModel {
   public double[] probability();
 
   public double probability(int index);

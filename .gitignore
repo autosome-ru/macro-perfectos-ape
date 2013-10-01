@@ -1,2 +1,4 @@
 production/
 .idea/workspace.xml
+*.xml
+*.iml

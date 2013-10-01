@@ -2,7 +2,7 @@ package ru.autosome.macroape;
 
 import java.util.ArrayList;
 
-class ArrayExtensions {
+public class ArrayExtensions {
   public static double max(double... array) throws IllegalArgumentException {
     if (array.length == 0) {
       throw new IllegalArgumentException("Can't calculate maximum of empty array");

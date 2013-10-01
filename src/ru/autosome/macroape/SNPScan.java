@@ -39,23 +39,26 @@ public class SNPScan {
     return s.replaceAll("\\s+", " ").split(" ")[0];
   }
 
-  String pwm_influence_infos(SequenceWithSNP seq_w_snp, PWM pwm, CanFindPvalue pvalue_calculation) {
-    Sequence[] trimmed_sequence_variants = seq_w_snp.trimmed_sequence_variants(pwm);
+  String pwm_influence_infos(SequenceWithSNP seq_w_snp, PwmWithFilename pwm) {
+    Sequence[] trimmed_sequence_variants = seq_w_snp.trimmed_sequence_variants(pwm.pwm);
 
     if (seq_w_snp.num_cases() != 2)
       return null; // Unable to process more than two variants(which fractions to return)
 
     String result;
 
-    ScanSequence scan_seq_1 = new ScanSequence(trimmed_sequence_variants[0], pwm);
+    ScanSequence scan_seq_1 = new ScanSequence(trimmed_sequence_variants[0], pwm.pwm);
     double score_1 = scan_seq_1.best_score_on_sequence();
-    double pvalue_1 = pvalue_calculation.pvalue_by_threshold(score_1).pvalue;
 
-    ScanSequence scan_seq_2 = new ScanSequence(trimmed_sequence_variants[1], pwm);
+    double[] thresholds_1 = {score_1};
+    double pvalue_1 = find_pvalue_calculator(pwm, thresholds_1).pvalues_by_thresholds().get(0).pvalue;
+
+    ScanSequence scan_seq_2 = new ScanSequence(trimmed_sequence_variants[1], pwm.pwm);
     double score_2 = scan_seq_2.best_score_on_sequence();
-    double pvalue_2 = pvalue_calculation.pvalue_by_threshold(score_2).pvalue;
+    double[] thresholds_2 = {score_2};
+    double pvalue_2 = find_pvalue_calculator(pwm, thresholds_2).pvalues_by_thresholds().get(0).pvalue;
     // We print position from the start of seq, not from the start of overlapping region, thus should calculate the shift
-    int left_shift = seq_w_snp.left_shift(pwm.length());
+    int left_shift = seq_w_snp.left_shift(pwm.pwm.length());
     result = scan_seq_1.best_match_info_string(left_shift) + "\t" + pvalue_1 + "\t";
     result += scan_seq_2.best_match_info_string(left_shift) + "\t" + pvalue_2 + "\t";
     result += pvalue_2 / pvalue_1;
@@ -213,12 +216,32 @@ public class SNPScan {
   }
 
   private void setup_pvalue_calculation() {
-    for (PwmWithFilename pwm : collection) {
-      pwm.pvalue_calculation = find_pvalue_calculator(pwm);
+    for (PwmWithFilename pwm_w_filename: collection) {
+      //pwm.pvalue_calculation = find_pvalue_calculator(pwm);
+      if (thresholds_folder != null) {
+        String filename = thresholds_folder + File.separator + "thresholds_" + (new File(pwm_w_filename.filename)).getName();
+        pwm_w_filename.bsearchList = PvalueBsearchList.load_from_file(filename);
+      }
     }
   }
 
-  private CanFindPvalue find_pvalue_calculator(PwmWithFilename pwm_w_filename) {
+  CanFindPvalue find_pvalue_calculator(PwmWithFilename pwm_w_filename, double[] thresholds) {
+    if (pwm_w_filename.bsearchList == null) {
+      FindPvalueAPEParameters parameters = new FindPvalueAPEParameters(pwm_w_filename.pwm,
+                                                                       thresholds,
+                                                                       discretization,
+                                                                       background,
+                                                                       max_hash_size);
+      return new FindPvalueAPE(parameters);
+    } else {
+      FindPvalueBsearchParameters parameters = new FindPvalueBsearchParameters(pwm_w_filename.pwm,
+                                                                               thresholds,background,
+                                                                               pwm_w_filename.bsearchList);
+      return new FindPvalueBsearch(parameters);
+    }
+  }
+
+  /*private CanFindPvalue find_pvalue_calculator(PwmWithFilename pwm_w_filename) {
     if (thresholds_folder == null) {
       FindPvalueAPE pvalue_calculation = new FindPvalueAPE(pwm_w_filename.pwm);
       pvalue_calculation.background = calculation.background;
@@ -227,11 +250,12 @@ public class SNPScan {
       return pvalue_calculation;
     } else {
       String filename = thresholds_folder + File.separator + "thresholds_" + (new File(pwm_w_filename.filename)).getName();
+
       FindPvalueBsearch pvalue_calculation = FindPvalueBsearch.load_from_file(pwm_w_filename.pwm, filename);
       pvalue_calculation.background = calculation.background;
       return pvalue_calculation;
     }
-  }
+  } */
 
   void process_snp(String snp_input) throws IOException {
     String snp_name = first_part_of_string(snp_input);
@@ -245,7 +269,7 @@ public class SNPScan {
       fw.write("PWM-name\t||Normal pos\torientation\tword\tpvalue\t||Changed pos\torientation\tword\tpvalue\t||changed_pvalue/normal_pvalue\n");
 
       for (PwmWithFilename pwm : collection) {
-        String infos = calculation.pwm_influence_infos(seq_w_snp, pwm.pwm, pwm.pvalue_calculation);
+        String infos = calculation.pwm_influence_infos(seq_w_snp, pwm);
         if (infos != null) {
           fw.write(pwm.pwm.name + "\t" + infos + "\n");
         }
