@@ -12,8 +12,8 @@ public class PrecalculateThresholdList {
   private int max_hash_size;
   private String data_model;
 
-  private String collection_folder;
-  private String output_folder;
+  private java.io.File collection_folder;
+  private java.io.File results_dir;
   private double[] pvalues;
 
   private void initialize_defaults() {
@@ -21,7 +21,7 @@ public class PrecalculateThresholdList {
     background = new WordwiseBackground();
     pvalue_boundary = "lower";
     max_hash_size = 10000000;
-    pvalues = Helper.values_in_range_mul(1E-6, 0.3, 1.1);
+    pvalues = new GeometricProgression(1E-6, 0.3, 1.1).values(); // Helper.values_in_range_mul(1E-6, 0.3, 1.1);
 
     data_model = "pwm";
   }
@@ -50,7 +50,7 @@ public class PrecalculateThresholdList {
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    //load_pwm();
+    create_results_folder();
   }
 
   private FindThresholdAPEParameters find_threshold_parameters(PWM pwm) {
@@ -63,7 +63,7 @@ public class PrecalculateThresholdList {
 
   private void extract_collection_folder_name(ArrayList<String> argv) {
     try {
-      collection_folder = argv.remove(0);
+      collection_folder = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Specify PWM-collection folder", e);
     }
@@ -71,9 +71,15 @@ public class PrecalculateThresholdList {
 
   private void extract_output_folder_name(ArrayList<String> argv) {
     try {
-      output_folder = argv.remove(0);
+      results_dir = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Specify output folder", e);
+    }
+  }
+
+  private void create_results_folder(){
+    if (!results_dir.exists()) {
+      results_dir.mkdir();
     }
   }
 
@@ -82,18 +88,7 @@ public class PrecalculateThresholdList {
     if (opt.equals("-b")) {
       background = Background.fromString(argv.remove(0));
     } else if (opt.equals("--pvalues")) {
-      StringTokenizer parser = new StringTokenizer(argv.remove(0));
-      double min_pvalue = Double.valueOf(parser.nextToken(","));
-      double max_pvalue = Double.valueOf(parser.nextToken(","));
-      double step = Double.valueOf(parser.nextToken(","));
-      String progression_method = parser.nextToken();
-      if (progression_method.equals("mul")) {
-        pvalues = Helper.values_in_range_mul(min_pvalue, max_pvalue, step);
-      } else if (progression_method.equals("add")) {
-        pvalues = Helper.values_in_range_add(min_pvalue, max_pvalue, step);
-      } else {
-        throw new IllegalArgumentException("Progression method for pvalue-list is either add or mul, but you specified " + progression_method);
-      }
+      pvalues = Progression.fromString(argv.remove(0)).values();
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
@@ -111,30 +106,28 @@ public class PrecalculateThresholdList {
     }
   }
 
-  void calculate_thresholds_for_collection() {
-    java.io.File dir = new File(collection_folder);
-    java.io.File results_dir = new File(output_folder);
-    if (!results_dir.exists()) {
-      results_dir.mkdir();
+  PWM load_pwm(File filename) {
+    if (data_model.equals("pcm")) {
+      return PCM.new_from_file(filename.getPath()).to_pwm(background);
+    } else {
+      return PWM.new_from_file(filename.getPath());
     }
-    for (File filename : dir.listFiles()) {
+  }
+
+  void calculate_thresholds_for_file(File filename) {
+    ArrayList<ThresholdPvaluePair> pairs = new ArrayList<ThresholdPvaluePair>();
+    for (ThresholdInfo info: find_threshold_calculator(load_pwm(filename)).find_thresholds_by_pvalues()) {
+      pairs.add(new ThresholdPvaluePair(info));
+    }
+
+    File result_filename = new File(results_dir + File.separator + "thresholds_" + filename.getName());
+    new PvalueBsearchList(pairs).save_to_file(result_filename.getPath());
+  }
+
+  void calculate_thresholds_for_collection() {
+    for (File filename : collection_folder.listFiles()) {
       System.err.println(filename);
-      PWM pwm;
-      if (data_model.equals("pcm")) {
-        pwm = PCM.new_from_file(filename.getPath()).to_pwm(background);
-      } else {
-        pwm = PWM.new_from_file(filename.getPath());
-      }
-
-      FindThresholdAPE calculation = find_threshold_calculator(pwm);
-
-      ArrayList<ThresholdPvaluePair> pairs = new ArrayList<ThresholdPvaluePair>();
-      for (ThresholdInfo info: calculation.find_thresholds_by_pvalues()) {
-        pairs.add(new ThresholdPvaluePair(info));
-      }
-
-      File result_filename = new File(results_dir + File.separator + "thresholds_" + filename.getName());
-      new PvalueBsearchList(pairs).save_to_file(result_filename.getPath());
+      calculate_thresholds_for_file(filename);
     }
   }
 
