@@ -8,7 +8,7 @@ import java.util.Collections;
 
 public class SNPScan {
   private BackgroundModel background;
-  private double discretization;
+  private Double discretization;
   private Integer max_hash_size;
 
   private File path_to_collection_of_pwms;
@@ -115,7 +115,7 @@ public class SNPScan {
 
   private void initialize_defaults() {
     background = new WordwiseBackground();
-    discretization = 100;
+    discretization = 100.0;
     max_hash_size = 10000000;
 
     calculation = new SNPScan();
@@ -210,7 +210,6 @@ public class SNPScan {
 
   private void setup_pvalue_calculation() {
     for (PwmWithFilename pwm_w_filename: collection) {
-      //pwm.pvalue_calculation = find_pvalue_calculator(pwm);
       if (thresholds_folder != null) {
         String filename = thresholds_folder + File.separator + "thresholds_" + (new File(pwm_w_filename.filename)).getName();
         pwm_w_filename.bsearchList = PvalueBsearchList.load_from_file(filename);
@@ -236,7 +235,7 @@ public class SNPScan {
 
   void process_snp(String snp_input) throws IOException {
     String snp_name = first_part_of_string(snp_input);
-    SequenceWithSNP seq_w_snp = new SequenceWithSNP(last_part_of_string(snp_input));
+    SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
     FileWriter fw;
     String resulting_filename = (path_to_results_folder + File.separator + snp_name + ".txt");
     fw = new FileWriter(new File(resulting_filename));

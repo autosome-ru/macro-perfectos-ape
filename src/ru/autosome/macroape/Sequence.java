@@ -3,6 +3,14 @@ package ru.autosome.macroape;
 import java.util.HashMap;
 
 public class Sequence {
+  private static final HashMap<Character, Character> complements;
+  static {
+    HashMap<Character, Character> hsh = new HashMap<Character, Character>();
+    hsh.put('a', 't'); hsh.put('A', 'T'); hsh.put('t', 'a'); hsh.put('T', 'A');
+    hsh.put('c', 'g'); hsh.put('C', 'G'); hsh.put('g', 'c'); hsh.put('G', 'C');
+    complements = hsh;
+  }
+
   final public String sequence;
 
   public Sequence(String sequence) {
@@ -14,20 +22,15 @@ public class Sequence {
   }
 
   public Sequence reverse() {
-    String result = "";
-    for (int i = 0; i < sequence.length(); ++i) {
-      result += sequence.charAt(sequence.length() - i - 1);
-    }
-    return new Sequence(result);
+    return new Sequence(new StringBuilder(sequence).reverse().toString());
   }
 
   public Sequence complement() {
-    HashMap<Character, Character> complements = complements();
-    String result = "";
+    StringBuilder result = new StringBuilder(length());
     for (int i = 0; i < sequence.length(); ++i) {
-      result += complements.get(sequence.charAt(i));
+      result.append(complements.get(sequence.charAt(i)));
     }
-    return new Sequence(result);
+    return new Sequence(result.toString());
   }
 
   public Sequence substring(int beginIndex, int endIndex) {
@@ -37,23 +40,5 @@ public class Sequence {
   @Override
   public String toString() {
     return sequence;
-  }
-
-  private static HashMap<Character, Character> complements_cache;
-
-  private static HashMap<Character, Character> complements() {
-    if (complements_cache == null) {
-      HashMap<Character, Character> complements = new HashMap<Character, Character>();
-      complements.put('a', 't');
-      complements.put('c', 'g');
-      complements.put('g', 'c');
-      complements.put('t', 'a');
-      complements.put('A', 'T');
-      complements.put('C', 'G');
-      complements.put('G', 'C');
-      complements.put('T', 'A');
-      complements_cache = complements;
-    }
-    return complements_cache;
   }
 }

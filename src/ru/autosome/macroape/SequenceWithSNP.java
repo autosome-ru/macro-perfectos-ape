@@ -10,19 +10,30 @@ public class SequenceWithSNP {
   // Example:
   // input:  "GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
   // possible SNP formats: [a/g]; [ag]; a/g; a/g/c; [agc]; [a/g/c] and so on
-  public SequenceWithSNP(String seq_w_snp) {
-    String[] seq_parts = seq_w_snp.split("\\[|\\]");  // split by [ or ]
+  public SequenceWithSNP(String left, char[] mid, String right) {
+    this.left = left;
+    this.mid = mid;
+    this.right = right;
+  }
 
-    if (seq_parts.length == 1) { //   accT/Acca  or  accT/A/Gcca
+  public static SequenceWithSNP fromString(String seq_w_snp) {
+    String[] seq_parts = seq_w_snp.split("\\[|\\]");  // split by [ or ]
+    if (seq_parts.length == 3) { // acc[T/A]cca  or acc[TA]cca or  acc[T/A/G]cca  or acc[TAG]cca
+      String left = seq_parts[0];
+      char[] mid = seq_parts[1].replaceAll("/", "").toCharArray();
+      String right = seq_parts[2];
+
+      return new SequenceWithSNP(left, mid, right);
+    }
+    else if (seq_parts.length == 1) { //   accT/Acca  or  accT/A/Gcca
       int left_separator = seq_w_snp.indexOf("/");
       int right_separator = seq_w_snp.lastIndexOf("/");
-      left = seq_w_snp.substring(0, left_separator - 1);
-      right = seq_w_snp.substring(right_separator + 2, seq_w_snp.length());
-      mid = seq_w_snp.substring(left_separator - 1, right_separator + 2).replaceAll("/", "").toCharArray();
-    } else if (seq_parts.length == 3) { // acc[T/A]cca  or acc[TA]cca or  acc[T/A/G]cca  or acc[TAG]cca
-      left = seq_parts[0];
-      mid = seq_parts[1].replaceAll("/", "").toCharArray();
-      right = seq_parts[2];
+
+      String left = seq_w_snp.substring(0, left_separator - 1);
+      String right = seq_w_snp.substring(right_separator + 2, seq_w_snp.length());
+      char[] mid = seq_w_snp.substring(left_separator - 1, right_separator + 2).replaceAll("/", "").toCharArray();
+
+      return new SequenceWithSNP(left, mid, right);
     } else {
       throw new IllegalArgumentException("Can't parse sequence with SNPs: " + seq_w_snp);
     }
