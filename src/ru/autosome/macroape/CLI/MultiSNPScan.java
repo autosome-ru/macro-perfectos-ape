@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class SNPScan {
+public class MultiSNPScan {
   private BackgroundModel background;
   private Double discretization;
   private Integer max_hash_size;
@@ -15,7 +15,7 @@ public class SNPScan {
   private String path_to_file_w_snps;
   private String path_to_results_folder;
 
-  private SNPScan calculation;
+  private MultiSNPScan calculation;
   private String data_model;
   private String thresholds_folder;
 
@@ -77,7 +77,7 @@ public class SNPScan {
 
   private static final String DOC =
           "Command-line format:\n" +
-                  "java ru.autosome.macroape.CLI.SNPScan <folder with pwms> <file with SNPs> <folder for results>\n" +
+                  "java ru.autosome.macroape.CLI.MultiSNPScan <folder with pwms> <file with SNPs> <folder for results>\n" +
                   "\n" +
                   "Options:\n" +
                   "  [-d <discretization level>]\n" +
@@ -86,8 +86,8 @@ public class SNPScan {
                   "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
                   "\n" +
                   "Example:\n" +
-                  "  java ru.autosome.macroape.CLI.SNPScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
-                  "  java ru.autosome.macroape.CLI.SNPScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
+                  "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
+                  "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
 
   void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
     try {
@@ -118,23 +118,23 @@ public class SNPScan {
     discretization = 100.0;
     max_hash_size = 10000000;
 
-    calculation = new SNPScan();
+    calculation = new MultiSNPScan();
     data_model = "pwm";
     thresholds_folder = null;
   }
 
-  private SNPScan() {
+  private MultiSNPScan() {
     initialize_defaults();
   }
 
-  private static SNPScan from_arglist(ArrayList<String> argv) {
-    SNPScan result = new SNPScan();
+  private static MultiSNPScan from_arglist(ArrayList<String> argv) {
+    MultiSNPScan result = new MultiSNPScan();
     Helper.print_help_if_requested(argv, DOC);
     result.setup_from_arglist(argv);
     return result;
   }
 
-  private static SNPScan from_arglist(String[] args) {
+  private static MultiSNPScan from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
@@ -267,7 +267,7 @@ public class SNPScan {
 
   public static void main(String[] args) {
     try {
-      SNPScan calculation = SNPScan.from_arglist(args);
+      MultiSNPScan calculation = MultiSNPScan.from_arglist(args);
       calculation.process();
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
