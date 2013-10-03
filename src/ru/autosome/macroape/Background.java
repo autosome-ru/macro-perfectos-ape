@@ -5,6 +5,7 @@ import java.util.StringTokenizer;
 public class Background implements BackgroundModel {
   private double[] background;
 
+  // TODO: whether we should check symmetricity of background
   private Background(double[] background) {
     if (Math.abs(ArrayExtensions.sum(background) - 1.0) > 0.0001) {
       throw new IllegalArgumentException("Background probabilities should be 1.0 being summarized");
