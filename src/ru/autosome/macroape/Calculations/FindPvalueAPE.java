@@ -1,17 +1,29 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.Calculations;
+
+import ru.autosome.macroape.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FindPvalueAPE implements CanFindPvalue {
-  FindPvalueAPEParameters parameters;
+  public static class Parameters {
+    public PWM pwm;
+    public Double discretization;
+    public BackgroundModel background;
+    public Integer max_hash_size;
 
-  public FindPvalueAPE(FindPvalueAPEParameters parameters) {
+    public Parameters() { }
+    public Parameters(PWM pwm, Double discretization, BackgroundModel background, Integer max_hash_size) {
+      this.pwm = pwm;
+      this.discretization = discretization;
+      this.background = background;
+      this.max_hash_size = max_hash_size;
+    }
+  }
+
+  Parameters parameters;
+  public FindPvalueAPE(Parameters parameters) {
     this.parameters = parameters;
-    /*this.pwm = pwm;
-    this.discretization = 10000.0;
-    this.background = new WordwiseBackground();
-    this.max_hash_size = 10000000;*/
   }
 
 
@@ -32,10 +44,10 @@ public class FindPvalueAPE implements CanFindPvalue {
       return threshold * parameters.discretization;
     }
   }
-  double[] upscaled_thresholds() {
-    double[] result = new double[parameters.thresholds.length];
-    for (int i = 0; i < parameters.thresholds.length; ++i) {
-        result[i] = upscale_threshold(parameters.thresholds[i]);
+  double[] upscaled_thresholds(double[] thresholds) {
+    double[] result = new double[thresholds.length];
+    for (int i = 0; i < thresholds.length; ++i) {
+      result[i] = upscale_threshold(thresholds[i]);
     }
     return result;
   }
@@ -46,21 +58,21 @@ public class FindPvalueAPE implements CanFindPvalue {
     return new PvalueInfo(non_upscaled_threshold, pvalue, (int) count);
   }
 
-  public ArrayList<PvalueInfo> pvalues_by_thresholds() {
+  public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
     CountingPWM countingPWM = countingPWM(upscaled_pwm());
-    HashMap<Double, Double> counts = countingPWM.counts_by_thresholds(upscaled_thresholds());
+    HashMap<Double, Double> counts = countingPWM.counts_by_thresholds(upscaled_thresholds(thresholds));
 
     ArrayList<PvalueInfo> infos = new ArrayList<PvalueInfo>();
-    for (double threshold : parameters.thresholds) {
+    for (double threshold : thresholds) {
       infos.add( infos_by_count(counts, threshold, countingPWM) );
     }
     return infos;
   }
 
-  /*public PvalueInfo pvalue_by_threshold(double threshold) {
+  public PvalueInfo pvalue_by_threshold(double threshold) {
     double[] thresholds = {threshold};
     return pvalues_by_thresholds(thresholds).get(0);
-  } */
+  }
 
   public OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();

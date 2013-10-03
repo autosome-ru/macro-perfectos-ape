@@ -1,5 +1,6 @@
 package ru.autosome.macroape.CLI;
 import ru.autosome.macroape.*;
+import ru.autosome.macroape.Calculations.FindPvalueAPE;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,22 +30,22 @@ public class FindPvalue {
   private String thresholds_folder;
   private PWM pwm;
 
-  private FindPvalueAPEParameters ape_parameters() {
-    return new FindPvalueAPEParameters(pwm, thresholds, discretization, background, max_hash_size);
+  private ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters ape_parameters() {
+    return new ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters(pwm, discretization, background, max_hash_size);
   }
 
-  private FindPvalueAPE ape_calculation() {
-    return new FindPvalueAPE(ape_parameters());
+  private ru.autosome.macroape.Calculations.FindPvalueAPE ape_calculation() {
+    return new ru.autosome.macroape.Calculations.FindPvalueAPE(ape_parameters());
   }
 
-  private FindPvalueBsearchParameters bsearch_parameters() {
+  private ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters bsearch_parameters() {
     String thresholds_filename = thresholds_folder + File.separator + "thresholds_" + (new File(pm_filename)).getName();
     PvalueBsearchList bsearchList = PvalueBsearchList.load_from_file(thresholds_filename);
-    return new FindPvalueBsearchParameters(pwm, thresholds, background, bsearchList);
+    return new ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters(pwm, background, bsearchList);
   }
 
-  private FindPvalueBsearch bsearch_calculation() {
-    return new FindPvalueBsearch(bsearch_parameters());
+  private ru.autosome.macroape.Calculations.FindPvalueBsearch bsearch_calculation() {
+    return new ru.autosome.macroape.Calculations.FindPvalueBsearch(bsearch_parameters());
   }
 
   private CanFindPvalue calculator() {
@@ -57,9 +58,9 @@ public class FindPvalue {
     return result;
   }
 
-  ArrayList<PvalueInfo> pvalues_by_thresholds() {
-    return calculator().pvalues_by_thresholds();
-  }
+  /*ArrayList<PvalueInfo> pvalues_by_thresholds() {
+    return calculator().pvalues_by_thresholds(thresholds);
+  }*/
 
   private void initialize_defaults() {
     discretization = 10000.0;
@@ -154,7 +155,7 @@ public class FindPvalue {
   }
 
   OutputInformation report_table() {
-    ArrayList<PvalueInfo> results = calculator().pvalues_by_thresholds();
+    ArrayList<PvalueInfo> results = calculator().pvalues_by_thresholds(thresholds);
     return report_table(results);
   }
 

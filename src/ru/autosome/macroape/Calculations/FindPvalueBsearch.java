@@ -1,21 +1,36 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.Calculations;
+
+import ru.autosome.macroape.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 // Looks for rough pValue of motif under given threshold
 // using a sorted list of predefined threshold-pvalues pairs
 // by performing binary search
-public class FindPvalueBsearch implements CanFindPvalue {
-  FindPvalueBsearchParameters parameters;
 
-  public FindPvalueBsearch(FindPvalueBsearchParameters parameters) {
+public class FindPvalueBsearch implements CanFindPvalue {
+  public static class Parameters {
+    public PWM pwm;
+    public BackgroundModel background;
+    public PvalueBsearchList bsearchList;
+
+    Parameters() { }
+    public Parameters(PWM pwm, BackgroundModel background, PvalueBsearchList bsearchList) {
+      this.pwm = pwm;
+      this.background = background;
+      this.bsearchList = bsearchList;
+    }
+  }
+
+  Parameters parameters;
+
+  public FindPvalueBsearch(Parameters parameters) {
     this.parameters = parameters;
   }
 
-  public ArrayList<PvalueInfo> pvalues_by_thresholds() {
+  public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
     ArrayList<PvalueInfo> results = new ArrayList<PvalueInfo>();
-    for (double threshold : parameters.thresholds) {
+    for (double threshold : thresholds) {
       results.add(pvalue_by_threshold(threshold));
     }
     return results;
@@ -45,3 +60,4 @@ public class FindPvalueBsearch implements CanFindPvalue {
     return infos;
   }
 }
+

@@ -54,12 +54,12 @@ public class PrecalculateThresholdList {
     create_results_folder();
   }
 
-  private FindThresholdAPEParameters find_threshold_parameters(PWM pwm) {
-    return new FindThresholdAPEParameters(pwm, pvalues, background, discretization, pvalue_boundary, max_hash_size);
+  private ru.autosome.macroape.Calculations.FindThresholdAPE.Parameters find_threshold_parameters(PWM pwm) {
+    return new ru.autosome.macroape.Calculations.FindThresholdAPE.Parameters(pwm, background, discretization, pvalue_boundary, max_hash_size);
   }
 
-  private FindThresholdAPE find_threshold_calculator(PWM pwm) {
-    return new FindThresholdAPE(find_threshold_parameters(pwm));
+  private ru.autosome.macroape.Calculations.FindThresholdAPE find_threshold_calculator(PWM pwm) {
+    return new ru.autosome.macroape.Calculations.FindThresholdAPE(find_threshold_parameters(pwm));
   }
 
   private void extract_collection_folder_name(ArrayList<String> argv) {
@@ -117,7 +117,7 @@ public class PrecalculateThresholdList {
 
   void calculate_thresholds_for_file(File filename) {
     ArrayList<ThresholdPvaluePair> pairs = new ArrayList<ThresholdPvaluePair>();
-    for (ThresholdInfo info: find_threshold_calculator(load_pwm(filename)).find_thresholds_by_pvalues()) {
+    for (ThresholdInfo info: find_threshold_calculator(load_pwm(filename)).find_thresholds_by_pvalues(pvalues)) {
       pairs.add(new ThresholdPvaluePair(info));
     }
 

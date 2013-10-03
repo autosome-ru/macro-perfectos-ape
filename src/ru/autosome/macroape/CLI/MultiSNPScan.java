@@ -53,12 +53,12 @@ public class MultiSNPScan {
     double score_1 = scan_seq_1.best_score_on_sequence();
 
     double[] thresholds_1 = {score_1};
-    double pvalue_1 = find_pvalue_calculator(pwm, thresholds_1).pvalues_by_thresholds().get(0).pvalue;
+    double pvalue_1 = find_pvalue_calculator(pwm).pvalues_by_thresholds(thresholds_1).get(0).pvalue;
 
     ScanSequence scan_seq_2 = new ScanSequence(trimmed_sequence_variants[1], pwm.pwm);
     double score_2 = scan_seq_2.best_score_on_sequence();
     double[] thresholds_2 = {score_2};
-    double pvalue_2 = find_pvalue_calculator(pwm, thresholds_2).pvalues_by_thresholds().get(0).pvalue;
+    double pvalue_2 = find_pvalue_calculator(pwm).pvalues_by_thresholds(thresholds_2).get(0).pvalue;
     // We print position from the start of seq, not from the start of overlapping region, thus should calculate the shift
     int left_shift = seq_w_snp.left_shift(pwm.pwm.length());
     result = scan_seq_1.best_match_info_string(left_shift) + "\t" + pvalue_1 + "\t";
@@ -217,19 +217,18 @@ public class MultiSNPScan {
     }
   }
 
-  CanFindPvalue find_pvalue_calculator(PwmWithFilename pwm_w_filename, double[] thresholds) {
+  CanFindPvalue find_pvalue_calculator(PwmWithFilename pwm_w_filename) {
     if (pwm_w_filename.bsearchList == null) {
-      FindPvalueAPEParameters parameters = new FindPvalueAPEParameters(pwm_w_filename.pwm,
-                                                                       thresholds,
+      ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters parameters = new ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters(pwm_w_filename.pwm,
                                                                        discretization,
                                                                        background,
                                                                        max_hash_size);
-      return new FindPvalueAPE(parameters);
+      return new ru.autosome.macroape.Calculations.FindPvalueAPE(parameters);
     } else {
-      FindPvalueBsearchParameters parameters = new FindPvalueBsearchParameters(pwm_w_filename.pwm,
-                                                                               thresholds, background,
-                                                                               pwm_w_filename.bsearchList);
-      return new FindPvalueBsearch(parameters);
+      ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters parameters = new ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters(pwm_w_filename.pwm,
+                                                                                                                                                     background,
+                                                                                                                                                     pwm_w_filename.bsearchList);
+      return new ru.autosome.macroape.Calculations.FindPvalueBsearch(parameters);
     }
   }
 

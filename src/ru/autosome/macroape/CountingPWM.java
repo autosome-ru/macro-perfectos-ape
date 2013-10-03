@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-class CountingPWM {
+public class CountingPWM {
   public Integer max_hash_size;
 
   private final PWM pwm;
   private final BackgroundModel background;
 
-  CountingPWM(PWM pwm, BackgroundModel background) {
+  public CountingPWM(PWM pwm, BackgroundModel background) {
     this.pwm = pwm;
     this.background = background;
   }
@@ -90,7 +90,7 @@ class CountingPWM {
     return new_scores;
   }
 
-  HashMap<Double, Double> counts_by_thresholds(double... thresholds) {
+  public HashMap<Double, Double> counts_by_thresholds(double... thresholds) {
     HashMap<Double, Double> scores = count_distribution_after_threshold(ArrayExtensions.min(thresholds));
     HashMap<Double, Double> result = new HashMap<Double, Double>();
     for (double threshold : thresholds) {
@@ -185,7 +185,7 @@ class CountingPWM {
     return results;
   }
 
-  double vocabularyVolume() {
+  public double vocabularyVolume() {
     return Math.pow(background.volume(), pwm.length());
   }
 }
