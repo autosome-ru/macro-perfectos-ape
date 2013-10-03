@@ -41,32 +41,6 @@ public class MultiSNPScan {
     return s.replaceAll("\\s+", " ").split(" ")[0];
   }
 
-  String pwm_influence_infos(SequenceWithSNP seq_w_snp, PwmWithFilename pwm) {
-    Sequence[] trimmed_sequence_variants = seq_w_snp.trimmed_sequence_variants(pwm.pwm);
-
-    if (seq_w_snp.num_cases() != 2)
-      return null; // Unable to process more than two variants(which fractions to return)
-
-    String result;
-
-    ScanSequence scan_seq_1 = new ScanSequence(trimmed_sequence_variants[0], pwm.pwm);
-    double score_1 = scan_seq_1.best_score_on_sequence();
-
-    double[] thresholds_1 = {score_1};
-    double pvalue_1 = find_pvalue_calculator(pwm).pvalues_by_thresholds(thresholds_1).get(0).pvalue;
-
-    ScanSequence scan_seq_2 = new ScanSequence(trimmed_sequence_variants[1], pwm.pwm);
-    double score_2 = scan_seq_2.best_score_on_sequence();
-    double[] thresholds_2 = {score_2};
-    double pvalue_2 = find_pvalue_calculator(pwm).pvalues_by_thresholds(thresholds_2).get(0).pvalue;
-    // We print position from the start of seq, not from the start of overlapping region, thus should calculate the shift
-    int left_shift = seq_w_snp.left_shift(pwm.pwm.length());
-    result = scan_seq_1.best_match_info_string(left_shift) + "\t" + pvalue_1 + "\t";
-    result += scan_seq_2.best_match_info_string(left_shift) + "\t" + pvalue_2 + "\t";
-    result += pvalue_2 / pvalue_1;
-    return result;
-  }
-
   private ArrayList<PwmWithFilename> load_collection_of_pwms() {
     ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
     for (File file : path_to_collection_of_pwms.listFiles()) {
@@ -244,7 +218,7 @@ public class MultiSNPScan {
       fw.write("PWM-name\t||Normal pos\torientation\tword\tpvalue\t||Changed pos\torientation\tword\tpvalue\t||changed_pvalue/normal_pvalue\n");
 
       for (PwmWithFilename pwm : collection) {
-        String infos = calculation.pwm_influence_infos(seq_w_snp, pwm);
+        String infos = new SnpScan(pwm.pwm, seq_w_snp, find_pvalue_calculator(pwm)).pwm_influence_infos();
         if (infos != null) {
           fw.write(pwm.pwm.name + "\t" + infos + "\n");
         }
