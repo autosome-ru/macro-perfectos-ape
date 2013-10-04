@@ -17,12 +17,10 @@ public class SnpScan {
       return null; // Unable to process more than two variants(which fractions to return)
 
     ScanSequence scan_seq_1 = new ScanSequence(trimmed_sequence_variants[0], pwm);
-    double score_1 = scan_seq_1.best_score_on_sequence();
-    double pvalue_1 = pvalueCalculator.pvalue_by_threshold(score_1).pvalue;
+    double pvalue_1 = new EstimateAffinityMinPvalue(pwm, trimmed_sequence_variants[0], pvalueCalculator).affinity();
 
     ScanSequence scan_seq_2 = new ScanSequence(trimmed_sequence_variants[1], pwm);
-    double score_2 = scan_seq_2.best_score_on_sequence();
-    double pvalue_2 = pvalueCalculator.pvalue_by_threshold(score_2).pvalue;
+    double pvalue_2 = new EstimateAffinityMinPvalue(pwm, trimmed_sequence_variants[1], pvalueCalculator).affinity();
 
     // We print position from the start of seq, not from the start of overlapping region, thus should calculate the shift
     int left_shift = sequenceWithSNP.left_shift(pwm.length());
