@@ -78,7 +78,7 @@ public class PrecalculateThresholdList {
     }
   }
 
-  private void create_results_folder(){
+  private void create_results_folder() {
     if (!results_dir.exists()) {
       results_dir.mkdir();
     }
@@ -97,7 +97,7 @@ public class PrecalculateThresholdList {
     } else if (opt.equals("--boundary")) {
       pvalue_boundary = argv.remove(0);
       if (!pvalue_boundary.equalsIgnoreCase("lower") &&
-              !pvalue_boundary.equalsIgnoreCase("upper")) {
+           !pvalue_boundary.equalsIgnoreCase("upper")) {
         throw new IllegalArgumentException("boundary should be either lower or upper");
       }
     } else if (opt.equals("--pcm")) {
@@ -117,7 +117,7 @@ public class PrecalculateThresholdList {
 
   void calculate_thresholds_for_file(File filename) {
     ArrayList<ThresholdPvaluePair> pairs = new ArrayList<ThresholdPvaluePair>();
-    for (ThresholdInfo info: find_threshold_calculator(load_pwm(filename)).find_thresholds_by_pvalues(pvalues)) {
+    for (ThresholdInfo info : find_threshold_calculator(load_pwm(filename)).find_thresholds_by_pvalues(pvalues)) {
       pairs.add(new ThresholdPvaluePair(info));
     }
 
@@ -133,19 +133,19 @@ public class PrecalculateThresholdList {
   }
 
   private static final String DOC =
-          "Command-line format:\n" +
-                  "java ru.autosome.macroape.CLI.PrecalculateThresholdList <collection folder> <output folder>... [options]\n" +
-                  "\n" +
-                  "Options:\n" +
-                  "  [-d <discretization level>]\n" +
-                  "  [--pcm] - treat the input files as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
-                  "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
-                  "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
-                  "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
-                  "\n" +
-                  "Examples:\n" +
-                  "  java ru.autosome.macroape.CLI.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/\n" +
-                  "  java ru.autosome.macroape.CLI.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
+   "Command-line format:\n" +
+    "java ru.autosome.macroape.CLI.PrecalculateThresholdList <collection folder> <output folder>... [options]\n" +
+    "\n" +
+    "Options:\n" +
+    "  [-d <discretization level>]\n" +
+    "  [--pcm] - treat the input files as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+    "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
+    "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
+    "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
+    "\n" +
+    "Examples:\n" +
+    "  java ru.autosome.macroape.CLI.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/\n" +
+    "  java ru.autosome.macroape.CLI.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
 
   public static void main(String[] args) {
     try {

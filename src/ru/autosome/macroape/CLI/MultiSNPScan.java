@@ -24,8 +24,8 @@ public class MultiSNPScan {
   private File thresholds_folder;
 
   private ArrayList<String> snp_list;
-  Map<File,PWM> collection_of_pwms;
-  Map<File,CanFindPvalue> pvalue_calculators;
+  Map<File, PWM> collection_of_pwms;
+  Map<File, CanFindPvalue> pvalue_calculators;
 
 
   // Split by spaces and return last part
@@ -50,24 +50,24 @@ public class MultiSNPScan {
     File[] files = path_to_collection_of_pwms.listFiles();
     if (files == null)
       return;
-    for (File file: files) {
+    for (File file : files) {
       collection_of_pwms.put(file, load_pwm(file));
     }
   }
 
   private static final String DOC =
-          "Command-line format:\n" +
-                  "java ru.autosome.macroape.CLI.MultiSNPScan <folder with pwms> <file with SNPs> <folder for results>\n" +
-                  "\n" +
-                  "Options:\n" +
-                  "  [-d <discretization level>]\n" +
-                  "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
-                  "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
-                  "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
-                  "\n" +
-                  "Example:\n" +
-                  "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
-                  "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
+   "Command-line format:\n" +
+    "java ru.autosome.macroape.CLI.MultiSNPScan <folder with pwms> <file with SNPs> <folder for results>\n" +
+    "\n" +
+    "Options:\n" +
+    "  [-d <discretization level>]\n" +
+    "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+    "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
+    "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
+    "\n" +
+    "Example:\n" +
+    "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
+    "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
 
   void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
     try {
@@ -181,16 +181,16 @@ public class MultiSNPScan {
   }
 
   private void setup_pvalue_calculation() {
-    collection_of_pwms.forEach(new BiConsumer<File,PWM>(){
+    collection_of_pwms.forEach(new BiConsumer<File, PWM>() {
       public void accept(File file, PWM pwm) {
         if (thresholds_folder != null) {
           File thresholds_file = new File(thresholds_folder, "thresholds_" + file.getName());
           PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file.getAbsolutePath());
           pvalue_calculators.put(file,
-                                 new FindPvalueBsearch(new FindPvalueBsearch.Parameters(pwm, background, pvalueBsearchList)) );
+                                 new FindPvalueBsearch(new FindPvalueBsearch.Parameters(pwm, background, pvalueBsearchList)));
         } else {
           pvalue_calculators.put(file,
-                                 new FindPvalueAPE(new FindPvalueAPE.Parameters(pwm, discretization, background, max_hash_size)) );
+                                 new FindPvalueAPE(new FindPvalueAPE.Parameters(pwm, discretization, background, max_hash_size)));
         }
       }
     });
@@ -207,7 +207,7 @@ public class MultiSNPScan {
       fw.write(seq_w_snp + "\n");
       fw.write("PWM-name\t||Normal pos\torientation\tword\tpvalue\t||Changed pos\torientation\tword\tpvalue\t||changed_pvalue/normal_pvalue\n");
 
-      for(File file: collection_of_pwms.keySet()) {
+      for (File file : collection_of_pwms.keySet()) {
         PWM pwm = collection_of_pwms.get(file);
         CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
         String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).pwm_influence_infos();

@@ -7,18 +7,18 @@ import java.util.Collections;
 
 public class FindThreshold {
   private static final String DOC =
-          "Command-line format:\n" +
-                  "java ru.autosome.macroape.CLI.FindThreshold <pat-file> [<list of P-values>...] [options]\n" +
-                  "\n" +
-                  "Options:\n" +
-                  "  [-d <discretization level>]\n" +
-                  "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
-                  "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
-                  "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
-                  "\n" +
-                  "Example:\n" +
-                  "  java ru.autosome.macroape.CLI.FindThreshold motifs/KLF4_f2.pat\n" +
-                  "  java ru.autosome.macroape.CLI.FindThreshold  motifs/KLF4_f2.pat 0.001 0.0001 0.0005 -d 1000 -b 0.4,0.3,0.2,0.1\n";
+   "Command-line format:\n" +
+    "java ru.autosome.macroape.CLI.FindThreshold <pat-file> [<list of P-values>...] [options]\n" +
+    "\n" +
+    "Options:\n" +
+    "  [-d <discretization level>]\n" +
+    "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+    "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
+    "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
+    "\n" +
+    "Example:\n" +
+    "  java ru.autosome.macroape.CLI.FindThreshold motifs/KLF4_f2.pat\n" +
+    "  java ru.autosome.macroape.CLI.FindThreshold  motifs/KLF4_f2.pat 0.001 0.0001 0.0005 -d 1000 -b 0.4,0.3,0.2,0.1\n";
 
   BackgroundModel background;
   Double discretization;
@@ -80,7 +80,7 @@ public class FindThreshold {
     } else if (opt.equals("--boundary")) {
       pvalue_boundary = argv.remove(0);
       if (!pvalue_boundary.equalsIgnoreCase("lower") &&
-              !pvalue_boundary.equalsIgnoreCase("upper")) {
+           !pvalue_boundary.equalsIgnoreCase("upper")) {
         throw new IllegalArgumentException("boundary should be either lower or upper");
       }
     } else if (opt.equals("--pcm")) {

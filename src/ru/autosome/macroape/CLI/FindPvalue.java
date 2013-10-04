@@ -1,6 +1,6 @@
 package ru.autosome.macroape.CLI;
+
 import ru.autosome.macroape.*;
-import ru.autosome.macroape.Calculations.FindPvalueAPE;
 
 import java.io.File;
 import java.util.ArrayList;
