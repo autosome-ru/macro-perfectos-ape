@@ -196,12 +196,12 @@ public class MultiSNPScan {
     });
   }
 
-  void process_snp(String snp_input) throws IOException {
+  private void process_snp(String snp_input) throws IOException {
     String snp_name = first_part_of_string(snp_input);
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
     FileWriter fw;
-    String resulting_filename = (path_to_results_folder + File.separator + snp_name + ".txt");
-    fw = new FileWriter(new File(resulting_filename));
+    File resulting_file = new File(path_to_results_folder, snp_name + ".txt");
+    fw = new FileWriter(resulting_file);
     try {
       System.out.println(snp_name);
       fw.write(seq_w_snp + "\n");
