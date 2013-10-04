@@ -1,57 +1,49 @@
 package ru.autosome.macroape;
 
+import java.util.Map;
+
 public class ScanSequence {
   private final Sequence sequence;
   private final PWM pwm;
   private double[] scores_on_direct_strand_cache;
   private double[] scores_on_reverse_strand_cache;
+  private Map<Position, Double> cache_score_by_position;
 
   public ScanSequence(Sequence sequence, PWM pwm) {
     this.sequence = sequence;
     this.pwm = pwm;
   }
 
-  double[] scores_on_direct_strand() {
-    if (scores_on_direct_strand_cache == null) {
-      scores_on_direct_strand_cache = pwm.scores_on_sequence(sequence);
+  Map<Position, Double> scores_by_position() {
+    if (cache_score_by_position == null) {
+      cache_score_by_position = pwm.scores_by_position_on_sequence(sequence);
     }
-    return scores_on_direct_strand_cache;
+    return cache_score_by_position;
   }
 
-  double[] scores_on_reverse_strand() {
-    if (scores_on_reverse_strand_cache == null) {
-      scores_on_reverse_strand_cache = pwm.scores_on_sequence(sequence.reverse().complement());
+  Position best_score_full_position() {
+    Map<Position, Double> scores_by_position = scores_by_position();
+    Double max_score = Double.NEGATIVE_INFINITY;
+    Position best_position = null;
+    for (Position position : scores_by_position.keySet()) {
+      if (scores_by_position.get(position) > max_score) {
+        best_position = position;
+        max_score = scores_by_position.get(position);
+      }
     }
-    return scores_on_reverse_strand_cache;
-  }
-
-  double best_score_on_direct_strand() {
-    return ArrayExtensions.max(scores_on_direct_strand());
-  }
-
-  double best_score_on_reverse_strand() {
-    return ArrayExtensions.max(scores_on_reverse_strand());
+    return best_position;
   }
 
   String best_score_strand() {
-    if (best_score_on_direct_strand() >= best_score_on_reverse_strand()) {
-      return "direct";
-    } else {
-      return "revcomp";
-    }
+    return best_score_full_position().strand();
   }
 
   public double best_score_on_sequence() {
-    return ArrayExtensions.max(best_score_on_direct_strand(), best_score_on_reverse_strand());
+    return scores_by_position().get(best_score_full_position());
   }
 
-  // position of motif start (most upstream position, not the leftmost)
   int best_score_position() {
-    if (best_score_strand().equals("direct")) {
-      return ArrayExtensions.indexOf(best_score_on_direct_strand(), scores_on_direct_strand());
-    } else {
-      return sequence.length() - 1 - ArrayExtensions.indexOf(best_score_on_reverse_strand(), scores_on_reverse_strand());
-    }
+    return best_score_full_position().position;
   }
 
   // params are number of letters before position where snp starts overlap with pwm

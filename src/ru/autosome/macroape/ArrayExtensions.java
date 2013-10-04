@@ -1,6 +1,7 @@
 package ru.autosome.macroape;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ArrayExtensions {
   public static double max(double... array) throws IllegalArgumentException {
@@ -80,10 +81,13 @@ public class ArrayExtensions {
     return array;
   }
 
-  public static double[] toPrimitiveArray(ArrayList<Double> wrappedArray) {
+  public static double[] toPrimitiveArray(Collection<Double> wrappedArray) {
     double[] array = new double[wrappedArray.size()];
-    for (int i = 0; i < wrappedArray.size(); i++)
-      array[i] = wrappedArray.get(i);
+    int i = 0;
+    for(Double element : wrappedArray) {
+      array[i] = element;
+      i += 1;
+    }
     return array;
   }
 }

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.Math.ceil;
 
@@ -99,6 +100,19 @@ public class PWM extends PM {
     double[] result = new double[seq.length() - length() + 1];
     for (int i = 0; i < result.length; ++i) {
       result[i] = score(seq.substring(i, i + length()));
+    }
+    return result;
+  }
+
+  public Map<Position, Double> scores_by_position_on_sequence(Sequence seq) throws IllegalArgumentException {
+    Map<Position, Double> result = new HashMap<Position, Double>();
+    if (seq.length() < length()) {
+      throw new IllegalArgumentException("seq in PWM#scores_on_sequence(seq) should have length not less than length of PWM");
+    }
+    for(int position = 0; position < seq.length() - length() + 1; ++ position) {
+      Sequence subSequence = seq.substring(position, position + length());
+      result.put(new Position(position,true), score(subSequence));
+      result.put(new Position(position,false), score(subSequence.reverse().complement()));
     }
     return result;
   }
