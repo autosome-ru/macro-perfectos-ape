@@ -1,10 +1,9 @@
 package ru.autosome.macroape.BioUML.Calculations;
 
 import ru.autosome.macroape.BackgroundModel;
-import ru.autosome.macroape.Calculations.*;
+import ru.autosome.macroape.CanFindPvalue;
 import ru.autosome.macroape.PWM;
 import ru.autosome.macroape.PvalueBsearchList;
-import ru.autosome.macroape.PvalueInfo;
 
 import java.util.ArrayList;
 
@@ -35,7 +34,7 @@ public class FindPvalueBsearch {
                                                                               parameters.bsearchList);
   }
 
-  ArrayList<PvalueInfo> launch() {
+  ArrayList<CanFindPvalue.PvalueInfo> launch() {
     return new ru.autosome.macroape.Calculations.FindPvalueBsearch(calculation_parameters())
             .pvalues_by_thresholds(parameters.thresholds);
   }

@@ -155,7 +155,7 @@ public class FindPvalue {
   }
 
   OutputInformation report_table() {
-    ArrayList<PvalueInfo> results = calculator().pvalues_by_thresholds(thresholds);
+    ArrayList<CanFindPvalue.PvalueInfo> results = calculator().pvalues_by_thresholds(thresholds);
     return report_table(results);
   }
 

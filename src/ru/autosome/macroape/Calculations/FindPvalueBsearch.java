@@ -14,7 +14,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
     public BackgroundModel background;
     public PvalueBsearchList bsearchList;
 
-    Parameters() { }
+    public Parameters() { }
     public Parameters(PWM pwm, BackgroundModel background, PvalueBsearchList bsearchList) {
       this.pwm = pwm;
       this.background = background;

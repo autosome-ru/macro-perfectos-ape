@@ -2,7 +2,6 @@ package ru.autosome.macroape.BioUML.Calculations;
 
 import ru.autosome.macroape.BackgroundModel;
 import ru.autosome.macroape.PWM;
-import ru.autosome.macroape.PvalueInfo;
 import ru.autosome.macroape.ThresholdInfo;
 
 import java.util.ArrayList;

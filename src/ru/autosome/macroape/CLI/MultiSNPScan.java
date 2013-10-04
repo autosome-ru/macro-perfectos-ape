@@ -1,10 +1,15 @@
 package ru.autosome.macroape.CLI;
 
 import ru.autosome.macroape.*;
+import ru.autosome.macroape.Calculations.FindPvalueAPE;
+import ru.autosome.macroape.Calculations.FindPvalueBsearch;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class MultiSNPScan {
   private BackgroundModel background;
@@ -12,15 +17,15 @@ public class MultiSNPScan {
   private Integer max_hash_size;
 
   private File path_to_collection_of_pwms;
-  private String path_to_file_w_snps;
-  private String path_to_results_folder;
+  private File path_to_file_w_snps;
+  private File path_to_results_folder;
 
-  private MultiSNPScan calculation;
   private String data_model;
-  private String thresholds_folder;
+  private File thresholds_folder;
 
-  private ArrayList<PwmWithFilename> collection;
   private ArrayList<String> snp_list;
+  Map<File,PWM> collection_of_pwms;
+  Map<File,CanFindPvalue> pvalue_calculators;
 
 
   // Split by spaces and return last part
@@ -41,12 +46,13 @@ public class MultiSNPScan {
     return s.replaceAll("\\s+", " ").split(" ")[0];
   }
 
-  private ArrayList<PwmWithFilename> load_collection_of_pwms() {
-    ArrayList<PwmWithFilename> result = new ArrayList<PwmWithFilename>();
-    for (File file : path_to_collection_of_pwms.listFiles()) {
-      result.add(new PwmWithFilename(load_pwm(file), file.getPath()));
+  private void load_collection_of_pwms() {
+    File[] files = path_to_collection_of_pwms.listFiles();
+    if (files == null)
+      return;
+    for (File file: files) {
+      collection_of_pwms.put(file, load_pwm(file));
     }
-    return result;
   }
 
   private static final String DOC =
@@ -73,7 +79,7 @@ public class MultiSNPScan {
 
   void extract_path_to_file_w_snps(ArrayList<String> argv) {
     try {
-      path_to_file_w_snps = argv.remove(0);
+      path_to_file_w_snps = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Specify file with SNPs", e);
     }
@@ -81,7 +87,7 @@ public class MultiSNPScan {
 
   void extract_path_to_results_folder(ArrayList<String> argv) {
     try {
-      path_to_results_folder = argv.remove(0);
+      path_to_results_folder = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Specify output folder", e);
     }
@@ -92,9 +98,10 @@ public class MultiSNPScan {
     discretization = 100.0;
     max_hash_size = 10000000;
 
-    calculation = new MultiSNPScan();
     data_model = "pwm";
     thresholds_folder = null;
+    collection_of_pwms = new HashMap<File, PWM>();
+    pvalue_calculators = new HashMap<File, CanFindPvalue>();
   }
 
   private MultiSNPScan() {
@@ -123,7 +130,7 @@ public class MultiSNPScan {
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    load_collection();
+    load_collection_of_pwms();
     setup_pvalue_calculation();
     load_snp_list();
   }
@@ -139,7 +146,7 @@ public class MultiSNPScan {
     } else if (opt.equals("--pcm")) {
       data_model = "pcm";
     } else if (opt.equals("--precalc")) {
-      thresholds_folder = argv.remove(0);
+      thresholds_folder = new File(argv.remove(0));
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
@@ -158,14 +165,6 @@ public class MultiSNPScan {
     return pwm;
   }
 
-  private void load_collection() {
-    try {
-      collection = load_collection_of_pwms();
-    } catch (Exception e) {
-      throw new IllegalArgumentException("Failed to load collection of PWMs", e);
-    }
-  }
-
   private void load_snp_list() {
     try {
       InputStream reader = new FileInputStream(path_to_file_w_snps);
@@ -176,34 +175,25 @@ public class MultiSNPScan {
   }
 
   private void setup_output_folder() {
-    File results_folder = new File(path_to_results_folder);
-    if (!results_folder.exists()) {
-      results_folder.mkdir();
+    if (!path_to_results_folder.exists()) {
+      path_to_results_folder.mkdir();
     }
   }
 
   private void setup_pvalue_calculation() {
-    for (PwmWithFilename pwm_w_filename: collection) {
-      if (thresholds_folder != null) {
-        String filename = thresholds_folder + File.separator + "thresholds_" + (new File(pwm_w_filename.filename)).getName();
-        pwm_w_filename.bsearchList = PvalueBsearchList.load_from_file(filename);
+    collection_of_pwms.forEach(new BiConsumer<File,PWM>(){
+      public void accept(File file, PWM pwm) {
+        if (thresholds_folder != null) {
+          File thresholds_file = new File(thresholds_folder, "thresholds_" + file.getName());
+          PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file.getAbsolutePath());
+          pvalue_calculators.put(file,
+                                 new FindPvalueBsearch(new FindPvalueBsearch.Parameters(pwm, background, pvalueBsearchList)) );
+        } else {
+          pvalue_calculators.put(file,
+                                 new FindPvalueAPE(new FindPvalueAPE.Parameters(pwm, discretization, background, max_hash_size)) );
+        }
       }
-    }
-  }
-
-  CanFindPvalue find_pvalue_calculator(PwmWithFilename pwm_w_filename) {
-    if (pwm_w_filename.bsearchList == null) {
-      ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters parameters = new ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters(pwm_w_filename.pwm,
-                                                                       discretization,
-                                                                       background,
-                                                                       max_hash_size);
-      return new ru.autosome.macroape.Calculations.FindPvalueAPE(parameters);
-    } else {
-      ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters parameters = new ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters(pwm_w_filename.pwm,
-                                                                                                                                                     background,
-                                                                                                                                                     pwm_w_filename.bsearchList);
-      return new ru.autosome.macroape.Calculations.FindPvalueBsearch(parameters);
-    }
+    });
   }
 
   void process_snp(String snp_input) throws IOException {
@@ -217,10 +207,12 @@ public class MultiSNPScan {
       fw.write(seq_w_snp + "\n");
       fw.write("PWM-name\t||Normal pos\torientation\tword\tpvalue\t||Changed pos\torientation\tword\tpvalue\t||changed_pvalue/normal_pvalue\n");
 
-      for (PwmWithFilename pwm : collection) {
-        String infos = new SnpScan(pwm.pwm, seq_w_snp, find_pvalue_calculator(pwm)).pwm_influence_infos();
+      for(File file: collection_of_pwms.keySet()) {
+        PWM pwm = collection_of_pwms.get(file);
+        CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
+        String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).pwm_influence_infos();
         if (infos != null) {
-          fw.write(pwm.pwm.name + "\t" + infos + "\n");
+          fw.write(pwm.name + "\t" + infos + "\n");
         }
       }
     } finally {
