@@ -5,8 +5,6 @@ import java.util.Map;
 public class ScanSequence {
   private final Sequence sequence;
   private final PWM pwm;
-  private double[] scores_on_direct_strand_cache;
-  private double[] scores_on_reverse_strand_cache;
   private Map<Position, Double> cache_score_by_position;
 
   public ScanSequence(Sequence sequence, PWM pwm) {

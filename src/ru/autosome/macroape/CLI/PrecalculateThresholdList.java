@@ -5,8 +5,69 @@ import ru.autosome.macroape.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.StringTokenizer;
 
 public class PrecalculateThresholdList {
+
+
+  abstract static public class Progression {
+    public abstract double[] values();
+
+    public static Progression fromString(String s) {
+      StringTokenizer parser = new StringTokenizer(s);
+      double min = Double.valueOf(parser.nextToken(","));
+      double max = Double.valueOf(parser.nextToken(","));
+      double step = Double.valueOf(parser.nextToken(","));
+      String progression_method = parser.nextToken();
+
+      if (progression_method.equals("mul")) {
+        return new GeometricProgression(min, max, step);
+      } else if (progression_method.equals("add")) {
+        return new ArithmeticProgression(min, max, step);
+      } else {
+        throw new IllegalArgumentException("Progression method for pvalue-list is either add or mul, but you specified " + progression_method);
+      }
+    }
+  }
+
+  public static class GeometricProgression extends Progression {
+    double from;
+    double to;
+    double step ;
+    public double[] values() {
+      ArrayList<Double> results = new ArrayList<Double>();
+      for (double x = from; x <= to; x *= step) {
+        results.add(x);
+      }
+      return ArrayExtensions.toPrimitiveArray(results);
+    }
+
+    public GeometricProgression(double min, double to, double step) {
+      this.from = min;
+      this.to = to;
+      this.step = step;
+    }
+  }
+
+  public static class ArithmeticProgression extends Progression {
+    double from;
+    double to;
+    double step ;
+    public double[] values() {
+      ArrayList<Double> results = new ArrayList<Double>();
+      for (double x = from; x <= to; x += step) {
+        results.add(x);
+      }
+      return ArrayExtensions.toPrimitiveArray(results);
+    }
+
+    ArithmeticProgression(double from, double to, double step) {
+      this.from = from;
+      this.to = to;
+      this.step = step;
+    }
+  }
+
   private double discretization;
   private BackgroundModel background;
   private String pvalue_boundary;
