@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.StringTokenizer;
 
-public class PrecalculateThresholdList {
+public class PrecalculateThresholdLists {
 
 
   abstract static public class Progression {
@@ -33,7 +33,8 @@ public class PrecalculateThresholdList {
   public static class GeometricProgression extends Progression {
     double from;
     double to;
-    double step ;
+    double step;
+
     public double[] values() {
       ArrayList<Double> results = new ArrayList<Double>();
       for (double x = from; x <= to; x *= step) {
@@ -52,7 +53,8 @@ public class PrecalculateThresholdList {
   public static class ArithmeticProgression extends Progression {
     double from;
     double to;
-    double step ;
+    double step;
+
     public double[] values() {
       ArrayList<Double> results = new ArrayList<Double>();
       for (double x = from; x <= to; x += step) {
@@ -88,18 +90,18 @@ public class PrecalculateThresholdList {
     data_model = "pwm";
   }
 
-  private PrecalculateThresholdList() {
+  private PrecalculateThresholdLists() {
     initialize_defaults();
   }
 
-  private static PrecalculateThresholdList from_arglist(ArrayList<String> argv) {
-    PrecalculateThresholdList result = new PrecalculateThresholdList();
+  private static PrecalculateThresholdLists from_arglist(ArrayList<String> argv) {
+    PrecalculateThresholdLists result = new PrecalculateThresholdLists();
     Helper.print_help_if_requested(argv, DOC);
     result.setup_from_arglist(argv);
     return result;
   }
 
-  private static PrecalculateThresholdList from_arglist(String[] args) {
+  private static PrecalculateThresholdLists from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
@@ -113,14 +115,6 @@ public class PrecalculateThresholdList {
       extract_option(argv);
     }
     create_results_folder();
-  }
-
-  private ru.autosome.macroape.Calculations.FindThresholdAPE.Parameters find_threshold_parameters(PWM pwm) {
-    return new ru.autosome.macroape.Calculations.FindThresholdAPE.Parameters(pwm, background, discretization, pvalue_boundary, max_hash_size);
-  }
-
-  private ru.autosome.macroape.Calculations.FindThresholdAPE find_threshold_calculator(PWM pwm) {
-    return new ru.autosome.macroape.Calculations.FindThresholdAPE(find_threshold_parameters(pwm));
   }
 
   private void extract_collection_folder_name(ArrayList<String> argv) {
@@ -176,14 +170,22 @@ public class PrecalculateThresholdList {
     }
   }
 
-  void calculate_thresholds_for_file(File filename) {
-    ArrayList<ThresholdPvaluePair> pairs = new ArrayList<ThresholdPvaluePair>();
-    for (ThresholdInfo info : find_threshold_calculator(load_pwm(filename)).find_thresholds_by_pvalues(pvalues)) {
-      pairs.add(new ThresholdPvaluePair(info));
-    }
 
-    File result_filename = new File(results_dir + File.separator + "thresholds_" + filename.getName());
-    new PvalueBsearchList(pairs).save_to_file(result_filename.getPath());
+  ru.autosome.macroape.Calculations.PrecalculateThresholdList calculator() {
+    return new ru.autosome.macroape.Calculations.PrecalculateThresholdList(calculator_parameters());
+  }
+
+  ru.autosome.macroape.Calculations.PrecalculateThresholdList.Parameters calculator_parameters() {
+    return new ru.autosome.macroape.Calculations.PrecalculateThresholdList.Parameters(pvalues,
+                                                                                      discretization,
+                                                                                      background,
+                                                                                      pvalue_boundary,
+                                                                                      max_hash_size);
+  }
+
+  void calculate_thresholds_for_file(File filename) {
+    File result_filename = new File(results_dir, "thresholds_" + filename.getName());
+    calculator().bsearch_list_for_pwm(load_pwm(filename)).save_to_file(result_filename.getPath());
   }
 
   void calculate_thresholds_for_collection() {
@@ -195,7 +197,7 @@ public class PrecalculateThresholdList {
 
   private static final String DOC =
    "Command-line format:\n" +
-    "java ru.autosome.macroape.CLI.PrecalculateThresholdList <collection folder> <output folder>... [options]\n" +
+    "java ru.autosome.macroape.CLI.PrecalculateThresholdLists <collection folder> <output folder>... [options]\n" +
     "\n" +
     "Options:\n" +
     "  [-d <discretization level>]\n" +
@@ -205,12 +207,12 @@ public class PrecalculateThresholdList {
     "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
     "\n" +
     "Examples:\n" +
-    "  java ru.autosome.macroape.CLI.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/\n" +
-    "  java ru.autosome.macroape.CLI.PrecalculateThresholdList ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
+    "  java ru.autosome.macroape.CLI.PrecalculateThresholdLists ./hocomoco/ ./hocomoco_thresholds/\n" +
+    "  java ru.autosome.macroape.CLI.PrecalculateThresholdLists ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
 
   public static void main(String[] args) {
     try {
-      PrecalculateThresholdList calculation = PrecalculateThresholdList.from_arglist(args);
+      PrecalculateThresholdLists calculation = PrecalculateThresholdLists.from_arglist(args);
       calculation.calculate_thresholds_for_collection();
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");

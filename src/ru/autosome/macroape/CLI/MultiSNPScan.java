@@ -205,14 +205,14 @@ public class MultiSNPScan {
     try {
       System.out.println(snp_name);
       fw.write(seq_w_snp + "\n");
-      fw.write("PWM-name\t||Normal pos\torientation\tword\tpvalue\t||Changed pos\torientation\tword\tpvalue\t||changed_pvalue/normal_pvalue\n");
+      fw.write("SNP name\tmotif\tposition1\torientation1\tword1\tP-value1\tposition2\torientation2\tword2\tP-value2\tFold change\n");
 
       for (File file : collection_of_pwms.keySet()) {
         PWM pwm = collection_of_pwms.get(file);
         CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
         String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).pwm_influence_infos();
         if (infos != null) {
-          fw.write(pwm.name + "\t" + infos + "\n");
+          fw.write(snp_name +"\t" + pwm.name + "\t" + infos + "\n");
         }
       }
     } finally {
