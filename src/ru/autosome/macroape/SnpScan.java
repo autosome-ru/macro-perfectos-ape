@@ -1,5 +1,7 @@
 package ru.autosome.macroape;
 
+import java.util.ArrayList;
+
 public class SnpScan {
   final PWM pwm;
   final SequenceWithSNP sequenceWithSNP;
@@ -11,23 +13,28 @@ public class SnpScan {
   }
 
   public String pwm_influence_infos() {
-    Sequence[] trimmed_sequence_variants = sequenceWithSNP.trimmed_sequence_variants(pwm);
 
     if (sequenceWithSNP.num_cases() != 2)
       return null; // Unable to process more than two variants(which fractions to return)
 
-    ScanSequence scan_seq_1 = new ScanSequence(trimmed_sequence_variants[0], pwm);
-    double pvalue_1 = new EstimateAffinityMinPvalue(pwm, trimmed_sequence_variants[0], pvalueCalculator).affinity();
+    ArrayList<Position> positions_to_check = sequenceWithSNP.positions_subsequence_overlaps_snp(pwm.length());
+    Sequence seq_1 = sequenceWithSNP.sequence_variants()[0];
+    EstimateAffinityMinPvalue seq_1_affinity_calculator =
+     new EstimateAffinityMinPvalue(pwm, seq_1, pvalueCalculator, positions_to_check);
+    Position pos_1 = seq_1_affinity_calculator.bestPosition();
+    double pvalue_1 = seq_1_affinity_calculator.affinity();
+    Sequence word_1 = seq_1.substring(pos_1, pwm.length());
 
-    ScanSequence scan_seq_2 = new ScanSequence(trimmed_sequence_variants[1], pwm);
-    double pvalue_2 = new EstimateAffinityMinPvalue(pwm, trimmed_sequence_variants[1], pvalueCalculator).affinity();
-
-    // We print position from the start of seq, not from the start of overlapping region, thus should calculate the shift
-    int left_shift = sequenceWithSNP.left_shift(pwm.length());
+    Sequence seq_2 = sequenceWithSNP.sequence_variants()[1];
+    EstimateAffinityMinPvalue seq_2_affinity_calculator =
+     new EstimateAffinityMinPvalue(pwm, seq_2, pvalueCalculator, positions_to_check);
+    Position pos_2 = seq_2_affinity_calculator.bestPosition();
+    double pvalue_2 = seq_2_affinity_calculator.affinity();
+    Sequence word_2 = seq_2.substring(pos_2, pwm.length());
 
     StringBuilder result = new StringBuilder();
-    result.append(scan_seq_1.best_match_info_string(left_shift)).append("\t").append(pvalue_1).append("\t");
-    result.append(scan_seq_2.best_match_info_string(left_shift)).append("\t").append(pvalue_2).append("\t");
+    result.append(pos_1.toString()).append("\t").append(word_1).append("\t").append(pvalue_1);
+    result.append(pos_2.toString()).append("\t").append(word_2).append("\t").append(pvalue_2);
     result.append(pvalue_2 / pvalue_1);
     return result.toString();
   }

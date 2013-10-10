@@ -1,5 +1,7 @@
 package ru.autosome.macroape;
 
+import java.util.ArrayList;
+
 public class SequenceWithSNP {
 
   final private String left;
@@ -65,14 +67,15 @@ public class SequenceWithSNP {
     return Math.max(0, pos_of_snp() - motif_length + 1);
   }
 
-  // trim sequence to size of no more length than (2*size+1) with SNP in center
-  private SequenceWithSNP trim_to_radius(int size) {
-    String trimmed_left = left.substring( Math.max(0, left.length() - size) );
-    String trimmed_right = right.substring( 0, Math.min(right.length(), size) );
-    return new SequenceWithSNP(trimmed_left, mid, trimmed_right);
+  // position
+  public ArrayList<Position> positions_subsequence_overlaps_snp(int subsequence_length) {
+    ArrayList<Position> positions = new ArrayList<Position>();
+    int left_pos = Math.max(0, left.length() - subsequence_length + 1);
+    int right_pos = Math.min(length(), left.length() + subsequence_length);
+    return Position.positions_between(left_pos, right_pos, subsequence_length);
   }
 
-  private static Sequence trim_to_motif_length(Sequence seq, int snp_position, int motif_length) {
+  /*private static Sequence trim_to_motif_length(Sequence seq, int snp_position, int motif_length) {
     return seq.substring(Math.max(0, snp_position - motif_length + 1),
             Math.min(seq.length(), snp_position + motif_length)); // end point not included
   }
@@ -87,7 +90,7 @@ public class SequenceWithSNP {
     }
     return trimmed_sequence_variants;
   }
-
+    */
   @Override
   public String toString() {
     String mid_variants = "" + mid[0];

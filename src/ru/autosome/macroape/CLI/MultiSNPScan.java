@@ -18,6 +18,7 @@ public class MultiSNPScan {
 
   private File path_to_collection_of_pwms;
   private File path_to_file_w_snps;
+  private File path_to_results;
   private File path_to_results_folder;
 
   private String data_model;
@@ -84,10 +85,18 @@ public class MultiSNPScan {
       throw new IllegalArgumentException("Specify file with SNPs", e);
     }
   }
-
+  /*
   void extract_path_to_results_folder(ArrayList<String> argv) {
     try {
       path_to_results_folder = new File(argv.remove(0));
+    } catch (IndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("Specify output folder", e);
+    }
+  }
+  */
+  void extract_path_to_results(ArrayList<String> argv) {
+    try {
+      path_to_results = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Specify output folder", e);
     }
@@ -124,8 +133,9 @@ public class MultiSNPScan {
   void setup_from_arglist(ArrayList<String> argv) {
     extract_path_to_collection_of_pwms(argv);
     extract_path_to_file_w_snps(argv);
-    extract_path_to_results_folder(argv);
-    setup_output_folder();
+    //extract_path_to_results_folder(argv);
+    //setup_output_folder();
+    extract_path_to_results(argv);
 
     while (argv.size() > 0) {
       extract_option(argv);
@@ -196,37 +206,32 @@ public class MultiSNPScan {
     });
   }
 
-  private void process_snp(String snp_input) throws IOException {
+  private void process_snp(String snp_input, FileWriter fw) throws IOException {
     String snp_name = first_part_of_string(snp_input);
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
-    FileWriter fw;
-    File resulting_file = new File(path_to_results_folder, snp_name + ".txt");
-    fw = new FileWriter(resulting_file);
-    try {
-      System.out.println(snp_name);
-      fw.write(seq_w_snp + "\n");
-      fw.write("SNP name\tmotif\tposition1\torientation1\tword1\tP-value1\tposition2\torientation2\tword2\tP-value2\tFold change\n");
+    System.out.println(snp_name);
 
-      for (File file : collection_of_pwms.keySet()) {
-        PWM pwm = collection_of_pwms.get(file);
-        CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
-        String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).pwm_influence_infos();
-        if (infos != null) {
-          fw.write(snp_name +"\t" + pwm.name + "\t" + infos + "\n");
-        }
+    //fw.write(seq_w_snp + "\n");
+
+    for (File file : collection_of_pwms.keySet()) {
+      PWM pwm = collection_of_pwms.get(file);
+      CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
+      String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).pwm_influence_infos();
+      if (infos != null) {
+        fw.write(snp_name +"\t" + pwm.name + "\t" + infos + "\n");
       }
-    } finally {
-      fw.close();
     }
   }
 
-  void process() {
-    for (String snp_input : snp_list) {
-      try {
-        process_snp(snp_input);
-      } catch (IOException e) {
-        System.err.println("SNP " + snp_input + "wasn't processed due to IO-error");
+  void process() throws IOException {
+    FileWriter fw = new FileWriter(path_to_results);
+    try {
+      fw.write("SNP name\tmotif\tposition1\torientation1\tword1\tP-value1\tposition2\torientation2\tword2\tP-value2\tFold change\n");
+      for (String snp_input : snp_list) {
+        process_snp(snp_input, fw);
       }
+    } finally {
+      fw.close();
     }
   }
 

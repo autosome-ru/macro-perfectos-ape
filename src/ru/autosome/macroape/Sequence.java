@@ -1,5 +1,6 @@
 package ru.autosome.macroape;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Sequence {
@@ -33,8 +34,23 @@ public class Sequence {
     return new Sequence(result.toString());
   }
 
+  // works on direct strand
   public Sequence substring(int beginIndex, int endIndex) {
     return new Sequence(sequence.substring(beginIndex, endIndex));
+  }
+
+  // returns subsequence of given length on according strand, starting from given upstream boundary
+  public Sequence substring(Position upstream_boundary, int substring_length) {
+    if (upstream_boundary.directStrand) {
+      return substring(upstream_boundary.position, Math.min(upstream_boundary.position + substring_length, length()));
+    } else {
+      return substring(Math.max(upstream_boundary.position - substring_length, 0), upstream_boundary.position).reverse().complement();
+    }
+  }
+
+  // (upstream) positions at which subsequence of given length can start
+  ArrayList<Position> subsequence_positions(int subsequence_length) {
+    return Position.positions_between(0, length(), subsequence_length);
   }
 
   @Override
