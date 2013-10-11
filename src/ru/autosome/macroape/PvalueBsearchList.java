@@ -1,7 +1,6 @@
 package ru.autosome.macroape;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -62,7 +61,29 @@ public class PvalueBsearchList {
     }
   }
 
+  private static ArrayList<ThresholdPvaluePair> load_thresholds_list(ArrayList<String> lines) {
+    ArrayList<ThresholdPvaluePair> result = new ArrayList<ThresholdPvaluePair>();
+    for (String s : lines) {
+      String[] line_tokens = s.replaceAll("\\s+", "\t").split("\t");
+      if (line_tokens.length < 2) continue;
+      double threshold = Double.valueOf(line_tokens[0]);
+      double pvalue = Double.valueOf(line_tokens[1]);
+      result.add(new ThresholdPvaluePair(threshold, pvalue));
+    }
+    return result;
+  }
+
+  public static ArrayList<ThresholdPvaluePair> load_thresholds_list(String filename) {
+    try {
+      InputStream reader = new FileInputStream(filename);
+      ArrayList<String> lines = InputExtensions.readLinesFromInputStream(reader);
+      return load_thresholds_list(lines);
+    } catch (FileNotFoundException e) {
+      return null;
+    }
+  }
+
   public static PvalueBsearchList load_from_file(String filename) {
-    return new PvalueBsearchList(ThresholdPvaluePair.load_thresholds_list(filename));
+    return new PvalueBsearchList(load_thresholds_list(filename));
   }
 }
