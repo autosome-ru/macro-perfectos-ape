@@ -4,7 +4,9 @@ import ru.autosome.macroape.*;
 import ru.autosome.macroape.Calculations.FindPvalueAPE;
 import ru.autosome.macroape.Calculations.FindPvalueBsearch;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -163,18 +165,18 @@ public class MultiSNPScan {
   }
 
   private void setup_pvalue_calculation() {
-    for (File file: collection_of_pwms.keySet()) {
+    for (File file : collection_of_pwms.keySet()) {
       PWM pwm = collection_of_pwms.get(file);
 
-        if (thresholds_folder != null) {
-          File thresholds_file = new File(thresholds_folder, "thresholds_" + file.getName());
-          PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file.getAbsolutePath());
-          pvalue_calculators.put(file,
-                                 new FindPvalueBsearch(new FindPvalueBsearch.Parameters(pwm, background, pvalueBsearchList)));
-        } else {
-          pvalue_calculators.put(file,
-                                 new FindPvalueAPE(new FindPvalueAPE.Parameters(pwm, discretization, background, max_hash_size)));
-        }
+      if (thresholds_folder != null) {
+        File thresholds_file = new File(thresholds_folder, "thresholds_" + file.getName());
+        PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file.getAbsolutePath());
+        pvalue_calculators.put(file,
+         new FindPvalueBsearch(new FindPvalueBsearch.Parameters(pwm, background, pvalueBsearchList)));
+      } else {
+        pvalue_calculators.put(file,
+         new FindPvalueAPE(new FindPvalueAPE.Parameters(pwm, discretization, background, max_hash_size)));
+      }
     }
   }
 
@@ -187,7 +189,7 @@ public class MultiSNPScan {
       CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
       String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).pwm_influence_infos();
       if (infos != null) {
-        System.out.println(snp_name +"\t" + pwm.name + "\t" + infos);
+        System.out.println(snp_name + "\t" + pwm.name + "\t" + infos);
       }
     }
   }
