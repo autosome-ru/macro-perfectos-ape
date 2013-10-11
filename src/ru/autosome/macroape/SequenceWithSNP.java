@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class SequenceWithSNP {
 
-  final private String left;
-  final private String right;
-  final private char[] mid;
+  final public String left;
+  final public String right;
+  final public char[] mid;
 
   // line should finish with sequence (which doesn't have spaces).
   // Example:
@@ -75,22 +75,6 @@ public class SequenceWithSNP {
     return Position.positions_between(left_pos, right_pos, subsequence_length);
   }
 
-  /*private static Sequence trim_to_motif_length(Sequence seq, int snp_position, int motif_length) {
-    return seq.substring(Math.max(0, snp_position - motif_length + 1),
-            Math.min(seq.length(), snp_position + motif_length)); // end point not included
-  }
-
-  // trim sequence variants to size that pwm will overlap place of polymorphism at each position
-  public Sequence[] trimmed_sequence_variants(PM pm) {
-    int pos_of_snp = pos_of_snp();
-    Sequence[] sequence_variants = sequence_variants();
-    Sequence[] trimmed_sequence_variants = new Sequence[num_cases()];
-    for (int i = 0; i < num_cases(); ++i) {
-      trimmed_sequence_variants[i] = trim_to_motif_length(sequence_variants[i], pos_of_snp, pm.length());
-    }
-    return trimmed_sequence_variants;
-  }
-    */
   @Override
   public String toString() {
     String mid_variants = "" + mid[0];

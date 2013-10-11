@@ -44,7 +44,7 @@ public class Sequence {
     if (upstream_boundary.directStrand) {
       return substring(upstream_boundary.position, Math.min(upstream_boundary.position + substring_length, length()));
     } else {
-      return substring(Math.max(upstream_boundary.position - substring_length, 0), upstream_boundary.position).reverse().complement();
+      return substring(Math.max(upstream_boundary.position - substring_length + 1, 0), upstream_boundary.position + 1).reverse().complement();
     }
   }
 

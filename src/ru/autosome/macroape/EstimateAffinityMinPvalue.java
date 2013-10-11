@@ -22,10 +22,10 @@ class EstimateAffinityMinPvalue implements EstimateAffinity {
   }
 
   public double affinity() {
-    double score = scanSequence().best_score_on_sequence();
+    double score = scanSequence().best_score();
     return pvalueCalculator.pvalue_by_threshold(score).pvalue;
   }
   public Position bestPosition() {
-    return scanSequence().best_score_full_position();
+    return scanSequence().best_position();
   }
 }

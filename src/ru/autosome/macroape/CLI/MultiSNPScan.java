@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 public class MultiSNPScan {
   private BackgroundModel background;
@@ -18,8 +17,6 @@ public class MultiSNPScan {
 
   private File path_to_collection_of_pwms;
   private File path_to_file_w_snps;
-  private File path_to_results;
-  private File path_to_results_folder;
 
   private String data_model;
   private File thresholds_folder;
@@ -58,7 +55,7 @@ public class MultiSNPScan {
 
   private static final String DOC =
    "Command-line format:\n" +
-    "java ru.autosome.macroape.CLI.MultiSNPScan <folder with pwms> <file with SNPs> <folder for results>\n" +
+    "java ru.autosome.macroape.CLI.MultiSNPScan <folder with pwms> <file with SNPs>\n" +
     "\n" +
     "Options:\n" +
     "  [-d <discretization level>]\n" +
@@ -67,8 +64,8 @@ public class MultiSNPScan {
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
     "\n" +
     "Example:\n" +
-    "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pwms/ snp.txt ./results --precalc ./collection_thresholds\n" +
-    "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pcms/ snp.txt ./results --pcm -d 10\n";
+    "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pwms/ snp.txt --precalc ./collection_thresholds\n" +
+    "  java ru.autosome.macroape.CLI.MultiSNPScan ./hocomoco/pcms/ snp.txt --pcm -d 10\n";
 
   void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
     try {
@@ -83,22 +80,6 @@ public class MultiSNPScan {
       path_to_file_w_snps = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Specify file with SNPs", e);
-    }
-  }
-  /*
-  void extract_path_to_results_folder(ArrayList<String> argv) {
-    try {
-      path_to_results_folder = new File(argv.remove(0));
-    } catch (IndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("Specify output folder", e);
-    }
-  }
-  */
-  void extract_path_to_results(ArrayList<String> argv) {
-    try {
-      path_to_results = new File(argv.remove(0));
-    } catch (IndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("Specify output folder", e);
     }
   }
 
@@ -133,9 +114,6 @@ public class MultiSNPScan {
   void setup_from_arglist(ArrayList<String> argv) {
     extract_path_to_collection_of_pwms(argv);
     extract_path_to_file_w_snps(argv);
-    //extract_path_to_results_folder(argv);
-    //setup_output_folder();
-    extract_path_to_results(argv);
 
     while (argv.size() > 0) {
       extract_option(argv);
@@ -184,15 +162,10 @@ public class MultiSNPScan {
     }
   }
 
-  private void setup_output_folder() {
-    if (!path_to_results_folder.exists()) {
-      path_to_results_folder.mkdir();
-    }
-  }
-
   private void setup_pvalue_calculation() {
-    collection_of_pwms.forEach(new BiConsumer<File, PWM>() {
-      public void accept(File file, PWM pwm) {
+    for (File file: collection_of_pwms.keySet()) {
+      PWM pwm = collection_of_pwms.get(file);
+
         if (thresholds_folder != null) {
           File thresholds_file = new File(thresholds_folder, "thresholds_" + file.getName());
           PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file.getAbsolutePath());
@@ -202,37 +175,29 @@ public class MultiSNPScan {
           pvalue_calculators.put(file,
                                  new FindPvalueAPE(new FindPvalueAPE.Parameters(pwm, discretization, background, max_hash_size)));
         }
-      }
-    });
+    }
   }
 
-  private void process_snp(String snp_input, FileWriter fw) throws IOException {
+  private void process_snp(String snp_input) {
     String snp_name = first_part_of_string(snp_input);
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
-    System.out.println(snp_name);
-
-    //fw.write(seq_w_snp + "\n");
 
     for (File file : collection_of_pwms.keySet()) {
       PWM pwm = collection_of_pwms.get(file);
       CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
       String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).pwm_influence_infos();
       if (infos != null) {
-        fw.write(snp_name +"\t" + pwm.name + "\t" + infos + "\n");
+        System.out.println(snp_name +"\t" + pwm.name + "\t" + infos);
       }
     }
   }
 
-  void process() throws IOException {
-    FileWriter fw = new FileWriter(path_to_results);
-    try {
-      fw.write("SNP name\tmotif\tposition1\torientation1\tword1\tP-value1\tposition2\torientation2\tword2\tP-value2\tFold change\n");
-      for (String snp_input : snp_list) {
-        process_snp(snp_input, fw);
-      }
-    } finally {
-      fw.close();
+  void process() {
+    System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change\n");
+    for (String snp_input : snp_list) {
+      process_snp(snp_input);
     }
+
   }
 
   public static void main(String[] args) {
