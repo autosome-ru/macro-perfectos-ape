@@ -1,4 +1,4 @@
-package ru.autosome.macroape.BioUML.Calculations;
+package ru.autosome.macroape.BioUML;
 
 
 import ru.autosome.macroape.*;
