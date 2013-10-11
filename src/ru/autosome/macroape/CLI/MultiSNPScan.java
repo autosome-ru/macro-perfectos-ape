@@ -1,8 +1,10 @@
 package ru.autosome.macroape.CLI;
 
 import ru.autosome.macroape.*;
+import ru.autosome.macroape.Calculations.CanFindPvalue;
 import ru.autosome.macroape.Calculations.FindPvalueAPE;
 import ru.autosome.macroape.Calculations.FindPvalueBsearch;
+import ru.autosome.macroape.Calculations.SnpScan;
 
 import java.io.File;
 import java.io.FileInputStream;

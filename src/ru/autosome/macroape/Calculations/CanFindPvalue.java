@@ -1,4 +1,7 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.Calculations;
+
+import ru.autosome.macroape.OutputInformation;
+import ru.autosome.macroape.ResultInfo;
 
 import java.util.ArrayList;
 

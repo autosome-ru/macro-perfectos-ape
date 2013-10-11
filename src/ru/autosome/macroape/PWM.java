@@ -88,7 +88,7 @@ public class PWM extends PM {
     return score(word.sequence, background);
   }
 
-  double score(Sequence word) throws IllegalArgumentException {
+  public double score(Sequence word) throws IllegalArgumentException {
     return score(word.sequence);
   }
 
@@ -101,7 +101,7 @@ public class PWM extends PM {
   }
 
   // best score of suffix s[i..l]
-  double best_suffix(int i) {
+  public double best_suffix(int i) {
     double result = 0.0;
     for (int pos_index = i; pos_index < length(); ++pos_index) {
       result += ArrayExtensions.max(matrix[pos_index]);

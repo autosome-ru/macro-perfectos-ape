@@ -1,5 +1,7 @@
 package ru.autosome.macroape;
 
+import ru.autosome.macroape.Calculations.CountingPWM;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;

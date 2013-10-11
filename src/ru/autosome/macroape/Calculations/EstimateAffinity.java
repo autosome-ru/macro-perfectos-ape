@@ -1,4 +1,4 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.Calculations;
 
 interface EstimateAffinity {
   double affinity();

@@ -1,4 +1,9 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.Calculations;
+
+import ru.autosome.macroape.PWM;
+import ru.autosome.macroape.Position;
+import ru.autosome.macroape.Sequence;
+import ru.autosome.macroape.SequenceWithSNP;
 
 import java.util.ArrayList;
 

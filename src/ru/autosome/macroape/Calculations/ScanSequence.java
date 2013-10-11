@@ -1,4 +1,8 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.Calculations;
+
+import ru.autosome.macroape.PWM;
+import ru.autosome.macroape.Position;
+import ru.autosome.macroape.Sequence;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +35,7 @@ public class ScanSequence {
     return cache_score_by_position;
   }
 
-  Position best_position() {
+  public Position best_position() {
     Double max_score = Double.NEGATIVE_INFINITY;
     Position best_position = null;
     for (Position position : scores_by_position().keySet()) {

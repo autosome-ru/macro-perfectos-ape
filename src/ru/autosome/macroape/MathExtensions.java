@@ -1,7 +1,7 @@
 package ru.autosome.macroape;
 
-class MathExtensions {
-  static double inverf(double x) {
+public class MathExtensions {
+  public static double inverf(double x) {
     int sign = x < 0 ? -1 : 1;
     x = Math.abs(x);
     double a = 8 / (3 * Math.PI) * (Math.PI - 3) / (4 - Math.PI);

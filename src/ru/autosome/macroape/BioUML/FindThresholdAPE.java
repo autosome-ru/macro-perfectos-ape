@@ -1,7 +1,7 @@
 package ru.autosome.macroape.BioUML;
 
 import ru.autosome.macroape.BackgroundModel;
-import ru.autosome.macroape.CountingPWM;
+import ru.autosome.macroape.Calculations.CountingPWM;
 import ru.autosome.macroape.PWM;
 
 import java.util.ArrayList;

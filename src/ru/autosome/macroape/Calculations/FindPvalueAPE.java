@@ -1,6 +1,8 @@
 package ru.autosome.macroape.Calculations;
 
-import ru.autosome.macroape.*;
+import ru.autosome.macroape.BackgroundModel;
+import ru.autosome.macroape.OutputInformation;
+import ru.autosome.macroape.PWM;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,6 +1,7 @@
 package ru.autosome.macroape.CLI;
 
 import ru.autosome.macroape.*;
+import ru.autosome.macroape.Calculations.CountingPWM;
 
 import java.util.ArrayList;
 import java.util.Collections;

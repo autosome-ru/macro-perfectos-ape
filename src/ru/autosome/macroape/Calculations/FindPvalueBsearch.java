@@ -1,6 +1,9 @@
 package ru.autosome.macroape.Calculations;
 
-import ru.autosome.macroape.*;
+import ru.autosome.macroape.BackgroundModel;
+import ru.autosome.macroape.OutputInformation;
+import ru.autosome.macroape.PWM;
+import ru.autosome.macroape.PvalueBsearchList;
 
 import java.util.ArrayList;
 

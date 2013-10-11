@@ -3,7 +3,7 @@ package ru.autosome.macroape;
 import java.util.HashMap;
 
 public class PM {
-  final double[][] matrix;
+  public final double[][] matrix;
   public String name;
 
   PM(double[][] matrix, String name) throws IllegalArgumentException {

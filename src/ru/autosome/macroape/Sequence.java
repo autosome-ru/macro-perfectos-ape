@@ -49,7 +49,7 @@ public class Sequence {
   }
 
   // (upstream) positions at which subsequence of given length can start
-  ArrayList<Position> subsequence_positions(int subsequence_length) {
+  public ArrayList<Position> subsequence_positions(int subsequence_length) {
     return Position.positions_between(0, length(), subsequence_length);
   }
 

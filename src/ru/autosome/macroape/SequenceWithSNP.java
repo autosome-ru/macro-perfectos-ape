@@ -51,7 +51,7 @@ public class SequenceWithSNP {
 
   // output: ["GATTCAAAGGTTCTGAATTCCACAACaGCTTTCCTGTGTTTTTGCAGCCAGA",
   //          "GATTCAAAGGTTCTGAATTCCACAACgGCTTTCCTGTGTTTTTGCAGCCAGA"]
-  Sequence[] sequence_variants() {
+  public Sequence[] sequence_variants() {
     Sequence[] result = new Sequence[num_cases()];
     for (int i = 0; i < num_cases(); ++i) {
       result[i] = new Sequence(left + mid[i] + right);

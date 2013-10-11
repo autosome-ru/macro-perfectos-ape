@@ -1,13 +1,17 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.Calculations;
+
+import ru.autosome.macroape.PWM;
+import ru.autosome.macroape.Position;
+import ru.autosome.macroape.Sequence;
 
 import java.util.ArrayList;
 
-class EstimateAffinityMinPvalue implements EstimateAffinity {
+public class EstimateAffinityMinPvalue implements EstimateAffinity {
   PWM pwm;
   Sequence sequence;
   CanFindPvalue pvalueCalculator;
   ArrayList<Position> positions_to_check;
-  EstimateAffinityMinPvalue(PWM pwm, Sequence sequence, CanFindPvalue pvalueCalculator, ArrayList<Position> positions_to_check) {
+  public EstimateAffinityMinPvalue(PWM pwm, Sequence sequence, CanFindPvalue pvalueCalculator, ArrayList<Position> positions_to_check) {
     this.pwm = pwm;
     this.sequence = sequence;
     this.pvalueCalculator = pvalueCalculator;
