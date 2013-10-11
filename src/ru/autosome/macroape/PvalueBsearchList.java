@@ -1,5 +1,7 @@
 package ru.autosome.macroape;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -10,17 +12,25 @@ public class PvalueBsearchList {
     this.list = sort_list(list);
   }
 
-  ArrayList<ThresholdPvaluePair> sort_list(ArrayList<ThresholdPvaluePair> infos) {
-    Collections.sort(infos);
-    ArrayList<ThresholdPvaluePair> sorted_infos;
-    sorted_infos = new ArrayList<ThresholdPvaluePair>();
-    sorted_infos.add(infos.get(0));
+  ArrayList<ThresholdPvaluePair> without_consequent_duplicates(ArrayList<ThresholdPvaluePair> infos) {
+    ArrayList<ThresholdPvaluePair> reduced_infos;
+    reduced_infos = new ArrayList<ThresholdPvaluePair>();
+    reduced_infos.add(infos.get(0));
     for (int i = 1; i < infos.size(); ++i) {
       if (!infos.get(i).equals(infos.get(i - 1))) {
-        sorted_infos.add(infos.get(i));
+        reduced_infos.add(infos.get(i));
       }
     }
-    return sorted_infos;
+    return reduced_infos;
+  }
+
+  ArrayList<ThresholdPvaluePair> sort_list(ArrayList<ThresholdPvaluePair> infos) {
+    Collections.sort(infos);
+    return without_consequent_duplicates(infos);
+  }
+
+  public double combine_pvalues(double pvalue_1, double pvalue_2) {
+    return Math.sqrt(pvalue_1 * pvalue_2);
   }
 
   public double pvalue_by_threshold(double threshold) {
@@ -31,7 +41,8 @@ public class PvalueBsearchList {
 
     int insertion_point = -index - 1;
     if (insertion_point > 0 && insertion_point < list.size()) {
-      return Math.sqrt( list.get(insertion_point).pvalue * list.get(insertion_point - 1).pvalue );
+      return combine_pvalues(list.get(insertion_point).pvalue,
+                             list.get(insertion_point - 1).pvalue);
     } else if (insertion_point == 0) {
       return list.get(0).pvalue;
     } else {
@@ -39,10 +50,16 @@ public class PvalueBsearchList {
     }
   }
 
-
-
   public void save_to_file(String filename) {
-    ThresholdPvaluePair.save_thresholds_list(list, filename);
+    try {
+      FileWriter fw = new FileWriter(new java.io.File(filename));
+      for (ThresholdPvaluePair info : list) {
+        fw.write(info + "\n");
+      }
+      fw.close();
+    } catch (IOException err) {
+      System.err.println("Error:\n" + err);
+    }
   }
 
   public static PvalueBsearchList load_from_file(String filename) {

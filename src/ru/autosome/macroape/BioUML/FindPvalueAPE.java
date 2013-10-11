@@ -1,12 +1,12 @@
 package ru.autosome.macroape.BioUML;
 
 
-import ru.autosome.macroape.*;
+import ru.autosome.macroape.BackgroundModel;
+import ru.autosome.macroape.PWM;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import static ru.autosome.macroape.Calculations.FindPvalueAPE.*;
+import static ru.autosome.macroape.Calculations.FindPvalueAPE.PvalueInfo;
 
 public class FindPvalueAPE {
   public static class Parameters {

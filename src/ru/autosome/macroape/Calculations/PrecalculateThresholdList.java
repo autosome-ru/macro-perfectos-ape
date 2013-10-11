@@ -2,7 +2,6 @@ package ru.autosome.macroape.Calculations;
 
 import ru.autosome.macroape.*;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class PrecalculateThresholdList {
@@ -38,16 +37,12 @@ public class PrecalculateThresholdList {
     return new ru.autosome.macroape.Calculations.FindThresholdAPE(find_threshold_parameters(pwm));
   }
 
-  public ArrayList<ThresholdPvaluePair> calculate_thresholds_for_pwm(PWM pwm) {
+  public PvalueBsearchList bsearch_list_for_pwm(PWM pwm) {
     ArrayList<ThresholdPvaluePair> pairs = new ArrayList<ThresholdPvaluePair>();
     for (ThresholdInfo info : find_threshold_calculator(pwm).find_thresholds_by_pvalues(parameters.pvalues)) {
       pairs.add(new ThresholdPvaluePair(info));
     }
-    return pairs;
-  }
-
-  public PvalueBsearchList bsearch_list_for_pwm(PWM pwm) {
-    return new PvalueBsearchList(calculate_thresholds_for_pwm(pwm));
+    return new PvalueBsearchList(pairs);
   }
 
 

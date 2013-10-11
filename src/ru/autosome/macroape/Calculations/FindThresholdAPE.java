@@ -1,6 +1,9 @@
 package ru.autosome.macroape.Calculations;
 
-import ru.autosome.macroape.*;
+import ru.autosome.macroape.BackgroundModel;
+import ru.autosome.macroape.CountingPWM;
+import ru.autosome.macroape.PWM;
+import ru.autosome.macroape.ThresholdInfo;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,8 @@
 package ru.autosome.macroape;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -63,18 +65,6 @@ public class ThresholdPvaluePair implements Comparable {
       return load_thresholds_list(lines);
     } catch (FileNotFoundException e) {
       return null;
-    }
-  }
-
-  public static void save_thresholds_list(ArrayList<ThresholdPvaluePair> infos, String filename) {
-    try {
-      FileWriter fw = new FileWriter(new java.io.File(filename));
-      for (ThresholdPvaluePair info : infos) {
-        fw.write(info + "\n");
-      }
-      fw.close();
-    } catch (IOException err) {
-      System.err.println("Error:\n" + err);
     }
   }
 

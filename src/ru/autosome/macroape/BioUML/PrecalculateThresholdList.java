@@ -1,8 +1,8 @@
 package ru.autosome.macroape.BioUML;
 
-import ru.autosome.macroape.*;
-
-import java.util.ArrayList;
+import ru.autosome.macroape.BackgroundModel;
+import ru.autosome.macroape.PWM;
+import ru.autosome.macroape.PvalueBsearchList;
 
 public class PrecalculateThresholdList {
   public static class Parameters {
@@ -41,7 +41,7 @@ public class PrecalculateThresholdList {
 
 
   public PvalueBsearchList launch() {
-    return new PvalueBsearchList(calculator().calculate_thresholds_for_pwm(parameters.pwm));
+    return calculator().bsearch_list_for_pwm(parameters.pwm);
   }
 
 }

@@ -1,6 +1,5 @@
 package ru.autosome.macroape;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class ArrayExtensions {
