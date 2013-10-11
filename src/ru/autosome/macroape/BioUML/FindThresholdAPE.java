@@ -1,8 +1,8 @@
 package ru.autosome.macroape.BioUML;
 
 import ru.autosome.macroape.BackgroundModel;
+import ru.autosome.macroape.CountingPWM;
 import ru.autosome.macroape.PWM;
-import ru.autosome.macroape.ThresholdInfo;
 
 import java.util.ArrayList;
 
@@ -40,7 +40,7 @@ public class FindThresholdAPE {
                                                                              parameters.max_hash_size);
   }
 
-  ArrayList<ThresholdInfo> launch() {
+  ArrayList<CountingPWM.ThresholdInfo> launch() {
     return new ru.autosome.macroape.Calculations.FindThresholdAPE(calculation_parameters())
             .find_thresholds_by_pvalues(parameters.pvalues);
   }

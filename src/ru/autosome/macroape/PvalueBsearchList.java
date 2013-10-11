@@ -15,7 +15,7 @@ public class PvalueBsearchList {
       this.pvalue = pvalue;
     }
 
-    public ThresholdPvaluePair(ThresholdInfo info) {
+    public ThresholdPvaluePair(CountingPWM.ThresholdInfo info) {
       this.threshold = info.threshold;
       this.pvalue = info.real_pvalue;
     }

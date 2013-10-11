@@ -3,7 +3,6 @@ package ru.autosome.macroape.Calculations;
 import ru.autosome.macroape.BackgroundModel;
 import ru.autosome.macroape.CountingPWM;
 import ru.autosome.macroape.PWM;
-import ru.autosome.macroape.ThresholdInfo;
 
 import java.util.ArrayList;
 
@@ -42,7 +41,7 @@ public class FindThresholdAPE {
     return result;
   }
 
-  public ArrayList<ThresholdInfo> threshold_infos(PWM pwm, double[] pvalues) {
+  public ArrayList<CountingPWM.ThresholdInfo> threshold_infos(PWM pwm, double[] pvalues) {
     if (parameters.pvalue_boundary.equals("lower")) {
       return countingPWM(pwm).thresholds(pvalues);
     } else {
@@ -50,15 +49,15 @@ public class FindThresholdAPE {
     }
   }
 
-  public ArrayList<ThresholdInfo> downscale_thresholds(ArrayList<ThresholdInfo> threshold_infos) {
-    ArrayList<ThresholdInfo> downscaled_infos = new ArrayList<ThresholdInfo>();
-    for (ThresholdInfo info : threshold_infos) {
+  public ArrayList<CountingPWM.ThresholdInfo> downscale_thresholds(ArrayList<CountingPWM.ThresholdInfo> threshold_infos) {
+    ArrayList<CountingPWM.ThresholdInfo> downscaled_infos = new ArrayList<CountingPWM.ThresholdInfo>();
+    for (CountingPWM.ThresholdInfo info : threshold_infos) {
       downscaled_infos.add(info.downscale(parameters.discretization));
     }
     return downscaled_infos;
   }
 
-  public ArrayList<ThresholdInfo> find_thresholds_by_pvalues(double[] pvalues) {
+  public ArrayList<CountingPWM.ThresholdInfo> find_thresholds_by_pvalues(double[] pvalues) {
     return downscale_thresholds(threshold_infos(upscaled_pwm(), pvalues));
   }
 }

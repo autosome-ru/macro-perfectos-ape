@@ -154,7 +154,7 @@ public class FindThreshold {
   }
 
   OutputInformation report_table() {
-    ArrayList<ThresholdInfo> results = calculator().find_thresholds_by_pvalues(pvalues);
+    ArrayList<CountingPWM.ThresholdInfo> results = calculator().find_thresholds_by_pvalues(pvalues);
     return report_table(results);
   }
 
