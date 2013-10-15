@@ -6,6 +6,15 @@ public class PM {
   public final double[][] matrix;
   public String name;
 
+  static HashMap<Character, Integer> indexByLetter;
+  static {
+    indexByLetter = new HashMap<Character, Integer>();
+    indexByLetter.put('A', 0);
+    indexByLetter.put('C', 1);
+    indexByLetter.put('G', 2);
+    indexByLetter.put('T', 3);
+  }
+
   PM(double[][] matrix, String name) throws IllegalArgumentException {
     for (double[] pos : matrix) {
       if (pos.length != 4) {
@@ -21,12 +30,18 @@ public class PM {
   }
 
   public String toString() {
-    String result;
-    result = name + "\n";
+    StringBuilder result = new StringBuilder();
+    result.append(name).append("\n");
     for (double[] pos : matrix) {
-      result = result + pos[0] + "\t" + pos[1] + "\t" + pos[2] + "\t" + pos[3] + "\n";
+      for (int letter_index = 0; letter_index < 4; ++ letter_index) {
+        if (letter_index != 0) {
+          result.append("\t");
+        }
+        result.append(pos[letter_index]);
+      }
+      result.append("\n");
     }
-    return result;
+    return result.toString();
   }
 
   public PM reverseComplement() {
@@ -36,14 +51,5 @@ public class PM {
       complement[i] = ArrayExtensions.reverse(matrix[i]);
     }
     return new PM(ArrayExtensions.reverse(complement), name);
-  }
-
-  static HashMap<Character, Integer> indexByLetter() {
-    HashMap<Character, Integer> result = new HashMap<Character, Integer>();
-    result.put('A', 0);
-    result.put('C', 1);
-    result.put('G', 2);
-    result.put('T', 3);
-    return result;
   }
 }

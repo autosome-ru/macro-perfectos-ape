@@ -164,9 +164,9 @@ public class PrecalculateThresholdLists {
 
   PWM load_pwm(File filename) {
     if (data_model.equals("pcm")) {
-      return PCM.new_from_file(filename.getPath()).to_pwm(background);
+      return PCM.new_from_file(filename).to_pwm(background);
     } else {
-      return PWM.new_from_file(filename.getPath());
+      return PWM.new_from_file(filename);
     }
   }
 

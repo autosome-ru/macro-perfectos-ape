@@ -31,15 +31,6 @@ public class PCM extends PM {
     return new PCM(matrix, name);
   }
 
-  public static PCM new_from_file(String filename) {
-    try {
-      InputStream reader = new FileInputStream(filename);
-      return new_from_text(InputExtensions.readLinesFromInputStream(reader));
-    } catch (FileNotFoundException err) {
-      return null;
-    }
-  }
-
   public static PCM new_from_file(File file) {
     try {
       InputStream reader = new FileInputStream(file);

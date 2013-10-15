@@ -24,15 +24,6 @@ public class PWM extends PM {
     return new PWM(matrix, name);
   }
 
-  public static PWM new_from_file(String filename) {
-    try {
-      InputStream reader = new FileInputStream(filename);
-      return new_from_text(InputExtensions.readLinesFromInputStream(reader));
-    } catch (FileNotFoundException err) {
-      return null;
-    }
-  }
-
   public static PWM new_from_file(File file) {
     try {
       InputStream reader = new FileInputStream(file);
@@ -65,14 +56,13 @@ public class PWM extends PM {
 
   double score(String word, BackgroundModel background) throws IllegalArgumentException {
     word = word.toUpperCase();
-    HashMap<Character, Integer> index_by_letter = indexByLetter();
     if (word.length() != length()) {
       throw new IllegalArgumentException("word in PWM#score(word) should have the same length as matrix");
     }
     double sum = 0.0;
     for (int pos_index = 0; pos_index < length(); ++pos_index) {
       char letter = word.charAt(pos_index);
-      Integer letter_index = index_by_letter.get(letter);
+      Integer letter_index = indexByLetter.get(letter);
       if (letter_index != null) {
         sum += matrix[pos_index][letter_index];
       } else if (letter == 'N') {
@@ -117,9 +107,6 @@ public class PWM extends PM {
     return result;
   }
 
-
-  /////////////////////////////
-
   public PWM discrete(Double rate) {
     if (rate == null) {
       return this;
@@ -134,35 +121,4 @@ public class PWM extends PM {
     }
     return new PWM(mat_result, name);
   }
-
-    /*
-    double[] zero_column() {
-      double[] result = {0.0,0.0,0.0,0.0};
-      return result;
-    }
-
-    public PWM left_augment(int n) {
-      double[][] mat_result;
-      mat_result = new double[length() + n][];
-      for (int i = 0; i < n; ++i) {
-        mat_result[i] = zero_column();
-      }
-      for (int i = 0; i < length(); ++i) {
-        mat_result[n + i] = matrix[i].clone();
-      }
-      return new PWM(mat_result, name);
-    }
-
-    public PWM right_augment(int n) {
-      double[][] mat_result;
-      mat_result = new double[length() + n][];
-      for (int i = 0; i < length(); ++i) {
-        mat_result[i] =  matrix[i].clone();
-      }
-      for (int i = 0; i < n; ++i) {
-        mat_result[length() + i] = zero_column();
-      }
-      return new PWM(mat_result, name);
-    }
-    */
 }
