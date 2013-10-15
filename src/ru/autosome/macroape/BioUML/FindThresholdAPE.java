@@ -28,7 +28,7 @@ public class FindThresholdAPE {
   }
 
   Parameters parameters;
-  FindThresholdAPE(Parameters parameters) {
+  public FindThresholdAPE(Parameters parameters) {
     this.parameters = parameters;
   }
 
@@ -40,7 +40,7 @@ public class FindThresholdAPE {
                                                                              parameters.max_hash_size);
   }
 
-  ArrayList<CountingPWM.ThresholdInfo> launch() {
+  public ArrayList<CountingPWM.ThresholdInfo> launch() {
     return new ru.autosome.macroape.Calculations.FindThresholdAPE(calculation_parameters())
             .find_thresholds_by_pvalues(parameters.pvalues);
   }

@@ -6,12 +6,13 @@ import ru.autosome.macroape.PvalueBsearchList;
 
 public class PrecalculateThresholdList {
   public static class Parameters {
-    private double discretization;
-    private BackgroundModel background;
-    private String pvalue_boundary;
-    private int max_hash_size;
-    private double[] pvalues;
-    PWM pwm;
+    public double discretization;
+    public BackgroundModel background;
+    public String pvalue_boundary;
+    public int max_hash_size;
+    public double[] pvalues;
+    public PWM pwm;
+
     public Parameters() {}
     public Parameters(PWM pwm, double[] pvalues, double discretization, BackgroundModel background, String pvalue_boundary, int max_hash_size) {
       this.pwm = pwm;

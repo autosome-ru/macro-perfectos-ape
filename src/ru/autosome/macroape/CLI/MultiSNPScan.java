@@ -190,7 +190,7 @@ public class MultiSNPScan {
       try {
         PWM pwm = collection_of_pwms.get(file);
         CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
-        String infos = new SNPScan(pwm, seq_w_snp, canFindPvalue).influenceString();
+        String infos = new SNPScan(pwm, seq_w_snp, canFindPvalue).affinityInfos().toString();
         System.out.println(snp_name + "\t" + pwm.name + "\t" + infos);
       } catch (IllegalArgumentException err) {
         System.err.println(err.getMessage());

@@ -14,7 +14,7 @@ public class FindPvalueBsearch {
     public PvalueBsearchList bsearchList;
     public double[] thresholds;
 
-    Parameters() { }
+    public Parameters() { }
     public Parameters(PWM pwm, double[] thresholds, BackgroundModel background, PvalueBsearchList bsearchList) {
       this.pwm = pwm;
       this.thresholds = thresholds;
@@ -34,7 +34,7 @@ public class FindPvalueBsearch {
                                                                               parameters.bsearchList);
   }
 
-  ArrayList<CanFindPvalue.PvalueInfo> launch() {
+  public ArrayList<CanFindPvalue.PvalueInfo> launch() {
     return new ru.autosome.macroape.Calculations.FindPvalueBsearch(calculation_parameters())
             .pvalues_by_thresholds(parameters.thresholds);
   }

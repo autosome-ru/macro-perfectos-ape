@@ -38,7 +38,7 @@ public class FindPvalueAPE {
                                                                           parameters.background,
                                                                           parameters.max_hash_size);
   }
-  ArrayList<PvalueInfo> launch() {
+  public ArrayList<PvalueInfo> launch() {
     return new ru.autosome.macroape.Calculations.FindPvalueAPE(calculation_parameters())
             .pvalues_by_thresholds(parameters.thresholds);
   }
