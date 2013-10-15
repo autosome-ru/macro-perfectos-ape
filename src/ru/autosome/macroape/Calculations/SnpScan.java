@@ -11,40 +11,69 @@ public class SnpScan {
   final PWM pwm;
   final SequenceWithSNP sequenceWithSNP;
   final CanFindPvalue pvalueCalculator;
+  RegionAffinityInfo[] cacheAffinityInfos;
+
   public SnpScan(PWM pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
     this.pwm = pwm;
     this.sequenceWithSNP = sequenceWithSNP;
     this.pvalueCalculator = pvalueCalculator;
+    if (sequenceWithSNP.num_cases() != 2) {
+      throw new IllegalArgumentException("Unable to process more than two variants of nucleotide for SNP " + sequenceWithSNP);
+    }
+    cacheAffinityInfos = new RegionAffinityInfo[2];
   }
 
-  public String pwm_influence_infos() {
+  public static class RegionAffinityInfo {
+    Position position;
+    Sequence word;
+    Character allele;
+    double pvalue;
 
-    if (sequenceWithSNP.num_cases() != 2)
-      return null; // Unable to process more than two variants(which fractions to return)
+    RegionAffinityInfo(Position position, Sequence word, Character allele, double pvalue) {
+      this.position = position;
+      this.word = word;
+      this.allele = allele;
+      this.pvalue = pvalue;
+    }
+  }
 
-    ArrayList<Position> positions_to_check = sequenceWithSNP.positions_subsequence_overlaps_snp(pwm.length());
-    Sequence seq_1 = sequenceWithSNP.sequence_variants()[0];
-    Character allele_1 = sequenceWithSNP.mid[0];
-    EstimateAffinityMinPvalue seq_1_affinity_calculator =
-     new EstimateAffinityMinPvalue(pwm, seq_1, pvalueCalculator, positions_to_check);
-    Position pos_1 = seq_1_affinity_calculator.bestPosition();
-    double pvalue_1 = seq_1_affinity_calculator.affinity();
-    Sequence word_1 = seq_1.substring(pos_1, pwm.length());
+  ArrayList<Position> positionsToCheck() {
+    return sequenceWithSNP.positions_subsequence_overlaps_snp(pwm.length());
+  }
 
-    Sequence seq_2 = sequenceWithSNP.sequence_variants()[1];
-    Character allele_2 = sequenceWithSNP.mid[1];
-    EstimateAffinityMinPvalue seq_2_affinity_calculator =
-     new EstimateAffinityMinPvalue(pwm, seq_2, pvalueCalculator, positions_to_check);
-    Position pos_2 = seq_2_affinity_calculator.bestPosition();
-    double pvalue_2 = seq_2_affinity_calculator.affinity();
-    Sequence word_2 = seq_2.substring(pos_2, pwm.length());
+  RegionAffinityInfo affinityInfo(int allele_number) {
+    if (cacheAffinityInfos[allele_number] == null) {
+      Sequence sequence = sequenceWithSNP.sequence_variants()[allele_number];
+      Character allele = sequenceWithSNP.mid[allele_number];
+      EstimateAffinityMinPvalue affinity_calculator =  new EstimateAffinityMinPvalue(pwm,
+                                                                                     sequence,
+                                                                                     pvalueCalculator,
+                                                                                     positionsToCheck());
+      Position pos = affinity_calculator.bestPosition();
+      double pvalue = affinity_calculator.affinity();
+      Sequence word = sequence.substring(pos, pwm.length());
+
+      cacheAffinityInfos[allele_number] = new RegionAffinityInfo(pos, word, allele, pvalue);
+    }
+    return cacheAffinityInfos[allele_number];
+  }
+
+  double foldChange() {
+    return affinityInfo(1).pvalue / affinityInfo(0).pvalue;
+  }
+
+  public String influenceString() {
+    RegionAffinityInfo info_1 = affinityInfo(0);
+    RegionAffinityInfo info_2 = affinityInfo(1);
 
     StringBuilder result = new StringBuilder();
-    result.append(pos_1.toString()).append("\t").append(word_1).append("\t");
-    result.append(pos_2.toString()).append("\t").append(word_2).append("\t");
-    result.append(allele_1).append("/").append(allele_2).append("\t");
-    result.append(pvalue_1).append("\t").append(pvalue_2).append("\t");
-    result.append(pvalue_2 / pvalue_1);
+    result.append(info_1.position.toString()).append("\t").append(info_1.word).append("\t");
+    result.append(info_2.position.toString()).append("\t").append(info_2.word).append("\t");
+
+    result.append(info_1.allele).append("/").append(info_2.allele).append("\t");
+    result.append(info_1.pvalue).append("\t").append(info_2.pvalue).append("\t");
+
+    result.append(foldChange());
     return result.toString();
   }
 

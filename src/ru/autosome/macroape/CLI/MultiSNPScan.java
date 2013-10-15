@@ -187,11 +187,13 @@ public class MultiSNPScan {
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
 
     for (File file : collection_of_pwms.keySet()) {
-      PWM pwm = collection_of_pwms.get(file);
-      CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
-      String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).pwm_influence_infos();
-      if (infos != null) {
+      try {
+        PWM pwm = collection_of_pwms.get(file);
+        CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
+        String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).influenceString();
         System.out.println(snp_name + "\t" + pwm.name + "\t" + infos);
+      } catch (IllegalArgumentException err) {
+        System.err.println(err.getMessage());
       }
     }
   }

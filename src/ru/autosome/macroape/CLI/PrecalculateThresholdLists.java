@@ -183,15 +183,11 @@ public class PrecalculateThresholdLists {
                                                                                       max_hash_size);
   }
 
-  void calculate_thresholds_for_file(File filename) {
-    File result_filename = new File(results_dir, "thresholds_" + filename.getName());
-    calculator().bsearch_list_for_pwm(load_pwm(filename)).save_to_file(result_filename.getPath());
-  }
-
   void calculate_thresholds_for_collection() {
-    for (File filename : collection_folder.listFiles()) {
-      System.err.println(filename);
-      calculate_thresholds_for_file(filename);
+    for (File file : collection_folder.listFiles()) {
+      System.err.println(file);
+      File result_filename = new File(results_dir, "thresholds_" + file.getName());
+      calculator().bsearch_list_for_pwm(load_pwm(file)).save_to_file(result_filename.getPath());
     }
   }
 
