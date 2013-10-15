@@ -1,18 +1,49 @@
 package ru.autosome.macroape;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 // Usual parser of 4-column matrix with or without name
-class PMParser {
+public class PMParser {
   private final ArrayList<String> inp_strings;
   private double[][] matrix;
   private String name;
 
-  PMParser(ArrayList<String> input) {
+  public PMParser(ArrayList<String> input) {
     inp_strings = input;
     parse();
   }
+
+  public static PMParser from_file(File input_file) {
+    try {
+      InputStream reader = new FileInputStream(input_file);
+      return new PMParser( InputExtensions.readLinesFromInputStream(reader) );
+    } catch (FileNotFoundException err) {
+      System.err.println(err.getMessage());
+      return null;
+    }
+  }
+
+  public static PMParser from_file_or_stdin(String filename_or_stdin) {
+    try {
+      InputStream reader;
+      if (filename_or_stdin.equals(".stdin")) {
+        reader = System.in;
+      } else {
+        if (new File(filename_or_stdin).exists()) {
+          reader = new FileInputStream(filename_or_stdin);
+        } else {
+          throw new FileNotFoundException("Error! File #{filename} doesn't exist");
+        }
+      }
+      return new PMParser( InputExtensions.readLinesFromInputStream(reader) );
+    } catch (FileNotFoundException err) {
+      System.err.println(err.getMessage());
+      return null;
+    }
+  }
+
 
   void parse() {
     ArrayList<double[]> matrix_as_list = new ArrayList<double[]>();

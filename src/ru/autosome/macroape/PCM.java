@@ -22,38 +22,10 @@ public class PCM extends PM {
     return converter.convert();
   }
 
-  private static PCM new_from_text(ArrayList<String> input_lines) {
-    PMParser matrix_parser = new PMParser(input_lines);
-
-    double[][] matrix = matrix_parser.matrix();
-    String name = matrix_parser.name();
-
+  public static PCM fromParser(PMParser parser) {
+    if (parser == null)  return null;
+    double[][] matrix = parser.matrix();
+    String name = parser.name();
     return new PCM(matrix, name);
-  }
-
-  public static PCM new_from_file(File file) {
-    try {
-      InputStream reader = new FileInputStream(file);
-      return new_from_text(InputExtensions.readLinesFromInputStream(reader));
-    } catch (FileNotFoundException err) {
-      return null;
-    }
-  }
-
-  public static PCM new_from_file_or_stdin(String filename) {
-    try {
-      InputStream reader;
-      if (filename.equals(".stdin")) {
-        reader = System.in;
-      } else {
-        if (!(new File(filename).exists())) {
-          throw new RuntimeException("Error! File #{filename} doesn't exist");
-        }
-        reader = new FileInputStream(filename);
-      }
-      return new_from_text(InputExtensions.readLinesFromInputStream(reader));
-    } catch (FileNotFoundException err) {
-      return null;
-    }
   }
 }

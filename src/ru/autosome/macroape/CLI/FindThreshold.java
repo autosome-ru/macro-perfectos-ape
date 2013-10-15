@@ -115,9 +115,9 @@ public class FindThreshold {
 
   private void load_pwm() {
     if (data_model.equals("pcm")) {
-      pwm = PCM.new_from_file_or_stdin(pm_filename).to_pwm(background);
+      pwm = PCM.fromParser(PMParser.from_file_or_stdin(pm_filename)).to_pwm(background);
     } else {
-      pwm = PWM.new_from_file_or_stdin(pm_filename);
+      pwm = PWM.fromParser(PMParser.from_file_or_stdin(pm_filename));
     }
   }
 

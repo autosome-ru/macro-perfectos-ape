@@ -1,5 +1,8 @@
 package ru.autosome.macroape;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PM {
@@ -29,6 +32,7 @@ public class PM {
     return matrix.length;
   }
 
+  @Override
   public String toString() {
     StringBuilder result = new StringBuilder();
     result.append(name).append("\n");
@@ -42,14 +46,5 @@ public class PM {
       result.append("\n");
     }
     return result.toString();
-  }
-
-  public PM reverseComplement() {
-    double[][] complement;
-    complement = new double[length()][];
-    for (int i = 0; i < length(); ++i) {
-      complement[i] = ArrayExtensions.reverse(matrix[i]);
-    }
-    return new PM(ArrayExtensions.reverse(complement), name);
   }
 }

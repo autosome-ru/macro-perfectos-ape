@@ -147,9 +147,9 @@ public class MultiSNPScan {
   PWM load_pwm(File file) {
     PWM pwm;
     if (data_model.equals("pcm")) {
-      pwm = PCM.new_from_file(file).to_pwm(background);
+      pwm = PCM.fromParser(PMParser.from_file(file)).to_pwm(background);
     } else {
-      pwm = PWM.new_from_file(file);
+      pwm = PWM.fromParser(PMParser.from_file(file));
     }
     if (pwm.name == null || pwm.name.isEmpty()) {
       pwm.name = file.getName();
