@@ -7,13 +7,13 @@ import ru.autosome.macroape.SequenceWithSNP;
 
 import java.util.ArrayList;
 
-public class SnpScan {
+public class SNPScan {
   final PWM pwm;
   final SequenceWithSNP sequenceWithSNP;
   final CanFindPvalue pvalueCalculator;
   RegionAffinityInfo[] cacheAffinityInfos;
 
-  public SnpScan(PWM pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
+  public SNPScan(PWM pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
     this.pwm = pwm;
     this.sequenceWithSNP = sequenceWithSNP;
     this.pvalueCalculator = pvalueCalculator;
@@ -29,11 +29,11 @@ public class SnpScan {
     Character allele;
     double pvalue;
 
-    RegionAffinityInfo(Position position, Sequence word, Character allele, double pvalue) {
+    RegionAffinityInfo(Position position, Character allele, double pvalue, Sequence word) {
       this.position = position;
-      this.word = word;
       this.allele = allele;
       this.pvalue = pvalue;
+      this.word = word;
     }
   }
 
@@ -53,7 +53,7 @@ public class SnpScan {
       double pvalue = affinity_calculator.affinity();
       Sequence word = sequence.substring(pos, pwm.length());
 
-      cacheAffinityInfos[allele_number] = new RegionAffinityInfo(pos, word, allele, pvalue);
+      cacheAffinityInfos[allele_number] = new RegionAffinityInfo(pos, allele, pvalue, word);
     }
     return cacheAffinityInfos[allele_number];
   }

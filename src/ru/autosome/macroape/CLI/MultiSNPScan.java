@@ -4,7 +4,7 @@ import ru.autosome.macroape.*;
 import ru.autosome.macroape.Calculations.CanFindPvalue;
 import ru.autosome.macroape.Calculations.FindPvalueAPE;
 import ru.autosome.macroape.Calculations.FindPvalueBsearch;
-import ru.autosome.macroape.Calculations.SnpScan;
+import ru.autosome.macroape.Calculations.SNPScan;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -190,7 +190,7 @@ public class MultiSNPScan {
       try {
         PWM pwm = collection_of_pwms.get(file);
         CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
-        String infos = new SnpScan(pwm, seq_w_snp, canFindPvalue).influenceString();
+        String infos = new SNPScan(pwm, seq_w_snp, canFindPvalue).influenceString();
         System.out.println(snp_name + "\t" + pwm.name + "\t" + infos);
       } catch (IllegalArgumentException err) {
         System.err.println(err.getMessage());
