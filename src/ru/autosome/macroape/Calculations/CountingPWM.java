@@ -33,14 +33,15 @@ public class CountingPWM {
   }
 
 
-  public Integer max_hash_size;
+  private Integer max_hash_size;
 
   private final PWM pwm;
   private final BackgroundModel background;
 
-  public CountingPWM(PWM pwm, BackgroundModel background) {
+  public CountingPWM(PWM pwm, BackgroundModel background, Integer max_hash_size) {
     this.pwm = pwm;
     this.background = background;
+    this.max_hash_size = max_hash_size;
   }
 
   private double score_mean() {

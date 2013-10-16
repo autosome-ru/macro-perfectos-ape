@@ -40,7 +40,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
   }
 
   double vocabularyVolume() {
-    return new CountingPWM(parameters.pwm, parameters.background).vocabularyVolume();
+    return new CountingPWM(parameters.pwm, parameters.background, null).vocabularyVolume();
   }
 
   public PvalueInfo pvalue_by_threshold(double threshold) {

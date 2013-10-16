@@ -35,9 +35,7 @@ public class FindThresholdAPE {
   }
 
   CountingPWM countingPWM(PWM pwm) {
-    CountingPWM result = new CountingPWM(pwm, parameters.background);
-    result.max_hash_size = parameters.max_hash_size;
-    return result;
+    return new CountingPWM(pwm, parameters.background, parameters.max_hash_size);
   }
 
   public ArrayList<CountingPWM.ThresholdInfo> threshold_infos(PWM pwm, double[] pvalues) {

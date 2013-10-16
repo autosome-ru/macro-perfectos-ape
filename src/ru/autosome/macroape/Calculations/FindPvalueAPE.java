@@ -34,9 +34,7 @@ public class FindPvalueAPE implements CanFindPvalue {
   }
 
   CountingPWM countingPWM(PWM pwm) {
-    CountingPWM countingPWM = new CountingPWM(pwm, parameters.background);
-    countingPWM.max_hash_size = parameters.max_hash_size;
-    return countingPWM;
+    return new CountingPWM(pwm, parameters.background, parameters.max_hash_size);
   }
 
   double upscale_threshold(double threshold) {
