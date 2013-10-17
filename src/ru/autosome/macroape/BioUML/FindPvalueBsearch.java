@@ -28,7 +28,7 @@ public class FindPvalueBsearch {
     this.parameters = parameters;
   }
 
-  public ArrayList<CanFindPvalue.PvalueInfo> launch() {
+  public CanFindPvalue.PvalueInfo[] launch() {
     return new ru.autosome.macroape.Calculations.FindPvalueBsearch(parameters.pwm,
                                                                    parameters.background,
                                                                    parameters.bsearchList)

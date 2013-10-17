@@ -22,10 +22,10 @@ public class FindPvalueBsearch implements CanFindPvalue {
     this.bsearchList = bsearchList;
   }
 
-  public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
-    ArrayList<PvalueInfo> results = new ArrayList<PvalueInfo>();
-    for (double threshold : thresholds) {
-      results.add(pvalue_by_threshold(threshold));
+  public PvalueInfo[] pvalues_by_thresholds(double[] thresholds) {
+    PvalueInfo[] results = new PvalueInfo[thresholds.length];
+    for (int i = 0; i < thresholds.length; ++i) {
+      results[i] = pvalue_by_threshold(thresholds[i]);
     }
     return results;
   }

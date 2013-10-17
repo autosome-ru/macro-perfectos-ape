@@ -48,7 +48,7 @@ public class FindPvalueAPE implements CanFindPvalue {
     double pvalue = count / countingPWM.vocabularyVolume();
     return new PvalueInfo(non_upscaled_threshold, pvalue, (int) count);
   }
-
+      /*
   public ArrayList<PvalueInfo> pvalues_by_thresholds(double[] thresholds) {
     CountingPWM countingPWM = countingPWM(upscaled_pwm());
     HashMap<Double, Double> counts = countingPWM.counts_by_thresholds(upscaled_thresholds(thresholds));
@@ -59,10 +59,21 @@ public class FindPvalueAPE implements CanFindPvalue {
     }
     return infos;
   }
+    */
+  public PvalueInfo[] pvalues_by_thresholds(double[] thresholds) {
+    CountingPWM countingPWM = countingPWM(upscaled_pwm());
+    HashMap<Double, Double> counts = countingPWM.counts_by_thresholds(upscaled_thresholds(thresholds));
+
+    PvalueInfo[] infos = new PvalueInfo[thresholds.length];
+    for (int i = 0; i < thresholds.length; ++i) {
+      infos[i] = infos_by_count(counts, thresholds[i], countingPWM);
+    }
+    return infos;
+  }
 
   public PvalueInfo pvalue_by_threshold(double threshold) {
     double[] thresholds = {threshold};
-    return pvalues_by_thresholds(thresholds).get(0);
+    return pvalues_by_thresholds(thresholds)[0];
   }
 
   public OutputInformation report_table_layout() {

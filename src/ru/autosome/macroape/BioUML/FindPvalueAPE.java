@@ -32,7 +32,7 @@ public class FindPvalueAPE {
     this.parameters = parameters;
   }
 
-  public ArrayList<PvalueInfo> launch() {
+  public PvalueInfo[] launch() {
     return new ru.autosome.macroape.Calculations.FindPvalueAPE(parameters.pwm,
                                                                parameters.discretization,
                                                                parameters.background,

@@ -147,8 +147,16 @@ public class FindPvalue {
     return result;
   }
 
+  <R extends ResultInfo> OutputInformation report_table(R[] data) {
+    ArrayList<R> data_list = new ArrayList<R>(data.length);
+    for(int i = 0; i < data.length; ++i) {
+      data_list.add(data[i]);
+    }
+    return report_table(data_list);
+  }
+
   OutputInformation report_table() {
-    ArrayList<CanFindPvalue.PvalueInfo> results = calculator().pvalues_by_thresholds(thresholds);
+    CanFindPvalue.PvalueInfo[] results = calculator().pvalues_by_thresholds(thresholds);
     return report_table(results);
   }
 
