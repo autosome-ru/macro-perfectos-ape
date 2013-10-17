@@ -31,22 +31,14 @@ public class FindPvalue {
   private String thresholds_folder;
   private PWM pwm;
 
-  private ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters ape_parameters() {
-    return new ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters(pwm, discretization, background, max_hash_size);
-  }
-
   private ru.autosome.macroape.Calculations.FindPvalueAPE ape_calculation() {
-    return new ru.autosome.macroape.Calculations.FindPvalueAPE(ape_parameters());
-  }
-
-  private ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters bsearch_parameters() {
-    String thresholds_filename = thresholds_folder + File.separator + "thresholds_" + (new File(pm_filename)).getName();
-    PvalueBsearchList bsearchList = PvalueBsearchList.load_from_file(thresholds_filename);
-    return new ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters(pwm, background, bsearchList);
+    return new ru.autosome.macroape.Calculations.FindPvalueAPE(pwm, discretization, background, max_hash_size);
   }
 
   private ru.autosome.macroape.Calculations.FindPvalueBsearch bsearch_calculation() {
-    return new ru.autosome.macroape.Calculations.FindPvalueBsearch(bsearch_parameters());
+    String thresholds_filename = thresholds_folder + File.separator + "thresholds_" + (new File(pm_filename)).getName();
+    PvalueBsearchList bsearchList = PvalueBsearchList.load_from_file(thresholds_filename);
+    return new ru.autosome.macroape.Calculations.FindPvalueBsearch(pwm, background, bsearchList);
   }
 
   private CanFindPvalue calculator() {

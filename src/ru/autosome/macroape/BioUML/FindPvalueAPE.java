@@ -32,14 +32,11 @@ public class FindPvalueAPE {
     this.parameters = parameters;
   }
 
-  ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters calculation_parameters() {
-    return new ru.autosome.macroape.Calculations.FindPvalueAPE.Parameters(parameters.pwm,
-                                                                          parameters.discretization,
-                                                                          parameters.background,
-                                                                          parameters.max_hash_size);
-  }
   public ArrayList<PvalueInfo> launch() {
-    return new ru.autosome.macroape.Calculations.FindPvalueAPE(calculation_parameters())
+    return new ru.autosome.macroape.Calculations.FindPvalueAPE(parameters.pwm,
+                                                               parameters.discretization,
+                                                               parameters.background,
+                                                               parameters.max_hash_size)
             .pvalues_by_thresholds(parameters.thresholds);
   }
 

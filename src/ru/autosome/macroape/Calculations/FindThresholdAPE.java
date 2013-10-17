@@ -6,40 +6,31 @@ import ru.autosome.macroape.PWM;
 import java.util.ArrayList;
 
 public class FindThresholdAPE {
-  public static class Parameters {
-    public BackgroundModel background;
-    public Double discretization; // if discretization is null - it's not applied
-    public String pvalue_boundary;
-    public Integer max_hash_size; // if max_hash_size is null - it's not applied
-    public PWM pwm;
+  BackgroundModel background;
+  Double discretization; // if discretization is null - it's not applied
+  String pvalue_boundary;
+  Integer max_hash_size; // if max_hash_size is null - it's not applied
+  PWM pwm;
 
-    public Parameters() { }
-    public Parameters(PWM pwm, BackgroundModel background,
-                      Double discretization, String pvalue_boundary, Integer max_hash_size) {
-      this.pwm = pwm;
-      this.background = background;
-      this.discretization = discretization;
-      this.pvalue_boundary = pvalue_boundary;
-      this.max_hash_size = max_hash_size;
-    }
-  }
-
-  Parameters parameters;
-
-  public FindThresholdAPE(Parameters parameters) {
-    this.parameters = parameters;
+  public FindThresholdAPE(PWM pwm, BackgroundModel background,
+                    Double discretization, String pvalue_boundary, Integer max_hash_size) {
+    this.pwm = pwm;
+    this.background = background;
+    this.discretization = discretization;
+    this.pvalue_boundary = pvalue_boundary;
+    this.max_hash_size = max_hash_size;
   }
 
   PWM upscaled_pwm() {
-    return parameters.pwm.discrete(parameters.discretization);
+    return pwm.discrete(discretization);
   }
 
   CountingPWM countingPWM(PWM pwm) {
-    return new CountingPWM(pwm, parameters.background, parameters.max_hash_size);
+    return new CountingPWM(pwm, background, max_hash_size);
   }
 
   public ArrayList<CountingPWM.ThresholdInfo> threshold_infos(PWM pwm, double[] pvalues) {
-    if (parameters.pvalue_boundary.equals("lower")) {
+    if (pvalue_boundary.equals("lower")) {
       return countingPWM(pwm).thresholds(pvalues);
     } else {
       return countingPWM(pwm).weak_thresholds(pvalues);
@@ -49,7 +40,7 @@ public class FindThresholdAPE {
   public ArrayList<CountingPWM.ThresholdInfo> downscale_thresholds(ArrayList<CountingPWM.ThresholdInfo> threshold_infos) {
     ArrayList<CountingPWM.ThresholdInfo> downscaled_infos = new ArrayList<CountingPWM.ThresholdInfo>();
     for (CountingPWM.ThresholdInfo info : threshold_infos) {
-      downscaled_infos.add(info.downscale(parameters.discretization));
+      downscaled_infos.add(info.downscale(discretization));
     }
     return downscaled_infos;
   }

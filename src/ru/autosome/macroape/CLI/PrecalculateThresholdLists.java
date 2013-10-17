@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class PrecalculateThresholdLists {
-
-
   abstract static public class Progression {
     public abstract double[] values();
 
@@ -172,15 +170,11 @@ public class PrecalculateThresholdLists {
 
 
   ru.autosome.macroape.Calculations.PrecalculateThresholdList calculator() {
-    return new ru.autosome.macroape.Calculations.PrecalculateThresholdList(calculator_parameters());
-  }
-
-  ru.autosome.macroape.Calculations.PrecalculateThresholdList.Parameters calculator_parameters() {
-    return new ru.autosome.macroape.Calculations.PrecalculateThresholdList.Parameters(pvalues,
-                                                                                      discretization,
-                                                                                      background,
-                                                                                      pvalue_boundary,
-                                                                                      max_hash_size);
+    return new ru.autosome.macroape.Calculations.PrecalculateThresholdList(pvalues,
+                                                                           discretization,
+                                                                           background,
+                                                                           pvalue_boundary,
+                                                                           max_hash_size);
   }
 
   void calculate_thresholds_for_collection() {

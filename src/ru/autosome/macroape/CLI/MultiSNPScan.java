@@ -173,11 +173,9 @@ public class MultiSNPScan {
       if (thresholds_folder != null) {
         File thresholds_file = new File(thresholds_folder, "thresholds_" + file.getName());
         PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file.getAbsolutePath());
-        pvalue_calculators.put(file,
-         new FindPvalueBsearch(new FindPvalueBsearch.Parameters(pwm, background, pvalueBsearchList)));
+        pvalue_calculators.put(file, new FindPvalueBsearch(pwm, background, pvalueBsearchList));
       } else {
-        pvalue_calculators.put(file,
-         new FindPvalueAPE(new FindPvalueAPE.Parameters(pwm, discretization, background, max_hash_size)));
+        pvalue_calculators.put(file, new FindPvalueAPE(pwm, discretization, background, max_hash_size));
       }
     }
   }

@@ -28,14 +28,10 @@ public class FindPvalueBsearch {
     this.parameters = parameters;
   }
 
-  ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters calculation_parameters() {
-    return new ru.autosome.macroape.Calculations.FindPvalueBsearch.Parameters(parameters.pwm,
-                                                                              parameters.background,
-                                                                              parameters.bsearchList);
-  }
-
   public ArrayList<CanFindPvalue.PvalueInfo> launch() {
-    return new ru.autosome.macroape.Calculations.FindPvalueBsearch(calculation_parameters())
+    return new ru.autosome.macroape.Calculations.FindPvalueBsearch(parameters.pwm,
+                                                                   parameters.background,
+                                                                   parameters.bsearchList)
             .pvalues_by_thresholds(parameters.thresholds);
   }
 

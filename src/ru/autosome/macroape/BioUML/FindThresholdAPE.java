@@ -32,16 +32,12 @@ public class FindThresholdAPE {
     this.parameters = parameters;
   }
 
-  ru.autosome.macroape.Calculations.FindThresholdAPE.Parameters calculation_parameters() {
-    return new ru.autosome.macroape.Calculations.FindThresholdAPE.Parameters(parameters.pwm,
-                                                                             parameters.background,
-                                                                             parameters.discretization,
-                                                                             parameters.pvalue_boundary,
-                                                                             parameters.max_hash_size);
-  }
-
   public ArrayList<CountingPWM.ThresholdInfo> launch() {
-    return new ru.autosome.macroape.Calculations.FindThresholdAPE(calculation_parameters())
+    return new ru.autosome.macroape.Calculations.FindThresholdAPE(parameters.pwm,
+                                                                  parameters.background,
+                                                                  parameters.discretization,
+                                                                  parameters.pvalue_boundary,
+                                                                  parameters.max_hash_size)
             .find_thresholds_by_pvalues(parameters.pvalues);
   }
 }

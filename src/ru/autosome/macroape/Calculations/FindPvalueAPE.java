@@ -8,40 +8,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FindPvalueAPE implements CanFindPvalue {
-  public static class Parameters {
-    public PWM pwm;
-    public Double discretization;
-    public BackgroundModel background;
-    public Integer max_hash_size;
+  PWM pwm;
+  Double discretization;
+  BackgroundModel background;
+  Integer max_hash_size;
 
-    public Parameters() { }
-    public Parameters(PWM pwm, Double discretization, BackgroundModel background, Integer max_hash_size) {
-      this.pwm = pwm;
-      this.discretization = discretization;
-      this.background = background;
-      this.max_hash_size = max_hash_size;
-    }
+  public FindPvalueAPE(PWM pwm, Double discretization, BackgroundModel background, Integer max_hash_size) {
+    this.pwm = pwm;
+    this.discretization = discretization;
+    this.background = background;
+    this.max_hash_size = max_hash_size;
   }
-
-  Parameters parameters;
-  public FindPvalueAPE(Parameters parameters) {
-    this.parameters = parameters;
-  }
-
 
   PWM upscaled_pwm() {
-    return parameters.pwm.discrete(parameters.discretization);
+    return pwm.discrete(discretization);
   }
 
   CountingPWM countingPWM(PWM pwm) {
-    return new CountingPWM(pwm, parameters.background, parameters.max_hash_size);
+    return new CountingPWM(pwm, background, max_hash_size);
   }
 
   double upscale_threshold(double threshold) {
-    if (parameters.discretization == null) {
+    if (discretization == null) {
       return threshold;
     } else {
-      return threshold * parameters.discretization;
+      return threshold * discretization;
     }
   }
   double[] upscaled_thresholds(double[] thresholds) {
@@ -76,11 +67,11 @@ public class FindPvalueAPE implements CanFindPvalue {
 
   public OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
-    infos.add_parameter("V", "discretization value", parameters.discretization);
-    infos.background_parameter("B", "background", parameters.background);
+    infos.add_parameter("V", "discretization value", discretization);
+    infos.background_parameter("B", "background", background);
 
     infos.add_table_parameter("T", "threshold", "threshold");
-    if (parameters.background.is_wordwise()) {
+    if (background.is_wordwise()) {
       infos.add_table_parameter("W", "number of recognized words", "number_of_recognized_words");
     }
     infos.add_table_parameter("P", "P-value", "pvalue");

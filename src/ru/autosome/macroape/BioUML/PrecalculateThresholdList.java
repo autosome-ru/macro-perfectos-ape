@@ -28,16 +28,12 @@ public class PrecalculateThresholdList {
     this.parameters = parameters;
   }
 
-  ru.autosome.macroape.Calculations.PrecalculateThresholdList.Parameters calculator_parameters() {
-    return new ru.autosome.macroape.Calculations.PrecalculateThresholdList.Parameters(parameters.pvalues,
-                                                                                     parameters.discretization,
-                                                                                     parameters.background,
-                                                                                     parameters.pvalue_boundary,
-                                                                                     parameters.max_hash_size);
-  }
-
   ru.autosome.macroape.Calculations.PrecalculateThresholdList calculator() {
-    return new ru.autosome.macroape.Calculations.PrecalculateThresholdList(calculator_parameters());
+    return new ru.autosome.macroape.Calculations.PrecalculateThresholdList(parameters.pvalues,
+                                                                           parameters.discretization,
+                                                                           parameters.background,
+                                                                           parameters.pvalue_boundary,
+                                                                           parameters.max_hash_size);
   }
 
 
