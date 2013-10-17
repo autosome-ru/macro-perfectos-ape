@@ -29,7 +29,7 @@ public class FindThresholdAPE {
     return new CountingPWM(pwm, background, max_hash_size);
   }
 
-  public ArrayList<CountingPWM.ThresholdInfo> threshold_infos(PWM pwm, double[] pvalues) {
+  public CountingPWM.ThresholdInfo[] threshold_infos(PWM pwm, double[] pvalues) {
     if (pvalue_boundary.equals("lower")) {
       return countingPWM(pwm).thresholds(pvalues);
     } else {
@@ -37,15 +37,15 @@ public class FindThresholdAPE {
     }
   }
 
-  public ArrayList<CountingPWM.ThresholdInfo> downscale_thresholds(ArrayList<CountingPWM.ThresholdInfo> threshold_infos) {
-    ArrayList<CountingPWM.ThresholdInfo> downscaled_infos = new ArrayList<CountingPWM.ThresholdInfo>();
-    for (CountingPWM.ThresholdInfo info : threshold_infos) {
-      downscaled_infos.add(info.downscale(discretization));
+  public CountingPWM.ThresholdInfo[] downscale_thresholds(CountingPWM.ThresholdInfo[] threshold_infos) {
+    CountingPWM.ThresholdInfo[] downscaled_infos = new CountingPWM.ThresholdInfo[threshold_infos.length];
+    for (int i = 0; i < threshold_infos.length; ++i) {
+      downscaled_infos[i] = threshold_infos[i].downscale(discretization);
     }
     return downscaled_infos;
   }
 
-  public ArrayList<CountingPWM.ThresholdInfo> find_thresholds_by_pvalues(double[] pvalues) {
+  public CountingPWM.ThresholdInfo[] find_thresholds_by_pvalues(double[] pvalues) {
     return downscale_thresholds(threshold_infos(upscaled_pwm(), pvalues));
   }
 }

@@ -132,7 +132,7 @@ public class CountingPWM {
     return result;
   }
 
-  public ArrayList<ThresholdInfo> thresholds(double... pvalues) {
+  public ThresholdInfo[] thresholds(double... pvalues) {
     ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
     HashMap<Double, double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     for (double pvalue : thresholds_by_pvalues.keySet()) {
@@ -142,11 +142,11 @@ public class CountingPWM {
       double real_pvalue = counts[1] / vocabularyVolume();
       results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[1]));
     }
-    return results;
+    return results.toArray(new ThresholdInfo[results.size()]);
   }
 
   // "weak" means that threshold has real pvalue not less than given pvalue, while usual threshold not greater
-  public ArrayList<ThresholdInfo> weak_thresholds(double... pvalues) {
+  public ThresholdInfo[] weak_thresholds(double... pvalues) {
     ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
     HashMap<Double, double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     for (double pvalue : thresholds_by_pvalues.keySet()) {
@@ -156,7 +156,7 @@ public class CountingPWM {
       double real_pvalue = counts[0] / vocabularyVolume();
       results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[0]));
     }
-    return results;
+    return results.toArray(new ThresholdInfo[results.size()]);
   }
 
   private double[] descending_sorted_hash_keys(Map<Double,?> hsh) {

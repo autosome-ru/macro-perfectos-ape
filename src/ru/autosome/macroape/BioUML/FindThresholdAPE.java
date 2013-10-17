@@ -32,7 +32,7 @@ public class FindThresholdAPE {
     this.parameters = parameters;
   }
 
-  public ArrayList<CountingPWM.ThresholdInfo> launch() {
+  public CountingPWM.ThresholdInfo[] launch() {
     return new ru.autosome.macroape.Calculations.FindThresholdAPE(parameters.pwm,
                                                                   parameters.background,
                                                                   parameters.discretization,
