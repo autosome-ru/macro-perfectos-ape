@@ -1,5 +1,6 @@
 package ru.autosome.macroape;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class ArrayExtensions {
@@ -49,12 +50,12 @@ public class ArrayExtensions {
     return result;
   }
 
-  public static double[] partial_sums(double array[], double initial) {
-    double result[] = new double[array.length];
+  public static ArrayList<Double> partial_sums(double array[], double initial) {
+    ArrayList<Double> result = new ArrayList<Double>(array.length);
     double sums = initial;
     for (int i = 0; i < array.length; ++i) {
       sums += array[i];
-      result[i] = sums;
+      result.add(sums);
     }
     return result;
   }

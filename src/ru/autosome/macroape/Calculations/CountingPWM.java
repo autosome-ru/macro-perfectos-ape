@@ -2,10 +2,7 @@ package ru.autosome.macroape.Calculations;
 
 import ru.autosome.macroape.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CountingPWM {
 
@@ -162,53 +159,57 @@ public class CountingPWM {
     return results;
   }
 
+  private double[] descending_sorted_hash_keys(Map<Double,?> hsh) {
+    Double[] keys = new Double[hsh.size()];
+    hsh.keySet().toArray(keys);
+    java.util.Arrays.sort(keys);
+    Double[] descending_keys = ArrayExtensions.reverse(keys);
+    return ArrayExtensions.toPrimitiveArray(descending_keys);
+    //return ArrayExtensions.toPrimitiveArray(keys);
+  }
+
+
+  // [ind_1, ind_2] such as value in [value_1, value_2]
+  int[] indices_of_range(ArrayList<Double> list, double value) {
+    int ind = java.util.Collections.binarySearch(list, value);
+    if (ind >= 0) {
+      return new int[] {ind, ind};
+    } else {
+      int insertion_point = -ind - 1;
+      if (insertion_point == 0) {
+        return new int[] {-1, -1};
+      } else if (insertion_point < list.size()) {
+        return new int[] {insertion_point - 1, insertion_point};
+      } else {
+        return new int[] {list.size(), list.size()};
+      }
+    }
+  }
+
   HashMap<Double, double[][]> thresholds_by_pvalues(double... pvalues) {
     HashMap<Double, Double> scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
-    Double[] scores_keys = new Double[scores_hash.size()];
-    scores_hash.keySet().toArray(scores_keys);
-    java.util.Arrays.sort(scores_keys);
-    Double[] sorted_scores_keys = ArrayExtensions.reverse(scores_keys);
-    double scores[] = ArrayExtensions.toPrimitiveArray(sorted_scores_keys);
+    double[] scores = descending_sorted_hash_keys(scores_hash);
 
     double counts[] = new double[scores.length];
     for (int i = 0; i < scores.length; ++i) {
       counts[i] = scores_hash.get(scores[i]);
     }
-
-    double partial_sums[] = ArrayExtensions.partial_sums(counts, 0.0);
-
+    ArrayList<Double> partial_sums = ArrayExtensions.partial_sums(counts, 0.0);
     HashMap<Double, double[][]> results = new HashMap<Double, double[][]>();
 
-    double sorted_pvalues[] = pvalues.clone();
-    Arrays.sort(sorted_pvalues);
-    HashMap<Double, Double> pvalue_counts = new HashMap<Double, Double>();
-    for (double pvalue : sorted_pvalues) {
-      pvalue_counts.put(pvalue, pvalue * vocabularyVolume());
-    }
-    for (Map.Entry<Double, Double> entry : pvalue_counts.entrySet()) {
-      double pvalue = entry.getKey();
-      double look_for_count = entry.getValue();
-      int ind = 0;
-      for (int i = 0; i < partial_sums.length; ++i) {
-        if (partial_sums[i] >= look_for_count) {
-          ind = i;
-          break;
-        }
-      }
-      double minscore = scores[ind];
-      double count_at_minscore = partial_sums[ind];
-      double maxscore;
-      double count_at_maxscore;
-      if (ind > 0) {
-        maxscore = scores[ind - 1];
-        count_at_maxscore = partial_sums[ind - 1];
+    for (double pvalue : pvalues) {
+      double look_for_count = pvalue * vocabularyVolume();
+      int[] range_indices = indices_of_range(partial_sums, look_for_count);
+      if (range_indices[0] == -1) {
+        results.put(pvalue, new double[][] { {scores[0], pwm.best_score() + 1},
+                                             {partial_sums.get(0), 0} });
+      } else if (range_indices[0] == partial_sums.size()) {
+        results.put(pvalue, new double[][] { {pwm.worst_score() - 1, scores[scores.length - 1]},
+                                             {vocabularyVolume(), partial_sums.get(scores.length - 1)} });
       } else {
-        maxscore = pwm.best_score() + 1.0;
-        count_at_maxscore = 0.0;
+        results.put(pvalue, new double[][] { {scores[range_indices[1]], scores[range_indices[0]]},
+                                             {partial_sums.get(range_indices[1]), partial_sums.get(range_indices[0])} });
       }
-
-      double[][] resulting_ranges = {{minscore, maxscore}, {count_at_minscore, count_at_maxscore}};
-      results.put(pvalue, resulting_ranges);
     }
     return results;
   }
