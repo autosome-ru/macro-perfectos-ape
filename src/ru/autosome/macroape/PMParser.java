@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 // Usual parser of 4-column matrix with or without name
+// (actually matrix can have any number of columns, so DiPWM matrices can be parsed too)
 public class PMParser {
   private final ArrayList<String> inp_strings;
   private double[][] matrix;
@@ -60,10 +61,11 @@ public class PMParser {
     }
 
     for (; i < inp_strings.size(); ++i) {
-      double[] tmp = new double[4];
       StringTokenizer parser = new StringTokenizer(inp_strings.get(i).replaceAll("\\s+", " "));
-      for (int j = 0; j < 4; ++j) {
-        tmp[j] = Double.valueOf(parser.nextToken(" "));
+      double[] tmp = new double[parser.countTokens()];
+      for (int j = 0; j < tmp.length; ++j) {
+        String elem = parser.nextToken(" ");
+        tmp[j] = Double.valueOf(elem);
       }
       matrix_as_list.add(tmp);
     }

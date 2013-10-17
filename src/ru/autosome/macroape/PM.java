@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PM {
+  static final int ALPHABET_SIZE = 4;
   public final double[][] matrix;
   public String name;
 
@@ -20,8 +21,8 @@ public class PM {
 
   PM(double[][] matrix, String name) throws IllegalArgumentException {
     for (double[] pos : matrix) {
-      if (pos.length != 4) {
-        throw new IllegalArgumentException("Matrix must have 4 elements in each position");
+      if (pos.length != ALPHABET_SIZE) {
+        throw new IllegalArgumentException("Matrix must have " + ALPHABET_SIZE + " elements in each position");
       }
     }
     this.matrix = matrix;
@@ -37,7 +38,7 @@ public class PM {
     StringBuilder result = new StringBuilder();
     result.append(name).append("\n");
     for (double[] pos : matrix) {
-      for (int letter_index = 0; letter_index < 4; ++ letter_index) {
+      for (int letter_index = 0; letter_index < ALPHABET_SIZE; ++ letter_index) {
         if (letter_index != 0) {
           result.append("\t");
         }
