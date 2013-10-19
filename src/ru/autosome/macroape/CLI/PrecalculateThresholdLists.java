@@ -187,7 +187,7 @@ public class PrecalculateThresholdLists {
 
   private static final String DOC =
    "Command-line format:\n" +
-    "java ru.autosome.macroape.CLI.PrecalculateThresholdLists <collection folder> <output folder>... [options]\n" +
+    "java ru.autosome.macroape.CLI.PrecalculateThresholdLists <collection folder> <output folder> [options]\n" +
     "\n" +
     "Options:\n" +
     "  [-d <discretization level>]\n" +

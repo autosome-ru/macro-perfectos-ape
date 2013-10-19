@@ -59,7 +59,7 @@ public class MultiSNPScan {
 
   private static final String DOC =
    "Command-line format:\n" +
-    "java ru.autosome.macroape.CLI.MultiSNPScan <folder with pwms> <file with SNPs>\n" +
+    "java ru.autosome.macroape.CLI.MultiSNPScan <folder with pwms> <file with SNPs> [options]\n" +
     "\n" +
     "Options:\n" +
     "  [-d <discretization level>]\n" +
