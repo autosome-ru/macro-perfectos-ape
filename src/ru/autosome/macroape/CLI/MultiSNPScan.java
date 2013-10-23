@@ -197,7 +197,7 @@ public class MultiSNPScan {
   }
 
   void process() {
-    System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change\n");
+    System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
     for (String snp_input : snp_list) {
       process_snp(snp_input);
     }
