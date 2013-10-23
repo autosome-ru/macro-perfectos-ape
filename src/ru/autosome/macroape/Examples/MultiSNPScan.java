@@ -28,7 +28,7 @@ public class MultiSNPScan {
                                                                                                               pvalue_boundary,
                                                                                                               max_hash_size);
     PrecalculateThresholdLists listCalculator = new PrecalculateThresholdLists(list_calculation_params);
-    Map<PWM, CanFindPvalue> collection = listCalculator.launch();
+    Map<PWM, CanFindPvalue> collection = listCalculator.launch(); // This data should be cached
 
     ru.autosome.macroape.BioUML.MultiSNPScan.Parameters scan_parameters =
      new ru.autosome.macroape.BioUML.MultiSNPScan.Parameters(snps, collection);
