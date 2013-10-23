@@ -48,4 +48,8 @@ public class FindThresholdAPE {
   public CountingPWM.ThresholdInfo[] find_thresholds_by_pvalues(double[] pvalues) {
     return downscale_thresholds(threshold_infos(upscaled_pwm(), pvalues));
   }
+
+  public CountingPWM.ThresholdInfo find_threshold_by_pvalue(double pvalue) {
+    return find_thresholds_by_pvalues( new double[]{pvalue} )[0];
+  }
 }

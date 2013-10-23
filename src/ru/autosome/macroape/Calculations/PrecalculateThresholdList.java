@@ -10,9 +10,9 @@ public class PrecalculateThresholdList {
   double discretization;
   BackgroundModel background;
   String pvalue_boundary;
-  int max_hash_size;
+  Integer max_hash_size;
   double[] pvalues;
-  public PrecalculateThresholdList(double[] pvalues, double discretization, BackgroundModel background, String pvalue_boundary, int max_hash_size) {
+  public PrecalculateThresholdList(double[] pvalues, double discretization, BackgroundModel background, String pvalue_boundary, Integer max_hash_size) {
     this.pvalues = pvalues;
     this.discretization = discretization;
     this.background = background;

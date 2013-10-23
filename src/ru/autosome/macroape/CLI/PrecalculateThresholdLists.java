@@ -71,7 +71,7 @@ public class PrecalculateThresholdLists {
   private double discretization;
   private BackgroundModel background;
   private String pvalue_boundary;
-  private int max_hash_size;
+  private Integer max_hash_size;
   private String data_model;
 
   private java.io.File collection_folder;
