@@ -8,7 +8,7 @@ import ru.autosome.macroape.SequenceWithSNP;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MultiSNPScan {
+public class MultiSNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SNPScan.RegionAffinityInfos>> > {
   static public class Parameters {
     public SequenceWithSNP[] sequencesWithSNP;
     Map<PWM, CanFindPvalue> pvalueCalculator;
@@ -20,12 +20,9 @@ public class MultiSNPScan {
   }
 
   Parameters parameters;
-  private Status status;
-  private Integer currentTicks;
   public MultiSNPScan(Parameters parameters) {
+    super();
     this.parameters = parameters;
-    status = Status.INITIALIZED;
-    currentTicks = 0;
   }
 
   ru.autosome.macroape.Calculations.SNPScan calculator(PWM pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
@@ -69,48 +66,4 @@ public class MultiSNPScan {
     return parameters.sequencesWithSNP.length * parameters.pvalueCalculator.size();
   }
 
-  public Status getStatus() {
-    synchronized (status) {
-      return status;
-    }
-  }
-
-  public boolean setStatus(Status newStatus) {
-    synchronized (status) {
-      if (status != Status.INTERRUPTED && status != Status.FAIL && status != Status.SUCCESS) {
-        status = newStatus;
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  void message(String msg) {
-    System.out.println(msg);
-  }
-
-  void tick() {
-    synchronized (currentTicks) {
-      currentTicks += 1;
-      double done = Math.floor((100 * currentTicks)/getTotalTicks());
-      this.message("overall: " + done + "% complete");
-    }
-  }
-
-  int getCurrentTicks() {
-    synchronized (currentTicks) {
-      return currentTicks;
-    }
-  }
-
-  boolean interrupted() {
-    synchronized (status) {
-      return status == Status.INTERRUPTED;
-    }
-  }
-
-  public static enum Status {
-    INITIALIZED, RUNNING, SUCCESS, FAIL, INTERRUPTED
-  }
 }

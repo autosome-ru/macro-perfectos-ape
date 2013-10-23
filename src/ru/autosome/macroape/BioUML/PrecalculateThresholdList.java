@@ -4,7 +4,7 @@ import ru.autosome.macroape.BackgroundModel;
 import ru.autosome.macroape.PWM;
 import ru.autosome.macroape.PvalueBsearchList;
 
-public class PrecalculateThresholdList {
+public class PrecalculateThresholdList extends SingleTask<PvalueBsearchList> {
   public static class Parameters {
     public double discretization;
     public BackgroundModel background;
@@ -25,6 +25,7 @@ public class PrecalculateThresholdList {
   }
   Parameters parameters;
   public PrecalculateThresholdList(Parameters parameters) {
+    super();
     this.parameters = parameters;
   }
 
@@ -37,7 +38,7 @@ public class PrecalculateThresholdList {
   }
 
 
-  public PvalueBsearchList launch() {
+  public PvalueBsearchList launchSingleTask() {
     return calculator().bsearch_list_for_pwm(parameters.pwm);
   }
 

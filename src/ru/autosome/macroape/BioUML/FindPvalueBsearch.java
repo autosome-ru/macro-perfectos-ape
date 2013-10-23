@@ -7,7 +7,7 @@ import ru.autosome.macroape.PvalueBsearchList;
 
 import java.util.ArrayList;
 
-public class FindPvalueBsearch {
+public class FindPvalueBsearch extends SingleTask<CanFindPvalue.PvalueInfo[]> {
   public static class Parameters {
     public PWM pwm;
     public BackgroundModel background;
@@ -25,10 +25,11 @@ public class FindPvalueBsearch {
 
   Parameters parameters;
   public FindPvalueBsearch(Parameters parameters) {
+    super();
     this.parameters = parameters;
   }
 
-  public CanFindPvalue.PvalueInfo[] launch() {
+  public CanFindPvalue.PvalueInfo[] launchSingleTask() {
     return new ru.autosome.macroape.Calculations.FindPvalueBsearch(parameters.pwm,
                                                                    parameters.background,
                                                                    parameters.bsearchList)

@@ -6,7 +6,7 @@ import ru.autosome.macroape.PWM;
 
 import java.util.ArrayList;
 
-public class FindThresholdAPE {
+public class FindThresholdAPE extends SingleTask<CountingPWM.ThresholdInfo[]> {
   public static class Parameters {
     public BackgroundModel background;
     public Double discretization; // if discretization is null - it's not applied
@@ -29,10 +29,11 @@ public class FindThresholdAPE {
 
   Parameters parameters;
   public FindThresholdAPE(Parameters parameters) {
+    super();
     this.parameters = parameters;
   }
 
-  public CountingPWM.ThresholdInfo[] launch() {
+  public CountingPWM.ThresholdInfo[] launchSingleTask() {
     return new ru.autosome.macroape.Calculations.FindThresholdAPE(parameters.pwm,
                                                                   parameters.background,
                                                                   parameters.discretization,

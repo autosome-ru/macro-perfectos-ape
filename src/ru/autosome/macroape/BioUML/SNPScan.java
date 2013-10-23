@@ -4,8 +4,9 @@ package ru.autosome.macroape.BioUML;
 import ru.autosome.macroape.Calculations.CanFindPvalue;
 import ru.autosome.macroape.PWM;
 import ru.autosome.macroape.SequenceWithSNP;
+import ru.autosome.macroape.Calculations.SNPScan.RegionAffinityInfos;
 
-public class SNPScan {
+public class SNPScan extends SingleTask<RegionAffinityInfos> {
   static public class Parameters {
     public SequenceWithSNP sequenceWithSNP;
     public PWM pwm;
@@ -20,6 +21,7 @@ public class SNPScan {
 
   Parameters parameters;
   public SNPScan(Parameters parameters) {
+    super();
     this.parameters = parameters;
   }
 
@@ -28,7 +30,7 @@ public class SNPScan {
                                                          parameters.sequenceWithSNP,
                                                          parameters.pvalueCalculator);
   }
-  public ru.autosome.macroape.Calculations.SNPScan.RegionAffinityInfos launch() {
+  public RegionAffinityInfos launchSingleTask() {
     return calculator().affinityInfos();
   }
 }
