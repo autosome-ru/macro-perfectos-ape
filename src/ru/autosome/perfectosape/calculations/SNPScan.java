@@ -77,7 +77,8 @@ public class SNPScan {
       double pvalue = affinity_calculator.affinity();
       Sequence word = sequence.substring(pos, pwm.length());
 
-      return new RegionAffinityVariantInfo(pos, allele, pvalue, word);
+      Position pos_centered = new Position(pos.position - sequenceWithSNP.left.length(), pos.directStrand);
+      return new RegionAffinityVariantInfo(pos_centered, allele, pvalue, word);
   }
 
   public RegionAffinityInfos affinityInfos(){

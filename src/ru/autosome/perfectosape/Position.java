@@ -3,9 +3,9 @@ package ru.autosome.perfectosape;
 import java.util.ArrayList;
 
 public class Position {
-  final int position;
-  final boolean directStrand;
-  Position(int position, boolean directStrand) {
+  final public int position;
+  final public boolean directStrand;
+  public Position(int position, boolean directStrand) {
     this.position = position;
     this.directStrand = directStrand;
   }
