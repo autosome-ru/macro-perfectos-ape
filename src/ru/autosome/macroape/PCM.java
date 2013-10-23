@@ -1,11 +1,5 @@
 package ru.autosome.macroape;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
 public class PCM extends PM {
   private PCM(double[][] matrix, String name) throws IllegalArgumentException {
     super(matrix, name);

@@ -5,8 +5,6 @@ import ru.autosome.macroape.Calculations.CanFindPvalue;
 import ru.autosome.macroape.PWM;
 import ru.autosome.macroape.PvalueBsearchList;
 
-import java.util.ArrayList;
-
 public class FindPvalueBsearch extends SingleTask<CanFindPvalue.PvalueInfo[]> {
   public static class Parameters {
     public PWM pwm;

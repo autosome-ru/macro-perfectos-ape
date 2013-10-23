@@ -3,8 +3,6 @@ package ru.autosome.macroape.Calculations;
 import ru.autosome.macroape.BackgroundModel;
 import ru.autosome.macroape.PWM;
 
-import java.util.ArrayList;
-
 public class FindThresholdAPE {
   BackgroundModel background;
   Double discretization; // if discretization is null - it's not applied

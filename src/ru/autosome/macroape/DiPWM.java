@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static java.lang.Math.ceil;
-import static java.lang.Math.max;
 
 public class DiPWM {
   static final int ALPHABET_SIZE = 16;

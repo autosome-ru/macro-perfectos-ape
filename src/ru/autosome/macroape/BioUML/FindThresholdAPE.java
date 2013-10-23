@@ -4,8 +4,6 @@ import ru.autosome.macroape.BackgroundModel;
 import ru.autosome.macroape.Calculations.CountingPWM;
 import ru.autosome.macroape.PWM;
 
-import java.util.ArrayList;
-
 public class FindThresholdAPE extends SingleTask<CountingPWM.ThresholdInfo[]> {
   public static class Parameters {
     public BackgroundModel background;

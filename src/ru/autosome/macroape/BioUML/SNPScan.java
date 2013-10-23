@@ -2,9 +2,9 @@ package ru.autosome.macroape.BioUML;
 
 
 import ru.autosome.macroape.Calculations.CanFindPvalue;
+import ru.autosome.macroape.Calculations.SNPScan.RegionAffinityInfos;
 import ru.autosome.macroape.PWM;
 import ru.autosome.macroape.SequenceWithSNP;
-import ru.autosome.macroape.Calculations.SNPScan.RegionAffinityInfos;
 
 public class SNPScan extends SingleTask<RegionAffinityInfos> {
   static public class Parameters {

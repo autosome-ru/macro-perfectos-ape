@@ -3,8 +3,6 @@ package ru.autosome.macroape.Calculations;
 import ru.autosome.macroape.OutputInformation;
 import ru.autosome.macroape.ResultInfo;
 
-import java.util.ArrayList;
-
 public interface CanFindPvalue {
   public static class PvalueInfo extends ResultInfo {
     public final double threshold;

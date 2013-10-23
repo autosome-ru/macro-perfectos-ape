@@ -5,8 +5,6 @@ import ru.autosome.macroape.OutputInformation;
 import ru.autosome.macroape.PWM;
 import ru.autosome.macroape.PvalueBsearchList;
 
-import java.util.ArrayList;
-
 // Looks for rough pValue of motif under given threshold
 // using a sorted list of predefined threshold-pvalues pairs
 // by performing binary search

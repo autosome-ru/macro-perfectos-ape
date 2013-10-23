@@ -1,9 +1,7 @@
 package ru.autosome.macroape.Examples;
 
 import ru.autosome.macroape.BackgroundModel;
-import ru.autosome.macroape.Calculations.CanFindPvalue;
 import ru.autosome.macroape.Calculations.CountingPWM;
-import ru.autosome.macroape.Calculations.FindPvalueAPE;
 import ru.autosome.macroape.Calculations.FindThresholdAPE;
 import ru.autosome.macroape.PMParser;
 import ru.autosome.macroape.PWM;

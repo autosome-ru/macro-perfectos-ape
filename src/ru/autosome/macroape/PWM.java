@@ -1,11 +1,6 @@
 package ru.autosome.macroape;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static java.lang.Math.ceil;
 

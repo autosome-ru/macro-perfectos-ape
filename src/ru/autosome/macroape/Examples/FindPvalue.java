@@ -1,10 +1,11 @@
 package ru.autosome.macroape.Examples;
 
-import ru.autosome.macroape.*;
+import ru.autosome.macroape.BackgroundModel;
 import ru.autosome.macroape.Calculations.CanFindPvalue;
 import ru.autosome.macroape.Calculations.FindPvalueAPE;
-
-import java.util.ArrayList;
+import ru.autosome.macroape.PMParser;
+import ru.autosome.macroape.PWM;
+import ru.autosome.macroape.WordwiseBackground;
 
 public class FindPvalue {
   static void print_result(CanFindPvalue.PvalueInfo info) {
