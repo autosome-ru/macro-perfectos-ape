@@ -32,7 +32,7 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
     this.parameters = parameters;
   }
 
-  Integer getTotalTicks() {
+  public Integer getTotalTicks() {
     return parameters.pwmCollection.length;
   }
 

@@ -1,7 +1,7 @@
 package ru.autosome.perfectosape.api;
 
 abstract public class SingleTask<ResultType extends Object> extends Task<ResultType> {
-  Integer getTotalTicks() {
+  public Integer getTotalTicks() {
     return 1;
   }
 

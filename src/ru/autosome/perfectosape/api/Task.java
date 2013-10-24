@@ -13,7 +13,7 @@ public abstract class Task <ResultType extends Object> {
   }
   public abstract ResultType launch();
 
-  abstract Integer getTotalTicks();
+  public abstract Integer getTotalTicks();
 
   void tick() {
     synchronized (currentTicks) {
@@ -23,7 +23,7 @@ public abstract class Task <ResultType extends Object> {
     }
   }
 
-  int getCurrentTicks() {
+  public int getCurrentTicks() {
     synchronized (currentTicks) {
       return currentTicks;
     }
@@ -53,6 +53,6 @@ public abstract class Task <ResultType extends Object> {
   }
 
   void message(String msg) {
-    System.out.println(msg);
+    System.out.println(msg); // TODO: printable interface, silent mode
   }
 }

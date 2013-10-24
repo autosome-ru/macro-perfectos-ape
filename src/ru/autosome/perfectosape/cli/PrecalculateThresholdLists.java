@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.calculations.PrecalculateThresholdList;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,66 +9,6 @@ import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class PrecalculateThresholdLists {
-  abstract static public class Progression {
-    public abstract double[] values();
-
-    public static Progression fromString(String s) {
-      StringTokenizer parser = new StringTokenizer(s);
-      double min = Double.valueOf(parser.nextToken(","));
-      double max = Double.valueOf(parser.nextToken(","));
-      double step = Double.valueOf(parser.nextToken(","));
-      String progression_method = parser.nextToken();
-
-      if (progression_method.equals("mul")) {
-        return new GeometricProgression(min, max, step);
-      } else if (progression_method.equals("add")) {
-        return new ArithmeticProgression(min, max, step);
-      } else {
-        throw new IllegalArgumentException("Progression method for pvalue-list is either add or mul, but you specified " + progression_method);
-      }
-    }
-  }
-
-  public static class GeometricProgression extends Progression {
-    double from;
-    double to;
-    double step;
-
-    public double[] values() {
-      ArrayList<Double> results = new ArrayList<Double>();
-      for (double x = from; x <= to; x *= step) {
-        results.add(x);
-      }
-      return ArrayExtensions.toPrimitiveArray(results);
-    }
-
-    public GeometricProgression(double min, double to, double step) {
-      this.from = min;
-      this.to = to;
-      this.step = step;
-    }
-  }
-
-  public static class ArithmeticProgression extends Progression {
-    double from;
-    double to;
-    double step;
-
-    public double[] values() {
-      ArrayList<Double> results = new ArrayList<Double>();
-      for (double x = from; x <= to; x += step) {
-        results.add(x);
-      }
-      return ArrayExtensions.toPrimitiveArray(results);
-    }
-
-    ArithmeticProgression(double from, double to, double step) {
-      this.from = from;
-      this.to = to;
-      this.step = step;
-    }
-  }
-
   private double discretization;
   private BackgroundModel background;
   private String pvalue_boundary;
@@ -83,7 +24,7 @@ public class PrecalculateThresholdLists {
     background = new WordwiseBackground();
     pvalue_boundary = "lower";
     max_hash_size = 10000000;
-    pvalues = new GeometricProgression(1E-6, 0.3, 1.1).values();
+    pvalues = new PrecalculateThresholdList.GeometricProgression(1E-6, 0.3, 1.1).values();
 
     data_model = "pwm";
   }
@@ -142,7 +83,7 @@ public class PrecalculateThresholdLists {
     if (opt.equals("-b")) {
       background = Background.fromString(argv.remove(0));
     } else if (opt.equals("--pvalues")) {
-      pvalues = Progression.fromString(argv.remove(0)).values();
+      pvalues = PrecalculateThresholdList.Progression.fromString(argv.remove(0)).values();
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {

@@ -62,7 +62,7 @@ public class MultiSNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SNPScan.Re
   }
 
 
-  Integer getTotalTicks() {
+  public Integer getTotalTicks() {
     return parameters.sequencesWithSNP.length * parameters.pvalueCalculator.size();
   }
 
