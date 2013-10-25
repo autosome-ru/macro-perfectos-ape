@@ -6,6 +6,7 @@ import ru.autosome.perfectosape.PWM;
 import ru.autosome.perfectosape.calculations.CanFindPvalue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
@@ -15,10 +16,10 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
     public BoundaryType pvalue_boundary;
     public Integer max_hash_size;
     public double[] pvalues;
-    public PWM[] pwmCollection;
+    public List<PWM> pwmCollection;
 
     public Parameters() {}
-    public Parameters(PWM[] pwmCollection, double[] pvalues, double discretization, BackgroundModel background, BoundaryType pvalue_boundary, Integer max_hash_size) {
+    public Parameters(List<PWM> pwmCollection, double[] pvalues, double discretization, BackgroundModel background, BoundaryType pvalue_boundary, Integer max_hash_size) {
       this.pwmCollection = pwmCollection;
       this.pvalues = pvalues;
       this.discretization = discretization;
@@ -34,7 +35,7 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
   }
 
   public Integer getTotalTicks() {
-    return parameters.pwmCollection.length;
+    return parameters.pwmCollection.size();
   }
 
 

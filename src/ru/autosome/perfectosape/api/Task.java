@@ -6,10 +6,14 @@ public abstract class Task <ResultType extends Object> {
   }
   private Status status;
   private Integer currentTicks;
+  public java.io.PrintStream outputStream;
+  public boolean silent;
 
   protected Task() {
     status = Status.INITIALIZED;
     currentTicks = 0;
+    outputStream = System.err;
+    silent = false;
   }
   public abstract ResultType launch();
 
@@ -53,6 +57,8 @@ public abstract class Task <ResultType extends Object> {
   }
 
   void message(String msg) {
-    System.out.println(msg); // TODO: printable interface, silent mode
+    if (!silent) {
+      outputStream.println(msg);
+    }
   }
 }

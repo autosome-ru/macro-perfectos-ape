@@ -6,14 +6,15 @@ import ru.autosome.perfectosape.calculations.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.SNPScan;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MultiSNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SNPScan.RegionAffinityInfos>> > {
   static public class Parameters {
-    public SequenceWithSNP[] sequencesWithSNP;
+    public List<SequenceWithSNP> sequencesWithSNP;
     Map<PWM, CanFindPvalue> pvalueCalculator;
     public Parameters() { }
-    public Parameters(SequenceWithSNP[] sequencesWithSNP, Map<PWM, CanFindPvalue> pvalueCalculator) {
+    public Parameters(List<SequenceWithSNP> sequencesWithSNP, Map<PWM, CanFindPvalue> pvalueCalculator) {
       this.sequencesWithSNP = sequencesWithSNP;
       this.pvalueCalculator = pvalueCalculator;
     }
@@ -63,7 +64,7 @@ public class MultiSNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SNPScan.Re
 
 
   public Integer getTotalTicks() {
-    return parameters.sequencesWithSNP.length * parameters.pvalueCalculator.size();
+    return parameters.sequencesWithSNP.size() * parameters.pvalueCalculator.size();
   }
 
 }

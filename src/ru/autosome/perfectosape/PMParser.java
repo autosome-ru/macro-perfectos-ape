@@ -29,6 +29,7 @@ public class PMParser {
     }
   }
 
+  // Parameter is filename or special string ".stdin" which means to load data from stdin
   public static PMParser from_file_or_stdin(String filename_or_stdin) {
     try {
       InputStream reader;

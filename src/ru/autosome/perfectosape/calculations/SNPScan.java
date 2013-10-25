@@ -22,10 +22,10 @@ public class SNPScan {
   }
 
   public static class RegionAffinityVariantInfo {
-    Position position;
-    Sequence word;
-    Character allele;
-    double pvalue;
+    public final Position position;
+    public final Sequence word;
+    public final Character allele;
+    public final double pvalue;
 
     RegionAffinityVariantInfo(Position position, Character allele, double pvalue, Sequence word) {
       this.position = position;
@@ -36,8 +36,8 @@ public class SNPScan {
   }
 
   public static class RegionAffinityInfos {
-    RegionAffinityVariantInfo info_1;
-    RegionAffinityVariantInfo info_2;
+    public final RegionAffinityVariantInfo info_1;
+    public final RegionAffinityVariantInfo info_2;
 
     RegionAffinityInfos(RegionAffinityVariantInfo info_1, RegionAffinityVariantInfo info_2) {
       this.info_1 = info_1;
