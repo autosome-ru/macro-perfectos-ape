@@ -1,17 +1,18 @@
 package ru.autosome.perfectosape.calculations;
 
 import ru.autosome.perfectosape.BackgroundModel;
+import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.PWM;
 
 public class FindThresholdAPE {
   BackgroundModel background;
   Double discretization; // if discretization is null - it's not applied
-  String pvalue_boundary;
+  BoundaryType pvalue_boundary;
   Integer max_hash_size; // if max_hash_size is null - it's not applied
   PWM pwm;
 
   public FindThresholdAPE(PWM pwm, BackgroundModel background,
-                    Double discretization, String pvalue_boundary, Integer max_hash_size) {
+                    Double discretization, BoundaryType pvalue_boundary, Integer max_hash_size) {
     this.pwm = pwm;
     this.background = background;
     this.discretization = discretization;
@@ -28,7 +29,7 @@ public class FindThresholdAPE {
   }
 
   public CountingPWM.ThresholdInfo[] threshold_infos(PWM pwm, double[] pvalues) {
-    if (pvalue_boundary.equals("lower")) {
+    if (pvalue_boundary == BoundaryType.LOWER) {
       return countingPWM(pwm).thresholds(pvalues);
     } else {
       return countingPWM(pwm).weak_thresholds(pvalues);

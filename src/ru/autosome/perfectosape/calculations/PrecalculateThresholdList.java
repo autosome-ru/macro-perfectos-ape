@@ -1,9 +1,6 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.ArrayExtensions;
-import ru.autosome.perfectosape.BackgroundModel;
-import ru.autosome.perfectosape.PWM;
-import ru.autosome.perfectosape.PvalueBsearchList;
+import ru.autosome.perfectosape.*;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -73,10 +70,10 @@ public class PrecalculateThresholdList {
 
   double discretization;
   BackgroundModel background;
-  String pvalue_boundary;
+  BoundaryType pvalue_boundary;
   Integer max_hash_size;
   double[] pvalues;
-  public PrecalculateThresholdList(double[] pvalues, double discretization, BackgroundModel background, String pvalue_boundary, Integer max_hash_size) {
+  public PrecalculateThresholdList(double[] pvalues, double discretization, BackgroundModel background, BoundaryType pvalue_boundary, Integer max_hash_size) {
     this.pvalues = pvalues;
     this.discretization = discretization;
     this.background = background;

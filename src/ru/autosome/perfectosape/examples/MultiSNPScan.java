@@ -15,7 +15,7 @@ public class MultiSNPScan {
     double[] pvalues = ru.autosome.perfectosape.calculations.PrecalculateThresholdList.PVALUE_LIST;
     double discretization = 10000;
     BackgroundModel background = new WordwiseBackground();
-    String pvalue_boundary = "lower"; // TODO: make enum
+    BoundaryType pvalue_boundary = BoundaryType.LOWER;
     Integer max_hash_size = null;
 
     PrecalculateThresholdLists.Parameters list_calculation_params = new PrecalculateThresholdLists.Parameters(pwms,

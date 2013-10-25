@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class FindThreshold {
+  ;
   private static final String DOC =
    "Command-line format:\n" +
     "java ru.autosome.perfectosape.cli.FindThreshold <pat-file> [<list of P-values>...] [options]\n" +
@@ -23,7 +24,8 @@ public class FindThreshold {
 
   BackgroundModel background;
   Double discretization;
-  String pvalue_boundary;
+
+  BoundaryType pvalue_boundary;
   Integer max_hash_size; // not int because it can be null
 
   PWM pwm;
@@ -35,9 +37,8 @@ public class FindThreshold {
   void initialize_defaults() {
     background = new WordwiseBackground();
     discretization = 10000.0;
-    pvalue_boundary = "lower";
+    pvalue_boundary = BoundaryType.LOWER;
     max_hash_size = 10000000;
-
     data_model = "pwm";
 
     pvalues = new double[1];
@@ -79,11 +80,7 @@ public class FindThreshold {
     } else if (opt.equals("-d")) {
       discretization = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--boundary")) {
-      pvalue_boundary = argv.remove(0);
-      if (!pvalue_boundary.equalsIgnoreCase("lower") &&
-           !pvalue_boundary.equalsIgnoreCase("upper")) {
-        throw new IllegalArgumentException("boundary should be either lower or upper");
-      }
+      pvalue_boundary = BoundaryType.valueOf(argv.remove(0));
     } else if (opt.equals("--pcm")) {
       data_model = "pcm";
     } else {

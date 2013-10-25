@@ -1,10 +1,10 @@
 package ru.autosome.perfectosape.api;
 
 
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
-import ru.autosome.perfectosape.calculations.SNPScan.RegionAffinityInfos;
 import ru.autosome.perfectosape.PWM;
 import ru.autosome.perfectosape.SequenceWithSNP;
+import ru.autosome.perfectosape.calculations.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.SNPScan.RegionAffinityInfos;
 
 public class SNPScan extends SingleTask<RegionAffinityInfos> {
   static public class Parameters {

@@ -1,8 +1,9 @@
 package ru.autosome.perfectosape.api;
 
 import ru.autosome.perfectosape.BackgroundModel;
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
+import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.PWM;
+import ru.autosome.perfectosape.calculations.CanFindPvalue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +12,13 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
   public static class Parameters {
     public double discretization;
     public BackgroundModel background;
-    public String pvalue_boundary;
+    public BoundaryType pvalue_boundary;
     public Integer max_hash_size;
     public double[] pvalues;
     public PWM[] pwmCollection;
 
     public Parameters() {}
-    public Parameters(PWM[] pwmCollection, double[] pvalues, double discretization, BackgroundModel background, String pvalue_boundary, Integer max_hash_size) {
+    public Parameters(PWM[] pwmCollection, double[] pvalues, double discretization, BackgroundModel background, BoundaryType pvalue_boundary, Integer max_hash_size) {
       this.pwmCollection = pwmCollection;
       this.pvalues = pvalues;
       this.discretization = discretization;

@@ -1,21 +1,22 @@
 package ru.autosome.perfectosape.api;
 
 import ru.autosome.perfectosape.BackgroundModel;
-import ru.autosome.perfectosape.calculations.CountingPWM;
+import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.PWM;
+import ru.autosome.perfectosape.calculations.CountingPWM;
 
 public class FindThresholdAPE extends SingleTask<CountingPWM.ThresholdInfo[]> {
   public static class Parameters {
     public BackgroundModel background;
     public Double discretization; // if discretization is null - it's not applied
-    public String pvalue_boundary;
+    public BoundaryType pvalue_boundary;
     public Integer max_hash_size; // if max_hash_size is null - it's not applied
     public PWM pwm;
     public double[] pvalues;
 
     public Parameters() { }
     public Parameters(PWM pwm, double[] pvalues, BackgroundModel background,
-                      Double discretization, String pvalue_boundary, Integer max_hash_size) {
+                      Double discretization, BoundaryType pvalue_boundary, Integer max_hash_size) {
       this.pwm = pwm;
       this.pvalues = pvalues;
       this.background = background;

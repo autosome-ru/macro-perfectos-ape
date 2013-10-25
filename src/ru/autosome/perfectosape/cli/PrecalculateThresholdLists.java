@@ -6,12 +6,11 @@ import ru.autosome.perfectosape.calculations.PrecalculateThresholdList;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.StringTokenizer;
 
 public class PrecalculateThresholdLists {
   private double discretization;
   private BackgroundModel background;
-  private String pvalue_boundary;
+  private BoundaryType pvalue_boundary;
   private Integer max_hash_size;
   private String data_model;
 
@@ -22,7 +21,7 @@ public class PrecalculateThresholdLists {
   private void initialize_defaults() {
     discretization = 1000;
     background = new WordwiseBackground();
-    pvalue_boundary = "lower";
+    pvalue_boundary = BoundaryType.LOWER;
     max_hash_size = 10000000;
     pvalues = new PrecalculateThresholdList.GeometricProgression(1E-6, 0.3, 1.1).values();
 
@@ -89,11 +88,7 @@ public class PrecalculateThresholdLists {
     } else if (opt.equals("-d")) {
       discretization = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--boundary")) {
-      pvalue_boundary = argv.remove(0);
-      if (!pvalue_boundary.equalsIgnoreCase("lower") &&
-           !pvalue_boundary.equalsIgnoreCase("upper")) {
-        throw new IllegalArgumentException("boundary should be either lower or upper");
-      }
+      pvalue_boundary = BoundaryType.valueOf(argv.remove(0));
     } else if (opt.equals("--pcm")) {
       data_model = "pcm";
     } else {

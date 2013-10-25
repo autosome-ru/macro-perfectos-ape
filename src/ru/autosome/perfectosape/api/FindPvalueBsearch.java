@@ -1,9 +1,9 @@
 package ru.autosome.perfectosape.api;
 
 import ru.autosome.perfectosape.BackgroundModel;
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
 import ru.autosome.perfectosape.PWM;
 import ru.autosome.perfectosape.PvalueBsearchList;
+import ru.autosome.perfectosape.calculations.CanFindPvalue;
 
 public class FindPvalueBsearch extends SingleTask<CanFindPvalue.PvalueInfo[]> {
   public static class Parameters {

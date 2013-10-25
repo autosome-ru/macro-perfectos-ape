@@ -1,11 +1,11 @@
 package ru.autosome.perfectosape.examples;
 
 import ru.autosome.perfectosape.BackgroundModel;
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
-import ru.autosome.perfectosape.calculations.FindPvalueAPE;
 import ru.autosome.perfectosape.PMParser;
 import ru.autosome.perfectosape.PWM;
 import ru.autosome.perfectosape.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.FindPvalueAPE;
 
 public class FindPvalue {
   static void print_result(CanFindPvalue.PvalueInfo info) {

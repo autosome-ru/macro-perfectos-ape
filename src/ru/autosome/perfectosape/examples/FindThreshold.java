@@ -1,11 +1,8 @@
 package ru.autosome.perfectosape.examples;
 
-import ru.autosome.perfectosape.BackgroundModel;
+import ru.autosome.perfectosape.*;
 import ru.autosome.perfectosape.calculations.CountingPWM;
 import ru.autosome.perfectosape.calculations.FindThresholdAPE;
-import ru.autosome.perfectosape.PMParser;
-import ru.autosome.perfectosape.PWM;
-import ru.autosome.perfectosape.WordwiseBackground;
 
 public class FindThreshold {
   static void print_result(CountingPWM.ThresholdInfo info) {
@@ -19,7 +16,7 @@ public class FindThreshold {
     PWM pwm = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
     BackgroundModel background = new WordwiseBackground();
     double discretization = 10000;
-    String pvalue_boundary = "lower";
+    BoundaryType pvalue_boundary = BoundaryType.LOWER;
     Integer max_hash_size = null;
     double pvalue = 0.0005;
     double[] pvalues = {0.0001, 0.0005, 0.001};
