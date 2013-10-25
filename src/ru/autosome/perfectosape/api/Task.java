@@ -22,9 +22,11 @@ public abstract class Task <ResultType extends Object> {
   void tick() {
     synchronized (currentTicks) {
       currentTicks += 1;
-      double done = Math.floor((100 * currentTicks)/getTotalTicks());
-      this.message("overall: " + done + "% complete");
     }
+  }
+
+  public double completionPercent() {
+    return Math.floor((100 * currentTicks)/getTotalTicks());
   }
 
   public int getCurrentTicks() {

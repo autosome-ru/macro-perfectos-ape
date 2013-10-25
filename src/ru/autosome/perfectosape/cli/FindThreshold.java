@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class FindThreshold {
-  ;
   private static final String DOC =
    "Command-line format:\n" +
     "java ru.autosome.perfectosape.cli.FindThreshold <pat-file> [<list of P-values>...] [options]\n" +
