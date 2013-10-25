@@ -88,7 +88,7 @@ public class PrecalculateThresholdLists {
     } else if (opt.equals("-d")) {
       discretization = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--boundary")) {
-      pvalue_boundary = BoundaryType.valueOf(argv.remove(0));
+      pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
       data_model = "pcm";
     } else {
