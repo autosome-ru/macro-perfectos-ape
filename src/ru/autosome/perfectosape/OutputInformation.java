@@ -141,7 +141,7 @@ public class OutputInformation {
     for (String column_name : table_columns) {
       if (table_column_callbacks.containsKey(column_name)) {
         Callback callback = table_column_callbacks.get(column_name);
-        cell_contents.add( callback.run(info.get(column_name)).toString());
+        cell_contents.add(callback.run(info.get(column_name)));
       } else {
         cell_contents.add(info.get(column_name).toString());
       }

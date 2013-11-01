@@ -148,9 +148,7 @@ public class FindThreshold {
 
   <R extends ResultInfo> OutputInformation report_table(R[] data) {
     ArrayList<R> data_list = new ArrayList<R>(data.length);
-    for(int i = 0; i < data.length; ++i) {
-      data_list.add(data[i]);
-    }
+    Collections.addAll(data_list, data);
     return report_table(data_list);
   }
 

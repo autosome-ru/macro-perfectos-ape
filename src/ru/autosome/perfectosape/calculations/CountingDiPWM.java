@@ -103,8 +103,7 @@ public class CountingDiPWM {
       }
     }
 
-    HashMap<Double, Double> result = combine_scores(scores);
-    return result;
+    return combine_scores(scores);
   }
 
   HashMap<Double,Double> combine_scores(HashMap<Double,Double>[] scores) {

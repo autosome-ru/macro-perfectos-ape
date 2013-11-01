@@ -1,6 +1,6 @@
 package ru.autosome.perfectosape.api;
 
-abstract public class SingleTask<ResultType extends Object> extends Task<ResultType> {
+abstract public class SingleTask<ResultType> extends Task<ResultType> {
   public Integer getTotalTicks() {
     return 1;
   }

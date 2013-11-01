@@ -69,7 +69,6 @@ public class SequenceWithSNP {
 
   // position
   public ArrayList<Position> positions_subsequence_overlaps_snp(int subsequence_length) {
-    ArrayList<Position> positions = new ArrayList<Position>();
     int left_pos = Math.max(0, left.length() - subsequence_length + 1);
     int right_pos = Math.min(length(), left.length() + subsequence_length);
     return Position.positions_between(left_pos, right_pos, subsequence_length);

@@ -34,7 +34,6 @@ public class FindThreshold {
     }
 
     // api integration
-    double[] thresholds_2 = {15,16,17};
     ru.autosome.perfectosape.api.FindThresholdAPE.Parameters parameters =
      new ru.autosome.perfectosape.api.FindThresholdAPE.Parameters(pwm,
                                                               pvalues,

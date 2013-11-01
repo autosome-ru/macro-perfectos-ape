@@ -41,7 +41,7 @@ public class DiPWM {
     }
     this.matrix = matrix;
     this.name = name;
-  };
+  }
 
   public int length() {
     return matrix.length + 1;

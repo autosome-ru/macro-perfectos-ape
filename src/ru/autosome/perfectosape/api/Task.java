@@ -3,7 +3,7 @@ package ru.autosome.perfectosape.api;
 import java.util.EventListener;
 import java.util.concurrent.Callable;
 
-public abstract class Task <ResultType extends Object> implements Callable {
+public abstract class Task <ResultType> implements Callable {
   public static enum Status {
     INITIALIZED, RUNNING, SUCCESS, FAIL, INTERRUPTED
   }

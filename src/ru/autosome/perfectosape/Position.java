@@ -35,6 +35,6 @@ public class Position {
 
   @Override
   public String toString() {
-    return new StringBuilder().append(position).append("\t").append(strand()).toString();
+    return String.valueOf(position) + "\t" + strand();
   }
 }
