@@ -7,8 +7,11 @@ public abstract class Task <ResultType> implements Callable {
   public static enum Status {
     INITIALIZED, RUNNING, SUCCESS, FAIL, INTERRUPTED
   }
+  public static enum Event {
+    TICK, STATUS_CHANGED
+  }
   interface Listener extends EventListener {
-    void eventOccured(Task with_task);
+    void eventOccured(Task with_task, Event event);
   }
   private Status status;
   private Integer currentTicks;
@@ -35,7 +38,7 @@ public abstract class Task <ResultType> implements Callable {
     synchronized (lock) {
       currentTicks += 1;
       if (listener != null) {
-        listener.eventOccured(this);
+        listener.eventOccured(this, Event.TICK);
       }
     }
   }
@@ -66,7 +69,7 @@ public abstract class Task <ResultType> implements Callable {
     synchronized (lock) {
       if (status != Status.INTERRUPTED) {
         status = newStatus;
-        listener.eventOccured(this);
+        listener.eventOccured(this, Event.STATUS_CHANGED);
         return true;
       } else {
         return false;
