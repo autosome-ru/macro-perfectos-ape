@@ -2,9 +2,15 @@ package ru.autosome.perfectosape.calculations;
 
 import ru.autosome.perfectosape.*;
 
+import gnu.trove.TDoubleCollection;
+import gnu.trove.iterator.TDoubleDoubleIterator;
+import gnu.trove.iterator.TDoubleIterator;
+import gnu.trove.map.TDoubleDoubleMap;
+import gnu.trove.map.hash.TDoubleDoubleHashMap;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 public class CountingPWM {
 
@@ -68,12 +74,20 @@ public class CountingPWM {
     return score_mean() + n_ * sigma;
   }
 
+  private double sum(TDoubleCollection vals) {
+    TDoubleIterator iterator = vals.iterator();
+    double result = 0;
+    while(iterator.hasNext()) {
+      result += iterator.next();
+    }
+    return result;
+  }
 
-  private HashMap<Double, Double> count_distribution_under_pvalue(double max_pvalue) {
-    HashMap<Double, Double> cnt_distribution = new HashMap<Double, Double>();
+  private TDoubleDoubleMap count_distribution_under_pvalue(double max_pvalue) {
+    TDoubleDoubleMap cnt_distribution = new TDoubleDoubleHashMap();
     double look_for_count = max_pvalue * vocabularyVolume();
 
-    while (!(HashExtensions.sum_values(cnt_distribution) >= look_for_count)) {
+    while (!(sum(cnt_distribution.valueCollection()) >= look_for_count)) {
       double approximate_threshold;
       try {
         approximate_threshold = threshold_gauss_estimation(max_pvalue);
@@ -87,8 +101,8 @@ public class CountingPWM {
     return cnt_distribution;
   }
 
-  private HashMap<Double, Double> count_distribution_after_threshold(double threshold) {
-    HashMap<Double, Double> scores = new HashMap<Double, Double>();
+  private TDoubleDoubleMap count_distribution_after_threshold(double threshold) {
+    TDoubleDoubleMap scores = new TDoubleDoubleHashMap();
     scores.put(0.0, 1.0);
     for (int column = 0; column < pwm.length(); ++column) {
       scores = recalc_score_hash(scores, pwm.matrix[column], threshold - pwm.best_suffix(column + 1));
@@ -99,18 +113,18 @@ public class CountingPWM {
     return scores;
   }
 
-  private HashMap<Double, Double> recalc_score_hash(HashMap<Double, Double> scores, double[] column, double least_sufficient) {
-    HashMap<Double, Double> new_scores = new HashMap<Double, Double>();
-    for (Map.Entry<Double, Double> entry : scores.entrySet()) {
-      double score = entry.getKey();
-      double count = entry.getValue();
+  private TDoubleDoubleMap recalc_score_hash(TDoubleDoubleMap scores, double[] column, double least_sufficient) {
+    TDoubleDoubleMap new_scores = new TDoubleDoubleHashMap(scores.size());
+    TDoubleDoubleIterator iterator = scores.iterator();
+    while(iterator.hasNext()) {
+      iterator.advance();
+      double score = iterator.key();
+      double count = iterator.value();
       for (int letter = 0; letter < 4; ++letter) {
         double new_score = score + column[letter];
         if (new_score >= least_sufficient) {
-          if (!new_scores.containsKey(new_score)) {
-            new_scores.put(new_score, 0.0);
-          }
-          new_scores.put(new_score, new_scores.get(new_score) + count * background.count(letter));
+          double add = count * background.count(letter);
+          new_scores.adjustOrPutValue(new_score, add, add);
         }
       }
     }
@@ -118,13 +132,15 @@ public class CountingPWM {
   }
 
   public HashMap<Double, Double> counts_by_thresholds(double... thresholds) {
-    HashMap<Double, Double> scores = count_distribution_after_threshold(ArrayExtensions.min(thresholds));
+    TDoubleDoubleMap scores = count_distribution_after_threshold(ArrayExtensions.min(thresholds));
     HashMap<Double, Double> result = new HashMap<Double, Double>();
     for (double threshold : thresholds) {
       double accum = 0.0;
-      for (Map.Entry<Double, Double> entry : scores.entrySet()) {
-        double score = entry.getKey();
-        double count = entry.getValue();
+      TDoubleDoubleIterator iterator = scores.iterator();
+      while(iterator.hasNext()) {
+        iterator.advance();
+        double score = iterator.key();
+        double count = iterator.value();
         if (score >= threshold) {
           accum += count;
         }
@@ -161,13 +177,10 @@ public class CountingPWM {
     return results.toArray(new ThresholdInfo[results.size()]);
   }
 
-  private double[] descending_sorted_hash_keys(Map<Double,?> hsh) {
-    Double[] keys = new Double[hsh.size()];
-    hsh.keySet().toArray(keys);
-    java.util.Arrays.sort(keys);
-    Double[] descending_keys = ArrayExtensions.reverse(keys);
-    return ArrayExtensions.toPrimitiveArray(descending_keys);
-    //return ArrayExtensions.toPrimitiveArray(keys);
+  private double[] descending_sorted_hash_keys(TDoubleDoubleMap hsh) {
+    double[] keys = hsh.keys();
+    Arrays.sort(keys);
+    return ArrayExtensions.reverse(keys);
   }
 
 
@@ -189,7 +202,7 @@ public class CountingPWM {
   }
 
   HashMap<Double, double[][]> thresholds_by_pvalues(double... pvalues) {
-    HashMap<Double, Double> scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
+    TDoubleDoubleMap scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     double[] scores = descending_sorted_hash_keys(scores_hash);
 
     double counts[] = new double[scores.length];
