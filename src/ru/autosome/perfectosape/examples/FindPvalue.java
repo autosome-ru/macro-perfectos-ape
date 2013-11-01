@@ -48,7 +48,7 @@ public class FindPvalue {
                                                               thresholds_2,
                                                               discretization, background, max_hash_size);
     ru.autosome.perfectosape.api.FindPvalueAPE bioumlCalculator = new ru.autosome.perfectosape.api.FindPvalueAPE(parameters);
-    CanFindPvalue.PvalueInfo[] infosBiouml = bioumlCalculator.launch();
+    CanFindPvalue.PvalueInfo[] infosBiouml = bioumlCalculator.call();
     for (int i = 0; i < infosBiouml.length; ++i) {
       print_result(infosBiouml[i]);
     }

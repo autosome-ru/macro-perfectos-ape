@@ -2,7 +2,6 @@ package ru.autosome.perfectosape.examples;
 
 import ru.autosome.perfectosape.*;
 import ru.autosome.perfectosape.api.PrecalculateThresholdLists;
-import ru.autosome.perfectosape.api.Task;
 import ru.autosome.perfectosape.calculations.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.SNPScan;
 
@@ -75,7 +74,7 @@ public class MultiSNPScan {
                                                                                                             max_hash_size);
     PrecalculateThresholdLists listCalculator = new PrecalculateThresholdLists(listCalculationParams);
 
-    Map<PWM, CanFindPvalue> pwmCollectionWithPvalueCalculators = listCalculator.launch();
+    Map<PWM, CanFindPvalue> pwmCollectionWithPvalueCalculators = listCalculator.call();
     // Result of this step (pwmCollectionWithPvalueCalculators) should be cached. You need to do it once for a collection of PWMs
     // It carries PWMs of collection with their lists of precalculated values so latter calculations can perform binary search by threshold
 
@@ -106,7 +105,7 @@ public class MultiSNPScan {
                                                                                                                                     pwmCollectionWithPvalueCalculators);
     ru.autosome.perfectosape.api.MultiSNPScan scan_calculator = new ru.autosome.perfectosape.api.MultiSNPScan(scan_parameters);
 
-    Map<PWM, Map<SequenceWithSNP, SNPScan.RegionAffinityInfos> > results = scan_calculator.launch();
+    Map<PWM, Map<SequenceWithSNP, SNPScan.RegionAffinityInfos> > results = scan_calculator.call();
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
 

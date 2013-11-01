@@ -31,7 +31,7 @@ public class MultiSNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SNPScan.Re
                                                       sequenceWithSNP,
                                                       pvalueCalculator);
   }
-  public Map<PWM, Map<SequenceWithSNP, SNPScan.RegionAffinityInfos>> launch() {
+  public Map<PWM, Map<SequenceWithSNP, SNPScan.RegionAffinityInfos>> call() {
     Map<PWM, Map<SequenceWithSNP, SNPScan.RegionAffinityInfos>> result;
     setStatus(Status.RUNNING);
     try {

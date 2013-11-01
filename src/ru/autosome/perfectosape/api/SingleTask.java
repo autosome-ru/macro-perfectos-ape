@@ -7,7 +7,7 @@ abstract public class SingleTask<ResultType extends Object> extends Task<ResultT
 
   abstract ResultType launchSingleTask();
 
-  public ResultType launch() {
+  public ResultType call() {
     ResultType result;
     setStatus(Status.RUNNING);
     try {

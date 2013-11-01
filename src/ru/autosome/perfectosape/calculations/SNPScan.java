@@ -22,10 +22,23 @@ public class SNPScan {
   }
 
   public static class RegionAffinityVariantInfo {
-    public final Position position;
-    public final Sequence word;
-    public final Character allele;
-    public final double pvalue;
+    final Position position;
+    final Sequence word;
+    final Character allele;
+    final double pvalue;
+
+    public Position getPosition() {
+      return position;
+    }
+    public Sequence getWord() {
+      return word;
+    }
+    public Character getAllele() {
+      return allele;
+    }
+    public double getPvalue() {
+      return pvalue;
+    }
 
     RegionAffinityVariantInfo(Position position, Character allele, double pvalue, Sequence word) {
       this.position = position;
@@ -36,15 +49,22 @@ public class SNPScan {
   }
 
   public static class RegionAffinityInfos {
-    public final RegionAffinityVariantInfo info_1;
-    public final RegionAffinityVariantInfo info_2;
+    final RegionAffinityVariantInfo info_1;
+    final RegionAffinityVariantInfo info_2;
+
+    public RegionAffinityVariantInfo getInfo_1() {
+     return info_1;
+    }
+    public RegionAffinityVariantInfo getInfo_2() {
+      return info_2;
+    }
 
     RegionAffinityInfos(RegionAffinityVariantInfo info_1, RegionAffinityVariantInfo info_2) {
       this.info_1 = info_1;
       this.info_2 = info_2;
     }
 
-    double foldChange() {
+    public double foldChange() {
       return info_1.pvalue / info_2.pvalue;
     }
 

@@ -41,7 +41,7 @@ public class FindThreshold {
                                                               background,
                                                               discretization,pvalue_boundary, max_hash_size);
     ru.autosome.perfectosape.api.FindThresholdAPE bioumlCalculator = new ru.autosome.perfectosape.api.FindThresholdAPE(parameters);
-    CountingPWM.ThresholdInfo[] infosBiouml = bioumlCalculator.launch();
+    CountingPWM.ThresholdInfo[] infosBiouml = bioumlCalculator.call();
     for (int i = 0; i < infosBiouml.length; ++i) {
       print_result(infosBiouml[i]);
     }

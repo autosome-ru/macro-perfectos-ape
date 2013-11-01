@@ -39,7 +39,7 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
   }
 
 
-  public Map<PWM, CanFindPvalue> launch() {
+  public Map<PWM, CanFindPvalue> call() {
     Map<PWM, CanFindPvalue> results;
     setStatus(Status.RUNNING);
     try {
