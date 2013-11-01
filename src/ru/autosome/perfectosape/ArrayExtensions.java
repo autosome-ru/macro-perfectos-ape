@@ -53,8 +53,8 @@ public class ArrayExtensions {
   public static ArrayList<Double> partial_sums(double array[], double initial) {
     ArrayList<Double> result = new ArrayList<Double>(array.length);
     double sums = initial;
-    for (int i = 0; i < array.length; ++i) {
-      sums += array[i];
+    for (double anArray : array) {
+      sums += anArray;
       result.add(sums);
     }
     return result;
