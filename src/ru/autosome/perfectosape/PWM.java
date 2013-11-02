@@ -19,10 +19,6 @@ public class PWM extends PM {
     return fromParser(new PMParser(input_lines));
   }
 
-  double score(String word) throws IllegalArgumentException {
-    return score(word, new WordwiseBackground());
-  }
-
   double score(String word, BackgroundModel background) throws IllegalArgumentException {
     word = word.toUpperCase();
     if (word.length() != length()) {
@@ -48,7 +44,7 @@ public class PWM extends PM {
   }
 
   public double score(Sequence word) throws IllegalArgumentException {
-    return score(word.sequence);
+    return score(word, new WordwiseBackground());
   }
 
   public double best_score() {

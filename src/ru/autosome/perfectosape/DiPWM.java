@@ -43,6 +43,20 @@ public class DiPWM {
     this.name = name;
   }
 
+  public static DiPWM fromPWM(PWM pwm) {
+    double[][] matrix = new double[pwm.matrix.length - 1][];
+    for (int i = 0; i < matrix.length; ++i) {
+      matrix[i] = new double[16];
+      for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
+        matrix[i][letter] = pwm.matrix[i][letter/4];
+      }
+    }
+    for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
+      matrix[matrix.length - 1][letter] += pwm.matrix[matrix.length][letter % 4];
+    }
+    return new DiPWM(matrix, pwm.name);
+  }
+
   public int length() {
     return matrix.length + 1;
   }
@@ -63,8 +77,6 @@ public class DiPWM {
     return result.toString();
   }
 
-
-
   public static DiPWM fromParser(PMParser parser) {
     double[][] matrix = parser.matrix();
     String name = parser.name();
@@ -73,10 +85,6 @@ public class DiPWM {
 
   private static DiPWM new_from_text(ArrayList<String> input_lines) {
     return fromParser(new PMParser(input_lines));
-  }
-
-  double score(String word) throws IllegalArgumentException {
-    return score(word, new WordwiseBackground());
   }
 
   double score(String word, BackgroundModel background) throws IllegalArgumentException {
@@ -104,7 +112,7 @@ public class DiPWM {
   }
 
   public double score(Sequence word) throws IllegalArgumentException {
-    return score(word.sequence);
+    return score(word, new WordwiseBackground());
   }
 
   public double best_score() {
