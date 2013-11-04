@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static java.lang.Math.ceil;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class DiPWM {
   static final int ALPHABET_SIZE = 16;
   public final double[][] matrix;
   String name;
+
+  private double[][] cache_best_suffices;
+  private double[][] cache_worst_suffices;
+
   static HashMap<String, Integer> indexByLetter;
   static {
     indexByLetter = new HashMap<String, Integer>();
@@ -122,22 +128,64 @@ public class DiPWM {
   public double worst_score() {
     return worst_suffix(0);
   }
-
   // best score of suffix s[i..l]
   public double best_suffix(int i) {
-    double result = 0.0;
-    for (int pos_index = i; pos_index < matrix.length; ++pos_index) {
-      result += ArrayExtensions.max(matrix[pos_index]);
+    double best_score = Double.NEGATIVE_INFINITY;
+    for (int letter = 0; letter < 4; ++letter) {
+      best_score = max(best_score,
+                       best_suffices()[i][letter]);
     }
-    return result;
+    return best_score;
   }
 
-  double worst_suffix(int i) {
-    double result = 0.0;
-    for (int pos_index = i; pos_index < matrix.length; ++pos_index) {
-      result += ArrayExtensions.min(matrix[pos_index]);
+  public double worst_suffix(int i) {
+    double worst_score = Double.POSITIVE_INFINITY;
+    for (int letter = 0; letter < 4; ++letter) {
+      worst_score = max(worst_score,
+                        worst_suffices()[i][letter]);
     }
-    return result;
+    return worst_score;
+  }
+
+  // These pair of methods are alphabet-dependent!
+  private double[][] best_suffices() {
+    if (cache_best_suffices == null) {
+      double[][] result = new double[matrix.length + 1][];
+      for(int letter = 0; letter < 4; ++letter) {
+        result[matrix.length][letter] = 0;
+      }
+      for(int i = matrix.length - 1; i >= 0; --i) {
+        for (int letter = 0; letter < 4; ++letter) {
+          double best_score = Double.NEGATIVE_INFINITY;
+          for(int next_letter = 0; next_letter < 4; ++next_letter) {
+            best_score = max(best_score, matrix[i][4*letter + next_letter] + result[i+1][next_letter]);
+          }
+          result[i][letter] = best_score;
+        }
+      }
+      cache_best_suffices = result;
+    }
+    return cache_best_suffices;
+  }
+
+  private double[][] worst_suffices() {
+    if (cache_worst_suffices == null) {
+      double[][] result = new double[matrix.length + 1][];
+      for(int letter = 0; letter < 4; ++letter) {
+        result[matrix.length][letter] = 0;
+      }
+      for(int i = matrix.length - 1; i >= 0; --i) {
+        for (int letter = 0; letter < 4; ++letter) {
+          double worst_score = Double.POSITIVE_INFINITY;
+          for(int next_letter = 0; next_letter < 4; ++next_letter) {
+            worst_score = min(worst_score, matrix[i][4*letter + next_letter] + result[i+1][next_letter]);
+          }
+          result[i][letter] = worst_score;
+        }
+      }
+      cache_worst_suffices = result;
+    }
+    return cache_worst_suffices;
   }
 
   public DiPWM discrete(Double rate) {
