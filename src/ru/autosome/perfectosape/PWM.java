@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import static java.lang.Math.ceil;
 
 public class PWM extends PM {
+  private double[] cache_best_suffices;
+  private double[] cache_worst_suffices;
+
   public PWM(double[][] matrix, String name) throws IllegalArgumentException {
     super(matrix, name);
   }
@@ -57,19 +60,35 @@ public class PWM extends PM {
 
   // best score of suffix s[i..l]
   public double best_suffix(int i) {
-    double result = 0.0;
-    for (int pos_index = i; pos_index < length(); ++pos_index) {
-      result += ArrayExtensions.max(matrix[pos_index]);
-    }
-    return result;
+    return best_suffices()[i];
   }
 
   double worst_suffix(int i) {
-    double result = 0.0;
-    for (int pos_index = i; pos_index < length(); ++pos_index) {
-      result += ArrayExtensions.min(matrix[pos_index]);
+    return worst_suffices()[i];
+  }
+
+  double[] worst_suffices() {
+    if (cache_worst_suffices == null) {
+      double[] result = new double[length() + 1];
+      result[length()] = 0;
+      for (int pos_index = length() - 1; pos_index >= 0; --pos_index) {
+        result[pos_index] = ArrayExtensions.min(matrix[pos_index]) + result[pos_index + 1];
+      }
+      cache_worst_suffices = result;
     }
-    return result;
+    return cache_worst_suffices;
+  }
+
+  double[] best_suffices() {
+    if (cache_best_suffices == null) {
+      double[] result = new double[length() + 1];
+      result[length()] = 0;
+      for (int pos_index = length() - 1; pos_index >= 0; --pos_index) {
+        result[pos_index] = ArrayExtensions.max(matrix[pos_index]) + result[pos_index + 1];
+      }
+      cache_best_suffices = result;
+    }
+    return cache_best_suffices;
   }
 
   public PWM discrete(Double rate) {
