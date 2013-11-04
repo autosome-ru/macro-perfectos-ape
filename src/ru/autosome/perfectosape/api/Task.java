@@ -69,7 +69,9 @@ public abstract class Task <ResultType> implements Callable {
     synchronized (lock) {
       if (status != Status.INTERRUPTED) {
         status = newStatus;
-        listener.eventOccured(this, Event.STATUS_CHANGED);
+        if (listener != null) {
+          listener.eventOccured(this, Event.STATUS_CHANGED);
+        }
         return true;
       } else {
         return false;
