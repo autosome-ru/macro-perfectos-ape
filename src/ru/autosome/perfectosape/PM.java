@@ -1,20 +1,17 @@
 package ru.autosome.perfectosape;
 
-import java.util.HashMap;
+import gnu.trove.impl.unmodifiable.TUnmodifiableCharIntMap;
+import gnu.trove.map.TCharIntMap;
+import gnu.trove.map.hash.TCharIntHashMap;
 
 public class PM {
   static final int ALPHABET_SIZE = 4;
   public final double[][] matrix;
   public String name;
 
-  static HashMap<Character, Integer> indexByLetter;
-  static {
-    indexByLetter = new HashMap<Character, Integer>();
-    indexByLetter.put('A', 0);
-    indexByLetter.put('C', 1);
-    indexByLetter.put('G', 2);
-    indexByLetter.put('T', 3);
-  }
+  protected static final TCharIntMap indexByLetter =
+   new TUnmodifiableCharIntMap( new TCharIntHashMap(new char[]{'A','C','G','T'},
+                                                    new int[] {0, 1, 2, 3}) );
 
   PM(double[][] matrix, String name) throws IllegalArgumentException {
     for (double[] pos : matrix) {

@@ -1,16 +1,15 @@
 package ru.autosome.perfectosape;
 
+import gnu.trove.impl.unmodifiable.TUnmodifiableCharCharMap;
+import gnu.trove.map.TCharCharMap;
+import gnu.trove.map.hash.TCharCharHashMap;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Sequence {
-  private static final HashMap<Character, Character> complements;
-  static {
-    HashMap<Character, Character> hsh = new HashMap<Character, Character>();
-    hsh.put('a', 't'); hsh.put('A', 'T'); hsh.put('t', 'a'); hsh.put('T', 'A');
-    hsh.put('c', 'g'); hsh.put('C', 'G'); hsh.put('g', 'c'); hsh.put('G', 'C');
-    complements = hsh;
-  }
+  private static final TCharCharMap complements =
+   new TUnmodifiableCharCharMap( new TCharCharHashMap(new char[]{'A','C','G','T','a','c','g','t'},
+                                                      new char[]{'T','G','C','A','t','g','c','a'}) );
 
   final public String sequence;
 
