@@ -20,7 +20,7 @@ class PCM2PWMConverter {
   public PWM convert() {
     double new_matrix[][] = new double[pcm.matrix.length][];
     for (int pos = 0; pos < pcm.matrix.length; ++pos) {
-      new_matrix[pos] = new double[PCM.ALPHABET_SIZE];
+      new_matrix[pos] = new double[pcm.ALPHABET_SIZE];
 
       // columns can have different counts for some PCMs
       double count = 0.0;
@@ -29,7 +29,7 @@ class PCM2PWMConverter {
       }
       double pseudocount = (const_pseudocount != null) ? const_pseudocount : Math.log(count);
 
-      for (int letter = 0; letter < PCM.ALPHABET_SIZE; ++letter) {
+      for (int letter = 0; letter < pcm.ALPHABET_SIZE; ++letter) {
         double numerator = pcm.matrix[pos][letter] + background.probability(letter) * pseudocount;
         double denominator = background.probability(letter) * (count + pseudocount);
         new_matrix[pos][letter] = Math.log(numerator / denominator);

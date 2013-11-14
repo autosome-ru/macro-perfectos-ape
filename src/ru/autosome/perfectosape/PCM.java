@@ -1,7 +1,7 @@
 package ru.autosome.perfectosape;
 
 public class PCM extends PM {
-  private PCM(double[][] matrix, String name) throws IllegalArgumentException {
+  public PCM(double[][] matrix, String name) throws IllegalArgumentException {
     super(matrix, name);
   }
 
@@ -14,6 +14,9 @@ public class PCM extends PM {
     PCM2PWMConverter converter = new PCM2PWMConverter(this);
     converter.background = background;
     return converter.convert();
+  }
+  public PPM to_ppm(BackgroundModel background) {
+    return new PCM2PPMConverter(this).convert();
   }
 
   public static PCM fromParser(PMParser parser) {
