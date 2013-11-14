@@ -6,14 +6,14 @@ public class Background implements BackgroundModel {
   private double[] background;
 
   // TODO: whether we should check symmetricity of background
-  private Background(double[] background) {
+  public Background(double[] background) {
     if (Math.abs(ArrayExtensions.sum(background) - 1.0) > 0.0001) {
       throw new IllegalArgumentException("Background probabilities should be 1.0 being summarized");
     }
     this.background = background;
   }
 
-  private static BackgroundModel fromArray(double[] background) {
+  public static BackgroundModel fromArray(double[] background) {
     if (background.length != 4) {
       throw new IllegalArgumentException("Background constructor accepts double array of length 4");
     }
