@@ -13,9 +13,13 @@ public class SequenceWithSNP {
   // input:  "GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
   // possible SNP formats: [a/g]; [ag]; a/g; a/g/c; [agc]; [a/g/c] and so on
   public SequenceWithSNP(String left, char[] mid, String right) {
-    this.left = left;
-    this.mid = mid;
-    this.right = right;
+    this.left = left.toLowerCase();
+    char[] mid_upcased = new char[mid.length];
+    for (int i = 0; i < mid.length; ++i) {
+      mid_upcased[i] = Character.toUpperCase(mid[i]);
+    }
+    this.mid = mid_upcased;
+    this.right = right.toLowerCase();
   }
 
   public static SequenceWithSNP fromString(String seq_w_snp) {
