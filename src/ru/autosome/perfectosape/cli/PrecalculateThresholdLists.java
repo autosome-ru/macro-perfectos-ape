@@ -13,6 +13,7 @@ public class PrecalculateThresholdLists {
   private BoundaryType pvalue_boundary;
   private Integer max_hash_size;
   private DataModel data_model;
+  private double effective_count; // used for converting PPM --> PWM
 
   private java.io.File collection_folder;
   private java.io.File results_dir;
@@ -23,9 +24,10 @@ public class PrecalculateThresholdLists {
     background = new WordwiseBackground();
     pvalue_boundary = BoundaryType.LOWER;
     max_hash_size = 10000000;
-    pvalues = new PrecalculateThresholdList.GeometricProgression(1E-6, 0.3, 1.1).values();
+    pvalues = PrecalculateThresholdList.PVALUE_LIST;
 
     data_model = DataModel.PWM;
+    effective_count = 100;
   }
 
   private PrecalculateThresholdLists() {
@@ -93,6 +95,8 @@ public class PrecalculateThresholdLists {
       data_model = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
       data_model = DataModel.PPM;
+    } else if (opt.equals("--effective-count")) {
+      effective_count = Double.valueOf(argv.remove(0));
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
@@ -110,7 +114,7 @@ public class PrecalculateThresholdLists {
     for (File file : collection_folder.listFiles()) {
       System.err.println(file);
       File result_filename = new File(results_dir, "thresholds_" + file.getName());
-      calculator().bsearch_list_for_pwm(Helper.load_pwm(file, data_model, background)).save_to_file(result_filename.getPath());
+      calculator().bsearch_list_for_pwm(Helper.load_pwm(file, data_model, background, effective_count)).save_to_file(result_filename.getPath());
     }
   }
 
@@ -122,6 +126,7 @@ public class PrecalculateThresholdLists {
     "  [-d <discretization level>]\n" +
     "  [--pcm] - treat the input files as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
     "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
+    "  [--effective-count] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
     "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
     "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
     "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +

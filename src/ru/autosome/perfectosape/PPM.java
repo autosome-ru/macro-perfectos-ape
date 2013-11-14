@@ -5,10 +5,12 @@ public class PPM extends PM {
     super(matrix, name);
   }
 
-  public PWM to_pwm(BackgroundModel background) {
-    PPM2PWMConverter converter = new PPM2PWMConverter(this);
-    converter.background = background;
+  public PCM to_pcm(double count) {
+    PPM2PCMConverter converter = new PPM2PCMConverter(this, count);
     return converter.convert();
+  }
+  public PWM to_pwm(BackgroundModel background, double count) {
+    return to_pcm(count).to_pwm(background);
   }
 
   public static PPM fromParser(PMParser parser) {

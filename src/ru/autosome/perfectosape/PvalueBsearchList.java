@@ -99,10 +99,20 @@ public class PvalueBsearchList {
     }
     return reduced_infos;
   }
+  ArrayList<ThresholdPvaluePair> without_zero_pvalue(ArrayList<ThresholdPvaluePair> infos) {
+    ArrayList<ThresholdPvaluePair> reduced_infos;
+    reduced_infos = new ArrayList<ThresholdPvaluePair>();
+    for (int i = 0; i < infos.size(); ++i) {
+      if (infos.get(i).pvalue != 0) {
+        reduced_infos.add(infos.get(i));
+      }
+    }
+    return reduced_infos;
+  }
 
   ArrayList<ThresholdPvaluePair> sort_list(ArrayList<ThresholdPvaluePair> infos) {
     Collections.sort(infos);
-    return without_consequent_duplicates(infos);
+    return without_consequent_duplicates(without_zero_pvalue(infos));
   }
 
   public double combine_pvalues(double pvalue_1, double pvalue_2) {
