@@ -14,6 +14,7 @@ public class FindThreshold {
     "Options:\n" +
     "  [-d <discretization level>]\n" +
     "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+    "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
     "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
     "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
     "\n" +
@@ -31,14 +32,14 @@ public class FindThreshold {
   double[] pvalues;
 
   private String pm_filename;
-  private String data_model;
+  private DataModel data_model;
 
   void initialize_defaults() {
     background = new WordwiseBackground();
     discretization = 10000.0;
     pvalue_boundary = BoundaryType.LOWER;
     max_hash_size = 10000000;
-    data_model = "pwm";
+    data_model = DataModel.PWM;
 
     pvalues = new double[1];
     pvalues[0] = 0.0005;
@@ -67,7 +68,7 @@ public class FindThreshold {
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    load_pwm();
+    pwm = Helper.load_pwm(PMParser.from_file_or_stdin(pm_filename),data_model,background);
   }
 
   private void extract_option(ArrayList<String> argv) {
@@ -81,7 +82,9 @@ public class FindThreshold {
     } else if (opt.equals("--boundary")) {
       pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
-      data_model = "pcm";
+      data_model = DataModel.PCM;
+    } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
+      data_model = DataModel.PPM;
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
@@ -106,14 +109,6 @@ public class FindThreshold {
     }
     if (pvalues_tmp.size() != 0) {
       pvalues = ArrayExtensions.toPrimitiveArray(pvalues_tmp);
-    }
-  }
-
-  private void load_pwm() {
-    if (data_model.equals("pcm")) {
-      pwm = PCM.fromParser(PMParser.from_file_or_stdin(pm_filename)).to_pwm(background);
-    } else {
-      pwm = PWM.fromParser(PMParser.from_file_or_stdin(pm_filename));
     }
   }
 

@@ -22,7 +22,7 @@ public class MultiSNPScan {
   private File path_to_collection_of_pwms;
   private File path_to_file_w_snps;
 
-  private String data_model;
+  private DataModel data_model;
   private File thresholds_folder;
 
   private ArrayList<String> snp_list;
@@ -53,7 +53,7 @@ public class MultiSNPScan {
     if (files == null)
       return;
     for (File file : files) {
-      collection_of_pwms.put(file, load_pwm(file));
+      collection_of_pwms.put(file, Helper.load_pwm(file, data_model, background));
     }
   }
 
@@ -64,6 +64,7 @@ public class MultiSNPScan {
     "Options:\n" +
     "  [-d <discretization level>]\n" +
     "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+    "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
     "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
     "\n" +
@@ -92,7 +93,7 @@ public class MultiSNPScan {
     discretization = 100.0;
     max_hash_size = 10000000;
 
-    data_model = "pwm";
+    data_model = DataModel.PWM;
     thresholds_folder = null;
     collection_of_pwms = new HashMap<File, PWM>();
     pvalue_calculators = new HashMap<File, CanFindPvalue>();
@@ -136,25 +137,14 @@ public class MultiSNPScan {
     } else if (opt.equals("-d")) {
       discretization = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--pcm")) {
-      data_model = "pcm";
+      data_model = DataModel.PCM;
+    } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
+      data_model = DataModel.PPM;
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
-  }
-
-  PWM load_pwm(File file) {
-    PWM pwm;
-    if (data_model.equals("pcm")) {
-      pwm = PCM.fromParser(PMParser.from_file(file)).to_pwm(background);
-    } else {
-      pwm = PWM.fromParser(PMParser.from_file(file));
-    }
-    if (pwm.name == null || pwm.name.isEmpty()) {
-      pwm.name = file.getName();
-    }
-    return pwm;
   }
 
   private void load_snp_list() {

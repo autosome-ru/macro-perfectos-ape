@@ -12,7 +12,7 @@ public class PrecalculateThresholdLists {
   private BackgroundModel background;
   private BoundaryType pvalue_boundary;
   private Integer max_hash_size;
-  private String data_model;
+  private DataModel data_model;
 
   private java.io.File collection_folder;
   private java.io.File results_dir;
@@ -25,7 +25,7 @@ public class PrecalculateThresholdLists {
     max_hash_size = 10000000;
     pvalues = new PrecalculateThresholdList.GeometricProgression(1E-6, 0.3, 1.1).values();
 
-    data_model = "pwm";
+    data_model = DataModel.PWM;
   }
 
   private PrecalculateThresholdLists() {
@@ -90,20 +90,13 @@ public class PrecalculateThresholdLists {
     } else if (opt.equals("--boundary")) {
       pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
-      data_model = "pcm";
+      data_model = DataModel.PCM;
+    } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
+      data_model = DataModel.PPM;
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
   }
-
-  PWM load_pwm(File filename) {
-    if (data_model.equals("pcm")) {
-      return PCM.fromParser(PMParser.from_file(filename)).to_pwm(background);
-    } else {
-      return PWM.fromParser(PMParser.from_file(filename));
-    }
-  }
-
 
   ru.autosome.perfectosape.calculations.PrecalculateThresholdList calculator() {
     return new ru.autosome.perfectosape.calculations.PrecalculateThresholdList(pvalues,
@@ -117,7 +110,7 @@ public class PrecalculateThresholdLists {
     for (File file : collection_folder.listFiles()) {
       System.err.println(file);
       File result_filename = new File(results_dir, "thresholds_" + file.getName());
-      calculator().bsearch_list_for_pwm(load_pwm(file)).save_to_file(result_filename.getPath());
+      calculator().bsearch_list_for_pwm(Helper.load_pwm(file, data_model, background)).save_to_file(result_filename.getPath());
     }
   }
 
@@ -128,6 +121,7 @@ public class PrecalculateThresholdLists {
     "Options:\n" +
     "  [-d <discretization level>]\n" +
     "  [--pcm] - treat the input files as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+    "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
     "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
     "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
     "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +

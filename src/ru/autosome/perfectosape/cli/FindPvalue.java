@@ -15,6 +15,7 @@ public class FindPvalue {
     "Options:\n" +
     "  [-d <discretization level>]\n" +
     "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+    "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
     "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
     "\n" +
@@ -27,7 +28,8 @@ public class FindPvalue {
   private BackgroundModel background;
   private double[] thresholds;
   private Integer max_hash_size;
-  private String data_model;
+  private DataModel data_model;
+
   private String thresholds_folder;
   private PWM pwm;
 
@@ -60,7 +62,7 @@ public class FindPvalue {
     background = new WordwiseBackground();
     thresholds = new double[0];
     max_hash_size = 10000000;
-    data_model = "pwm";
+    data_model = DataModel.PWM;
     thresholds_folder = null;
   }
 
@@ -95,19 +97,13 @@ public class FindPvalue {
     } else if (opt.equals("-d")) {
       discretization = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--pcm")) {
-      data_model = "pcm";
+      data_model = DataModel.PCM;
+    } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
+      data_model = DataModel.PPM;
     } else if (opt.equals("--precalc")) {
       thresholds_folder = argv.remove(0);
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
-    }
-  }
-
-  private void load_pwm() {
-    if (data_model.equals("pcm")) {
-      pwm = PCM.fromParser(PMParser.from_file_or_stdin(pm_filename)).to_pwm(background);
-    } else {
-      pwm = PWM.fromParser(PMParser.from_file_or_stdin(pm_filename));
     }
   }
 
@@ -117,7 +113,7 @@ public class FindPvalue {
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    load_pwm();
+    pwm = Helper.load_pwm(PMParser.from_file_or_stdin(pm_filename),data_model,background);
   }
 
   private FindPvalue() {
