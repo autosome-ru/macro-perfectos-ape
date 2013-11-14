@@ -54,7 +54,7 @@ public class MultiSNPScan {
     double discretization = 10000;
     // Wordwise background means that we calculate number of words instead of probabilities, this is a default mode
     // If one need to work with certain nucleotide background probabilities he should use:
-    // BackgroundModel background = new Background(pA, pC, pG, pT); where {pA,... pT} are probabilities of respective nucleotides
+    // BackgroundModel background = new Background(new double[]{pA, pC, pG, pT}); where {pA,... pT} are probabilities of respective nucleotides
     BackgroundModel background = new WordwiseBackground();
     // A actual pvalue will be less than requested. Not very important setting in this task
     BoundaryType pvalue_boundary = BoundaryType.LOWER;
