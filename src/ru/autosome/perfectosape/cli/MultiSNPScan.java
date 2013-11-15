@@ -37,7 +37,7 @@ public class MultiSNPScan {
   private static String last_part_of_string(String s) {
     String[] string_parts = s.replaceAll("\\s+", " ").split(" ");
     String result = string_parts[string_parts.length - 1];
-    if (result.matches("[ACGT]+(/[ACGT]+)+") || result.matches("[ACGT]+\\[(/?[ACGT]+)+\\][ACGT]+")) {
+    if (result.matches("[ACGTacgt]+(/[ACGTacgt]+)+") || result.matches("[ACGTacgt]+\\[(/?[ACGTacgt]+)+\\][ACGTacgt]+")) {
       return result;
     } else {
       return string_parts[string_parts.length - 3] + "[" + string_parts[string_parts.length - 2].replaceAll("\\[|\\]", "") + "]" + string_parts[string_parts.length - 1];
