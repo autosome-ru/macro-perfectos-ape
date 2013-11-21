@@ -12,37 +12,6 @@ import java.util.Map;
 public class MultiSNPScan {
   public static void main(String[] args) {
 
-    // Collection of PWMs to test on sequences
-    List<PWM> pwmCollection = new ArrayList<PWM>();
-
-    // One way is to load PWMs from files
-    pwmCollection.add(PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm")));
-    pwmCollection.add(PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/SP1_f1.pwm")));
-
-    // Another way is to create PWM by specifying (Nx4)-matrix and PWM name
-    double[][] matrix_cAVNCT = { {1.0, 2.0, 1.0, 1.0},
-                                {10.5, -3.0, 0.0, 0.0},
-                                {5.0, 5.0, 5.0, -10.0},
-                                {0.0, 0.0, 0.0, 0.0},
-                                {-1.0, 10.5, -1.0, 0.0},
-                                {0.0, 0.0, 0.0, 2.0} };
-    PWM pwm_manual_constructed = new PWM(matrix_cAVNCT, "PWM for cAVNCt consensus sequence (name of PWM)");
-
-    pwmCollection.add(pwm_manual_constructed);
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Now we should get collection of SNPs with sequence around them. Each SNP should have only two variants (if one need 3 or 4 variants, it's possible to add several SNPs: 1-2, 2-3, 1-3 for instance)
-    // There are two ways to construct SNP: with constructor taking left part, array of nucleotide characters and right part as parameters
-    // left and right part should be long enough to embed PWM (30 characters is enough for this implementation,
-    // but may be in latter implementations we'll use more information so it's better to keep, say 50 nucleotides from each side where possible).
-    // Another way is to construct object from string in this way:
-    List<SequenceWithSNP> snpCollection = new ArrayList<SequenceWithSNP>();
-    snpCollection.add(SequenceWithSNP.fromString("AAGGTCAATACTCAACATCATAAAAACAGACAAAAGTATAAAACTTACAG[C/G]GTCTTACAAAAAGGATGATCCAGTAATATGCTGCTTACAAGAAACCCACC"));
-    snpCollection.add(new SequenceWithSNP("AGGGAAACAAAAATTGTTCGGAAAGGAGAACTAAGATGTATGAATGTTTC",
-                                          new char[]{'G','T'},
-                                          "TTTTTAAGTGAAAAGTGTATAGTTCAGAGTGTAATATTTATTACCAGTAT"));
-
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Reasonable defaults
@@ -62,6 +31,53 @@ public class MultiSNPScan {
     // Reasonable value is about 10 millions elements. But actually only specially constructed matrices can reach such high hash sizes.
     // So in standalone calculations we use null (not to check hash size) and in web version we use 1e7
     Integer max_hash_size = null;
+
+    // It sets effective count for ppm-->pcm (-->pwm) conversion when we load matrix from ppm
+    double ppm_effective_count = 100;
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Collection of PWMs to test on sequences
+    List<PWM> pwmCollection = new ArrayList<PWM>();
+
+    // One way is to load PWMs from files
+    pwmCollection.add(PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm")));
+    pwmCollection.add(PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/SP1_f1.pwm")));
+
+    // Another way is to create PWM by specifying (Nx4)-matrix and PWM name
+    double[][] matrix_cAVNCT = { {1.0, 2.0, 1.0, 1.0},
+                                {10.5, -3.0, 0.0, 0.0},
+                                {5.0, 5.0, 5.0, -10.0},
+                                {0.0, 0.0, 0.0, 0.0},
+                                {-1.0, 10.5, -1.0, 0.0},
+                                {0.0, 0.0, 0.0, 2.0} };
+    PWM pwm_manual_constructed = new PWM(matrix_cAVNCT, "PWM for cAVNCt consensus sequence (name of PWM)");
+
+    pwmCollection.add(pwm_manual_constructed);
+
+    // PWM from PPM
+    double[][] ppm_matrix = { {2, 4, 2, 2},
+                             {9, 0, 0.5, 0.5},
+                             {3, 3, 3, 1},
+                             {2.5, 2.5, 2.5, 2.5},
+                             {0, 9, 0, 1},
+                             {2, 2, 2, 4} };
+    PPM ppm = new PPM(ppm_matrix, "cAVNCt PPM (slightly different from another cAVNCt matrix)");
+    PWM pwm_from_ppm = ppm.to_pwm(background, ppm_effective_count);
+    pwmCollection.add(pwm_from_ppm);
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Now we should get collection of SNPs with sequence around them. Each SNP should have only two variants (if one need 3 or 4 variants, it's possible to add several SNPs: 1-2, 2-3, 1-3 for instance)
+    // There are two ways to construct SNP: with constructor taking left part, array of nucleotide characters and right part as parameters
+    // left and right part should be long enough to embed PWM (30 characters is enough for this implementation,
+    // but may be in latter implementations we'll use more information so it's better to keep, say 50 nucleotides from each side where possible).
+    // Another way is to construct object from string in this way:
+    List<SequenceWithSNP> snpCollection = new ArrayList<SequenceWithSNP>();
+    snpCollection.add(SequenceWithSNP.fromString("AAGGTCAATACTCAACATCATAAAAACAGACAAAAGTATAAAACTTACAG[C/G]GTCTTACAAAAAGGATGATCCAGTAATATGCTGCTTACAAGAAACCCACC"));
+    snpCollection.add(new SequenceWithSNP("AGGGAAACAAAAATTGTTCGGAAAGGAGAACTAAGATGTATGAATGTTTC",
+                                          new char[]{'G','T'},
+                                          "TTTTTAAGTGAAAAGTGTATAGTTCAGAGTGTAATATTTATTACCAGTAT"));
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
