@@ -56,12 +56,12 @@ public class MultiSNPScan {
     pwmCollection.add(pwm_manual_constructed);
 
     // PWM from PPM
-    double[][] ppm_matrix = { {2, 4, 2, 2},
-                             {9, 0, 0.5, 0.5},
-                             {3, 3, 3, 1},
-                             {2.5, 2.5, 2.5, 2.5},
-                             {0, 9, 0, 1},
-                             {2, 2, 2, 4} };
+    double[][] ppm_matrix = { {0.2, 0.4, 0.2, 0.2},
+                             {0.9, 0, 0.05, 0.05},
+                             {0.3, 0.3, 0.3, 0.1},
+                             {0.25, 0.25, 0.25, 0.25},
+                             {0, 0.9, 0, 0.1},
+                             {0.2, 0.2, 0.2, 0.4} };
     PPM ppm = new PPM(ppm_matrix, "cAVNCt PPM (slightly different from another cAVNCt matrix)");
     PWM pwm_from_ppm = ppm.to_pwm(background, ppm_effective_count);
     pwmCollection.add(pwm_from_ppm);
