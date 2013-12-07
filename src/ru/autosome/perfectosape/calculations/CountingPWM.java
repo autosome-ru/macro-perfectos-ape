@@ -40,8 +40,8 @@ public class CountingPWM {
 
   private Integer max_hash_size;
 
-  private final PWM pwm;
-  private final BackgroundModel background;
+  final PWM pwm;
+  final BackgroundModel background;
 
   public CountingPWM(PWM pwm, BackgroundModel background, Integer max_hash_size) {
     this.pwm = pwm;
@@ -150,6 +150,10 @@ public class CountingPWM {
     return result;
   }
 
+  public Double count_by_threshold(double threshold) {
+    return counts_by_thresholds(new double[]{threshold}).get(threshold);
+  }
+
   public ThresholdInfo[] thresholds(double... pvalues) {
     ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
     HashMap<Double, double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
@@ -161,6 +165,10 @@ public class CountingPWM {
       results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[1]));
     }
     return results.toArray(new ThresholdInfo[results.size()]);
+  }
+
+  public ThresholdInfo threshold(double pvalue) {
+    return thresholds(new double[]{pvalue})[0];
   }
 
   // "weak" means that threshold has real pvalue not less than given pvalue, while usual threshold not greater
@@ -175,6 +183,10 @@ public class CountingPWM {
       results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[0]));
     }
     return results.toArray(new ThresholdInfo[results.size()]);
+  }
+
+  public ThresholdInfo weak_threshold(double pvalue) {
+    return weak_thresholds(new double[]{pvalue})[0];
   }
 
   private double[] descending_sorted_hash_keys(TDoubleDoubleMap hsh) {

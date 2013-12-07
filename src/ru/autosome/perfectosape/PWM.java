@@ -105,4 +105,35 @@ public class PWM extends PM {
     }
     return new PWM(mat_result, name);
   }
+
+  PWM reverseComplement() {
+    double[][] matrix_revcomp;
+    matrix_revcomp = ArrayExtensions.reverse(matrix);
+    for (int i = 0; i < matrix_revcomp.length; ++i) {
+      matrix_revcomp[i] = ArrayExtensions.reverse(matrix_revcomp[i]);
+    }
+    return new PWM(matrix_revcomp, name);
+  }
+
+  PWM leftAugment(int n) {
+    double[][] aligned_matrix = new double[length() + n][];
+    for(int i = 0; i < n; ++i) {
+      aligned_matrix[i] = new double[]{0,0,0,0};
+    }
+    for(int i = 0; i < length(); ++i) {
+      aligned_matrix[n + i] = matrix[i];
+    }
+    return new PWM(aligned_matrix, name);
+  }
+
+  PWM rightAugment(int n) {
+    double[][] aligned_matrix = new double[length() + n][];
+    for(int i = 0; i < length(); ++i) {
+      aligned_matrix[i] = matrix[i];
+    }
+    for(int i = 0; i < n; ++i) {
+      aligned_matrix[length() + i] = new double[]{0,0,0,0};
+    }
+    return new PWM(aligned_matrix, name);
+  }
 }

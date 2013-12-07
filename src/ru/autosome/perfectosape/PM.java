@@ -5,7 +5,7 @@ import gnu.trove.map.TCharIntMap;
 import gnu.trove.map.hash.TCharIntHashMap;
 
 public class PM {
-  static final int ALPHABET_SIZE = 4;
+  public static final int ALPHABET_SIZE = 4;
   public final double[][] matrix;
   public String name;
 

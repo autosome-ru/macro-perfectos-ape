@@ -3,6 +3,7 @@ package ru.autosome.perfectosape;
 import java.util.StringTokenizer;
 
 public class Background implements BackgroundModel {
+  static final int ALPHABET_SIZE = 4;
   private double[] background;
 
   // TODO: whether we should check symmetricity of background
@@ -14,11 +15,11 @@ public class Background implements BackgroundModel {
   }
 
   public static BackgroundModel fromArray(double[] background) {
-    if (background.length != 4) {
+    if (background.length != ALPHABET_SIZE) {
       throw new IllegalArgumentException("Background constructor accepts double array of length 4");
     }
     boolean wordwise = true;
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < ALPHABET_SIZE; ++i) {
       if (Math.abs(background[i] - 1) > 0.0001) {
         wordwise = false;
       }
@@ -53,7 +54,7 @@ public class Background implements BackgroundModel {
   public static BackgroundModel fromString(String s) {
     double[] background = new double[4];
     StringTokenizer parser = new StringTokenizer(s);
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < ALPHABET_SIZE; ++i) {
       background[i] = Double.valueOf(parser.nextToken(","));
     }
     return Background.fromArray(background);
@@ -69,7 +70,7 @@ public class Background implements BackgroundModel {
 
   public double mean_value(double[] values) {
     double result = 0;
-    for (int letter = 0; letter < 4; ++letter) {
+    for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
       result += values[letter] * probability(letter);
     }
     return result;
@@ -77,9 +78,17 @@ public class Background implements BackgroundModel {
 
   public double mean_square_value(double[] values) {
     double mean_square = 0.0;
-    for (int letter = 0; letter < 4; ++letter) {
+    for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
       mean_square += values[letter] * values[letter] * probability(letter);
     }
     return mean_square;
+  }
+
+  public boolean equals(BackgroundModel other) {
+    boolean result = true;
+    for (int i = 0; i < ALPHABET_SIZE; ++i) {
+      result = result && count(i) == other.count(i);
+    }
+    return result;
   }
 }
