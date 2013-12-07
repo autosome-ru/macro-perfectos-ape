@@ -10,7 +10,7 @@ import ru.autosome.perfectosape.calculations.CountingPWM;
 public class EvaluateSimilarity {
   public static void main(String[] args){
     PWM firstPWM = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
-    PWM secondPWM = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/AHR_si.pwm"));
+    PWM secondPWM = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/SP1_f1.pwm"));
     try {
       ComparePWM.SimilarityInfo similarityInfo =
        new ComparePWM(new CountingPWM(firstPWM.discrete(10.0), new WordwiseBackground(), null),

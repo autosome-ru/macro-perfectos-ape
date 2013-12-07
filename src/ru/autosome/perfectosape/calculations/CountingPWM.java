@@ -1,16 +1,17 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.*;
-
 import gnu.trove.TDoubleCollection;
 import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.iterator.TDoubleIterator;
+import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.TDoubleDoubleMap;
+import gnu.trove.map.TDoubleObjectMap;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
+import gnu.trove.map.hash.TDoubleObjectHashMap;
+import ru.autosome.perfectosape.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class CountingPWM {
 
@@ -131,9 +132,9 @@ public class CountingPWM {
     return new_scores;
   }
 
-  public HashMap<Double, Double> counts_by_thresholds(double... thresholds) {
+  public TDoubleDoubleMap counts_by_thresholds(double... thresholds) {
     TDoubleDoubleMap scores = count_distribution_after_threshold(ArrayExtensions.min(thresholds));
-    HashMap<Double, Double> result = new HashMap<Double, Double>();
+    TDoubleDoubleMap result = new TDoubleDoubleHashMap();
     for (double threshold : thresholds) {
       double accum = 0.0;
       TDoubleDoubleIterator iterator = scores.iterator();
@@ -156,10 +157,13 @@ public class CountingPWM {
 
   public ThresholdInfo[] thresholds(double... pvalues) {
     ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
-    HashMap<Double, double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
-    for (double pvalue : thresholds_by_pvalues.keySet()) {
-      double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
-      double counts[] = thresholds_by_pvalues.get(pvalue)[1];
+    TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
+    TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
+    while (iterator.hasNext()) {
+      iterator.advance();
+      double pvalue = iterator.key();
+      double thresholds[] = iterator.value()[0];
+      double counts[] = iterator.value()[1];
       double threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
       double real_pvalue = counts[1] / vocabularyVolume();
       results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[1]));
@@ -174,10 +178,13 @@ public class CountingPWM {
   // "weak" means that threshold has real pvalue not less than given pvalue, while usual threshold not greater
   public ThresholdInfo[] weak_thresholds(double... pvalues) {
     ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
-    HashMap<Double, double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
-    for (double pvalue : thresholds_by_pvalues.keySet()) {
-      double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
-      double counts[] = thresholds_by_pvalues.get(pvalue)[1];
+    TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
+    TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
+    while (iterator.hasNext()) {
+      iterator.advance();
+      double pvalue = iterator.key();
+      double thresholds[] = iterator.value()[0];
+      double counts[] = iterator.value()[1];
       double threshold = thresholds[0];
       double real_pvalue = counts[0] / vocabularyVolume();
       results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[0]));
@@ -213,7 +220,7 @@ public class CountingPWM {
     }
   }
 
-  HashMap<Double, double[][]> thresholds_by_pvalues(double... pvalues) {
+  TDoubleObjectMap<double[][]> thresholds_by_pvalues(double... pvalues) {
     TDoubleDoubleMap scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     double[] scores = descending_sorted_hash_keys(scores_hash);
 
@@ -222,7 +229,7 @@ public class CountingPWM {
       counts[i] = scores_hash.get(scores[i]);
     }
     ArrayList<Double> partial_sums = ArrayExtensions.partial_sums(counts, 0.0);
-    HashMap<Double, double[][]> results = new HashMap<Double, double[][]>();
+    TDoubleObjectMap<double[][]> results = new TDoubleObjectHashMap<double[][]>();
 
     for (double pvalue : pvalues) {
       double look_for_count = pvalue * vocabularyVolume();

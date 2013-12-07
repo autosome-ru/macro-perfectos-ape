@@ -1,10 +1,9 @@
 package ru.autosome.perfectosape.calculations;
 
+import gnu.trove.map.TDoubleDoubleMap;
 import ru.autosome.perfectosape.BackgroundModel;
 import ru.autosome.perfectosape.OutputInformation;
 import ru.autosome.perfectosape.PWM;
-
-import java.util.HashMap;
 
 public class FindPvalueAPE implements CanFindPvalue {
   PWM pwm;
@@ -42,7 +41,7 @@ public class FindPvalueAPE implements CanFindPvalue {
     return result;
   }
 
-  PvalueInfo infos_by_count(HashMap<Double, Double> counts, double non_upscaled_threshold, CountingPWM countingPWM) {
+  PvalueInfo infos_by_count(TDoubleDoubleMap counts, double non_upscaled_threshold, CountingPWM countingPWM) {
     double count = counts.get(upscale_threshold(non_upscaled_threshold));
     double pvalue = count / countingPWM.vocabularyVolume();
     return new PvalueInfo(non_upscaled_threshold, pvalue, (int) count);
@@ -50,7 +49,7 @@ public class FindPvalueAPE implements CanFindPvalue {
 
   public PvalueInfo[] pvalues_by_thresholds(double[] thresholds) {
     CountingPWM countingPWM = countingPWM(upscaled_pwm());
-    HashMap<Double, Double> counts = countingPWM.counts_by_thresholds(upscaled_thresholds(thresholds));
+    TDoubleDoubleMap counts = countingPWM.counts_by_thresholds(upscaled_thresholds(thresholds));
 
     PvalueInfo[] infos = new PvalueInfo[thresholds.length];
     for (int i = 0; i < thresholds.length; ++i) {

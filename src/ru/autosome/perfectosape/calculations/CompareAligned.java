@@ -1,11 +1,13 @@
 package ru.autosome.perfectosape.calculations;
 
+import gnu.trove.iterator.TDoubleDoubleIterator;
+import gnu.trove.iterator.TDoubleObjectIterator;
+import gnu.trove.map.hash.TDoubleDoubleHashMap;
+import gnu.trove.map.hash.TDoubleObjectHashMap;
 import ru.autosome.perfectosape.BackgroundModel;
 import ru.autosome.perfectosape.PWM;
 import ru.autosome.perfectosape.PWMAligned;
 import ru.autosome.perfectosape.Position;
-
-import java.util.HashMap;
 
 public class CompareAligned {
   public static class SimilarityInfo {
@@ -138,10 +140,12 @@ public class CompareAligned {
   }
 
 
-  private int summarySize(HashMap<Double, HashMap<Double,Double> > scores) {
+  private int summarySize(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores) {
     int sum = 0;
-    for (Double key: scores.keySet()) {
-      sum += scores.get(key).size();
+    TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
+    while (iterator.hasNext()) {
+      iterator.advance();
+      sum += iterator.value().size();
     }
     return sum;
   }
@@ -156,9 +160,11 @@ public class CompareAligned {
   // block has form: {|score,letter| contribution to count by `letter` with `score` }
   private double get_counts(double threshold_first, double threshold_second, RecalculateScore count_contribution_block) throws Exception {
     // scores_on_first_pwm, scores_on_second_pwm --> count
-    HashMap<Double, HashMap<Double,Double> > scores = new HashMap<Double, HashMap<Double,Double> >();
-    scores.put(0.0, new HashMap<Double, Double>());
-    scores.get(0.0).put(0.0, 1.0);
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
+
+
+    //HashMap<Double, HashMap<Double,Double> > scores = new HashMap<Double, HashMap<Double,Double> >();
+    scores.put(0.0, new TDoubleDoubleHashMap(new double[]{0}, new double[]{1}));
 
     for (int pos = 0; pos < alignment().length(); ++pos) {
       scores = recalc_score_hash(scores,
@@ -174,45 +180,57 @@ public class CompareAligned {
     return combine_scores(scores);
   }
 
-  double combine_scores(HashMap<Double, HashMap<Double,Double> > scores) {
+  double combine_scores(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores) {
     double sum = 0;
-    for (Double score_first: scores.keySet()) {
-      HashMap<Double,Double> hsh = scores.get(score_first);
-      for (Double score_second: hsh.keySet()) {
-        double count = hsh.get(score_second);
-        sum += count;
+    TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
+    while (iterator.hasNext()){
+      iterator.advance();
+      double score_first = iterator.key();
+      TDoubleDoubleHashMap hsh = iterator.value();
+      TDoubleDoubleIterator second_iterator = hsh.iterator();
+      while (second_iterator.hasNext()) {
+        second_iterator.advance();
+        sum += second_iterator.value();
       }
     }
+
     return sum;
   }
 
   // wouldn't work without count_contribution_block
-  HashMap<Double, HashMap<Double,Double> > recalc_score_hash(HashMap<Double, HashMap<Double,Double> > scores,
+  TDoubleObjectHashMap<TDoubleDoubleHashMap> recalc_score_hash(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores,
                                                              double[] first_column, double[] second_column,
                                                              double least_sufficient_first, double least_sufficient_second,
                                                              RecalculateScore count_contribution_block) throws Exception {
-    HashMap<Double, HashMap<Double,Double> > new_scores = new HashMap<Double, HashMap<Double,Double> >();  /*** Hash.new{|h,k| h[k] = Hash.new(0)} ***/
-    for (double score_first: scores.keySet()) {
-      HashMap<Double,Double> second_scores = scores.get(score_first);
-      for (double score_second: second_scores.keySet()) {
-        double count = second_scores.get(score_second);
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
+
+    TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
+    while (iterator.hasNext()) {
+      iterator.advance();
+      double score_first = iterator.key();
+
+      TDoubleDoubleHashMap second_scores = iterator.value();
+
+      TDoubleDoubleIterator second_iterator = second_scores.iterator();
+      while (second_iterator.hasNext()) {
+        second_iterator.advance();
+        double score_second = second_iterator.key();
+        double count = second_iterator.value();
+
         for (int letter = 0; letter < PWM.ALPHABET_SIZE; ++letter) {
           double new_score_first = score_first + first_column[letter];
+
           if (new_score_first >= least_sufficient_first) {
             double new_score_second = score_second + second_column[letter];
+
             if (new_score_second >= least_sufficient_second) {
-              if (!new_scores.containsKey(new_score_first)) {
-                new_scores.put(new_score_first, new HashMap<Double,Double>());
-              }
-              if (!new_scores.get(new_score_first).containsKey(new_score_second)) {
-                new_scores.get(new_score_first).put(new_score_second, 0.0);
-              }
-              double val = new_scores.get(new_score_first).get(new_score_second);
-              new_scores.get(new_score_first).put(new_score_second,
-                                                  val + count_contribution_block.recalculateScore(count, letter));
+              new_scores.putIfAbsent(new_score_first, new TDoubleDoubleHashMap());
+              double add = count_contribution_block.recalculateScore(count, letter);
+              new_scores.get(new_score_first).adjustOrPutValue(new_score_second, add, add);
             }
           }
         }
+
       }
     }
     return new_scores;
