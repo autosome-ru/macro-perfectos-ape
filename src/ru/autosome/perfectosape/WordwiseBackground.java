@@ -51,4 +51,13 @@ public class WordwiseBackground implements BackgroundModel {
     }
     return sum_square / 4.0;
   }
+
+  @Override
+  public boolean equals(Object other) {
+    if (other instanceof BackgroundModel) {
+      return ((BackgroundModel)other).is_wordwise();
+    } else {
+      return false;
+    }
+  }
 }

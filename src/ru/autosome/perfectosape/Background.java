@@ -84,11 +84,16 @@ public class Background implements BackgroundModel {
     return mean_square;
   }
 
-  public boolean equals(BackgroundModel other) {
-    boolean result = true;
-    for (int i = 0; i < ALPHABET_SIZE; ++i) {
-      result = result && count(i) == other.count(i);
+  @Override
+  public boolean equals(Object other) {
+    if (other instanceof BackgroundModel) {
+      boolean result = true;
+      for (int i = 0; i < ALPHABET_SIZE; ++i) {
+        result = result && count(i) == ((BackgroundModel)other).count(i);
+      }
+      return result;
+    } else {
+      return false;
     }
-    return result;
   }
 }
