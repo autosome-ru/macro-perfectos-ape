@@ -223,7 +223,6 @@ public class EvalSimilarity {
 
   public static void main(String[] args) {
     try {
-
       EvalSimilarity cli = EvalSimilarity.from_arglist(args);
       System.out.println(cli.report_table().report());
     } catch (Exception err) {
