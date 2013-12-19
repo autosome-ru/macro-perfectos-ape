@@ -111,10 +111,11 @@ public class CompareAligned {
     final BackgroundModel second_background = secondPWM.background;
     if (first_background.equals(second_background)) {
       if (firstPWM.background.is_wordwise()) {
-        double result = get_counts(threshold_first, threshold_second,  new RecalculateScore() {
-          public double recalculateScore(double score, int letter) { return score; }
-        });
+//        double result = get_counts(threshold_first, threshold_second,  new RecalculateScore() {
+//          public double recalculateScore(double score, int letter) { return score; }
+//        });
 
+        double result = get_counts_wordwise(threshold_first, threshold_second);
         return new double[] {result, result};
       } else {
         final BackgroundModel background = first_background;
@@ -176,6 +177,26 @@ public class CompareAligned {
     return combine_scores(scores);
   }
 
+  // block has form: {|score,letter| contribution to count by `letter` with `score` }
+  private double get_counts_wordwise(double threshold_first, double threshold_second) throws Exception {
+    // scores_on_first_pwm, scores_on_second_pwm --> count
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
+    scores.put(0.0, new TDoubleDoubleHashMap(new double[] {0},
+                                             new double[] {1}) );
+
+    for (int pos = 0; pos < alignment().length(); ++pos) {
+      scores = recalc_score_hash_wordwise(scores,
+                                         alignment().first_pwm.matrix[pos], alignment().second_pwm.matrix[pos],
+                                         threshold_first - alignment().first_pwm.best_suffix(pos + 1),
+                                         threshold_second - alignment().second_pwm.best_suffix(pos + 1));
+      if (max_pair_hash_size != null && summarySize(scores) > max_pair_hash_size) {
+        throw new Exception("Hash overflow in Macroape::AlignedPairIntersection#counts_for_two_matrices_with_different_probabilities");
+      }
+    }
+
+    return combine_scores(scores);
+  }
+
   double combine_scores(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores) {
     double sum = 0;
     TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
@@ -191,12 +212,29 @@ public class CompareAligned {
     return sum;
   }
 
-  // wouldn't work without count_contribution_block
+  TDoubleObjectHashMap<TDoubleDoubleHashMap> initial2DHash(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores, double[] first_column, double least_sufficient_first) {
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> result = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
+
+    TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
+    while (iterator.hasNext()) {
+      iterator.advance();
+      double score_first = iterator.key();
+      for (int letter = 0; letter < PWM.ALPHABET_SIZE; ++letter) {
+        double new_score_first = score_first + first_column[letter];
+        if (new_score_first >= least_sufficient_first) {
+          result.put(new_score_first, new TDoubleDoubleHashMap());
+        }
+      }
+    }
+    return result;
+  }
+
+
   TDoubleObjectHashMap<TDoubleDoubleHashMap> recalc_score_hash(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores,
                                                              double[] first_column, double[] second_column,
                                                              double least_sufficient_first, double least_sufficient_second,
                                                              RecalculateScore count_contribution_block) throws Exception {
-    TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = initial2DHash(scores,first_column,least_sufficient_first);
 
     TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
     while (iterator.hasNext()) {
@@ -218,9 +256,43 @@ public class CompareAligned {
             double new_score_second = score_second + second_column[letter];
 
             if (new_score_second >= least_sufficient_second) {
-              new_scores.putIfAbsent(new_score_first, new TDoubleDoubleHashMap());
               double add = count_contribution_block.recalculateScore(count, letter);
               new_scores.get(new_score_first).adjustOrPutValue(new_score_second, add, add);
+            }
+          }
+        }
+
+      }
+    }
+    return new_scores;
+  }
+
+  TDoubleObjectHashMap<TDoubleDoubleHashMap> recalc_score_hash_wordwise(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores,
+                                                               double[] first_column, double[] second_column,
+                                                               double least_sufficient_first, double least_sufficient_second) throws Exception {
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = initial2DHash(scores,first_column,least_sufficient_first);
+
+    TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
+    while (iterator.hasNext()) {
+      iterator.advance();
+      double score_first = iterator.key();
+
+      TDoubleDoubleHashMap second_scores = iterator.value();
+
+      TDoubleDoubleIterator second_iterator = second_scores.iterator();
+      while (second_iterator.hasNext()) {
+        second_iterator.advance();
+        double score_second = second_iterator.key();
+        double count = second_iterator.value();
+
+        for (int letter = 0; letter < PWM.ALPHABET_SIZE; ++letter) {
+          double new_score_first = score_first + first_column[letter];
+
+          if (new_score_first >= least_sufficient_first) {
+            double new_score_second = score_second + second_column[letter];
+
+            if (new_score_second >= least_sufficient_second) {
+              new_scores.get(new_score_first).adjustOrPutValue(new_score_second, count, count);
             }
           }
         }
