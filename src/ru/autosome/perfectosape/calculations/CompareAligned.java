@@ -4,13 +4,10 @@ import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
-import ru.autosome.perfectosape.BackgroundModel;
-import ru.autosome.perfectosape.PWM;
-import ru.autosome.perfectosape.PWMAligned;
-import ru.autosome.perfectosape.Position;
+import ru.autosome.perfectosape.*;
 
 public class CompareAligned {
-  public static class SimilarityInfo {
+  public static class SimilarityInfo extends ResultInfo {
     public final double recognizedByBoth;
     public final double recognizedByFirst;
     public final double recognizedBySecond;
@@ -41,7 +38,7 @@ public class CompareAligned {
       if (similarity == null) {
         return null;
       } else {
-        return similarity;
+        return 1.0 - similarity;
       }
     }
 
@@ -76,15 +73,16 @@ public class CompareAligned {
   }
 
   public SimilarityInfo jaccard(double first_threshold, double second_threshold) throws Exception {
-    double f = new CountingPWM(alignment().first_pwm, firstPWM.background, null).count_by_threshold(first_threshold);
-    double s = new CountingPWM(alignment().second_pwm, secondPWM.background, null).count_by_threshold(second_threshold);
+    double f = firstPWM.count_by_threshold(first_threshold) * Math.pow(firstPWM.background.volume(),
+                                                                       alignment().length() - firstPWM.pwm.length());
+    double s = secondPWM.count_by_threshold(second_threshold) * Math.pow(secondPWM.background.volume(),
+                                                                         alignment().length() - secondPWM.pwm.length());
 
     double[] intersections = counts_for_two_matrices(first_threshold, second_threshold);
     double intersect = Math.sqrt(intersections[0] * intersections[1]);
 
-    double firstPWMVocabularyVolume = new CountingPWM(alignment().first_pwm, firstPWM.background, null).vocabularyVolume();
-    double secondPWMVocabularyVolume = new CountingPWM(alignment().second_pwm, secondPWM.background, null).vocabularyVolume();
-
+    double firstPWMVocabularyVolume = Math.pow(firstPWM.background.volume(), alignment().length());
+    double secondPWMVocabularyVolume = Math.pow(secondPWM.background.volume(), alignment().length());
     return new SimilarityInfo(intersect, f, s,
                               firstPWMVocabularyVolume,
                               secondPWMVocabularyVolume);
@@ -161,10 +159,8 @@ public class CompareAligned {
   private double get_counts(double threshold_first, double threshold_second, RecalculateScore count_contribution_block) throws Exception {
     // scores_on_first_pwm, scores_on_second_pwm --> count
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
-
-
-    //HashMap<Double, HashMap<Double,Double> > scores = new HashMap<Double, HashMap<Double,Double> >();
-    scores.put(0.0, new TDoubleDoubleHashMap(new double[]{0}, new double[]{1}));
+    scores.put(0.0, new TDoubleDoubleHashMap(new double[] {0},
+                                             new double[] {1}) );
 
     for (int pos = 0; pos < alignment().length(); ++pos) {
       scores = recalc_score_hash(scores,
@@ -185,9 +181,7 @@ public class CompareAligned {
     TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
     while (iterator.hasNext()){
       iterator.advance();
-      double score_first = iterator.key();
-      TDoubleDoubleHashMap hsh = iterator.value();
-      TDoubleDoubleIterator second_iterator = hsh.iterator();
+      TDoubleDoubleIterator second_iterator = iterator.value().iterator();
       while (second_iterator.hasNext()) {
         second_iterator.advance();
         sum += second_iterator.value();

@@ -39,7 +39,7 @@ public class PMParser {
         if (new File(filename_or_stdin).exists()) {
           reader = new FileInputStream(filename_or_stdin);
         } else {
-          throw new FileNotFoundException("Error! File #{filename} doesn't exist");
+          throw new FileNotFoundException("Error! File " + filename_or_stdin + " doesn't exist");
         }
       }
       return new PMParser( InputExtensions.readLinesFromInputStream(reader) );

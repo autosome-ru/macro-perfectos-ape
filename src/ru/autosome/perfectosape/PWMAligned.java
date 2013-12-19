@@ -31,6 +31,9 @@ public class PWMAligned {
   public int shift() {
     return relative_position.position;
   }
+  public String orientation() {
+    return relative_position.strand();
+  }
   public int length() {
     if (shift() > 0) {
       return Math.max(first_length, second_length + shift());

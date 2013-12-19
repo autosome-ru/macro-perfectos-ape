@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.calculations;
 
+import ru.autosome.perfectosape.PWMAligned;
 import ru.autosome.perfectosape.Position;
 
 import java.util.ArrayList;
@@ -7,13 +8,13 @@ import java.util.List;
 
 public class ComparePWM {
   static public class SimilarityInfo extends CompareAligned.SimilarityInfo {
-    public final Position alignment;
-    public SimilarityInfo(Position alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond,
+    public final PWMAligned alignment;
+    public SimilarityInfo(PWMAligned alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond,
                           Double firstVocabularyVolume, Double secondVocabularyVolume) {
       super(recognizedByBoth, recognizedByFirst, recognizedBySecond, firstVocabularyVolume, secondVocabularyVolume);
       this.alignment = alignment;
     }
-    public SimilarityInfo(Position alignment, CompareAligned.SimilarityInfo similarityInfo) {
+    public SimilarityInfo(PWMAligned alignment, CompareAligned.SimilarityInfo similarityInfo) {
       super(similarityInfo.recognizedByBoth,
             similarityInfo.recognizedByFirst,
             similarityInfo.recognizedBySecond,
@@ -21,13 +22,12 @@ public class ComparePWM {
             similarityInfo.secondVocabularyVolume);
       this.alignment = alignment;
     }
-
   }
 
   public final CountingPWM firstPWM;
   public final CountingPWM secondPWM;
 
-  public Double max_pair_hash_size;
+  public Integer max_pair_hash_size;
 
   public ComparePWM(CountingPWM firstPWM, CountingPWM secondPWM) {
     this.firstPWM = firstPWM;
@@ -46,10 +46,10 @@ public class ComparePWM {
 
   private List<SimilarityInfo> all_jaccards(double threshold_first, double threshold_second) throws Exception {
     List<SimilarityInfo> result = new ArrayList<SimilarityInfo>();
-    for (Position alignment: relative_alignments()) {
+    for (Position relative_position: relative_alignments()) {
+      PWMAligned alignment = new PWMAligned(firstPWM.pwm, secondPWM.pwm, relative_position);
       CompareAligned.SimilarityInfo similarityInfo =
-       new CompareAligned(firstPWM, secondPWM, alignment).jaccard(threshold_first, threshold_second);
-
+       new CompareAligned(firstPWM, secondPWM, relative_position).jaccard(threshold_first, threshold_second);
       result.add(new SimilarityInfo(alignment, similarityInfo));
     }
     return result;

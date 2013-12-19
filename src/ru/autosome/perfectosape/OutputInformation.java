@@ -78,6 +78,11 @@ public class OutputInformation {
     return "# " + param_name + ": " + description;
   }
 
+  public void add_resulting_value(String param_name, String description, Object value) {
+    resulting_value_descriptions.add(parameter_description_string(param_name, description));
+    resulting_value_infos.add(param_name + "\t" + value);
+  }
+
   public String report() {
     ArrayList<ArrayList<String>> tmp = new ArrayList<ArrayList<String>>();
     tmp.add(parameters_info());
