@@ -31,7 +31,7 @@ public class Helper {
 
     return pwm;
   }
-  static PWM load_pwm(File file, DataModel data_model, BackgroundModel background, double effective_count) {
+  public static PWM load_pwm(File file, DataModel data_model, BackgroundModel background, double effective_count) {
     PWM pwm = load_pwm(PMParser.from_file(file), data_model, background, effective_count);
     if (pwm.name == null || pwm.name.isEmpty()) {
       pwm.name = file.getName();

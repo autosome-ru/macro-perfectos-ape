@@ -161,17 +161,21 @@ public class MultiSNPScan {
     }
   }
 
+  private CanFindPvalue pvalueCalculation(File pwmFilename, PWM pwm) {
+    if (thresholds_folder != null) {
+      File thresholds_file = new File(thresholds_folder, "thresholds_" + pwmFilename.getName());
+      PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file.getAbsolutePath());
+      return new FindPvalueBsearch(pwm, background, pvalueBsearchList);
+    } else {
+      return new FindPvalueAPE(pwm, discretization, background, max_hash_size);
+    }
+
+  }
+
   private void setup_pvalue_calculation() {
     for (File file : collection_of_pwms.keySet()) {
       PWM pwm = collection_of_pwms.get(file);
-
-      if (thresholds_folder != null) {
-        File thresholds_file = new File(thresholds_folder, "thresholds_" + file.getName());
-        PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file.getAbsolutePath());
-        pvalue_calculators.put(file, new FindPvalueBsearch(pwm, background, pvalueBsearchList));
-      } else {
-        pvalue_calculators.put(file, new FindPvalueAPE(pwm, discretization, background, max_hash_size));
-      }
+      pvalue_calculators.put(file, pvalueCalculation(file, pwm));
     }
   }
 
