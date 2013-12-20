@@ -1,6 +1,5 @@
-out/
-production/
+.idea/
+target/
 .idea/workspace.xml
 .idea/.name
-*.xml
 *.iml
