@@ -1,9 +1,6 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.*;
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
-import ru.autosome.perfectosape.calculations.FindPvalueAPE;
-import ru.autosome.perfectosape.calculations.FindPvalueBsearch;
 import ru.autosome.perfectosape.calculations.SNPScan;
 
 import java.io.File;
@@ -11,8 +8,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MultiSNPScan {
   private BackgroundModel background;
@@ -22,13 +17,12 @@ public class MultiSNPScan {
   private File path_to_collection_of_pwms;
   private File path_to_file_w_snps;
 
-  private DataModel data_model;
-  private double effective_count;
+  private DataModel dataModel;
+  private double effectiveCount;
   private File thresholds_folder;
 
   private ArrayList<String> snp_list;
-  Map<File, PWM> collection_of_pwms;
-  Map<File, CanFindPvalue> pvalue_calculators;
+  PWMCollection pwmCollection;
 
 
   // Split by spaces and return last part
@@ -50,12 +44,8 @@ public class MultiSNPScan {
   }
 
   private void load_collection_of_pwms() {
-    File[] files = path_to_collection_of_pwms.listFiles();
-    if (files == null)
-      return;
-    for (File file : files) {
-      collection_of_pwms.put(file, Helper.load_pwm(file, data_model, background, effective_count));
-    }
+    PWMCollectionImporter importer = new PWMCollectionImporter(background, discretization, max_hash_size, dataModel, effectiveCount);
+    pwmCollection = importer.loadPWMCollection(path_to_collection_of_pwms, thresholds_folder);
   }
 
   private static final String DOC =
@@ -95,11 +85,9 @@ public class MultiSNPScan {
     discretization = 100.0;
     max_hash_size = 10000000;
 
-    data_model = DataModel.PWM;
-    effective_count = 100;
+    dataModel = DataModel.PWM;
+    effectiveCount = 100;
     thresholds_folder = null;
-    collection_of_pwms = new HashMap<File, PWM>();
-    pvalue_calculators = new HashMap<File, CanFindPvalue>();
   }
 
   private MultiSNPScan() {
@@ -127,7 +115,6 @@ public class MultiSNPScan {
       extract_option(argv);
     }
     load_collection_of_pwms();
-    setup_pvalue_calculation();
     load_snp_list();
   }
 
@@ -140,11 +127,11 @@ public class MultiSNPScan {
     } else if (opt.equals("-d")) {
       discretization = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--pcm")) {
-      data_model = DataModel.PCM;
+      dataModel = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
-      data_model = DataModel.PPM;
+      dataModel = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
-      effective_count = Double.valueOf(argv.remove(0));
+      effectiveCount = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
     } else {
@@ -161,37 +148,13 @@ public class MultiSNPScan {
     }
   }
 
-  private CanFindPvalue pvalueCalculation(File pwmFilename, PWM pwm) {
-    if (thresholds_folder != null) {
-      File thresholds_file = new File(thresholds_folder, "thresholds_" + pwmFilename.getName());
-      PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file.getAbsolutePath());
-      return new FindPvalueBsearch(pwm, background, pvalueBsearchList);
-    } else {
-      return new FindPvalueAPE(pwm, discretization, background, max_hash_size);
-    }
-
-  }
-
-  private void setup_pvalue_calculation() {
-    for (File file : collection_of_pwms.keySet()) {
-      PWM pwm = collection_of_pwms.get(file);
-      pvalue_calculators.put(file, pvalueCalculation(file, pwm));
-    }
-  }
-
   private void process_snp(String snp_input) {
     String snp_name = first_part_of_string(snp_input);
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
 
-    for (File file : collection_of_pwms.keySet()) {
-      try {
-        PWM pwm = collection_of_pwms.get(file);
-        CanFindPvalue canFindPvalue = pvalue_calculators.get(file);
-        String infos = new SNPScan(pwm, seq_w_snp, canFindPvalue).affinityInfos().toString();
-        System.out.println(snp_name + "\t" + pwm.name + "\t" + infos);
-      } catch (IllegalArgumentException err) {
-        System.err.println(err.getMessage());
-      }
+    for (PWMCollection.PWMAugmented pwmAugmented: pwmCollection) {
+      String infos = new SNPScan(pwmAugmented.pwm, seq_w_snp, pwmAugmented.pvalueCalculator).affinityInfos().toString();
+      System.out.println(snp_name + "\t" + pwmAugmented.pwm.name + "\t" + infos);
     }
   }
 

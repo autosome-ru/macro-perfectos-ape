@@ -31,7 +31,7 @@ public class PWMCollectionImporter {
     }
   }
 
-  PWMCollection loadPWMCollection(File pathToPwms, File pathToThresholds) {
+  public PWMCollection loadPWMCollection(File pathToPwms, File pathToThresholds) {
     PWMCollection result = new PWMCollection();
     File[] files = pathToPwms.listFiles();
     if (files == null) {
