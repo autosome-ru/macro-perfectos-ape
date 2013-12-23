@@ -22,7 +22,11 @@ public class MultiSNPScan {
   private File thresholds_folder;
 
   private ArrayList<String> snp_list;
-  PWMCollection pwmCollection;
+  private PWMCollection pwmCollection;
+
+  private double max_pvalue_cutoff;
+  private double min_fold_change_cutoff;
+
 
 
   // Split by spaces and return last part
@@ -53,6 +57,11 @@ public class MultiSNPScan {
     "java ru.autosome.perfectosape.cli.MultiSNPScan <folder with pwms> <file with SNPs> [options]\n" +
     "\n" +
     "Options:\n" +
+    "  [--pvalue-cutoff <maximal pvalue to be considered>] - drop results having both allele-variant pvalues greater than given\n" +
+    "                                                       (default: 0.001)\n" +
+    "  [--fold-change-cutoff <minmal fold change to be considered>] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
+    "                                                                 less than given (default: 10)\n" +
+    "        In order to get all fold changes - set both pvalue-cutoff and fold-change-cutoff to 1.0.\n" +
     "  [-d <discretization level>]\n" +
     "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
     "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
@@ -88,6 +97,8 @@ public class MultiSNPScan {
     dataModel = DataModel.PWM;
     effectiveCount = 100;
     thresholds_folder = null;
+    max_pvalue_cutoff = 0.001;
+    min_fold_change_cutoff = 10.0;
   }
 
   private MultiSNPScan() {
@@ -134,6 +145,10 @@ public class MultiSNPScan {
       effectiveCount = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
+    } else if(opt.equals("--pvalue-cutoff")) {
+      max_pvalue_cutoff = Double.valueOf(argv.remove(0));
+    } else if(opt.equals("--fold-change-cutoff")) {
+      min_fold_change_cutoff = Double.valueOf(argv.remove(0));
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
@@ -153,8 +168,14 @@ public class MultiSNPScan {
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
 
     for (PWMCollection.PWMAugmented pwmAugmented: pwmCollection) {
-      String infos = new SNPScan(pwmAugmented.pwm, seq_w_snp, pwmAugmented.pvalueCalculator).affinityInfos().toString();
-      System.out.println(snp_name + "\t" + pwmAugmented.pwm.name + "\t" + infos);
+      SNPScan.RegionAffinityInfos result = new SNPScan(pwmAugmented.pwm, seq_w_snp, pwmAugmented.pvalueCalculator).affinityInfos();
+      boolean pvalueSignificant = (result.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
+                                    result.getInfo_2().getPvalue() <= max_pvalue_cutoff);
+      boolean foldChangeSignificant = (result.foldChange() >= min_fold_change_cutoff ||
+                                        result.foldChange() <= 1.0/min_fold_change_cutoff);
+      if (pvalueSignificant && foldChangeSignificant) {
+        System.out.println(snp_name + "\t" + pwmAugmented.pwm.name + "\t" + result.toString());
+      }
     }
   }
 
