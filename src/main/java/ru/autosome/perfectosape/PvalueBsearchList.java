@@ -1,6 +1,6 @@
 package ru.autosome.perfectosape;
 
-import ru.autosome.perfectosape.calculations.CountingPWM;
+import ru.autosome.perfectosape.calculations.CanFindThreshold;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,36 +17,58 @@ public class PvalueBsearchList {
       this.pvalue = pvalue;
     }
 
-    public ThresholdPvaluePair(CountingPWM.ThresholdInfo info) {
+    public ThresholdPvaluePair(CanFindThreshold.ThresholdInfo info) {
       this.threshold = info.threshold;
       this.pvalue = info.real_pvalue;
     }
 
-    public static Comparator double_comparator() {
-      return new Comparator<Object>() {
-        Double val(Object obj) {
-          double value;
-          if (obj instanceof ThresholdPvaluePair) {
-            value = ((ThresholdPvaluePair) obj).threshold;
-          } else if (obj instanceof Double) {
-            value = (Double) obj;
-          } else {
-            throw new ClassCastException("Incorrect type for comparison");
-          }
-          return value;
-        }
+    public static Comparator thresholdComparator =
+     new Comparator<Object>() {
+       Double val(Object obj) {
+         double value;
+         if (obj instanceof ThresholdPvaluePair) {
+           value = ((ThresholdPvaluePair) obj).threshold;
+         } else if (obj instanceof Double) {
+           value = (Double) obj;
+         } else {
+           throw new ClassCastException("Incorrect type for comparison");
+         }
+         return value;
+       }
 
-        @Override
-        public int compare(Object o1, Object o2) {
-          if (val(o1) < val(o2)) {
-            return -1;
-          } else if (val(o1) > val(o2)) {
-            return 1;
-          } else return 0;
-        }
-      };
+       @Override
+       public int compare(Object o1, Object o2) {
+         if (val(o1) < val(o2)) {
+           return -1;
+         } else if (val(o1) > val(o2)) {
+           return 1;
+         } else return 0;
+       }
+     };
+    public static Comparator pvalueComparator =
+     new Comparator<Object>() {
+       Double val(Object obj) {
+         double value;
+         if (obj instanceof ThresholdPvaluePair) {
+           value = ((ThresholdPvaluePair) obj).pvalue;
+         } else if (obj instanceof Double) {
+           value = (Double) obj;
+         } else {
+           throw new ClassCastException("Incorrect type for comparison");
+         }
+         return value;
+       }
 
-    }
+       @Override
+       public int compare(Object o1, Object o2) {
+         if (val(o1) < val(o2)) {
+           return -1;
+         } else if (val(o1) > val(o2)) {
+           return 1;
+         } else return 0;
+       }
+     };
+
 
     @Override
     public boolean equals(Object other) {
@@ -56,6 +78,7 @@ public class PvalueBsearchList {
       return threshold == ((ThresholdPvaluePair) other).threshold && pvalue == ((ThresholdPvaluePair) other).pvalue;
     }
 
+    @Override
     public int compareTo(Object other) {
       double other_value;
       if (other instanceof ThresholdPvaluePair) {
@@ -88,7 +111,7 @@ public class PvalueBsearchList {
     this.list = sort_list(list);
   }
 
-  ArrayList<ThresholdPvaluePair> without_consequent_duplicates(ArrayList<ThresholdPvaluePair> infos) {
+  private ArrayList<ThresholdPvaluePair> without_consequent_duplicates(ArrayList<ThresholdPvaluePair> infos) {
     ArrayList<ThresholdPvaluePair> reduced_infos;
     reduced_infos = new ArrayList<ThresholdPvaluePair>();
     reduced_infos.add(infos.get(0));
@@ -99,7 +122,7 @@ public class PvalueBsearchList {
     }
     return reduced_infos;
   }
-  ArrayList<ThresholdPvaluePair> without_zero_pvalue(ArrayList<ThresholdPvaluePair> infos) {
+  private ArrayList<ThresholdPvaluePair> without_zero_pvalue(ArrayList<ThresholdPvaluePair> infos) {
     ArrayList<ThresholdPvaluePair> reduced_infos;
     reduced_infos = new ArrayList<ThresholdPvaluePair>();
     for (int i = 0; i < infos.size(); ++i) {
@@ -110,7 +133,7 @@ public class PvalueBsearchList {
     return reduced_infos;
   }
 
-  ArrayList<ThresholdPvaluePair> sort_list(ArrayList<ThresholdPvaluePair> infos) {
+  private ArrayList<ThresholdPvaluePair> sort_list(ArrayList<ThresholdPvaluePair> infos) {
     Collections.sort(infos);
     return without_consequent_duplicates(without_zero_pvalue(infos));
   }
@@ -119,8 +142,12 @@ public class PvalueBsearchList {
     return Math.sqrt(pvalue_1 * pvalue_2);
   }
 
+  public double combine_thresholds(double threshold_1, double threshold_2) {
+    return (threshold_1 + threshold_2) / 2;
+  }
+
   public double pvalue_by_threshold(double threshold) {
-    int index = Collections.binarySearch(list, threshold, ThresholdPvaluePair.double_comparator());
+    int index = Collections.binarySearch(list, threshold, ThresholdPvaluePair.thresholdComparator);
     if (index >= 0) {
       return list.get(index).pvalue;
     }
@@ -135,6 +162,24 @@ public class PvalueBsearchList {
       return list.get(list.size() - 1).pvalue;
     }
   }
+
+  public double threshold_by_pvalue(double pvalue) {
+    int index = Collections.binarySearch(list, pvalue, ThresholdPvaluePair.pvalueComparator);
+    if (index >= 0) {
+      return list.get(index).threshold;
+    }
+
+    int insertion_point = -index - 1;
+    if (insertion_point > 0 && insertion_point < list.size()) {
+      return combine_thresholds(list.get(insertion_point).threshold,
+                                list.get(insertion_point - 1).threshold);
+    } else if (insertion_point == 0) {
+      return list.get(0).threshold;
+    } else {
+      return list.get(list.size() - 1).threshold;
+    }
+  }
+
 
   public void save_to_file(String filename) {
     try {
