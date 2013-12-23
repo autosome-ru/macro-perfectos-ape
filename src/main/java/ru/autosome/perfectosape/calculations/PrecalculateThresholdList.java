@@ -81,7 +81,7 @@ public class PrecalculateThresholdList {
     this.max_hash_size = max_hash_size;
   }
 
-  private ru.autosome.perfectosape.calculations.FindThresholdAPE find_threshold_calculator(PWM pwm) {
+  private CanFindThreshold find_threshold_calculator(PWM pwm) {
     return new ru.autosome.perfectosape.calculations.FindThresholdAPE(pwm,
                                                                   background,
                                                                   discretization,
@@ -91,7 +91,7 @@ public class PrecalculateThresholdList {
 
   public PvalueBsearchList bsearch_list_for_pwm(PWM pwm) {
     ArrayList<PvalueBsearchList.ThresholdPvaluePair> pairs = new ArrayList<PvalueBsearchList.ThresholdPvaluePair>();
-    for (CountingPWM.ThresholdInfo info : find_threshold_calculator(pwm).find_thresholds_by_pvalues(pvalues)) {
+    for (CanFindThreshold.ThresholdInfo info : find_threshold_calculator(pwm).find_thresholds_by_pvalues(pvalues)) {
       pairs.add(new PvalueBsearchList.ThresholdPvaluePair(info));
     }
     return new PvalueBsearchList(pairs);

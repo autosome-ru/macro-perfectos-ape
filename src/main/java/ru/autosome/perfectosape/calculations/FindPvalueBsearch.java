@@ -20,6 +20,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
     this.bsearchList = bsearchList;
   }
 
+  @Override
   public PvalueInfo[] pvalues_by_thresholds(double[] thresholds) {
     PvalueInfo[] results = new PvalueInfo[thresholds.length];
     for (int i = 0; i < thresholds.length; ++i) {
@@ -32,6 +33,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
     return new CountingPWM(pwm, background, null).vocabularyVolume();
   }
 
+  @Override
   public PvalueInfo pvalue_by_threshold(double threshold) {
     double pvalue = bsearchList.pvalue_by_threshold(threshold);
     int count = (int) (pvalue * vocabularyVolume());
@@ -39,13 +41,14 @@ public class FindPvalueBsearch implements CanFindPvalue {
   }
 
   // TODO: decide which parameters are relevant
+  @Override
   public OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
     infos.background_parameter("B", "background", background);
 
     infos.add_table_parameter("T", "threshold", "threshold");
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", "number_of_recognized_words");
+      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords");
     }
     infos.add_table_parameter("P", "P-value", "pvalue");
 

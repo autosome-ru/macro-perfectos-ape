@@ -1,10 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.*;
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
-import ru.autosome.perfectosape.calculations.ComparePWM;
-import ru.autosome.perfectosape.calculations.CountingPWM;
-import ru.autosome.perfectosape.calculations.FindThresholdAPE;
+import ru.autosome.perfectosape.calculations.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -194,7 +191,7 @@ public class EvalSimilarity {
     if (predefinedFirstThreshold != null) {
       return predefinedFirstThreshold;
     } else {
-      FindThresholdAPE pvalue_calculator = new FindThresholdAPE(firstPWM,
+      CanFindThreshold pvalue_calculator = new FindThresholdAPE(firstPWM,
                                                                 firstBackground,
                                                                 discretization,
                                                                 pvalue_boundary,
@@ -207,7 +204,7 @@ public class EvalSimilarity {
     if (predefinedSecondThreshold != null) {
       return predefinedSecondThreshold;
     } else {
-        FindThresholdAPE pvalue_calculator = new FindThresholdAPE(secondPWM,
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE(secondPWM,
                                                                   secondBackground,
                                                                   discretization,
                                                                   pvalue_boundary,

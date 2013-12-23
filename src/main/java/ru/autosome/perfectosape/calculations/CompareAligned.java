@@ -26,7 +26,7 @@ public class CompareAligned {
     }
 
     public Double similarity() {
-      return jaccardByCounts(recognizedByFirst,recognizedBySecond, recognizedByBoth);
+      return jaccardByCounts(recognizedByFirst, recognizedBySecond, recognizedByBoth);
     }
 
     public Double distance() {
@@ -56,6 +56,7 @@ public class CompareAligned {
 
   public final CountingPWM firstPWM;
   public final CountingPWM secondPWM;
+
   public final Position relativePosition;
 
   public Double max_pair_hash_size;
@@ -77,16 +78,16 @@ public class CompareAligned {
   }
 
   public SimilarityInfo jaccard(double first_threshold, double second_threshold) throws Exception {
-    double f = firstPWM.count_by_threshold(first_threshold) * Math.pow(firstPWM.background.volume(),
+    double firstCount = firstPWM.count_by_threshold(first_threshold) * Math.pow(firstPWM.background.volume(),
                                                                        alignment().length() - firstPWM.pwm.length());
-    double s = secondPWM.count_by_threshold(second_threshold) * Math.pow(secondPWM.background.volume(),
+    double secondCount = secondPWM.count_by_threshold(second_threshold) * Math.pow(secondPWM.background.volume(),
                                                                          alignment().length() - secondPWM.pwm.length());
 
     double intersect = count_in_intersection(first_threshold, second_threshold);
 
     double firstPWMVocabularyVolume = Math.pow(firstPWM.background.volume(), alignment().length());
     double secondPWMVocabularyVolume = Math.pow(secondPWM.background.volume(), alignment().length());
-    return new SimilarityInfo(intersect, f, s,
+    return new SimilarityInfo(intersect, firstCount, secondCount,
                               firstPWMVocabularyVolume,
                               secondPWMVocabularyVolume);
   }

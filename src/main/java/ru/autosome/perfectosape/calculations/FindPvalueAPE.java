@@ -47,6 +47,7 @@ public class FindPvalueAPE implements CanFindPvalue {
     return new PvalueInfo(non_upscaled_threshold, pvalue, (int) count);
   }
 
+  @Override
   public PvalueInfo[] pvalues_by_thresholds(double[] thresholds) {
     CountingPWM countingPWM = countingPWM(upscaled_pwm());
     TDoubleDoubleMap counts = countingPWM.counts_by_thresholds(upscaled_thresholds(thresholds));
@@ -58,11 +59,13 @@ public class FindPvalueAPE implements CanFindPvalue {
     return infos;
   }
 
+  @Override
   public PvalueInfo pvalue_by_threshold(double threshold) {
     double[] thresholds = {threshold};
     return pvalues_by_thresholds(thresholds)[0];
   }
 
+  @Override
   public OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
     infos.add_parameter("V", "discretization value", discretization);
@@ -70,7 +73,7 @@ public class FindPvalueAPE implements CanFindPvalue {
 
     infos.add_table_parameter("T", "threshold", "threshold");
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", "number_of_recognized_words");
+      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords");
     }
     infos.add_table_parameter("P", "P-value", "pvalue");
 

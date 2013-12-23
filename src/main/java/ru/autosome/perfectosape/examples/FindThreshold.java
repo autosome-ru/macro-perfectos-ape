@@ -1,15 +1,15 @@
 package ru.autosome.perfectosape.examples;
 
 import ru.autosome.perfectosape.*;
-import ru.autosome.perfectosape.calculations.CountingPWM;
+import ru.autosome.perfectosape.calculations.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.FindThresholdAPE;
 
 public class FindThreshold {
-  static void print_result(CountingPWM.ThresholdInfo info) {
+  static void print_result(CanFindThreshold.ThresholdInfo info) {
     System.out.println( "expected pvalue: " + info.expected_pvalue + "\n" +
                          "threshold: " + info.threshold + "\n" +
                          "actual pvalue: " + info.real_pvalue + "\n" +
-                         "number of recognized words: " + info.recognized_words + "\n------------\n");
+                         "number of recognized words: " + info.numberOfRecognizedWords + "\n------------\n");
   }
 
   public static void main(String[] args) {
@@ -21,14 +21,14 @@ public class FindThreshold {
     double pvalue = 0.0005;
     double[] pvalues = {0.0001, 0.0005, 0.001};
 
-    FindThresholdAPE calculator = new FindThresholdAPE(pwm,background,discretization,pvalue_boundary,max_hash_size);
+    CanFindThreshold calculator = new FindThresholdAPE(pwm,background,discretization,pvalue_boundary,max_hash_size);
 
     // Single threshold
-    CountingPWM.ThresholdInfo info = calculator.find_threshold_by_pvalue(pvalue);
+    CanFindThreshold.ThresholdInfo info = calculator.find_threshold_by_pvalue(pvalue);
     print_result(info);
 
     // Multiple thresholds
-    CountingPWM.ThresholdInfo[] infos = calculator.find_thresholds_by_pvalues(pvalues);
+    CanFindThreshold.ThresholdInfo[] infos = calculator.find_thresholds_by_pvalues(pvalues);
     for (int i = 0; i < infos.length; ++i) {
       print_result(infos[i]);
     }
@@ -40,7 +40,7 @@ public class FindThreshold {
                                                               background,
                                                               discretization,pvalue_boundary, max_hash_size);
     ru.autosome.perfectosape.api.FindThresholdAPE bioumlCalculator = new ru.autosome.perfectosape.api.FindThresholdAPE(parameters);
-    CountingPWM.ThresholdInfo[] infosBiouml = bioumlCalculator.call();
+    CanFindThreshold.ThresholdInfo[] infosBiouml = bioumlCalculator.call();
     for (int i = 0; i < infosBiouml.length; ++i) {
       print_result(infosBiouml[i]);
     }

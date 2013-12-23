@@ -3,9 +3,9 @@ package ru.autosome.perfectosape.api;
 import ru.autosome.perfectosape.BackgroundModel;
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.PWM;
-import ru.autosome.perfectosape.calculations.CountingPWM;
+import ru.autosome.perfectosape.calculations.CanFindThreshold;
 
-public class FindThresholdAPE extends SingleTask<CountingPWM.ThresholdInfo[]> {
+public class FindThresholdAPE extends SingleTask<CanFindThreshold.ThresholdInfo[]> {
   public static class Parameters {
     public BackgroundModel background;
     public Double discretization; // if discretization is null - it's not applied
@@ -32,7 +32,7 @@ public class FindThresholdAPE extends SingleTask<CountingPWM.ThresholdInfo[]> {
     this.parameters = parameters;
   }
 
-  public CountingPWM.ThresholdInfo[] launchSingleTask() {
+  public CanFindThreshold.ThresholdInfo[] launchSingleTask() {
     return new ru.autosome.perfectosape.calculations.FindThresholdAPE(parameters.pwm,
                                                                   parameters.background,
                                                                   parameters.discretization,

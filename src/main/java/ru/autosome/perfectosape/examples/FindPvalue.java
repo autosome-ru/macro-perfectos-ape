@@ -11,7 +11,7 @@ public class FindPvalue {
   static void print_result(CanFindPvalue.PvalueInfo info) {
     System.out.println( "threshold: " + info.threshold + "\n" +
      "pvalue: " + info.pvalue + "\n" +
-     "number of recognized words: " + info.number_of_recognized_words + "\n------------\n");
+     "number of recognized words: " + info.numberOfRecognizedWords + "\n------------\n");
   }
 
   public static void main(String[] args) {

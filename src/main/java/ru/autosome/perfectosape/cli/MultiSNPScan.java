@@ -97,7 +97,7 @@ public class MultiSNPScan {
     dataModel = DataModel.PWM;
     effectiveCount = 100;
     thresholds_folder = null;
-    max_pvalue_cutoff = 0.001;
+    max_pvalue_cutoff = 0.0005;
     min_fold_change_cutoff = 10.0;
   }
 
@@ -149,6 +149,9 @@ public class MultiSNPScan {
       max_pvalue_cutoff = Double.valueOf(argv.remove(0));
     } else if(opt.equals("--fold-change-cutoff")) {
       min_fold_change_cutoff = Double.valueOf(argv.remove(0));
+      if (min_fold_change_cutoff < 1.0) {
+        min_fold_change_cutoff = 1.0 / min_fold_change_cutoff;
+      }
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }

@@ -4,11 +4,11 @@ import ru.autosome.perfectosape.BackgroundModel;
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.PWM;
 
-public class FindThresholdAPE {
+public class FindThresholdAPE implements CanFindThreshold {
   BackgroundModel background;
   Double discretization; // if discretization is null - it's not applied
   BoundaryType pvalue_boundary;
-  Integer max_hash_size; // if max_hash_size is null - it's not applied
+  Integer maxHashSize; // if maxHashSize is null - it's not applied
   PWM pwm;
 
   public FindThresholdAPE(PWM pwm, BackgroundModel background,
@@ -17,7 +17,7 @@ public class FindThresholdAPE {
     this.background = background;
     this.discretization = discretization;
     this.pvalue_boundary = pvalue_boundary;
-    this.max_hash_size = max_hash_size;
+    this.maxHashSize = max_hash_size;
   }
 
   PWM upscaled_pwm() {
@@ -25,10 +25,10 @@ public class FindThresholdAPE {
   }
 
   CountingPWM countingPWM(PWM pwm) {
-    return new CountingPWM(pwm, background, max_hash_size);
+    return new CountingPWM(pwm, background, maxHashSize);
   }
 
-  public CountingPWM.ThresholdInfo[] threshold_infos(PWM pwm, double[] pvalues) {
+  public ThresholdInfo[] threshold_infos(PWM pwm, double[] pvalues) {
     if (pvalue_boundary == BoundaryType.LOWER) {
       return countingPWM(pwm).thresholds(pvalues);
     } else {
@@ -36,19 +36,21 @@ public class FindThresholdAPE {
     }
   }
 
-  public CountingPWM.ThresholdInfo[] downscale_thresholds(CountingPWM.ThresholdInfo[] threshold_infos) {
-    CountingPWM.ThresholdInfo[] downscaled_infos = new CountingPWM.ThresholdInfo[threshold_infos.length];
+  public ThresholdInfo[] downscale_thresholds(ThresholdInfo[] threshold_infos) {
+    ThresholdInfo[] downscaled_infos = new ThresholdInfo[threshold_infos.length];
     for (int i = 0; i < threshold_infos.length; ++i) {
       downscaled_infos[i] = threshold_infos[i].downscale(discretization);
     }
     return downscaled_infos;
   }
 
-  public CountingPWM.ThresholdInfo[] find_thresholds_by_pvalues(double[] pvalues) {
+  @Override
+  public ThresholdInfo[] find_thresholds_by_pvalues(double[] pvalues) {
     return downscale_thresholds(threshold_infos(upscaled_pwm(), pvalues));
   }
 
-  public CountingPWM.ThresholdInfo find_threshold_by_pvalue(double pvalue) {
+  @Override
+  public ThresholdInfo find_threshold_by_pvalue(double pvalue) {
     return find_thresholds_by_pvalues( new double[]{pvalue} )[0];
   }
 }

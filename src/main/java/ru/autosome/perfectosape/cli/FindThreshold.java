@@ -1,7 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.*;
-import ru.autosome.perfectosape.calculations.CountingPWM;
+import ru.autosome.perfectosape.calculations.CanFindThreshold;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -117,7 +117,7 @@ public class FindThreshold {
     }
   }
 
-  ru.autosome.perfectosape.calculations.FindThresholdAPE calculator() {
+  CanFindThreshold calculator() {
     return new ru.autosome.perfectosape.calculations.FindThresholdAPE(pwm, background, discretization, pvalue_boundary, max_hash_size);
   }
 
@@ -133,7 +133,7 @@ public class FindThreshold {
     infos.add_table_parameter("AP", "actual P-value", "real_pvalue");
 
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", "recognized_words");
+      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords");
     }
     infos.add_table_parameter("T", "threshold", "threshold");
 
@@ -153,7 +153,7 @@ public class FindThreshold {
   }
 
   OutputInformation report_table() {
-    CountingPWM.ThresholdInfo[] results = calculator().find_thresholds_by_pvalues(pvalues);
+    CanFindThreshold.ThresholdInfo[] results = calculator().find_thresholds_by_pvalues(pvalues);
     return report_table(results);
   }
 

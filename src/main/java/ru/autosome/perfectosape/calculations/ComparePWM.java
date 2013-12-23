@@ -70,9 +70,8 @@ public class ComparePWM {
   }
 
   public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws Exception {
-    double f = firstPWM.count_by_threshold(threshold_first);
-    double s = secondPWM.count_by_threshold(threshold_second);
-
+    double firstCount = firstPWM.count_by_threshold(threshold_first);
+    double secondCount = secondPWM.count_by_threshold(threshold_second);
 
     Map<Position, Double> intersections = all_intersections(threshold_first, threshold_second);
     Position bestPosition = null;
@@ -80,18 +79,17 @@ public class ComparePWM {
     for (Position position: intersections.keySet()) {
       double intersection = intersections.get(position);
       PWMAligned alignment = new PWMAligned(firstPWM.pwm, secondPWM.pwm, position);
-      double firstCountRenormed = f * Math.pow(firstPWM.background.volume(), alignment.length() - firstPWM.pwm.length());
-      double secondCountRenormed = s * Math.pow(secondPWM.background.volume(), alignment.length() - secondPWM.pwm.length());
+      double firstCountRenormed = firstCount * Math.pow(firstPWM.background.volume(), alignment.length() - firstPWM.pwm.length());
+      double secondCountRenormed = secondCount * Math.pow(secondPWM.background.volume(), alignment.length() - secondPWM.pwm.length());
       double similarity = CompareAligned.jaccardByCounts(firstCountRenormed, secondCountRenormed, intersection);
       if (similarity > bestSimilarity) {
         bestPosition = position;
         bestSimilarity = similarity;
       }
-
     }
     PWMAligned bestAlignment = new PWMAligned(firstPWM.pwm, secondPWM.pwm, bestPosition);
-    double firstCountRenormedBest = f * Math.pow(firstPWM.background.volume(), bestAlignment.length() - firstPWM.pwm.length());
-    double secondCountRenormedBest = s * Math.pow(secondPWM.background.volume(), bestAlignment.length() - secondPWM.pwm.length());
+    double firstCountRenormedBest = firstCount * Math.pow(firstPWM.background.volume(), bestAlignment.length() - firstPWM.pwm.length());
+    double secondCountRenormedBest = secondCount * Math.pow(secondPWM.background.volume(), bestAlignment.length() - secondPWM.pwm.length());
     double firstPWMVocabularyVolume = Math.pow(firstPWM.background.volume(), bestAlignment.length());
     double secondPWMVocabularyVolume = Math.pow(secondPWM.background.volume(), bestAlignment.length());
 
@@ -100,16 +98,6 @@ public class ComparePWM {
                               firstCountRenormedBest, secondCountRenormedBest,
                               firstPWMVocabularyVolume, secondPWMVocabularyVolume);
   }
-
-  /*public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws Exception {
-    SimilarityInfo bestSimilarityInfo = null;
-    for(SimilarityInfo similarityInfo: all_jaccards(threshold_first, threshold_second)) {
-      if (bestSimilarityInfo == null || similarityInfo.similarity() > bestSimilarityInfo.similarity()) {
-        bestSimilarityInfo = similarityInfo;
-      }
-    }
-    return bestSimilarityInfo;
-  } */
 
   public SimilarityInfo jaccard_by_pvalue(double pvalue) throws Exception {
     double threshold_first = firstPWM.threshold(pvalue).threshold;
