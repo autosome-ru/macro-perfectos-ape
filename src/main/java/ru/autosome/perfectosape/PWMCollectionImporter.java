@@ -5,7 +5,9 @@ import ru.autosome.perfectosape.calculations.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.FindPvalueBsearch;
 import ru.autosome.perfectosape.cli.Helper;
 
-import java.io.File;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PWMCollectionImporter {
   BackgroundModel background;
@@ -32,8 +34,16 @@ public class PWMCollectionImporter {
   }
 
   public PWMCollection loadPWMCollection(File pathToPwms, File pathToThresholds) {
+    if (pathToPwms.isDirectory() && (pathToThresholds == null || pathToThresholds.isDirectory())) {
+      return loadPWMCollectionFromFolder(pathToPwms, pathToThresholds);
+    }
     PWMCollection result = new PWMCollection();
-    File[] files = pathToPwms.listFiles();
+    return result;
+  }
+
+  public PWMCollection loadPWMCollectionFromFolder(File pathToPWMs, File pathToThresholds) {
+    PWMCollection result = new PWMCollection();
+    File[] files = pathToPWMs.listFiles();
     if (files == null) {
       return result;
     }
@@ -44,4 +54,24 @@ public class PWMCollectionImporter {
     return result;
   }
 
+  public PWMCollection loadPWMCollectionFromFile(File pathToPWMs) {
+    try {
+      PWMCollection result = new PWMCollection();
+      BufferedPushbackReader reader = new BufferedPushbackReader(new FileInputStream(pathToPWMs));
+      boolean canExtract = true;
+      while (canExtract) {
+        PMParser parser = PMParser.loadFromStream(reader);
+        canExtract = canExtract && (parser != null);
+        if (parser == null) {
+          canExtract = false;
+        } else {
+          PWM pwm = PWM.fromParser(parser);
+          result.add(pwm, new FindPvalueAPE(pwm, discretization, background, maxHashSize));
+        }
+      }
+      return result;
+    } catch (FileNotFoundException e) {
+      return new PWMCollection();
+    }
+  }
 }

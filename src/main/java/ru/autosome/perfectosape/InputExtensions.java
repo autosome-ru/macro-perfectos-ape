@@ -30,4 +30,17 @@ public class InputExtensions {
     }
     return result;
   }
+
+  public static boolean startWithDouble(String s) {
+    return isDouble(s.replaceAll("\\s+", " ").split(" ")[0]);
+  }
+
+  public static boolean isDouble(String s) {
+    try {
+      Double.valueOf(s);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
 }

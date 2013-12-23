@@ -169,7 +169,6 @@ public class FindPvalue {
       System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + DOC);
       System.exit(1);
     }
-
   }
 
 }
