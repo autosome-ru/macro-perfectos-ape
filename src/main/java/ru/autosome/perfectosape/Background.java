@@ -96,4 +96,11 @@ public class Background implements BackgroundModel {
       return false;
     }
   }
+
+  // GC-content should be 0 to 1
+  public static BackgroundModel fromGCContent(double gcContent) {
+    double p_at = (1 - gcContent) / 2;
+    double p_cg = gcContent / 2;
+    return new Background(new double[]{p_at, p_cg, p_cg, p_at});
+  }
 }
