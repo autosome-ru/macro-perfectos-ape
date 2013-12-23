@@ -57,9 +57,9 @@ public class MultiSNPScan {
     "java ru.autosome.perfectosape.cli.MultiSNPScan <folder with pwms> <file with SNPs> [options]\n" +
     "\n" +
     "Options:\n" +
-    "  [--pvalue-cutoff <maximal pvalue to be considered>] - drop results having both allele-variant pvalues greater than given\n" +
+    "  [--pvalue-cutoff <maximal pvalue to be considered>], [-P] - drop results having both allele-variant pvalues greater than given\n" +
     "                                                       (default: 0.001)\n" +
-    "  [--fold-change-cutoff <minmal fold change to be considered>] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
+    "  [--fold-change-cutoff <minmal fold change to be considered>], [-F] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
     "                                                                 less than given (default: 10)\n" +
     "        In order to get all fold changes - set both pvalue-cutoff and fold-change-cutoff to 1.0.\n" +
     "  [-d <discretization level>]\n" +
@@ -145,9 +145,9 @@ public class MultiSNPScan {
       effectiveCount = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
-    } else if(opt.equals("--pvalue-cutoff")) {
+    } else if(opt.equals("--pvalue-cutoff") || opt.equals("-P")) {
       max_pvalue_cutoff = Double.valueOf(argv.remove(0));
-    } else if(opt.equals("--fold-change-cutoff")) {
+    } else if(opt.equals("--fold-change-cutoff") || opt.equals("-F")) {
       min_fold_change_cutoff = Double.valueOf(argv.remove(0));
       if (min_fold_change_cutoff < 1.0) {
         min_fold_change_cutoff = 1.0 / min_fold_change_cutoff;
