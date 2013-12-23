@@ -14,40 +14,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CountingPWM {
-
-  public static class ThresholdInfo extends ResultInfo {
-    public final double threshold;
-    public final double real_pvalue;
-    public final double expected_pvalue;
-    public final int recognized_words;
-
-    public ThresholdInfo(double threshold, double real_pvalue, double expected_pvalue, int recognized_words) {
-      this.threshold = threshold;
-      this.real_pvalue = real_pvalue;
-      this.expected_pvalue = expected_pvalue;
-      this.recognized_words = recognized_words;
-    }
-
-    // generate infos for non-disreeted matrix from infos for discreeted matrix
-    public ThresholdInfo downscale(Double discretization) {
-      if (discretization == null) {
-        return this;
-      } else {
-        return new ThresholdInfo(threshold / discretization, real_pvalue, expected_pvalue, recognized_words);
-      }
-    }
-  }
-
-
-  private Integer max_hash_size;
+  private Integer maxHashSize;
 
   final PWM pwm;
   final BackgroundModel background;
 
-  public CountingPWM(PWM pwm, BackgroundModel background, Integer max_hash_size) {
+  public CountingPWM(PWM pwm, BackgroundModel background, Integer maxHashSize) {
     this.pwm = pwm;
     this.background = background;
-    this.max_hash_size = max_hash_size;
+    this.maxHashSize = maxHashSize;
   }
 
   private double score_mean() {
@@ -107,7 +82,7 @@ public class CountingPWM {
     scores.put(0.0, 1.0);
     for (int column = 0; column < pwm.length(); ++column) {
       scores = recalc_score_hash(scores, pwm.matrix[column], threshold - pwm.best_suffix(column + 1));
-      if (max_hash_size != null && scores.size() > max_hash_size) {
+      if (maxHashSize != null && scores.size() > maxHashSize) {
         throw new IllegalArgumentException("Hash overflow in PWM::ThresholdByPvalue#count_distribution_after_threshold");
       }
     }
@@ -155,8 +130,8 @@ public class CountingPWM {
     return counts_by_thresholds(new double[]{threshold}).get(threshold);
   }
 
-  public ThresholdInfo[] thresholds(double... pvalues) {
-    ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
+  public CanFindThreshold.ThresholdInfo[] thresholds(double... pvalues) {
+    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
     TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
     while (iterator.hasNext()) {
@@ -166,18 +141,18 @@ public class CountingPWM {
       double counts[] = iterator.value()[1];
       double threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
       double real_pvalue = counts[1] / vocabularyVolume();
-      results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[1]));
+      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue, counts[1]));
     }
-    return results.toArray(new ThresholdInfo[results.size()]);
+    return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
   }
 
-  public ThresholdInfo threshold(double pvalue) {
+  public CanFindThreshold.ThresholdInfo threshold(double pvalue) {
     return thresholds(new double[]{pvalue})[0];
   }
 
   // "weak" means that threshold has real pvalue not less than given pvalue, while usual threshold not greater
-  public ThresholdInfo[] weak_thresholds(double... pvalues) {
-    ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
+  public CanFindThreshold.ThresholdInfo[] weak_thresholds(double... pvalues) {
+    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
     TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
     while (iterator.hasNext()) {
@@ -187,12 +162,12 @@ public class CountingPWM {
       double counts[] = iterator.value()[1];
       double threshold = thresholds[0];
       double real_pvalue = counts[0] / vocabularyVolume();
-      results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[0]));
+      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue, counts[0]));
     }
-    return results.toArray(new ThresholdInfo[results.size()]);
+    return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
   }
 
-  public ThresholdInfo weak_threshold(double pvalue) {
+  public CanFindThreshold.ThresholdInfo weak_threshold(double pvalue) {
     return weak_thresholds(new double[]{pvalue})[0];
   }
 
