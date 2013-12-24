@@ -59,7 +59,7 @@ public class CompareAligned {
 
   public final Position relativePosition;
 
-  public Double max_pair_hash_size;
+  public Double maxPairHashSize;
 
   private PWMAligned cache_alignment;
 
@@ -77,7 +77,7 @@ public class CompareAligned {
     return recognizedByBoth / union;
   }
 
-  public SimilarityInfo jaccard(double first_threshold, double second_threshold) throws Exception {
+  public SimilarityInfo jaccard(double first_threshold, double second_threshold) throws HashOverflowException {
     double firstCount = firstPWM.count_by_threshold(first_threshold) * Math.pow(firstPWM.background.volume(),
                                                                        alignment().length() - firstPWM.pwm.length());
     double secondCount = secondPWM.count_by_threshold(second_threshold) * Math.pow(secondPWM.background.volume(),
@@ -92,7 +92,7 @@ public class CompareAligned {
                               secondPWMVocabularyVolume);
   }
 
-  public double count_in_intersection(double first_threshold, double second_threshold) throws Exception {
+  public double count_in_intersection(double first_threshold, double second_threshold) throws HashOverflowException {
     double[] intersections = counts_for_two_matrices(first_threshold, second_threshold);
 
     return combine_intersection_values(intersections[0], intersections[1]);
@@ -102,20 +102,20 @@ public class CompareAligned {
     return Math.sqrt(intersection_count_1 * intersection_count_2);
   }
 
-  public SimilarityInfo jaccard_by_pvalue(double pvalue) throws Exception {
+  public SimilarityInfo jaccard_by_pvalue(double pvalue) throws HashOverflowException {
     double threshold_first = firstPWM.threshold(pvalue).threshold;
     double threshold_second = secondPWM.threshold(pvalue).threshold;
     return jaccard(threshold_first, threshold_second);
   }
 
-  public SimilarityInfo jaccard_by_weak_pvalue(double pvalue) throws Exception {
+  public SimilarityInfo jaccard_by_weak_pvalue(double pvalue) throws HashOverflowException {
     double threshold_first = firstPWM.weak_threshold(pvalue).threshold;
     double threshold_second = secondPWM.weak_threshold(pvalue).threshold;
     return jaccard(threshold_first, threshold_second);
   }
 
   // unoptimized version of this and related methods
-  private double[] counts_for_two_matrices(double threshold_first, double threshold_second) throws Exception {
+  private double[] counts_for_two_matrices(double threshold_first, double threshold_second) throws HashOverflowException {
     // just not to call method each time
     final BackgroundModel first_background = firstPWM.background;
     final BackgroundModel second_background = secondPWM.background;
@@ -160,7 +160,7 @@ public class CompareAligned {
   }
 
   // block has form: {|score,letter| contribution to count by `letter` with `score` }
-  private double get_counts(double threshold_first, double threshold_second, BackgroundModel background) throws Exception {
+  private double get_counts(double threshold_first, double threshold_second, BackgroundModel background) throws HashOverflowException {
     // scores_on_first_pwm, scores_on_second_pwm --> count
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
     scores.put(0.0, new TDoubleDoubleHashMap(new double[] {0},
@@ -172,8 +172,8 @@ public class CompareAligned {
                                  threshold_first - alignment().first_pwm.best_suffix(pos + 1),
                                  threshold_second - alignment().second_pwm.best_suffix(pos + 1),
                                  background);
-      if (max_pair_hash_size != null && summarySize(scores) > max_pair_hash_size) {
-        throw new Exception("Hash overflow in Macroape::AlignedPairIntersection#counts_for_two_matrices_with_different_probabilities");
+      if (maxPairHashSize != null && summarySize(scores) > maxPairHashSize) {
+        throw new HashOverflowException("Hash overflow in Macroape::AlignedPairIntersection#counts_for_two_matrices_with_different_probabilities");
       }
     }
 
@@ -181,7 +181,7 @@ public class CompareAligned {
   }
 
   // block has form: {|score,letter| contribution to count by `letter` with `score` }
-  private double get_counts_wordwise(double threshold_first, double threshold_second) throws Exception {
+  private double get_counts_wordwise(double threshold_first, double threshold_second) throws HashOverflowException {
     // scores_on_first_pwm, scores_on_second_pwm --> count
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
     scores.put(0.0, new TDoubleDoubleHashMap(new double[] {0},
@@ -192,8 +192,8 @@ public class CompareAligned {
                                          alignment().first_pwm.matrix[pos], alignment().second_pwm.matrix[pos],
                                          threshold_first - alignment().first_pwm.best_suffix(pos + 1),
                                          threshold_second - alignment().second_pwm.best_suffix(pos + 1));
-      if (max_pair_hash_size != null && summarySize(scores) > max_pair_hash_size) {
-        throw new Exception("Hash overflow in Macroape::AlignedPairIntersection#counts_for_two_matrices_with_different_probabilities");
+      if (maxPairHashSize != null && summarySize(scores) > maxPairHashSize) {
+        throw new HashOverflowException("Hash overflow in Macroape::AlignedPairIntersection#counts_for_two_matrices_with_different_probabilities");
       }
     }
 
@@ -236,7 +236,7 @@ public class CompareAligned {
   TDoubleObjectHashMap<TDoubleDoubleHashMap> recalc_score_hash(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores,
                                                              double[] first_column, double[] second_column,
                                                              double least_sufficient_first, double least_sufficient_second,
-                                                             BackgroundModel background) throws Exception {
+                                                             BackgroundModel background) {
     TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = initial2DHash(scores, first_column, least_sufficient_first);
 
     TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
@@ -272,7 +272,7 @@ public class CompareAligned {
 
   TDoubleObjectHashMap<TDoubleDoubleHashMap> recalc_score_hash_wordwise(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores,
                                                                double[] first_column, double[] second_column,
-                                                               double least_sufficient_first, double least_sufficient_second) throws Exception {
+                                                               double least_sufficient_first, double least_sufficient_second) {
     TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = initial2DHash(scores,first_column,least_sufficient_first);
 
     TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();

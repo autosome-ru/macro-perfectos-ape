@@ -58,9 +58,9 @@ public class MultiSNPScan {
     "\n" +
     "Options:\n" +
     "  [--pvalue-cutoff <maximal pvalue to be considered>], [-P] - drop results having both allele-variant pvalues greater than given\n" +
-    "                                                       (default: 0.001)\n" +
+    "                                                       (default: 0.0005)\n" +
     "  [--fold-change-cutoff <minmal fold change to be considered>], [-F] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
-    "                                                                 less than given (default: 10)\n" +
+    "                                                                 less than given (default: 5)\n" +
     "        In order to get all fold changes - set both pvalue-cutoff and fold-change-cutoff to 1.0.\n" +
     "  [-d <discretization level>]\n" +
     "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
@@ -98,7 +98,7 @@ public class MultiSNPScan {
     effectiveCount = 100;
     thresholds_folder = null;
     max_pvalue_cutoff = 0.0005;
-    min_fold_change_cutoff = 10.0;
+    min_fold_change_cutoff = 5.0;
   }
 
   private MultiSNPScan() {

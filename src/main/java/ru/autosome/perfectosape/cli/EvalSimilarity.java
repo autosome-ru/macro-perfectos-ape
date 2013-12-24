@@ -28,12 +28,12 @@ public class EvalSimilarity {
   private BackgroundModel firstBackground, secondBackground;
   private Double discretization;
   private double pvalue;
-  private BoundaryType pvalue_boundary;
+  private BoundaryType pvalueBoundary;
   private String firstPMFilename, secondPMFilename;
   private DataModel dataModelFirst, dataModelSecond;
 
-  private Integer max_hash_size;
-  private Integer max_pair_hash_size;
+  private Integer maxHashSize;
+  private Integer maxPairHashSize;
 
   private Double effectiveCountFirst, effectiveCountSecond;
 
@@ -66,9 +66,9 @@ public class EvalSimilarity {
     pvalue = 0.0005;
     discretization = 10.0;
 
-    max_hash_size = 10000000;
-    max_pair_hash_size = 10000;
-    pvalue_boundary = BoundaryType.UPPER;
+    maxHashSize = 10000000;
+    maxPairHashSize = 10000;
+    pvalueBoundary = BoundaryType.UPPER;
   }
 
   private void extract_option(ArrayList<String> argv) {
@@ -82,11 +82,13 @@ public class EvalSimilarity {
     } else if (opt.equals("-b2")) {
       secondBackground = Background.fromString(argv.remove(0));
     } else if (opt.equals("--max-hash-size")) {
-      max_hash_size = Integer.valueOf(argv.remove(0));
+      maxHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("--max-2d-hash-size")) {
-      max_pair_hash_size = Integer.valueOf(argv.remove(0));
+      maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
       discretization = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--boundary")) {
+      pvalueBoundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
       dataModelFirst = DataModel.PCM;
       dataModelSecond = DataModel.PCM;
@@ -134,9 +136,9 @@ public class EvalSimilarity {
   }
 
   ComparePWM calculator() {
-    ComparePWM result = new ComparePWM(new CountingPWM(firstPWM.discrete(discretization), firstBackground, max_hash_size),
-                                       new CountingPWM(secondPWM.discrete(discretization), secondBackground, max_hash_size));
-    result.max_pair_hash_size = max_pair_hash_size;
+    ComparePWM result = new ComparePWM(new CountingPWM(firstPWM.discrete(discretization), firstBackground, maxHashSize),
+                                       new CountingPWM(secondPWM.discrete(discretization), secondBackground, maxHashSize));
+    result.maxPairHashSize = maxPairHashSize;
     return result;
   }
 
@@ -153,7 +155,7 @@ public class EvalSimilarity {
     if (predefinedSecondThreshold != null) {
       infos.add_parameter("T2", "threshold for the 2nd matrix", predefinedSecondThreshold);
     }
-    infos.add_parameter("PB", "P-value boundary", pvalue_boundary);
+    infos.add_parameter("PB", "P-value boundary", pvalueBoundary);
     if (firstBackground.equals(secondBackground)) {
       infos.background_parameter("B", "background", firstBackground);
     } else {
@@ -194,8 +196,8 @@ public class EvalSimilarity {
       CanFindThreshold pvalue_calculator = new FindThresholdAPE(firstPWM,
                                                                 firstBackground,
                                                                 discretization,
-                                                                pvalue_boundary,
-                                                                max_hash_size);
+                                                                pvalueBoundary,
+                                                                maxHashSize);
       return pvalue_calculator.find_threshold_by_pvalue(pvalue).threshold;
     }
   }
@@ -207,8 +209,8 @@ public class EvalSimilarity {
         CanFindThreshold pvalue_calculator = new FindThresholdAPE(secondPWM,
                                                                   secondBackground,
                                                                   discretization,
-                                                                  pvalue_boundary,
-                                                                  max_hash_size);
+                                                                  pvalueBoundary,
+                                                                  maxHashSize);
       return pvalue_calculator.find_threshold_by_pvalue(pvalue).threshold;
     }
   }

@@ -59,7 +59,7 @@ public class CountingPWM {
     return result;
   }
 
-  private TDoubleDoubleMap count_distribution_under_pvalue(double max_pvalue) {
+  private TDoubleDoubleMap count_distribution_under_pvalue(double max_pvalue) throws HashOverflowException {
     TDoubleDoubleMap cnt_distribution = new TDoubleDoubleHashMap();
     double look_for_count = max_pvalue * vocabularyVolume();
 
@@ -77,13 +77,13 @@ public class CountingPWM {
     return cnt_distribution;
   }
 
-  private TDoubleDoubleMap count_distribution_after_threshold(double threshold) {
+  private TDoubleDoubleMap count_distribution_after_threshold(double threshold) throws HashOverflowException {
     TDoubleDoubleMap scores = new TDoubleDoubleHashMap();
     scores.put(0.0, 1.0);
     for (int column = 0; column < pwm.length(); ++column) {
       scores = recalc_score_hash(scores, pwm.matrix[column], threshold - pwm.best_suffix(column + 1));
       if (maxHashSize != null && scores.size() > maxHashSize) {
-        throw new IllegalArgumentException("Hash overflow in PWM::ThresholdByPvalue#count_distribution_after_threshold");
+        throw new HashOverflowException("Hash overflow in PWM::ThresholdByPvalue#count_distribution_after_threshold");
       }
     }
     return scores;
@@ -107,7 +107,7 @@ public class CountingPWM {
     return new_scores;
   }
 
-  public TDoubleDoubleMap counts_by_thresholds(double... thresholds) {
+  public TDoubleDoubleMap counts_by_thresholds(double... thresholds) throws HashOverflowException {
     TDoubleDoubleMap scores = count_distribution_after_threshold(ArrayExtensions.min(thresholds));
     TDoubleDoubleMap result = new TDoubleDoubleHashMap();
     for (double threshold : thresholds) {
@@ -126,11 +126,11 @@ public class CountingPWM {
     return result;
   }
 
-  public Double count_by_threshold(double threshold) {
+  public Double count_by_threshold(double threshold) throws HashOverflowException {
     return counts_by_thresholds(new double[]{threshold}).get(threshold);
   }
 
-  public CanFindThreshold.ThresholdInfo[] thresholds(double... pvalues) {
+  public CanFindThreshold.ThresholdInfo[] thresholds(double... pvalues) throws HashOverflowException {
     ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
     TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
@@ -146,12 +146,12 @@ public class CountingPWM {
     return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
   }
 
-  public CanFindThreshold.ThresholdInfo threshold(double pvalue) {
-    return thresholds(new double[]{pvalue})[0];
+  public CanFindThreshold.ThresholdInfo threshold(double pvalue) throws HashOverflowException {
+    return thresholds(pvalue)[0];
   }
 
   // "weak" means that threshold has real pvalue not less than given pvalue, while usual threshold not greater
-  public CanFindThreshold.ThresholdInfo[] weak_thresholds(double... pvalues) {
+  public CanFindThreshold.ThresholdInfo[] weak_thresholds(double... pvalues) throws HashOverflowException {
     ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
     TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
@@ -167,8 +167,8 @@ public class CountingPWM {
     return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
   }
 
-  public CanFindThreshold.ThresholdInfo weak_threshold(double pvalue) {
-    return weak_thresholds(new double[]{pvalue})[0];
+  public CanFindThreshold.ThresholdInfo weak_threshold(double pvalue) throws HashOverflowException {
+    return weak_thresholds(pvalue)[0];
   }
 
   private double[] descending_sorted_hash_keys(TDoubleDoubleMap hsh) {
@@ -195,7 +195,7 @@ public class CountingPWM {
     }
   }
 
-  TDoubleObjectMap<double[][]> thresholds_by_pvalues(double... pvalues) {
+  TDoubleObjectMap<double[][]> thresholds_by_pvalues(double... pvalues) throws HashOverflowException {
     TDoubleDoubleMap scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     double[] scores = descending_sorted_hash_keys(scores_hash);
 

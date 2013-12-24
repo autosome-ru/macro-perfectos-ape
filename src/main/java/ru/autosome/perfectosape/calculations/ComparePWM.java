@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.calculations;
 
+import ru.autosome.perfectosape.HashOverflowException;
 import ru.autosome.perfectosape.PWMAligned;
 import ru.autosome.perfectosape.Position;
 
@@ -29,7 +30,7 @@ public class ComparePWM {
   public final CountingPWM firstPWM;
   public final CountingPWM secondPWM;
 
-  public Integer max_pair_hash_size;
+  public Integer maxPairHashSize;
 
   public ComparePWM(CountingPWM firstPWM, CountingPWM secondPWM) {
     this.firstPWM = firstPWM;
@@ -46,7 +47,7 @@ public class ComparePWM {
     return result;
   }
 
-  private List<SimilarityInfo> all_jaccards(double threshold_first, double threshold_second) throws Exception {
+  private List<SimilarityInfo> all_jaccards(double threshold_first, double threshold_second) throws HashOverflowException {
     List<SimilarityInfo> result = new ArrayList<SimilarityInfo>();
     for (Position relative_position: relative_alignments()) {
       PWMAligned alignment = new PWMAligned(firstPWM.pwm, secondPWM.pwm, relative_position);
@@ -57,7 +58,7 @@ public class ComparePWM {
     return result;
   }
 
-  private Map<Position, Double> all_intersections(double threshold_first, double threshold_second) throws Exception {
+  private Map<Position, Double> all_intersections(double threshold_first, double threshold_second) throws HashOverflowException {
     Map<Position, Double> result = new HashMap<Position, Double>();
     for (Position relative_position: relative_alignments()) {
       PWMAligned alignment = new PWMAligned(firstPWM.pwm, secondPWM.pwm, relative_position);
@@ -69,7 +70,7 @@ public class ComparePWM {
     return result;
   }
 
-  public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws Exception {
+  public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
     double firstCount = firstPWM.count_by_threshold(threshold_first);
     double secondCount = secondPWM.count_by_threshold(threshold_second);
 
@@ -99,13 +100,13 @@ public class ComparePWM {
                               firstPWMVocabularyVolume, secondPWMVocabularyVolume);
   }
 
-  public SimilarityInfo jaccard_by_pvalue(double pvalue) throws Exception {
+  public SimilarityInfo jaccard_by_pvalue(double pvalue) throws HashOverflowException {
     double threshold_first = firstPWM.threshold(pvalue).threshold;
     double threshold_second = secondPWM.threshold(pvalue).threshold;
     return jaccard(threshold_first, threshold_second);
   }
 
-  public SimilarityInfo jaccard_by_weak_pvalue(double pvalue) throws Exception {
+  public SimilarityInfo jaccard_by_weak_pvalue(double pvalue) throws HashOverflowException {
     double threshold_first = firstPWM.weak_threshold(pvalue).threshold;
     double threshold_second = secondPWM.weak_threshold(pvalue).threshold;
     return jaccard(threshold_first, threshold_second);
