@@ -1,7 +1,19 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.backgroundModels.Background;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.*;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
+import ru.autosome.perfectosape.formatters.OutputInformation;
+import ru.autosome.perfectosape.importers.PMParser;
+import ru.autosome.perfectosape.importers.PWMImporter;
+import ru.autosome.perfectosape.motifModels.DataModel;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,8 +50,9 @@ public class EvalSimilarity {
   private Double effectiveCountFirst, effectiveCountSecond;
 
   private Double predefinedFirstThreshold, predefinedSecondThreshold;
-
   private PWM firstPWM, secondPWM;
+
+  private Double cacheFirstThreshold, cacheSecondThreshold;
 
 
   private void extract_first_pm_filename(ArrayList<String> argv) {
@@ -114,8 +127,12 @@ public class EvalSimilarity {
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    firstPWM = Helper.load_pwm(PMParser.from_file_or_stdin(firstPMFilename), dataModelFirst, firstBackground, effectiveCountFirst);
-    secondPWM = Helper.load_pwm(PMParser.from_file_or_stdin(secondPMFilename), dataModelSecond, secondBackground, effectiveCountSecond);
+    firstPWM = new PWMImporter(firstBackground,
+                               dataModelFirst,
+                               effectiveCountFirst).loadPWMFromParser(PMParser.from_file_or_stdin(firstPMFilename));
+    secondPWM = new PWMImporter(secondBackground,
+                                dataModelSecond,
+                                effectiveCountSecond).loadPWMFromParser(PMParser.from_file_or_stdin(secondPMFilename));
   }
 
   private EvalSimilarity() {
@@ -136,9 +153,11 @@ public class EvalSimilarity {
   }
 
   ComparePWM calculator() {
-    ComparePWM result = new ComparePWM(new CountingPWM(firstPWM.discrete(discretization), firstBackground, maxHashSize),
-                                       new CountingPWM(secondPWM.discrete(discretization), secondBackground, maxHashSize));
-    result.maxPairHashSize = maxPairHashSize;
+    ComparePWM result = new ComparePWM(firstPWM, secondPWM,
+                                       firstBackground, secondBackground,
+                                       new FindPvalueAPE(firstPWM, discretization, firstBackground, maxHashSize),
+                                       new FindPvalueAPE(secondPWM, discretization, secondBackground, maxHashSize),
+                                       discretization, maxPairHashSize);
     return result;
   }
 
@@ -166,7 +185,7 @@ public class EvalSimilarity {
     return infos;
   }
 
-  OutputInformation report_table(ComparePWM.SimilarityInfo info) {
+  OutputInformation report_table(ComparePWM.SimilarityInfo info) throws HashOverflowException {
     OutputInformation infos = report_table_layout();
     infos.add_resulting_value("S", "similarity", info.similarity());
     infos.add_resulting_value("D", "distance (1-similarity)", info.distance());
@@ -177,46 +196,50 @@ public class EvalSimilarity {
     infos.add_resulting_value("A2", "aligned 2nd matrix", info.alignment.second_pwm_alignment());
     infos.add_resulting_value("W", "number of words recognized by both models (model = PWM + threshold)", info.recognizedByBoth );
     infos.add_resulting_value("W1", "number of words and recognized by the first model", info.recognizedByFirst );
-    infos.add_resulting_value("P1", "P-value for the 1st matrix", info.realPvalueFirst() );
+    infos.add_resulting_value("P1", "P-value for the 1st matrix", info.realPvalueFirst(firstBackground));
     if (predefinedFirstThreshold == null) {
       infos.add_resulting_value("T1", "threshold for the 1st matrix", thresholdFirst() );
     }
     infos.add_resulting_value("W2", "number of words recognized by the 2nd model", info.recognizedBySecond );
-    infos.add_resulting_value("P2", "P-value for the 2nd matrix", info.realPvalueSecond() );
+    infos.add_resulting_value("P2", "P-value for the 2nd matrix", info.realPvalueSecond(secondBackground));
     if (predefinedSecondThreshold == null) {
       infos.add_resulting_value("T2", "threshold for the 2nd matrix", thresholdSecond() );
     }
     return infos;
   }
 
-  double thresholdFirst() {
-    if (predefinedFirstThreshold != null) {
-      return predefinedFirstThreshold;
-    } else {
-      CanFindThreshold pvalue_calculator = new FindThresholdAPE(firstPWM,
-                                                                firstBackground,
-                                                                discretization,
-                                                                pvalueBoundary,
-                                                                maxHashSize);
-      return pvalue_calculator.find_threshold_by_pvalue(pvalue).threshold;
+  double thresholdFirst() throws HashOverflowException {
+    if (cacheFirstThreshold == null) {
+      if (predefinedFirstThreshold != null) {
+        cacheFirstThreshold = predefinedFirstThreshold;
+      } else {
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE(firstPWM,
+                                                                  firstBackground,
+                                                                  discretization,
+                                                                  maxHashSize);
+        cacheFirstThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
+      }
     }
+    return cacheFirstThreshold;
   }
 
-  double thresholdSecond() {
-    if (predefinedSecondThreshold != null) {
-      return predefinedSecondThreshold;
-    } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE(secondPWM,
-                                                                  secondBackground,
-                                                                  discretization,
-                                                                  pvalueBoundary,
-                                                                  maxHashSize);
-      return pvalue_calculator.find_threshold_by_pvalue(pvalue).threshold;
+  double thresholdSecond() throws HashOverflowException {
+    if (cacheSecondThreshold == null) {
+      if (predefinedSecondThreshold != null) {
+        cacheSecondThreshold = predefinedSecondThreshold;
+      } else {
+          CanFindThreshold pvalue_calculator = new FindThresholdAPE(secondPWM,
+                                                                    secondBackground,
+                                                                    discretization,
+                                                                    maxHashSize);
+        cacheSecondThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
+      }
     }
+    return cacheSecondThreshold;
   }
 
   OutputInformation report_table() throws Exception {
-    ComparePWM.SimilarityInfo results = calculator().jaccard(thresholdFirst() * discretization, thresholdSecond() * discretization);
+    ComparePWM.SimilarityInfo results = calculator().jaccard(thresholdFirst(), thresholdSecond());
     return report_table(results);
   }
 

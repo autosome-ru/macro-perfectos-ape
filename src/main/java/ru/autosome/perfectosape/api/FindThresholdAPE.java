@@ -1,9 +1,10 @@
 package ru.autosome.perfectosape.api;
 
-import ru.autosome.perfectosape.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.PWM;
-import ru.autosome.perfectosape.calculations.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 
 public class FindThresholdAPE extends SingleTask<CanFindThreshold.ThresholdInfo[]> {
   public static class Parameters {
@@ -32,12 +33,12 @@ public class FindThresholdAPE extends SingleTask<CanFindThreshold.ThresholdInfo[
     this.parameters = parameters;
   }
 
-  public CanFindThreshold.ThresholdInfo[] launchSingleTask() {
-    return new ru.autosome.perfectosape.calculations.FindThresholdAPE(parameters.pwm,
-                                                                  parameters.background,
-                                                                  parameters.discretization,
-                                                                  parameters.pvalue_boundary,
-                                                                  parameters.max_hash_size)
-            .find_thresholds_by_pvalues(parameters.pvalues);
+  @Override
+  public CanFindThreshold.ThresholdInfo[] launchSingleTask() throws HashOverflowException {
+    return new ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE(parameters.pwm,
+                                                                      parameters.background,
+                                                                      parameters.discretization,
+                                                                      parameters.max_hash_size)
+     .thresholdsByPvalues(parameters.pvalues, parameters.pvalue_boundary);
   }
 }

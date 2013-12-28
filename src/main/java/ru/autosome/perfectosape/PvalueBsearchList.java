@@ -1,15 +1,18 @@
 package ru.autosome.perfectosape;
 
-import ru.autosome.perfectosape.calculations.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.importers.InputExtensions;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
+// List of pvalue-threshold pairs sorted by threshold ascending
 public class PvalueBsearchList {
-  public static class ThresholdPvaluePair implements Comparable {
-    private final double threshold;
+  public static class ThresholdPvaluePair {
+    public final double threshold;
     public final double pvalue;
 
     ThresholdPvaluePair(double threshold, double pvalue) {
@@ -45,6 +48,8 @@ public class PvalueBsearchList {
          } else return 0;
        }
      };
+
+    // reversed comparison (thresholds are sorted ascending, so pvalues descending)
     public static Comparator pvalueComparator =
      new Comparator<Object>() {
        Double val(Object obj) {
@@ -62,40 +67,26 @@ public class PvalueBsearchList {
        @Override
        public int compare(Object o1, Object o2) {
          if (val(o1) < val(o2)) {
-           return -1;
-         } else if (val(o1) > val(o2)) {
            return 1;
+         } else if (val(o1) > val(o2)) {
+           return -1;
          } else return 0;
        }
      };
 
-
     @Override
     public boolean equals(Object other) {
-      if (!(other instanceof ThresholdPvaluePair)) {
-        return false;
-      }
-      return threshold == ((ThresholdPvaluePair) other).threshold && pvalue == ((ThresholdPvaluePair) other).pvalue;
+      return (other instanceof ThresholdPvaluePair) &&
+              threshold == ((ThresholdPvaluePair) other).threshold &&
+              pvalue == ((ThresholdPvaluePair) other).pvalue;
     }
 
     @Override
-    public int compareTo(Object other) {
-      double other_value;
-      if (other instanceof ThresholdPvaluePair) {
-        other_value = ((ThresholdPvaluePair) other).threshold;
-      } else if (other instanceof Double) {
-        other_value = (Double) other;
-      } else {
-        throw new ClassCastException("Incorrect type for comparison");
-      }
-
-      if (threshold > other_value) {
-        return 1;
-      } else if (threshold < other_value) {
-        return -1;
-      } else {
-        return 0;
-      }
+    public int hashCode() {
+      int hash = 1;
+      hash  = hash * 17 + ((Double)threshold).hashCode();
+      hash  = hash * 31 + ((Double)pvalue).hashCode();
+      return hash;
     }
 
     @Override
@@ -105,15 +96,21 @@ public class PvalueBsearchList {
   }
 
 
-  private ArrayList<ThresholdPvaluePair> list;
-  PvalueBsearchList () { }
-  public PvalueBsearchList(ArrayList<ThresholdPvaluePair> list) {
-    this.list = sort_list(list);
+  private List<ThresholdPvaluePair> list;
+  public PvalueBsearchList() {
+    this.list = new ArrayList<ThresholdPvaluePair>();
+  }
+  public PvalueBsearchList(List<ThresholdPvaluePair> infos) {
+    Collections.sort(infos, ThresholdPvaluePair.thresholdComparator);
+    this.list = without_consequent_duplicates(without_zero_pvalue(infos));
   }
 
-  private ArrayList<ThresholdPvaluePair> without_consequent_duplicates(ArrayList<ThresholdPvaluePair> infos) {
-    ArrayList<ThresholdPvaluePair> reduced_infos;
+  private List<ThresholdPvaluePair> without_consequent_duplicates(List<ThresholdPvaluePair> infos) {
+    List<ThresholdPvaluePair> reduced_infos;
     reduced_infos = new ArrayList<ThresholdPvaluePair>();
+    if (infos.isEmpty()) {
+      return reduced_infos;
+    }
     reduced_infos.add(infos.get(0));
     for (int i = 1; i < infos.size(); ++i) {
       if (!infos.get(i).equals(infos.get(i - 1))) {
@@ -122,28 +119,20 @@ public class PvalueBsearchList {
     }
     return reduced_infos;
   }
-  private ArrayList<ThresholdPvaluePair> without_zero_pvalue(ArrayList<ThresholdPvaluePair> infos) {
-    ArrayList<ThresholdPvaluePair> reduced_infos;
+
+  private List<ThresholdPvaluePair> without_zero_pvalue(List<ThresholdPvaluePair> infos) {
+    List<ThresholdPvaluePair> reduced_infos;
     reduced_infos = new ArrayList<ThresholdPvaluePair>();
-    for (int i = 0; i < infos.size(); ++i) {
-      if (infos.get(i).pvalue != 0) {
-        reduced_infos.add(infos.get(i));
+    for (ThresholdPvaluePair info: infos) {
+      if (info.pvalue != 0) {
+        reduced_infos.add(info);
       }
     }
     return reduced_infos;
   }
 
-  private ArrayList<ThresholdPvaluePair> sort_list(ArrayList<ThresholdPvaluePair> infos) {
-    Collections.sort(infos);
-    return without_consequent_duplicates(without_zero_pvalue(infos));
-  }
-
   public double combine_pvalues(double pvalue_1, double pvalue_2) {
     return Math.sqrt(pvalue_1 * pvalue_2);
-  }
-
-  public double combine_thresholds(double threshold_1, double threshold_2) {
-    return (threshold_1 + threshold_2) / 2;
   }
 
   public double pvalue_by_threshold(double threshold) {
@@ -163,38 +152,49 @@ public class PvalueBsearchList {
     }
   }
 
-  public double threshold_by_pvalue(double pvalue) {
+  public ThresholdPvaluePair strongThresholdInfoByPvalue(double pvalue) {
     int index = Collections.binarySearch(list, pvalue, ThresholdPvaluePair.pvalueComparator);
     if (index >= 0) {
-      return list.get(index).threshold;
+      return list.get(index);
     }
 
     int insertion_point = -index - 1;
     if (insertion_point > 0 && insertion_point < list.size()) {
-      return combine_thresholds(list.get(insertion_point).threshold,
-                                list.get(insertion_point - 1).threshold);
+      return list.get(insertion_point);
     } else if (insertion_point == 0) {
-      return list.get(0).threshold;
+      return list.get(0);
     } else {
-      return list.get(list.size() - 1).threshold;
+      return list.get(list.size() - 1);
+    }
+  }
+
+  public ThresholdPvaluePair weakThresholdByPvalue(double pvalue) {
+    int index = Collections.binarySearch(list, pvalue, ThresholdPvaluePair.pvalueComparator);
+    if (index >= 0) {
+      return list.get(index);
+    }
+
+    int insertion_point = -index - 1;
+    if (insertion_point > 0 && insertion_point < list.size()) {
+      return list.get(insertion_point - 1);
+    } else if (insertion_point == 0) {
+      return list.get(0);
+    } else {
+      return list.get(list.size() - 1);
     }
   }
 
 
-  public void save_to_file(String filename) {
-    try {
-      FileWriter fw = new FileWriter(new java.io.File(filename));
-      for (ThresholdPvaluePair info : list) {
-        fw.write(info + "\n");
-      }
-      fw.close();
-    } catch (IOException err) {
-      System.err.println("Error:\n" + err);
+  public void save_to_file(File file) throws IOException {
+    FileWriter fw = new FileWriter(file);
+    for (ThresholdPvaluePair info : list) {
+      fw.write(info + "\n");
     }
+    fw.close();
   }
 
-  private static ArrayList<ThresholdPvaluePair> load_thresholds_list(ArrayList<String> lines) {
-    ArrayList<ThresholdPvaluePair> result = new ArrayList<ThresholdPvaluePair>();
+  private static List<ThresholdPvaluePair> load_thresholds_list(List<String> lines) {
+    List<ThresholdPvaluePair> result = new ArrayList<ThresholdPvaluePair>();
     for (String s : lines) {
       String[] line_tokens = s.replaceAll("\\s+", "\t").split("\t");
       if (line_tokens.length < 2) continue;
@@ -205,17 +205,13 @@ public class PvalueBsearchList {
     return result;
   }
 
-  public static ArrayList<ThresholdPvaluePair> load_thresholds_list(String filename) {
-    try {
-      InputStream reader = new FileInputStream(filename);
-      ArrayList<String> lines = InputExtensions.readLinesFromInputStream(reader);
-      return load_thresholds_list(lines);
-    } catch (FileNotFoundException e) {
-      return null;
-    }
+  public static List<ThresholdPvaluePair> load_thresholds_list(File file) throws FileNotFoundException {
+    InputStream reader = new FileInputStream(file);
+    List<String> lines = InputExtensions.readLinesFromInputStream(reader);
+    return load_thresholds_list(lines);
   }
 
-  public static PvalueBsearchList load_from_file(String filename) {
-    return new PvalueBsearchList(load_thresholds_list(filename));
+  public static PvalueBsearchList load_from_file(File file) throws FileNotFoundException {
+    return new PvalueBsearchList(load_thresholds_list(file));
   }
 }

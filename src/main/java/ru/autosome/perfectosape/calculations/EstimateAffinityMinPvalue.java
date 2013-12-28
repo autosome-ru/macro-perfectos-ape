@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.PWM;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.motifModels.PWM;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.Sequence;
 
@@ -25,9 +26,10 @@ public class EstimateAffinityMinPvalue implements EstimateAffinity {
     return new ScanSequence(sequence, pwm, positions_to_check);
   }
 
-  public double affinity() {
+  @Override
+  public double affinity() throws HashOverflowException {
     double score = scanSequence().best_score();
-    return pvalueCalculator.pvalue_by_threshold(score).pvalue;
+    return pvalueCalculator.pvalueByThreshold(score).pvalue;
   }
   public Position bestPosition() {
     return scanSequence().best_position();

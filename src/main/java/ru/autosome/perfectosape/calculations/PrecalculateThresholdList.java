@@ -1,6 +1,10 @@
 package ru.autosome.perfectosape.calculations;
 
 import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -31,6 +35,7 @@ public class PrecalculateThresholdList {
     double to;
     double step;
 
+    @Override
     public double[] values() {
       ArrayList<Double> results = new ArrayList<Double>();
       for (double x = from; x <= to; x *= step) {
@@ -51,6 +56,7 @@ public class PrecalculateThresholdList {
     double to;
     double step;
 
+    @Override
     public double[] values() {
       ArrayList<Double> results = new ArrayList<Double>();
       for (double x = from; x <= to; x += step) {
@@ -82,20 +88,21 @@ public class PrecalculateThresholdList {
   }
 
   private CanFindThreshold find_threshold_calculator(PWM pwm) {
-    return new ru.autosome.perfectosape.calculations.FindThresholdAPE(pwm,
-                                                                  background,
-                                                                  discretization,
-                                                                  pvalue_boundary,
-                                                                  max_hash_size);
+    return new FindThresholdAPE(pwm,
+                                background,
+                                discretization,
+                                max_hash_size);
   }
 
-  public PvalueBsearchList bsearch_list_for_pwm(PWM pwm) {
+  public PvalueBsearchList bsearch_list_for_pwm(PWM pwm) throws HashOverflowException {
+    CanFindThreshold.ThresholdInfo[] infos = find_threshold_calculator(pwm).thresholdsByPvalues(pvalues, pvalue_boundary);
+
     ArrayList<PvalueBsearchList.ThresholdPvaluePair> pairs = new ArrayList<PvalueBsearchList.ThresholdPvaluePair>();
-    for (CanFindThreshold.ThresholdInfo info : find_threshold_calculator(pwm).find_thresholds_by_pvalues(pvalues)) {
+    for (CanFindThreshold.ThresholdInfo info: infos) {
       pairs.add(new PvalueBsearchList.ThresholdPvaluePair(info));
     }
+
     return new PvalueBsearchList(pairs);
   }
-
 
 }

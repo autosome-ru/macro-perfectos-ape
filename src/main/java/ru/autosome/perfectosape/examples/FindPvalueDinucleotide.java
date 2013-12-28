@@ -1,13 +1,18 @@
 package ru.autosome.perfectosape.examples;
 
 import ru.autosome.perfectosape.*;
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.importers.PMParser;
+import ru.autosome.perfectosape.motifModels.DiPWM;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindPvalueDinucleotide {
-  static void print_result(CanFindPvalue.PvalueInfo info) {
+  static void print_result(CanFindPvalue.PvalueInfo info, BackgroundModel background, int pwmLength) {
     System.out.println( "threshold: " + info.threshold + "\n" +
                          "pvalue: " + info.pvalue + "\n" +
-                         "number of recognized words: " + info.numberOfRecognizedWords + "\n------------\n");
+                         "number of recognized words: " + info.numberOfRecognizedWords(background, pwmLength) + "\n------------\n");
   }
 
   public static void main(String[] args) {
@@ -26,11 +31,11 @@ public class FindPvalueDinucleotide {
     FindPvalueAPE calculator = new FindPvalueAPE(pwm, discretization, background, max_hash_size);
 
     // Single threshold
-    CanFindPvalue.PvalueInfo info = calculator.pvalue_by_threshold(threshold);
+    CanFindPvalue.PvalueInfo info = calculator.pvalueByThreshold(threshold);
     print_result(info);
 
     // Multiple thresholds
-    CanFindPvalue.PvalueInfo[] infos = calculator.pvalues_by_thresholds(thresholds);
+    CanFindPvalue.PvalueInfo[] infos = calculator.pvaluesByThresholds(thresholds);
     for (int i = 0; i < infos.length; ++i) {
       print_result(infos[i]);
     }

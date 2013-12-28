@@ -2,6 +2,9 @@ package ru.autosome.perfectosape.calculations;
 
 
 import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.formatters.ResultInfo;
+import ru.autosome.perfectosape.motifModels.DiPWM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,11 +73,19 @@ public class CountingDiPWM {
   }
 
 
+  private static double sum_values(Map<Double, Double> hsh) {
+    double result = 0;
+    for (Map.Entry<Double, Double> entry : hsh.entrySet()) {
+      result += entry.getValue();
+    }
+    return result;
+  }
+
   private HashMap<Double, Double> count_distribution_under_pvalue(double max_pvalue) {
     HashMap<Double, Double> cnt_distribution = new HashMap<Double, Double>();
     double look_for_count = max_pvalue * vocabularyVolume();
 
-    while (!(HashExtensions.sum_values(cnt_distribution) >= look_for_count)) {
+    while (!(sum_values(cnt_distribution) >= look_for_count)) {
       double approximate_threshold;
       try {
         approximate_threshold = threshold_gauss_estimation(max_pvalue);

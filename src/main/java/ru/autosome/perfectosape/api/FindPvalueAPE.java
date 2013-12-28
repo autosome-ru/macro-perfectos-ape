@@ -1,10 +1,11 @@
 package ru.autosome.perfectosape.api;
 
 
-import ru.autosome.perfectosape.BackgroundModel;
-import ru.autosome.perfectosape.PWM;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.motifModels.PWM;
 
-import static ru.autosome.perfectosape.calculations.FindPvalueAPE.PvalueInfo;
+import static ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE.PvalueInfo;
 
 public class FindPvalueAPE extends SingleTask<PvalueInfo[]> {
   public static class Parameters {
@@ -31,13 +32,14 @@ public class FindPvalueAPE extends SingleTask<PvalueInfo[]> {
     this.parameters = parameters;
   }
 
-  public PvalueInfo[] launchSingleTask() {
-    ru.autosome.perfectosape.calculations.FindPvalueAPE calculator =
-     new ru.autosome.perfectosape.calculations.FindPvalueAPE(parameters.pwm,
+  @Override
+  public PvalueInfo[] launchSingleTask() throws HashOverflowException {
+    ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE calculator =
+     new ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE(parameters.pwm,
                                                          parameters.discretization,
                                                          parameters.background,
                                                          parameters.max_hash_size);
-    return calculator.pvalues_by_thresholds(parameters.thresholds);
+    return calculator.pvaluesByThresholds(parameters.thresholds);
   }
 }
 

@@ -1,9 +1,8 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.PWM;
-import ru.autosome.perfectosape.Position;
-import ru.autosome.perfectosape.Sequence;
-import ru.autosome.perfectosape.SequenceWithSNP;
+import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 
@@ -86,7 +85,7 @@ public class SNPScan {
     return sequenceWithSNP.positions_subsequence_overlaps_snp(pwm.length());
   }
 
-  public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) {
+  public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) throws HashOverflowException {
       Sequence sequence = sequenceWithSNP.sequence_variants()[allele_number];
       Character allele = sequenceWithSNP.mid[allele_number];
       EstimateAffinityMinPvalue affinity_calculator =  new EstimateAffinityMinPvalue(pwm,
@@ -101,7 +100,7 @@ public class SNPScan {
       return new RegionAffinityVariantInfo(pos_centered, allele, pvalue, word);
   }
 
-  public RegionAffinityInfos affinityInfos(){
+  public RegionAffinityInfos affinityInfos() throws HashOverflowException {
     return new RegionAffinityInfos(affinityVariantInfo(0), affinityVariantInfo(1));
   }
 }

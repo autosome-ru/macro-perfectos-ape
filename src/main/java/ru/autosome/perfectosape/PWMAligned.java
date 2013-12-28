@@ -1,5 +1,7 @@
 package ru.autosome.perfectosape;
 
+import ru.autosome.perfectosape.motifModels.PWM;
+
 public class PWMAligned {
   public final PWM first_pwm;
   public final PWM second_pwm;

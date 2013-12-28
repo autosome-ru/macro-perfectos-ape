@@ -1,9 +1,17 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.backgroundModels.Background;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.PrecalculateThresholdList;
+import ru.autosome.perfectosape.importers.PWMImporter;
+import ru.autosome.perfectosape.motifModels.DataModel;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -110,11 +118,14 @@ public class PrecalculateThresholdLists {
                                                                            max_hash_size);
   }
 
-  void calculate_thresholds_for_collection() {
+  void calculate_thresholds_for_collection() throws HashOverflowException, IOException {
+    PWMImporter importer = new PWMImporter(background, data_model, effective_count);
     for (File file : collection_folder.listFiles()) {
       System.err.println(file);
-      File result_filename = new File(results_dir, "thresholds_" + file.getName());
-      calculator().bsearch_list_for_pwm(Helper.load_pwm(file, data_model, background, effective_count)).save_to_file(result_filename.getPath());
+      PWM pwm = importer.loadPWMFromFile(file);
+      File result_filename = new File(results_dir, pwm.name + ".thr");
+      PvalueBsearchList bsearchList = calculator().bsearch_list_for_pwm(pwm);
+      bsearchList.save_to_file(result_filename);
     }
   }
 

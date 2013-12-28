@@ -1,13 +1,26 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.backgroundModels.Background;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.SNPScan;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
+import ru.autosome.perfectosape.importers.InputExtensions;
+import ru.autosome.perfectosape.importers.PWMCollectionImporter;
+import ru.autosome.perfectosape.importers.PWMImporter;
+import ru.autosome.perfectosape.motifModels.DataModel;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class MultiSNPScan {
   private BackgroundModel background;
@@ -21,8 +34,8 @@ public class MultiSNPScan {
   private double effectiveCount;
   private File thresholds_folder;
 
-  private ArrayList<String> snp_list;
-  private PWMCollection pwmCollection;
+  private List<String> snp_list;
+  private MotifEvaluatorCollection motifEvaluatorCollection;
 
   private double max_pvalue_cutoff;
   private double min_fold_change_cutoff;
@@ -47,9 +60,17 @@ public class MultiSNPScan {
     return s.replaceAll("\\s+", " ").split(" ")[0];
   }
 
-  private void load_collection_of_pwms() {
-    PWMCollectionImporter importer = new PWMCollectionImporter(background, discretization, max_hash_size, dataModel, effectiveCount);
-    pwmCollection = importer.loadPWMCollection(path_to_collection_of_pwms, thresholds_folder);
+  private void load_collection_of_pwms() throws FileNotFoundException {
+    PWMImporter pwmImporter = new PWMImporter(background, dataModel, effectiveCount);
+
+    CanFindPvalue.Builder builder;
+    if (thresholds_folder == null) {
+      builder = new FindPvalueAPE.Builder(discretization, background, max_hash_size);
+    } else {
+      builder = new FindPvalueBsearch.Builder(thresholds_folder);
+    }
+    PWMCollectionImporter importer = new PWMCollectionImporter(pwmImporter, builder);
+    motifEvaluatorCollection = importer.loadPWMCollection(path_to_collection_of_pwms);
   }
 
   private static final String DOC =
@@ -57,9 +78,9 @@ public class MultiSNPScan {
     "java ru.autosome.perfectosape.cli.MultiSNPScan <folder with pwms> <file with SNPs> [options]\n" +
     "\n" +
     "Options:\n" +
-    "  [--pvalue-cutoff <maximal pvalue to be considered>], [-P] - drop results having both allele-variant pvalues greater than given\n" +
+    "  [--pvalue-cutoff <maximal pvalue to be considered>] or [-P] - drop results having both allele-variant pvalues greater than given\n" +
     "                                                       (default: 0.0005)\n" +
-    "  [--fold-change-cutoff <minmal fold change to be considered>], [-F] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
+    "  [--fold-change-cutoff <minmal fold change to be considered>] or [-F] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
     "                                                                 less than given (default: 5)\n" +
     "        In order to get all fold changes - set both pvalue-cutoff and fold-change-cutoff to 1.0.\n" +
     "  [-d <discretization level>]\n" +
@@ -105,20 +126,20 @@ public class MultiSNPScan {
     initialize_defaults();
   }
 
-  private static MultiSNPScan from_arglist(ArrayList<String> argv) {
+  private static MultiSNPScan from_arglist(ArrayList<String> argv) throws FileNotFoundException {
     MultiSNPScan result = new MultiSNPScan();
     Helper.print_help_if_requested(argv, DOC);
     result.setup_from_arglist(argv);
     return result;
   }
 
-  private static MultiSNPScan from_arglist(String[] args) {
+  private static MultiSNPScan from_arglist(String[] args) throws FileNotFoundException {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }
 
-  void setup_from_arglist(ArrayList<String> argv) {
+  void setup_from_arglist(ArrayList<String> argv) throws FileNotFoundException {
     extract_path_to_collection_of_pwms(argv);
     extract_path_to_file_w_snps(argv);
 
@@ -166,23 +187,23 @@ public class MultiSNPScan {
     }
   }
 
-  private void process_snp(String snp_input) {
+  private void process_snp(String snp_input) throws HashOverflowException {
     String snp_name = first_part_of_string(snp_input);
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
 
-    for (PWMCollection.PWMAugmented pwmAugmented: pwmCollection) {
-      SNPScan.RegionAffinityInfos result = new SNPScan(pwmAugmented.pwm, seq_w_snp, pwmAugmented.pvalueCalculator).affinityInfos();
+    for (MotifEvaluatorCollection.MotifEvaluator motifEvaluator : motifEvaluatorCollection) {
+      SNPScan.RegionAffinityInfos result = new SNPScan(motifEvaluator.pwm, seq_w_snp, motifEvaluator.pvalueCalculator).affinityInfos();
       boolean pvalueSignificant = (result.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
                                     result.getInfo_2().getPvalue() <= max_pvalue_cutoff);
       boolean foldChangeSignificant = (result.foldChange() >= min_fold_change_cutoff ||
                                         result.foldChange() <= 1.0/min_fold_change_cutoff);
       if (pvalueSignificant && foldChangeSignificant) {
-        System.out.println(snp_name + "\t" + pwmAugmented.pwm.name + "\t" + result.toString());
+        System.out.println(snp_name + "\t" + motifEvaluator.pwm.name + "\t" + result.toString());
       }
     }
   }
 
-  void process() {
+  void process() throws HashOverflowException {
     System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
     for (String snp_input : snp_list) {
       process_snp(snp_input);

@@ -1,6 +1,6 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.PWM;
+import ru.autosome.perfectosape.motifModels.PWM;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.Sequence;
 
@@ -24,6 +24,8 @@ public class ScanSequence {
     this(sequence, pwm, sequence.subsequence_positions(pwm.length()));
   }
 
+  // TODO: here we create lots of temporary objects(substrings), may be we should define a method which uses parent object and shift?
+  // TODO: reverse-complement matrix, not the sequence
   Map<Position, Double> scores_by_position() {
     if (cache_score_by_position == null) {
       cache_score_by_position = new HashMap<Position,Double>();

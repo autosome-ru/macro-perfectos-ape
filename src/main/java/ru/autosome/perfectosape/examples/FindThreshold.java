@@ -1,15 +1,20 @@
 package ru.autosome.perfectosape.examples;
 
 import ru.autosome.perfectosape.*;
-import ru.autosome.perfectosape.calculations.CanFindThreshold;
-import ru.autosome.perfectosape.calculations.FindThresholdAPE;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
+import ru.autosome.perfectosape.importers.PMParser;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindThreshold {
-  static void print_result(CanFindThreshold.ThresholdInfo info) {
+  static void print_result(CanFindThreshold.ThresholdInfo info, BackgroundModel background, int pwmLength) {
     System.out.println( "expected pvalue: " + info.expected_pvalue + "\n" +
                          "threshold: " + info.threshold + "\n" +
                          "actual pvalue: " + info.real_pvalue + "\n" +
-                         "number of recognized words: " + info.numberOfRecognizedWords + "\n------------\n");
+                         "number of recognized words: " + info.numberOfRecognizedWords(background, pwmLength) + "\n------------\n");
   }
 
   public static void main(String[] args) {
@@ -21,16 +26,26 @@ public class FindThreshold {
     double pvalue = 0.0005;
     double[] pvalues = {0.0001, 0.0005, 0.001};
 
-    CanFindThreshold calculator = new FindThresholdAPE(pwm,background,discretization,pvalue_boundary,max_hash_size);
+    CanFindThreshold calculator = new FindThresholdAPE(pwm, background, discretization, max_hash_size);
 
     // Single threshold
-    CanFindThreshold.ThresholdInfo info = calculator.find_threshold_by_pvalue(pvalue);
-    print_result(info);
+    CanFindThreshold.ThresholdInfo info = null;
+    try {
+      info = calculator.thresholdByPvalue(pvalue, pvalue_boundary);
+    } catch (HashOverflowException e) {
+      e.printStackTrace();
+    }
+    print_result(info, background, pwm.length());
 
     // Multiple thresholds
-    CanFindThreshold.ThresholdInfo[] infos = calculator.find_thresholds_by_pvalues(pvalues);
+    CanFindThreshold.ThresholdInfo[] infos = new CanFindThreshold.ThresholdInfo[0];
+    try {
+      infos = calculator.thresholdsByPvalues(pvalues, pvalue_boundary);
+    } catch (HashOverflowException e) {
+      e.printStackTrace();
+    }
     for (int i = 0; i < infos.length; ++i) {
-      print_result(infos[i]);
+      print_result(infos[i], background, pwm.length());
     }
 
     // api integration
@@ -42,7 +57,7 @@ public class FindThreshold {
     ru.autosome.perfectosape.api.FindThresholdAPE bioumlCalculator = new ru.autosome.perfectosape.api.FindThresholdAPE(parameters);
     CanFindThreshold.ThresholdInfo[] infosBiouml = bioumlCalculator.call();
     for (int i = 0; i < infosBiouml.length; ++i) {
-      print_result(infosBiouml[i]);
+      print_result(infosBiouml[i], background, pwm.length());
     }
   }
 }

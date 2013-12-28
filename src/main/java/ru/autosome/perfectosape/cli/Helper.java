@@ -13,29 +13,4 @@ public class Helper {
       System.exit(1);
     }
   }
-  static PWM load_pwm(PMParser parser, DataModel data_model, BackgroundModel background, double effective_count) {
-    PWM pwm;
-    switch (data_model) {
-      case PCM:
-        pwm = PCM.fromParser(parser).to_pwm(background);
-        break;
-      case PPM:
-        pwm = PPM.fromParser(parser).to_pwm(background, effective_count);
-        break;
-      case PWM:
-        pwm = PWM.fromParser(parser);
-        break;
-      default:
-        throw new Error("This code never reached");
-    }
-
-    return pwm;
-  }
-  public static PWM load_pwm(File file, DataModel data_model, BackgroundModel background, double effective_count) {
-    PWM pwm = load_pwm(PMParser.from_file(file), data_model, background, effective_count);
-    if (pwm.name == null || pwm.name.isEmpty()) {
-      pwm.name = file.getName();
-    }
-    return pwm;
-  }
 }

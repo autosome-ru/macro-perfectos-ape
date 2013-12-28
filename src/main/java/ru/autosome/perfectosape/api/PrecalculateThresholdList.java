@@ -1,9 +1,9 @@
 package ru.autosome.perfectosape.api;
 
-import ru.autosome.perfectosape.BackgroundModel;
-import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.PWM;
-import ru.autosome.perfectosape.PvalueBsearchList;
+import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 public class PrecalculateThresholdList extends SingleTask<PvalueBsearchList> {
   public static class Parameters {
@@ -39,8 +39,14 @@ public class PrecalculateThresholdList extends SingleTask<PvalueBsearchList> {
   }
 
 
+  @Override
   public PvalueBsearchList launchSingleTask() {
-    return calculator().bsearch_list_for_pwm(parameters.pwm);
+    try {
+      return calculator().bsearch_list_for_pwm(parameters.pwm);
+    } catch (HashOverflowException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
 }

@@ -1,17 +1,18 @@
 package ru.autosome.perfectosape.examples;
 
-import ru.autosome.perfectosape.BackgroundModel;
-import ru.autosome.perfectosape.PMParser;
-import ru.autosome.perfectosape.PWM;
-import ru.autosome.perfectosape.WordwiseBackground;
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
-import ru.autosome.perfectosape.calculations.FindPvalueAPE;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
+import ru.autosome.perfectosape.importers.PMParser;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindPvalue {
-  static void print_result(CanFindPvalue.PvalueInfo info) {
+  static void print_result(CanFindPvalue.PvalueInfo info, BackgroundModel background, int pwmLength) {
     System.out.println( "threshold: " + info.threshold + "\n" +
      "pvalue: " + info.pvalue + "\n" +
-     "number of recognized words: " + info.numberOfRecognizedWords + "\n------------\n");
+     "number of recognized words: " + info.numberOfRecognizedWords(background, pwmLength) + "\n------------\n");
   }
 
   public static void main(String[] args) {
@@ -25,13 +26,23 @@ public class FindPvalue {
     FindPvalueAPE calculator = new FindPvalueAPE(pwm, discretization, background, max_hash_size);
 
       // Single threshold
-    CanFindPvalue.PvalueInfo info = calculator.pvalue_by_threshold(threshold);
-    print_result(info);
+    CanFindPvalue.PvalueInfo info = null;
+    try {
+      info = calculator.pvalueByThreshold(threshold);
+    } catch (HashOverflowException e) {
+      e.printStackTrace();
+    }
+    print_result(info, background, pwm.length());
 
       // Multiple thresholds
-    CanFindPvalue.PvalueInfo[] infos = calculator.pvalues_by_thresholds(thresholds);
+    CanFindPvalue.PvalueInfo[] infos = new CanFindPvalue.PvalueInfo[0];
+    try {
+      infos = calculator.pvaluesByThresholds(thresholds);
+    } catch (HashOverflowException e) {
+      e.printStackTrace();
+    }
     for (int i = 0; i < infos.length; ++i) {
-      print_result(infos[i]);
+      print_result(infos[i], background, pwm.length());
     }
 
     // api integration
@@ -50,7 +61,7 @@ public class FindPvalue {
     ru.autosome.perfectosape.api.FindPvalueAPE bioumlCalculator = new ru.autosome.perfectosape.api.FindPvalueAPE(parameters);
     CanFindPvalue.PvalueInfo[] infosBiouml = bioumlCalculator.call();
     for (int i = 0; i < infosBiouml.length; ++i) {
-      print_result(infosBiouml[i]);
+      print_result(infosBiouml[i], background, pwm_manual_constructed.length());
     }
   }
 }

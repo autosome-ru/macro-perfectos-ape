@@ -1,0 +1,33 @@
+package ru.autosome.perfectosape.motifModels;
+
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.converters.PCM2PPMConverter;
+import ru.autosome.perfectosape.converters.PCM2PWMConverter;
+import ru.autosome.perfectosape.importers.PMParser;
+
+public class PCM extends PM {
+  public PCM(double[][] matrix, String name) throws IllegalArgumentException {
+    super(matrix, name);
+  }
+
+  public double count() {
+    double[] pos = matrix[0];
+    return pos[0] + pos[1] + pos[2] + pos[3];
+  }
+
+  public PWM to_pwm(BackgroundModel background) {
+    PCM2PWMConverter converter = new PCM2PWMConverter(this);
+    converter.background = background;
+    return converter.convert();
+  }
+  public PPM to_ppm(BackgroundModel background) {
+    return new PCM2PPMConverter(this).convert();
+  }
+
+  public static PCM fromParser(PMParser parser) {
+    if (parser == null)  return null;
+    double[][] matrix = parser.matrix();
+    String name = parser.name();
+    return new PCM(matrix, name);
+  }
+}

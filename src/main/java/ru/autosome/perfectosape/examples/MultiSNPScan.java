@@ -2,8 +2,13 @@ package ru.autosome.perfectosape.examples;
 
 import ru.autosome.perfectosape.*;
 import ru.autosome.perfectosape.api.PrecalculateThresholdLists;
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.SNPScan;
+import ru.autosome.perfectosape.importers.PMParser;
+import ru.autosome.perfectosape.motifModels.PPM;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.List;

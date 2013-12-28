@@ -1,7 +1,18 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.*;
-import ru.autosome.perfectosape.calculations.CanFindThreshold;
+import ru.autosome.perfectosape.backgroundModels.Background;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
+import ru.autosome.perfectosape.formatters.OutputInformation;
+import ru.autosome.perfectosape.formatters.ResultInfo;
+import ru.autosome.perfectosape.importers.PMParser;
+import ru.autosome.perfectosape.importers.PWMImporter;
+import ru.autosome.perfectosape.motifModels.DataModel;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +82,9 @@ public class FindThreshold {
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    pwm = Helper.load_pwm(PMParser.from_file_or_stdin(pm_filename), data_model, background, effective_count);
+    pwm = new PWMImporter(background,
+                          data_model,
+                          effective_count).loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename));
   }
 
   private void extract_option(ArrayList<String> argv) {
@@ -118,7 +131,7 @@ public class FindThreshold {
   }
 
   CanFindThreshold calculator() {
-    return new ru.autosome.perfectosape.calculations.FindThresholdAPE(pwm, background, discretization, pvalue_boundary, max_hash_size);
+    return new FindThresholdAPE(pwm, background, discretization, max_hash_size);
   }
 
   OutputInformation report_table_layout() {
@@ -133,7 +146,13 @@ public class FindThreshold {
     infos.add_table_parameter("AP", "actual P-value", "real_pvalue");
 
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords");
+      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords", new OutputInformation.Callback<CanFindThreshold.ThresholdInfo>() {
+        @Override
+        public Object run(CanFindThreshold.ThresholdInfo cell) {
+          double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, pwm.length());
+          return (int)numberOfRecognizedWords;
+        }
+      });
     }
     infos.add_table_parameter("T", "threshold", "threshold");
 
@@ -152,8 +171,8 @@ public class FindThreshold {
     return report_table(data_list);
   }
 
-  OutputInformation report_table() {
-    CanFindThreshold.ThresholdInfo[] results = calculator().find_thresholds_by_pvalues(pvalues);
+  OutputInformation report_table() throws HashOverflowException {
+    CanFindThreshold.ThresholdInfo[] results = calculator().thresholdsByPvalues(pvalues, pvalue_boundary);
     return report_table(results);
   }
 

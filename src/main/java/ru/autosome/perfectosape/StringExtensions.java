@@ -1,9 +1,9 @@
 package ru.autosome.perfectosape;
 
-import java.util.ArrayList;
+import java.util.List;
 
-class StringExtensions {
-  public static String join(ArrayList<?> array, String separator) {
+public class StringExtensions {
+  public static String join(List<?> array, String separator) {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < array.size(); ++i) {
       if (i != 0) {

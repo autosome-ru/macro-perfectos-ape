@@ -9,6 +9,9 @@ import gnu.trove.map.TDoubleObjectMap;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
 import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,7 +110,7 @@ public class CountingPWM {
     return new_scores;
   }
 
-  public TDoubleDoubleMap counts_by_thresholds(double... thresholds) throws HashOverflowException {
+  public TDoubleDoubleMap counts_by_thresholds(double[] thresholds) throws HashOverflowException {
     TDoubleDoubleMap scores = count_distribution_after_threshold(ArrayExtensions.min(thresholds));
     TDoubleDoubleMap result = new TDoubleDoubleHashMap();
     for (double threshold : thresholds) {
@@ -141,7 +144,7 @@ public class CountingPWM {
       double counts[] = iterator.value()[1];
       double threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
       double real_pvalue = counts[1] / vocabularyVolume();
-      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue, counts[1]));
+      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
     }
     return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
   }
@@ -162,7 +165,7 @@ public class CountingPWM {
       double counts[] = iterator.value()[1];
       double threshold = thresholds[0];
       double real_pvalue = counts[0] / vocabularyVolume();
-      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue, counts[0]));
+      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
     }
     return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
   }

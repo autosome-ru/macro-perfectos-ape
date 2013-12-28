@@ -1,8 +1,8 @@
 package ru.autosome.perfectosape.api;
 
-import ru.autosome.perfectosape.PWM;
+import ru.autosome.perfectosape.motifModels.PWM;
 import ru.autosome.perfectosape.SequenceWithSNP;
-import ru.autosome.perfectosape.calculations.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.SNPScan;
 
 import java.util.HashMap;
@@ -63,6 +63,7 @@ public class MultiSNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SNPScan.Re
   }
 
 
+  @Override
   public Integer getTotalTicks() {
     return parameters.sequencesWithSNP.size() * parameters.pvalueCalculator.size();
   }
