@@ -139,7 +139,7 @@ public class CollectDistanceMatrix {
       extract_option(argv);
     }
     PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount);
-    pwmCollection = new PWMCollectionImporter(importer).loadPWMCollectionFromFolder(pathToCollectionOfPWMs);
+    pwmCollection = new PWMCollectionImporter(importer).loadPWMCollection(pathToCollectionOfPWMs);
   }
 
   private CollectDistanceMatrix() {
@@ -216,12 +216,11 @@ public class CollectDistanceMatrix {
     for(PWMWithThreshold second: thresholds) {
       System.out.print(second.pwm.name + "\t");
     }
-    // TODO: paralellize!
     System.out.println();
     for(PWMWithThreshold first: thresholds) {
       System.out.print(first.pwm.name + "\t");
       for(PWMWithThreshold second: thresholds) {
-        taskNum += 1;
+
         if (taskNum % numOfThreads == numThread % numOfThreads) {
           // so that numThread in range 0..(n-1) was equal to 1..n
           int cmp = first.pwm.name.compareTo(second.pwm.name);
@@ -236,6 +235,8 @@ public class CollectDistanceMatrix {
         } else {
           System.out.print("x\t");
         }
+        taskNum += 1;
+
       }
       System.out.println();
       System.err.print(".");
