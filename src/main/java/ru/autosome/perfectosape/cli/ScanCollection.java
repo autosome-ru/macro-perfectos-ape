@@ -5,7 +5,11 @@ import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBsearch;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.importers.PMParser;
@@ -18,12 +22,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import static ru.autosome.perfectosape.calculations.ScanCollection.ThresholdEvaluator;
 
 public class ScanCollection {
 
   private static final String DOC =
    "Command-line format:\n" +
-    "java ru.autosome.perfectosape.cli.ScanCollection <query PWM file> <folder with pwms> [options]\n" +
+    "java ru.autosome.perfectosape.cli.ScanCollection <query PWM file> <folder with PWMs> [options]\n" +
     "\n" +
     "Options:\n" +
     "  [-p <P-value>]\n" +
@@ -64,7 +71,7 @@ public class ScanCollection {
   File pathToCollectionOfPWMs;
   File thresholds_folder;
   PWM queryPWM;
-  MotifEvaluatorCollection motifEvaluatorCollection;
+  List<ThresholdEvaluator> pwmCollection;
 
   private void initialize_defaults() {
     queryBackground = new WordwiseBackground();
@@ -80,7 +87,7 @@ public class ScanCollection {
     pvalueBoundaryType = BoundaryType.UPPER;
     pvalue = 0.0005;
     similarityCutoff = 0.05;
-    preciseRecalculationCutoff = null; // 0.05;
+    preciseRecalculationCutoff = null;
   }
 
   private ScanCollection() {
@@ -115,12 +122,34 @@ public class ScanCollection {
     }
   }
 
-  private void load_collection_of_pwms() throws FileNotFoundException {
+  private List<ThresholdEvaluator> load_collection_of_pwms() throws FileNotFoundException {
+
+    CanFindPvalue.Builder roughPvalueBuilder, precisePvalueBuilder;
+    CanFindThreshold.Builder roughThresholdBuilder, preciseThresholdBuilder;
+
+    if (thresholds_folder == null) {
+      roughPvalueBuilder = new FindPvalueAPE.Builder(roughDiscretization, collectionBackground, maxHashSize);
+      roughThresholdBuilder = new FindThresholdAPE.Builder(collectionBackground, roughDiscretization, maxHashSize);
+      precisePvalueBuilder = new FindPvalueAPE.Builder(preciseDiscretization, collectionBackground, maxHashSize);
+      preciseThresholdBuilder = new FindThresholdAPE.Builder(collectionBackground, preciseDiscretization, maxHashSize);
+
+    } else {
+      roughPvalueBuilder = precisePvalueBuilder = new FindPvalueBsearch.Builder(thresholds_folder);
+      roughThresholdBuilder = preciseThresholdBuilder = new FindThresholdBsearch.Builder(thresholds_folder);
+    }
+
     PWMImporter pwmImporter = new PWMImporter(collectionBackground, dataModel, effectiveCount);
-    CanFindPvalue.Builder builder;
-    builder = new FindPvalueBsearch.Builder(thresholds_folder);
-    PWMCollectionImporter collectionImporter = new PWMCollectionImporter(pwmImporter, builder);
-    motifEvaluatorCollection = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
+    PWMCollectionImporter collectionImporter = new PWMCollectionImporter(pwmImporter);
+    List<PWM> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
+    List<ThresholdEvaluator> result = new ArrayList<ThresholdEvaluator>();
+    for (PWM pwm: pwmList) {
+      result.add(new ThresholdEvaluator(pwm,
+                                        roughThresholdBuilder.applyMotif(pwm).build(),
+                                        preciseThresholdBuilder.applyMotif(pwm).build(),
+                                        roughPvalueBuilder.applyMotif(pwm).build(),
+                                        precisePvalueBuilder.applyMotif(pwm).build()));
+    }
+    return result;
   }
 
   void setup_from_arglist(ArrayList<String> argv) throws FileNotFoundException {
@@ -133,7 +162,7 @@ public class ScanCollection {
     queryPWM = new PWMImporter(queryBackground,
                                dataModel,
                                effectiveCount).loadPWMFromParser(PMParser.from_file_or_stdin(queryPMFilename));
-    load_collection_of_pwms();
+    pwmCollection = load_collection_of_pwms();
   }
 
   private void extract_option(ArrayList<String> argv) {
@@ -214,7 +243,8 @@ public class ScanCollection {
 
 
   private ru.autosome.perfectosape.calculations.ScanCollection calculator() {
-    ru.autosome.perfectosape.calculations.ScanCollection calculator = new ru.autosome.perfectosape.calculations.ScanCollection(motifEvaluatorCollection, queryPWM);
+    ru.autosome.perfectosape.calculations.ScanCollection calculator;
+    calculator = new ru.autosome.perfectosape.calculations.ScanCollection(pwmCollection, queryPWM);
     calculator.pvalue = pvalue;
     calculator.queryPredefinedThreshold = queryPredefinedThreshold;
     calculator.roughDiscretization = roughDiscretization;
@@ -224,29 +254,34 @@ public class ScanCollection {
     calculator.pvalueBoundaryType = pvalueBoundaryType;
     calculator.maxHashSize = maxHashSize;
     calculator.maxPairHashSize = maxPairHashSize;
+    calculator.similarityCutoff = similarityCutoff;
+    calculator.preciseRecalculationCutoff = preciseRecalculationCutoff;
     return calculator;
    }
 
-  OutputInformation report_table(ArrayList<? extends ResultInfo> data) {
+  OutputInformation report_table(List<? extends ResultInfo> data) {
     OutputInformation result = report_table_layout();
     result.data = data;
     return result;
   }
 
   <R extends ResultInfo> OutputInformation report_table(R[] data) {
-    ArrayList<R> data_list = new ArrayList<R>(data.length);
+    List<R> data_list = new ArrayList<R>(data.length);
     Collections.addAll(data_list, data);
     return report_table(data_list);
   }
 
-  void process() throws Exception {
-
+  List<? extends ResultInfo> process() throws Exception {
+    List<ru.autosome.perfectosape.calculations.ScanCollection.SimilarityInfo> infos;
+    infos = calculator().similarityInfos();
+    return infos;
   }
 
   public static void main(String[] args) {
     try {
       ScanCollection calculation = ScanCollection.from_arglist(args);
-      calculation.process();
+      List<? extends ResultInfo> infos = calculation.process();
+      System.out.println(calculation.report_table(infos).report());
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();

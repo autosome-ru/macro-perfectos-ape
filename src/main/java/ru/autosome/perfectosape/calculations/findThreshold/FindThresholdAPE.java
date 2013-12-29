@@ -4,9 +4,39 @@ import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.CountingPWM;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindThresholdAPE implements CanFindThreshold {
+  public static class Builder implements CanFindThreshold.Builder {
+    Double discretization;
+    BackgroundModel background;
+    Integer maxHashSize;
+    PWM pwm;
+
+    public Builder(BackgroundModel background, Double discretization, Integer maxHashSize) {
+      this.background = background;
+      this.discretization = discretization;
+      this.maxHashSize = maxHashSize;
+    }
+
+    @Override
+    public CanFindThreshold.Builder applyMotif(PWM pwm) {
+      this.pwm = pwm;
+      return this;
+    }
+
+    @Override
+    public CanFindThreshold build() {
+      if (pwm != null) {
+        return new FindThresholdAPE(pwm, background, discretization, maxHashSize);
+      } else {
+        return null;
+      }
+    }
+  }
+
+
   BackgroundModel background;
   Double discretization; // if discretization is null - it's not applied
   Integer maxHashSize; // if maxHashSize is null - it's not applied

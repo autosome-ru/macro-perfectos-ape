@@ -9,10 +9,14 @@ import ru.autosome.perfectosape.calculations.SNPScan;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBsearch;
 import ru.autosome.perfectosape.importers.InputExtensions;
 import ru.autosome.perfectosape.importers.PWMCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.DataModel;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +27,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class MultiSNPScan {
+  public static class ThresholdEvaluator {
+    public PWM pwm;
+    public CanFindPvalue pvalueCalculator;
+
+    public ThresholdEvaluator(PWM pwm, CanFindPvalue pvalueCalculator) {
+      this.pwm = pwm;
+      this.pvalueCalculator = pvalueCalculator;
+    }
+  }
+
   private BackgroundModel background;
   private Double discretization;
   private Integer max_hash_size;
@@ -35,7 +49,7 @@ public class MultiSNPScan {
   private File thresholds_folder;
 
   private List<String> snp_list;
-  private MotifEvaluatorCollection motifEvaluatorCollection;
+  List<ThresholdEvaluator> pwmCollection;
 
   private double max_pvalue_cutoff;
   private double min_fold_change_cutoff;
@@ -61,16 +75,21 @@ public class MultiSNPScan {
   }
 
   private void load_collection_of_pwms() throws FileNotFoundException {
-    PWMImporter pwmImporter = new PWMImporter(background, dataModel, effectiveCount);
-
-    CanFindPvalue.Builder builder;
+    CanFindPvalue.Builder pvalueBuilder;
     if (thresholds_folder == null) {
-      builder = new FindPvalueAPE.Builder(discretization, background, max_hash_size);
+      pvalueBuilder = new FindPvalueAPE.Builder(discretization, background, max_hash_size);
     } else {
-      builder = new FindPvalueBsearch.Builder(thresholds_folder);
+      pvalueBuilder = new FindPvalueBsearch.Builder(thresholds_folder);
     }
-    PWMCollectionImporter importer = new PWMCollectionImporter(pwmImporter, builder);
-    motifEvaluatorCollection = importer.loadPWMCollection(path_to_collection_of_pwms);
+
+    PWMImporter pwmImporter = new PWMImporter(background, dataModel, effectiveCount);
+    PWMCollectionImporter importer = new PWMCollectionImporter(pwmImporter);
+    List<PWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
+
+    pwmCollection = new ArrayList<ThresholdEvaluator>();
+    for (PWM pwm: pwmList) {
+      pwmCollection.add(new ThresholdEvaluator(pwm, pvalueBuilder.applyMotif(pwm).build()));
+    }
   }
 
   private static final String DOC =
@@ -191,8 +210,9 @@ public class MultiSNPScan {
     String snp_name = first_part_of_string(snp_input);
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
 
-    for (MotifEvaluatorCollection.MotifEvaluator motifEvaluator : motifEvaluatorCollection) {
-      SNPScan.RegionAffinityInfos result = new SNPScan(motifEvaluator.pwm, seq_w_snp, motifEvaluator.pvalueCalculator).affinityInfos();
+    for (ThresholdEvaluator motifEvaluator: pwmCollection) {
+      SNPScan.RegionAffinityInfos result;
+      result = new SNPScan(motifEvaluator.pwm, seq_w_snp, motifEvaluator.pvalueCalculator).affinityInfos();
       boolean pvalueSignificant = (result.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
                                     result.getInfo_2().getPvalue() <= max_pvalue_cutoff);
       boolean foldChangeSignificant = (result.foldChange() >= min_fold_change_cutoff ||

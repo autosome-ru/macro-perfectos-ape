@@ -4,15 +4,46 @@ import ru.autosome.perfectosape.*;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.motifModels.PWM;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 public class FindThresholdBsearch implements CanFindThreshold {
+  public static class Builder implements CanFindThreshold.Builder {
+    File pathToThresholds;
+    PWM pwm;
+
+    public Builder(File pathToThresholds) {
+      this.pathToThresholds = pathToThresholds;
+    }
+
+    @Override
+    public Builder applyMotif(PWM pwm) {
+      this.pwm = pwm;
+      return this;
+    }
+
+    @Override
+    public CanFindThreshold build() {
+      if (pwm != null) {
+        try {
+          File thresholds_file = new File(pathToThresholds, pwm.name + ".thr");
+          PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
+          return new FindThresholdBsearch(pwm, pvalueBsearchList);
+        } catch (FileNotFoundException e) {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
+  }
+
   PWM pwm;
   PvalueBsearchList bsearchList;
-  BoundaryType pvalueBoundary;
 
-  public FindThresholdBsearch(PWM pwm, PvalueBsearchList bsearchList, BoundaryType pvalueBoundary) {
+  public FindThresholdBsearch(PWM pwm, PvalueBsearchList bsearchList) {
     this.pwm = pwm;
     this.bsearchList = bsearchList;
-    this.pvalueBoundary = pvalueBoundary;
   }
 
   @Override

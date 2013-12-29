@@ -1,47 +1,47 @@
 package ru.autosome.perfectosape.importers;
 
 import ru.autosome.perfectosape.MotifEvaluatorCollection;
-import ru.autosome.perfectosape.PvalueBsearchList;
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
-import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
-import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PWMCollectionImporter {
-  // TODO: to be removed
-  CanFindPvalue.Builder builder;
   PWMImporter importer;
   
-  public PWMCollectionImporter(PWMImporter importer, CanFindPvalue.Builder builder) {
+  public PWMCollectionImporter(PWMImporter importer) {
     this.importer = importer;
-    this.builder = builder;
   }
 
-  public MotifEvaluatorCollection loadPWMCollection(File pathToPwms) throws FileNotFoundException {
+  public List<PWM> loadPWMCollection(File pathToPwms) throws FileNotFoundException {
+    // TODO: expand features
     return loadPWMCollectionFromFolder(pathToPwms);
   }
 
-  public MotifEvaluatorCollection loadPWMCollectionFromFolder(File pathToPWMs) throws FileNotFoundException {
-    MotifEvaluatorCollection result = new MotifEvaluatorCollection();
+  public List<PWM> loadPWMCollectionFromFolder(File pathToPWMs) throws FileNotFoundException {
+    List<PWM> result = new ArrayList<PWM>();
     File[] files = pathToPWMs.listFiles();
     if (files == null) {
       return result;
     }
     for (File file : files) {
       PWM pwm = importer.loadPWMFromFile(file);
-      result.add(pwm, builder.applyMotif(pwm).build());
+      result.add(pwm);
+//    result.add(pwm,
+//               pvalueCalculatorBuilder.applyMotif(pwm).build(),
+//               thresholdCalculatorBuilder.applyMotif(pwm).build());
     }
     return result;
   }
 
-  public MotifEvaluatorCollection loadPWMCollectionFromFile(File pathToPWMs) {
+  public List<PWM> loadPWMCollectionFromFile(File pathToPWMs) {
     try {
-      MotifEvaluatorCollection result = new MotifEvaluatorCollection();
+      List<PWM> result = new ArrayList<PWM>();
       BufferedPushbackReader reader = new BufferedPushbackReader(new FileInputStream(pathToPWMs));
       boolean canExtract = true;
       while (canExtract) {
@@ -51,12 +51,15 @@ public class PWMCollectionImporter {
           canExtract = false;
         } else {
           PWM pwm = importer.loadPWMFromParser(parser);
-          result.add(pwm, builder.applyMotif(pwm).build());
+          result.add(pwm);
+//          result.add(pwm,
+//                     pvalueCalculatorBuilder.applyMotif(pwm).build(),
+//                     thresholdCalculatorBuilder.applyMotif(pwm).build());
         }
       }
       return result;
     } catch (FileNotFoundException e) {
-      return new MotifEvaluatorCollection();
+      return null;
     }
   }
 

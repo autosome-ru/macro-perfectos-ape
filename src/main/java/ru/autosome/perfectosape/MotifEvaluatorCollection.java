@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape;
 
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
@@ -15,9 +16,11 @@ public class MotifEvaluatorCollection implements Iterable<MotifEvaluatorCollecti
   public static class MotifEvaluator {
     public final PWM pwm;
     public final CanFindPvalue pvalueCalculator;
-    public MotifEvaluator(PWM pwm, CanFindPvalue pvalueCalculator) {
+    public final CanFindThreshold thresholdCalculator;
+    public MotifEvaluator(PWM pwm, CanFindPvalue pvalueCalculator, CanFindThreshold thresholdCalculator) {
       this.pwm = pwm;
       this.pvalueCalculator = pvalueCalculator;
+      this.thresholdCalculator = thresholdCalculator;
     }
   }
 
@@ -31,8 +34,8 @@ public class MotifEvaluatorCollection implements Iterable<MotifEvaluatorCollecti
     this.collection = collection;
   }
 
-  public void add(PWM pwm, CanFindPvalue pvalueCalculator) {
-    collection.add(new MotifEvaluator(pwm, pvalueCalculator));
+  public void add(PWM pwm, CanFindPvalue pvalueCalculator, CanFindThreshold thresholdCalculator) {
+    collection.add(new MotifEvaluator(pwm, pvalueCalculator, thresholdCalculator));
   }
 
   @Override

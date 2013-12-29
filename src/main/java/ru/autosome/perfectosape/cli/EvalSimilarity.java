@@ -90,6 +90,8 @@ public class EvalSimilarity {
       BackgroundModel background = Background.fromString(argv.remove(0));
       firstBackground = background;
       secondBackground = background;
+    } else if (opt.equals("-p")) {
+      pvalue = Double.valueOf(argv.remove(0));
     } else if (opt.equals("-b1")) {
       firstBackground = Background.fromString(argv.remove(0));
     } else if (opt.equals("-b2")) {
