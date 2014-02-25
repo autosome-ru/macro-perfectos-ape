@@ -51,7 +51,7 @@ public class ScanCollection {
     "              Attention! Name can contain whitespace characters.\n" +
     "              Attention! The shift and orientation are reported for the collection matrix relative to the query matrix.\n" +
     "\n" +
-    "Example:\n" +
+    "Examples:\n" +
     "  java ru.autosome.perfectosape.cli.ScanCollection ./query_motif.pwm ./hocomoco/ --precalc ./hocomoco_thresholds\n" +
     "  java ru.autosome.perfectosape.cli.ScanCollection ./query_motif.pcm ./hocomoco/ --pcm -p 0.0005 --precise 0.03\n";
 

@@ -39,7 +39,7 @@ public class CollectDistanceMatrix {
     "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
     "  [--parallelize <num of threads> <thread number>] - run only one task per numOfThreads (those equal to thread number modulo numOfThreads)\n" +
     "\n" +
-    "examples:\n" +
+    "Examples:\n" +
     "  java ru.autosome.perfectosape.cli.CollectDistanceMatrix ./motifs/ -d 10\n";
 
 

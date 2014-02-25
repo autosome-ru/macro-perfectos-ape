@@ -33,7 +33,7 @@ public class FindPvalue {
     "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
     "\n" +
-    "examples:\n" +
+    "Examples:\n" +
     "  java ru.autosome.perfectosape.cli.FindPvalue motifs/KLF4_f2.pat 7.32\n" +
     "  java ru.autosome.perfectosape.cli.FindPvalue motifs/KLF4_f2.pat 7.32 4.31 5.42 -d 1000 -b 0.2,0.3,0.3,0.2\n";
 

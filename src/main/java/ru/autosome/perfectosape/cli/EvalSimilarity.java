@@ -34,7 +34,7 @@ public class EvalSimilarity {
     "  [--first-threshold <threshold for the first matrix>]\n" +
     "  [--second-threshold <threshold for the second matrix>]\n" +
     "\n" +
-    "examples:\n" +
+    "Examples:\n" +
     "  java ru.autosome.perfectosape.cli.EvalSimilarity motifs/KLF4_f2.pat motifs/SP1_f1.pat -p 0.0005 -d 100 -b 0.3,0.2,0.2,0.3\n";
 
   private BackgroundModel firstBackground, secondBackground;

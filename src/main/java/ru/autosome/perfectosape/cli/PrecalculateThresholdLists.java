@@ -142,7 +142,7 @@ public class PrecalculateThresholdLists {
     "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
     "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
     "\n" +
-    "examples:\n" +
+    "Examples:\n" +
     "  java ru.autosome.perfectosape.cli.PrecalculateThresholdLists ./hocomoco/ ./hocomoco_thresholds/\n" +
     "  java ru.autosome.perfectosape.cli.PrecalculateThresholdLists ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
 

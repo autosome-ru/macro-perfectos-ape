@@ -30,7 +30,7 @@ public class FindThreshold {
     "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
     "  [-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
     "\n" +
-    "Example:\n" +
+    "Examples:\n" +
     "  java ru.autosome.perfectosape.cli.FindThreshold motifs/KLF4_f2.pat\n" +
     "  java ru.autosome.perfectosape.cli.FindThreshold  motifs/KLF4_f2.pat 0.001 0.0001 0.0005 -d 1000 -b 0.4,0.3,0.2,0.1\n";
 
