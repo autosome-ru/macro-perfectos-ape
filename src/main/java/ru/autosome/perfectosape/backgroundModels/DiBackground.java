@@ -4,7 +4,7 @@ import ru.autosome.perfectosape.ArrayExtensions;
 
 import java.util.StringTokenizer;
 
-public class DiBackground implements BackgroundModel {
+public class DiBackground implements DiBackgroundModel {
   private double[] background;
 
   // TODO: whether we should check symmetricity of background
@@ -15,7 +15,7 @@ public class DiBackground implements BackgroundModel {
     this.background = background;
   }
 
-  private static BackgroundModel fromArray(double[] background) {
+  private static DiBackgroundModel fromArray(double[] background) {
     if (background.length != 16) {
       throw new IllegalArgumentException("Background constructor accepts double array of length 4");
     }
@@ -57,7 +57,7 @@ public class DiBackground implements BackgroundModel {
     return 1;
   }
 
-  public static BackgroundModel fromString(String s) {
+  public static DiBackgroundModel fromString(String s) {
     double[] background = new double[16];
     StringTokenizer parser = new StringTokenizer(s);
     for (int i = 0; i < 16; ++i) {

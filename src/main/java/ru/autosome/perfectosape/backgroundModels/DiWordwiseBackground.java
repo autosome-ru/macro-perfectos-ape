@@ -1,6 +1,6 @@
 package ru.autosome.perfectosape.backgroundModels;
 
-public class DiWordwiseBackground implements BackgroundModel {
+public class DiWordwiseBackground implements DiBackgroundModel {
   public DiWordwiseBackground() {
   }
 

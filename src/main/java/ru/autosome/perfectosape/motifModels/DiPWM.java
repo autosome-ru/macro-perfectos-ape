@@ -1,9 +1,9 @@
 package ru.autosome.perfectosape.motifModels;
 
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
 import ru.autosome.perfectosape.importers.PMParser;
 import ru.autosome.perfectosape.Sequence;
-import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +75,7 @@ public class DiPWM {
     StringBuilder result = new StringBuilder();
     result.append(name).append("\n");
     for (double[] pos : matrix) {
-      for (int letter_index = 0; letter_index < ALPHABET_SIZE; ++ letter_index) {
+      for (int letter_index = 0; letter_index < ALPHABET_SIZE; ++letter_index) {
         if (letter_index != 0) {
           result.append("\t");
         }
@@ -96,7 +96,7 @@ public class DiPWM {
     return fromParser(new PMParser(input_lines));
   }
 
-  double score(String word, BackgroundModel background) throws IllegalArgumentException {
+  double score(String word, DiBackgroundModel background) throws IllegalArgumentException {
     word = word.toUpperCase();
     if (word.length() != length()) {
       throw new IllegalArgumentException("word in PWM#score(word) should have the same length as matrix");
@@ -116,12 +116,12 @@ public class DiPWM {
     return sum;
   }
 
-  public double score(Sequence word, BackgroundModel background) throws IllegalArgumentException {
+  public double score(Sequence word, DiBackgroundModel background) throws IllegalArgumentException {
     return score(word.sequence, background);
   }
 
   public double score(Sequence word) throws IllegalArgumentException {
-    return score(word, new WordwiseBackground());
+    return score(word, new DiWordwiseBackground());
   }
 
   public double best_score() {
