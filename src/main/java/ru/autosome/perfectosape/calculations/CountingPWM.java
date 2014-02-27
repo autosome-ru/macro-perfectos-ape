@@ -15,6 +15,7 @@ import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CountingPWM {
   private Integer maxHashSize;
@@ -132,46 +133,48 @@ public class CountingPWM {
   public Double count_by_threshold(double threshold) throws HashOverflowException {
     return counts_by_thresholds(new double[]{threshold}).get(threshold);
   }
-
-  public CanFindThreshold.ThresholdInfo[] thresholds(double... pvalues) throws HashOverflowException {
-    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
-    TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
-    TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
-    while (iterator.hasNext()) {
-      iterator.advance();
-      double pvalue = iterator.key();
-      double thresholds[] = iterator.value()[0];
-      double counts[] = iterator.value()[1];
-      double threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
-      double real_pvalue = counts[1] / vocabularyVolume();
-      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
-    }
-    return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
+  // "strong" means that threshold has real pvalue not more than requested one
+  public CanFindThreshold.ThresholdInfo[] strong_thresholds(double[] pvalues) throws HashOverflowException {
+    return thresholds(pvalues, BoundaryType.LOWER);
   }
 
-  public CanFindThreshold.ThresholdInfo threshold(double pvalue) throws HashOverflowException {
-    return thresholds(pvalue)[0];
+  public CanFindThreshold.ThresholdInfo strong_threshold(double pvalue) throws HashOverflowException {
+    return strong_thresholds(new double[]{pvalue})[0];
   }
 
-  // "weak" means that threshold has real pvalue not less than given pvalue, while usual threshold not greater
-  public CanFindThreshold.ThresholdInfo[] weak_thresholds(double... pvalues) throws HashOverflowException {
-    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
-    TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
-    TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
-    while (iterator.hasNext()) {
-      iterator.advance();
-      double pvalue = iterator.key();
-      double thresholds[] = iterator.value()[0];
-      double counts[] = iterator.value()[1];
-      double threshold = thresholds[0];
-      double real_pvalue = counts[0] / vocabularyVolume();
-      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
-    }
-    return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
+  // "strong" means that threshold has real pvalue not less than requested one
+  public CanFindThreshold.ThresholdInfo[] weak_thresholds(double[] pvalues) throws HashOverflowException {
+    return thresholds(pvalues, BoundaryType.UPPER);
   }
 
   public CanFindThreshold.ThresholdInfo weak_threshold(double pvalue) throws HashOverflowException {
-    return weak_thresholds(pvalue)[0];
+    return weak_thresholds(new double[]{pvalue})[0];
+  }
+
+  public CanFindThreshold.ThresholdInfo[] thresholds(double[] pvalues, BoundaryType pvalueBoundary) throws HashOverflowException {
+    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
+    TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
+    while (iterator.hasNext()) {
+      iterator.advance();
+      double pvalue = iterator.key();
+      double thresholds[] = iterator.value()[0];
+      double counts[] = iterator.value()[1];
+      double threshold, real_pvalue;
+      if (pvalueBoundary == BoundaryType.LOWER) { // strong threshold
+        threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
+        real_pvalue = counts[1] / vocabularyVolume();
+      } else { // weak threshold
+        threshold = thresholds[0];
+        real_pvalue = counts[0] / vocabularyVolume();
+      }
+      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
+    }
+    return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
+  }
+
+  public CanFindThreshold.ThresholdInfo threshold(double pvalue, BoundaryType pvalueBoundary) throws HashOverflowException {
+    return thresholds(new double[]{pvalue}, pvalueBoundary)[0];
   }
 
   private double[] descending_sorted_hash_keys(TDoubleDoubleMap hsh) {
@@ -182,7 +185,7 @@ public class CountingPWM {
 
 
   // [ind_1, ind_2] such as value in [value_1, value_2]
-  int[] indices_of_range(ArrayList<Double> list, double value) {
+  int[] indices_of_range(List<Double> list, double value) {
     int ind = java.util.Collections.binarySearch(list, value);
     if (ind >= 0) {
       return new int[] {ind, ind};
@@ -198,7 +201,7 @@ public class CountingPWM {
     }
   }
 
-  TDoubleObjectMap<double[][]> thresholds_by_pvalues(double... pvalues) throws HashOverflowException {
+  TDoubleObjectMap<double[][]> thresholds_by_pvalues(double[] pvalues) throws HashOverflowException {
     TDoubleDoubleMap scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     double[] scores = descending_sorted_hash_keys(scores_hash);
 

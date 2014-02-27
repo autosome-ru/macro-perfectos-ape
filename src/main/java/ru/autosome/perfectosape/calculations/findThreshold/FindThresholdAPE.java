@@ -61,16 +61,12 @@ public class FindThresholdAPE implements CanFindThreshold {
 
   @Override
   public ThresholdInfo strongThresholdByPvalue(double pvalue) throws HashOverflowException {
-    return countingPWM(pwm.discrete(discretization)).threshold(pvalue).downscale(discretization);
+    return countingPWM(pwm.discrete(discretization)).strong_threshold(pvalue).downscale(discretization);
   }
 
   @Override
   public ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) throws HashOverflowException {
-    if (boundaryType == BoundaryType.LOWER) {
-      return strongThresholdByPvalue(pvalue);
-    } else {
-      return weakThresholdByPvalue(pvalue);
-    }
+    return countingPWM(pwm.discrete(discretization)).threshold(pvalue, boundaryType).downscale(discretization);
   }
 
   @Override
