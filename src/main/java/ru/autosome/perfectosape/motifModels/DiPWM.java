@@ -66,6 +66,7 @@ public class DiPWM {
     return new DiPWM(matrix, pwm.name);
   }
 
+  // length of TFBS, not of a matrix representation
   public int length() {
     return matrix.length + 1;
   }
@@ -104,13 +105,13 @@ public class DiPWM {
     double sum = 0.0;
     for (int pos_index = 0; pos_index < matrix.length; ++pos_index) {
       String dinucleotide = word.substring(pos_index, pos_index + 2);
-      Integer letter_index = indexByLetter.get(dinucleotide);
-      if (letter_index != null) {
-        sum += matrix[pos_index][letter_index];
+      Integer superletter_index = indexByLetter.get(dinucleotide);
+      if (superletter_index != null) {
+        sum += matrix[pos_index][superletter_index];
       } /*else if (letter == 'N') {    //  alphabet should include letters such AN, CN, GN, TN, NA, NC, NG, NT, NN
         sum += background.mean_value(matrix[pos_index]);
       } */ else {
-        throw new IllegalArgumentException("word in PWM#score(#{word}) should have only {ACGT}^2 dinucleotides , but have '" + dinucleotide + "' dinucleotide");
+        throw new IllegalArgumentException("word in PWM#score(#{word}) should have only {ACGT}^2 dinucleotides , but has '" + dinucleotide + "' dinucleotide");
       }
     }
     return sum;
@@ -136,7 +137,7 @@ public class DiPWM {
     double best_score = Double.NEGATIVE_INFINITY;
     for (int letter = 0; letter < 4; ++letter) {
       best_score = max(best_score,
-                       best_suffices()[i][letter]);
+                       best_suffix(i, letter));
     }
     return best_score;
   }
@@ -144,51 +145,70 @@ public class DiPWM {
   public double worst_suffix(int i) {
     double worst_score = Double.POSITIVE_INFINITY;
     for (int letter = 0; letter < 4; ++letter) {
-      worst_score = max(worst_score,
-                        worst_suffices()[i][letter]);
+      worst_score = min(worst_score,
+                        worst_suffix(i, letter));
     }
     return worst_score;
   }
 
-  // These pair of methods are alphabet-dependent!
+  // result is an array of best suffices, such that best_suffices()[pos][letter]
+  // is the best score of suffix seq[pos:end] of word such that seq[pos] == letter
+  // suffix of length 1 has no score (because it's dinculeotide model)
+  // so such elements are equal zero
+  private double best_suffix(int pos, int letter) {
+    return best_suffices()[pos][letter];
+  }
+  private double worst_suffix(int pos, int letter) {
+    return worst_suffices()[pos][letter];
+  }
+
   private double[][] best_suffices() {
     if (cache_best_suffices == null) {
-      double[][] result = new double[matrix.length + 1][];
-      for(int letter = 0; letter < 4; ++letter) {
-        result[matrix.length][letter] = 0;
-      }
-      for(int i = matrix.length - 1; i >= 0; --i) {
-        for (int letter = 0; letter < 4; ++letter) {
-          double best_score = Double.NEGATIVE_INFINITY;
-          for(int next_letter = 0; next_letter < 4; ++next_letter) {
-            best_score = max(best_score, matrix[i][4*letter + next_letter] + result[i+1][next_letter]);
-          }
-          result[i][letter] = best_score;
-        }
-      }
-      cache_best_suffices = result;
+      cache_best_suffices = calculate_best_suffices();
     }
     return cache_best_suffices;
   }
 
   private double[][] worst_suffices() {
     if (cache_worst_suffices == null) {
-      double[][] result = new double[matrix.length + 1][];
-      for(int letter = 0; letter < 4; ++letter) {
-        result[matrix.length][letter] = 0;
-      }
-      for(int i = matrix.length - 1; i >= 0; --i) {
-        for (int letter = 0; letter < 4; ++letter) {
-          double worst_score = Double.POSITIVE_INFINITY;
-          for(int next_letter = 0; next_letter < 4; ++next_letter) {
-            worst_score = min(worst_score, matrix[i][4*letter + next_letter] + result[i+1][next_letter]);
-          }
-          result[i][letter] = worst_score;
-        }
-      }
-      cache_worst_suffices = result;
+      cache_worst_suffices = calculate_worst_suffices();
     }
     return cache_worst_suffices;
+  }
+
+  // This pair of methods is alphabet-dependent!
+  private double[][] calculate_best_suffices() {
+    double[][] result = new double[matrix.length + 1][];
+    for(int letter = 0; letter < 4; ++letter) {
+      result[matrix.length][letter] = 0;
+    }
+    for(int i = matrix.length - 1; i >= 0; --i) {
+      for (int letter = 0; letter < 4; ++letter) {
+        double best_score = Double.NEGATIVE_INFINITY;
+        for(int next_letter = 0; next_letter < 4; ++next_letter) {
+          best_score = max(best_score, matrix[i][4*letter + next_letter] + result[i+1][next_letter]);
+        }
+        result[i][letter] = best_score;
+      }
+    }
+    return result;
+  }
+
+  private double[][] calculate_worst_suffices() {
+    double[][] result = new double[matrix.length + 1][];
+    for(int letter = 0; letter < 4; ++letter) {
+      result[matrix.length][letter] = 0;
+    }
+    for(int i = matrix.length - 1; i >= 0; --i) {
+      for (int letter = 0; letter < 4; ++letter) {
+        double worst_score = Double.POSITIVE_INFINITY;
+        for(int next_letter = 0; next_letter < 4; ++next_letter) {
+          worst_score = min(worst_score, matrix[i][4*letter + next_letter] + result[i+1][next_letter]);
+        }
+        result[i][letter] = worst_score;
+      }
+    }
+    return result;
   }
 
   public DiPWM discrete(Double rate) {
