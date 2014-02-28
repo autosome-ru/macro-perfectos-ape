@@ -18,6 +18,21 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CountingPWM {
+  // Container for a range of thresholds and appropriate counts.
+  // Following inequations are assumed
+  // first threshold < second threshold
+  // first count > second count
+  public static class ThresholdsRange {
+    double first_threshold, second_threshold;
+    double first_count, second_count;
+    ThresholdsRange(double first_threshold, double second_threshold, double first_count, double second_count) {
+      this.first_threshold = first_threshold;
+      this.second_threshold = second_threshold;
+      this.first_count = first_count;
+      this.second_count = second_count;
+    }
+  }
+
   private Integer maxHashSize;
 
   final PWM pwm;
@@ -153,20 +168,19 @@ public class CountingPWM {
 
   public CanFindThreshold.ThresholdInfo[] thresholds(double[] pvalues, BoundaryType pvalueBoundary) throws HashOverflowException {
     ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
-    TDoubleObjectMap<double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
-    TDoubleObjectIterator<double[][]> iterator = thresholds_by_pvalues.iterator();
+    TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
+    TDoubleObjectIterator<ThresholdsRange> iterator = thresholds_by_pvalues.iterator();
     while (iterator.hasNext()) {
       iterator.advance();
       double pvalue = iterator.key();
-      double thresholds[] = iterator.value()[0];
-      double counts[] = iterator.value()[1];
+      ThresholdsRange range = iterator.value();
       double threshold, real_pvalue;
       if (pvalueBoundary == BoundaryType.LOWER) { // strong threshold
-        threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
-        real_pvalue = counts[1] / vocabularyVolume();
+        threshold = range.first_threshold + 0.1 * (range.second_threshold - range.first_threshold);
+        real_pvalue = range.second_count / vocabularyVolume();
       } else { // weak threshold
-        threshold = thresholds[0];
-        real_pvalue = counts[0] / vocabularyVolume();
+        threshold = range.first_threshold;
+        real_pvalue = range.first_count / vocabularyVolume();
       }
       results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
     }
@@ -201,7 +215,7 @@ public class CountingPWM {
     }
   }
 
-  TDoubleObjectMap<double[][]> thresholds_by_pvalues(double[] pvalues) throws HashOverflowException {
+  TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues(double[] pvalues) throws HashOverflowException {
     TDoubleDoubleMap scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     double[] scores = descending_sorted_hash_keys(scores_hash);
 
@@ -210,20 +224,20 @@ public class CountingPWM {
       counts[i] = scores_hash.get(scores[i]);
     }
     ArrayList<Double> partial_sums = ArrayExtensions.partial_sums(counts, 0.0);
-    TDoubleObjectMap<double[][]> results = new TDoubleObjectHashMap<double[][]>();
+    TDoubleObjectMap<ThresholdsRange> results = new TDoubleObjectHashMap<ThresholdsRange>();
 
     for (double pvalue : pvalues) {
       double look_for_count = pvalue * vocabularyVolume();
       int[] range_indices = indices_of_range(partial_sums, look_for_count);
       if (range_indices[0] == -1) {
-        results.put(pvalue, new double[][] { {scores[0], pwm.best_score() + 1},
-                                             {partial_sums.get(0), 0} });
+        results.put(pvalue, new ThresholdsRange(scores[0], pwm.best_score() + 1,
+                                                partial_sums.get(0), 0));
       } else if (range_indices[0] == partial_sums.size()) {
-        results.put(pvalue, new double[][] { {pwm.worst_score() - 1, scores[scores.length - 1]},
-                                             {vocabularyVolume(), partial_sums.get(scores.length - 1)} });
+        results.put(pvalue, new ThresholdsRange(pwm.worst_score() - 1, scores[scores.length - 1],
+                                                vocabularyVolume(), partial_sums.get(scores.length - 1)));
       } else {
-        results.put(pvalue, new double[][] { {scores[range_indices[1]], scores[range_indices[0]]},
-                                             {partial_sums.get(range_indices[1]), partial_sums.get(range_indices[0])} });
+        results.put(pvalue, new ThresholdsRange(scores[range_indices[1]], scores[range_indices[0]],
+                                                partial_sums.get(range_indices[1]), partial_sums.get(range_indices[0])));
       }
     }
     return results;
