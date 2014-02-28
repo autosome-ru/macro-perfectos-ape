@@ -2,7 +2,7 @@ package ru.autosome.perfectosape.calculations;
 
 
 import ru.autosome.perfectosape.*;
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
@@ -14,39 +14,13 @@ public class CountingDiPWM {
   private Integer max_hash_size;
 
   private final DiPWM dipwm;
-  private final BackgroundModel dibackground;
+  private final DiBackgroundModel dibackground;
 
-  public CountingDiPWM(DiPWM dipwm, BackgroundModel dibackground, Integer max_hash_size) {
+  public CountingDiPWM(DiPWM dipwm, DiBackgroundModel dibackground, Integer max_hash_size) {
     this.dipwm = dipwm;
     this.dibackground = dibackground;
     this.max_hash_size = max_hash_size;
   }
-
-  private double score_mean() {
-    double result = 0.0;
-    for (double[] pos : dipwm.matrix) {
-      result += dibackground.mean_value(pos);
-    }
-    return result;
-  }
-
-  private double score_variance() {
-    double variance = 0.0;
-    for (double[] pos : dipwm.matrix) {
-      double mean_square = dibackground.mean_square_value(pos);
-      double mean = dibackground.mean_value(pos);
-      double squared_mean = mean * mean;
-      variance += mean_square - squared_mean;
-    }
-    return variance;
-  }
-
-  private double threshold_gauss_estimation(double pvalue) {
-    double sigma = Math.sqrt(score_variance());
-    double n_ = MathExtensions.inverf(1 - 2 * pvalue) * Math.sqrt(2);
-    return score_mean() + n_ * sigma;
-  }
-
 
   private static double sum_values(Map<Double, Double> hsh) {
     double result = 0;
@@ -59,11 +33,12 @@ public class CountingDiPWM {
   private HashMap<Double, Double> count_distribution_under_pvalue(double max_pvalue) {
     HashMap<Double, Double> cnt_distribution = new HashMap<Double, Double>();
     double look_for_count = max_pvalue * vocabularyVolume();
+    GaussianThresholdDinucleotideEstimation gaussianThresholdEstimation = new GaussianThresholdDinucleotideEstimation(dipwm, dibackground);
 
     while (!(sum_values(cnt_distribution) >= look_for_count)) {
       double approximate_threshold;
       try {
-        approximate_threshold = threshold_gauss_estimation(max_pvalue);
+        approximate_threshold = gaussianThresholdEstimation.thresholdByPvalue(max_pvalue);
       } catch (ArithmeticException e) {
         approximate_threshold = dipwm.worst_score();
       }

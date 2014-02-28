@@ -12,29 +12,9 @@ public class GaussianThresholdEstimation {
     this.pwm = pwm;
     this.background = background;
   }
-
-  private double score_mean() {
-    double result = 0.0;
-    for (double[] pos : pwm.matrix) {
-      result += background.mean_value(pos);
-    }
-    return result;
-  }
-
-  private double score_variance() {
-    double variance = 0.0;
-    for (double[] pos : pwm.matrix) {
-      double mean_square = background.mean_square_value(pos);
-      double mean = background.mean_value(pos);
-      double squared_mean = mean * mean;
-      variance += mean_square - squared_mean;
-    }
-    return variance;
-  }
-
   public double thresholdByPvalue(double pvalue) {
-    double sigma = Math.sqrt(score_variance());
+    double sigma = Math.sqrt(pwm.score_variance(background));
     double n_ = MathExtensions.inverf(1 - 2 * pvalue) * Math.sqrt(2);
-    return score_mean() + n_ * sigma;
+    return pwm.score_mean(background) + n_ * sigma;
   }
 }

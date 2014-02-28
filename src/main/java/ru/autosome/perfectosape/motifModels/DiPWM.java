@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.motifModels;
 
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
 import ru.autosome.perfectosape.importers.PMParser;
@@ -226,4 +227,22 @@ public class DiPWM {
     return new DiPWM(mat_result, name);
   }
 
+  public double score_mean(DiBackgroundModel background) {
+    double result = 0.0;
+    for (double[] pos : matrix) {
+      result += background.mean_value(pos);
+    }
+    return result;
+  }
+
+  public double score_variance(DiBackgroundModel background) {
+    double variance = 0.0;
+    for (double[] pos : matrix) {
+      double mean_square = background.mean_square_value(pos);
+      double mean = background.mean_value(pos);
+      double squared_mean = mean * mean;
+      variance += mean_square - squared_mean;
+    }
+    return variance;
+  }
 }

@@ -141,4 +141,23 @@ public class PWM extends PM {
     }
     return new PWM(aligned_matrix, name);
   }
+
+  public double score_mean(BackgroundModel background) {
+    double result = 0.0;
+    for (double[] pos : matrix) {
+      result += background.mean_value(pos);
+    }
+    return result;
+  }
+
+  public double score_variance(BackgroundModel background) {
+    double variance = 0.0;
+    for (double[] pos : matrix) {
+      double mean_square = background.mean_square_value(pos);
+      double mean = background.mean_value(pos);
+      double squared_mean = mean * mean;
+      variance += mean_square - squared_mean;
+    }
+    return variance;
+  }
 }
