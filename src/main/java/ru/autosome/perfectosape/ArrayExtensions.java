@@ -1,10 +1,22 @@
 package ru.autosome.perfectosape;
 
+import gnu.trove.TDoubleCollection;
+import gnu.trove.iterator.TDoubleIterator;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class ArrayExtensions {
+  public static double sum(TDoubleCollection vals) {
+    TDoubleIterator iterator = vals.iterator();
+    double result = 0;
+    while(iterator.hasNext()) {
+      result += iterator.next();
+    }
+    return result;
+  }
+
   public static double max(double... array) throws IllegalArgumentException {
     if (array.length == 0) {
       throw new IllegalArgumentException("Can't calculate maximum of empty array");

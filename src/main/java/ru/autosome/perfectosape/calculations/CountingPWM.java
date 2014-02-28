@@ -43,22 +43,12 @@ public class CountingPWM {
     this.maxHashSize = maxHashSize;
   }
 
-
-  private double sum(TDoubleCollection vals) {
-    TDoubleIterator iterator = vals.iterator();
-    double result = 0;
-    while(iterator.hasNext()) {
-      result += iterator.next();
-    }
-    return result;
-  }
-
   private TDoubleDoubleMap count_distribution_under_pvalue(double max_pvalue) throws HashOverflowException {
     TDoubleDoubleMap cnt_distribution = new TDoubleDoubleHashMap();
     double look_for_count = max_pvalue * vocabularyVolume();
     GaussianThresholdEstimation gaussianThresholdEstimation = new GaussianThresholdEstimation(pwm, background);
 
-    while (!(sum(cnt_distribution.valueCollection()) >= look_for_count)) {
+    while (!(ArrayExtensions.sum(cnt_distribution.valueCollection()) >= look_for_count)) {
       double approximate_threshold;
       try {
         approximate_threshold = gaussianThresholdEstimation.thresholdByPvalue(max_pvalue);
