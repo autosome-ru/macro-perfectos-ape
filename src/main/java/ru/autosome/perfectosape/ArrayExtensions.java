@@ -2,6 +2,7 @@ package ru.autosome.perfectosape;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class ArrayExtensions {
   public static double max(double... array) throws IllegalArgumentException {
@@ -89,5 +90,22 @@ public class ArrayExtensions {
       i += 1;
     }
     return array;
+  }
+
+  // [ind_1, ind_2] such as value in [value_1, value_2]
+  public static int[] indices_of_range(List<Double> list, double value) {
+    int ind = java.util.Collections.binarySearch(list, value);
+    if (ind >= 0) {
+      return new int[] {ind, ind};
+    } else {
+      int insertion_point = -ind - 1;
+      if (insertion_point == 0) {
+        return new int[] {-1, -1};
+      } else if (insertion_point < list.size()) {
+        return new int[] {insertion_point - 1, insertion_point};
+      } else {
+        return new int[] {list.size(), list.size()};
+      }
+    }
   }
 }

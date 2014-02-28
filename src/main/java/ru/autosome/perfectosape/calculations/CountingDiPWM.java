@@ -204,24 +204,6 @@ public class CountingDiPWM {
     //return ArrayExtensions.toPrimitiveArray(keys);
   }
 
-
-  // [ind_1, ind_2] such as value in [value_1, value_2]
-  int[] indices_of_range(ArrayList<Double> list, double value) {
-    int ind = java.util.Collections.binarySearch(list, value);
-    if (ind >= 0) {
-      return new int[] {ind, ind};
-    } else {
-      int insertion_point = -ind - 1;
-      if (insertion_point == 0) {
-        return new int[] {-1, -1};
-      } else if (insertion_point < list.size()) {
-        return new int[] {insertion_point - 1, insertion_point};
-      } else {
-        return new int[] {list.size(), list.size()};
-      }
-    }
-  }
-
   HashMap<Double, double[][]> thresholds_by_pvalues(double... pvalues) {
     HashMap<Double, Double> scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     double[] scores = descending_sorted_hash_keys(scores_hash);
@@ -235,7 +217,7 @@ public class CountingDiPWM {
 
     for (double pvalue : pvalues) {
       double look_for_count = pvalue * vocabularyVolume();
-      int[] range_indices = indices_of_range(partial_sums, look_for_count);
+      int[] range_indices = ArrayExtensions.indices_of_range(partial_sums, look_for_count);
       if (range_indices[0] == -1) {
         results.put(pvalue, new double[][] { {scores[0], dipwm.best_score() + 1},
                                             {partial_sums.get(0), 0} });

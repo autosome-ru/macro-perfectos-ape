@@ -15,7 +15,6 @@ import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class CountingPWM {
   // Container for a range of thresholds and appropriate counts.
@@ -44,30 +43,6 @@ public class CountingPWM {
     this.maxHashSize = maxHashSize;
   }
 
-  private double score_mean() {
-    double result = 0.0;
-    for (double[] pos : pwm.matrix) {
-      result += background.mean_value(pos);
-    }
-    return result;
-  }
-
-  private double score_variance() {
-    double variance = 0.0;
-    for (double[] pos : pwm.matrix) {
-      double mean_square = background.mean_square_value(pos);
-      double mean = background.mean_value(pos);
-      double squared_mean = mean * mean;
-      variance += mean_square - squared_mean;
-    }
-    return variance;
-  }
-
-  private double threshold_gauss_estimation(double pvalue) {
-    double sigma = Math.sqrt(score_variance());
-    double n_ = MathExtensions.inverf(1 - 2 * pvalue) * Math.sqrt(2);
-    return score_mean() + n_ * sigma;
-  }
 
   private double sum(TDoubleCollection vals) {
     TDoubleIterator iterator = vals.iterator();
@@ -81,11 +56,12 @@ public class CountingPWM {
   private TDoubleDoubleMap count_distribution_under_pvalue(double max_pvalue) throws HashOverflowException {
     TDoubleDoubleMap cnt_distribution = new TDoubleDoubleHashMap();
     double look_for_count = max_pvalue * vocabularyVolume();
+    GaussianThresholdEstimation gaussianThresholdEstimation = new GaussianThresholdEstimation(pwm, background);
 
     while (!(sum(cnt_distribution.valueCollection()) >= look_for_count)) {
       double approximate_threshold;
       try {
-        approximate_threshold = threshold_gauss_estimation(max_pvalue);
+        approximate_threshold = gaussianThresholdEstimation.thresholdByPvalue(max_pvalue);
       } catch (ArithmeticException e) {
         approximate_threshold = pwm.worst_score();
       }
@@ -197,24 +173,6 @@ public class CountingPWM {
     return ArrayExtensions.reverse(keys);
   }
 
-
-  // [ind_1, ind_2] such as value in [value_1, value_2]
-  int[] indices_of_range(List<Double> list, double value) {
-    int ind = java.util.Collections.binarySearch(list, value);
-    if (ind >= 0) {
-      return new int[] {ind, ind};
-    } else {
-      int insertion_point = -ind - 1;
-      if (insertion_point == 0) {
-        return new int[] {-1, -1};
-      } else if (insertion_point < list.size()) {
-        return new int[] {insertion_point - 1, insertion_point};
-      } else {
-        return new int[] {list.size(), list.size()};
-      }
-    }
-  }
-
   TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues(double[] pvalues) throws HashOverflowException {
     TDoubleDoubleMap scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     double[] scores = descending_sorted_hash_keys(scores_hash);
@@ -228,7 +186,7 @@ public class CountingPWM {
 
     for (double pvalue : pvalues) {
       double look_for_count = pvalue * vocabularyVolume();
-      int[] range_indices = indices_of_range(partial_sums, look_for_count);
+      int[] range_indices = ArrayExtensions.indices_of_range(partial_sums, look_for_count);
       if (range_indices[0] == -1) {
         results.put(pvalue, new ThresholdsRange(scores[0], pwm.best_score() + 1,
                                                 partial_sums.get(0), 0));
