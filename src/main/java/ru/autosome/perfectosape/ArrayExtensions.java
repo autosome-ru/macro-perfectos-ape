@@ -2,8 +2,10 @@ package ru.autosome.perfectosape;
 
 import gnu.trove.TDoubleCollection;
 import gnu.trove.iterator.TDoubleIterator;
+import gnu.trove.map.TDoubleDoubleMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -119,5 +121,10 @@ public class ArrayExtensions {
         return new int[] {list.size(), list.size()};
       }
     }
+  }
+  public static double[] descending_sorted_hash_keys(TDoubleDoubleMap hsh) {
+    double[] keys = hsh.keys();
+    Arrays.sort(keys);
+    return ArrayExtensions.reverse(keys);
   }
 }
