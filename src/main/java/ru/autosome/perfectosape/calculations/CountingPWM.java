@@ -63,8 +63,8 @@ public class CountingPWM {
   private TDoubleDoubleMap count_distribution_after_threshold(double threshold) throws HashOverflowException {
     TDoubleDoubleMap scores = new TDoubleDoubleHashMap();
     scores.put(0.0, 1.0);
-    for (int column = 0; column < pwm.length(); ++column) {
-      scores = recalc_score_hash(scores, pwm.matrix[column], threshold - pwm.best_suffix(column + 1));
+    for (int pos = 0; pos < pwm.length(); ++pos) {
+      scores = recalc_score_hash(scores, pwm.matrix[pos], threshold - pwm.best_suffix(pos + 1));
       if (maxHashSize != null && scores.size() > maxHashSize) {
         throw new HashOverflowException("Hash overflow in PWM::ThresholdByPvalue#count_distribution_after_threshold");
       }
