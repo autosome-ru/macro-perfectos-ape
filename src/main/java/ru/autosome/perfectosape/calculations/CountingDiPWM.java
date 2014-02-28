@@ -3,7 +3,7 @@ package ru.autosome.perfectosape.calculations;
 
 import ru.autosome.perfectosape.*;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
-import ru.autosome.perfectosape.formatters.ResultInfo;
+import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
 import java.util.ArrayList;
@@ -11,31 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CountingDiPWM {
-
-  public static class ThresholdInfo extends ResultInfo {
-    public final double threshold;
-    public final double real_pvalue;
-    public final double expected_pvalue;
-    public final int recognized_words;
-
-    public ThresholdInfo(double threshold, double real_pvalue, double expected_pvalue, int recognized_words) {
-      this.threshold = threshold;
-      this.real_pvalue = real_pvalue;
-      this.expected_pvalue = expected_pvalue;
-      this.recognized_words = recognized_words;
-    }
-
-    // generate infos for non-disreeted matrix from infos for discreeted matrix
-    public ThresholdInfo downscale(Double discretization) {
-      if (discretization == null) {
-        return this;
-      } else {
-        return new ThresholdInfo(threshold / discretization, real_pvalue, expected_pvalue, recognized_words);
-      }
-    }
-  }
-
-
   private Integer max_hash_size;
 
   private final DiPWM dipwm;
@@ -168,29 +143,29 @@ public class CountingDiPWM {
     return result;
   }
 
-  public ArrayList<ThresholdInfo> thresholds(double... pvalues) {
-    ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
+  public ArrayList<CanFindThreshold.ThresholdInfo> thresholds(double... pvalues) {
+    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
     HashMap<Double, double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     for (double pvalue : thresholds_by_pvalues.keySet()) {
       double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
       double counts[] = thresholds_by_pvalues.get(pvalue)[1];
       double threshold = thresholds[0] + 0.1 * (thresholds[1] - thresholds[0]);
       double real_pvalue = counts[1] / vocabularyVolume();
-      results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[1]));
+      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
     }
     return results;
   }
 
   // "weak" means that threshold has real pvalue not less than given pvalue, while usual threshold not greater
-  public ArrayList<ThresholdInfo> weak_thresholds(double... pvalues) {
-    ArrayList<ThresholdInfo> results = new ArrayList<ThresholdInfo>();
+  public ArrayList<CanFindThreshold.ThresholdInfo> weak_thresholds(double... pvalues) {
+    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
     HashMap<Double, double[][]> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     for (double pvalue : thresholds_by_pvalues.keySet()) {
       double thresholds[] = thresholds_by_pvalues.get(pvalue)[0];
       double counts[] = thresholds_by_pvalues.get(pvalue)[1];
       double threshold = thresholds[0];
       double real_pvalue = counts[0] / vocabularyVolume();
-      results.add(new ThresholdInfo(threshold, real_pvalue, pvalue, (int) counts[0]));
+      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
     }
     return results;
   }

@@ -1,8 +1,6 @@
 package ru.autosome.perfectosape.calculations;
 
-import gnu.trove.TDoubleCollection;
 import gnu.trove.iterator.TDoubleDoubleIterator;
-import gnu.trove.iterator.TDoubleIterator;
 import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.TDoubleObjectMap;
