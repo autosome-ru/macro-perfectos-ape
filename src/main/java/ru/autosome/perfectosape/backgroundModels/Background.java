@@ -5,7 +5,6 @@ import ru.autosome.perfectosape.ArrayExtensions;
 import java.util.StringTokenizer;
 
 public class Background implements BackgroundModel {
-  static final int ALPHABET_SIZE = 4;
   private double[] background;
 
   // TODO: whether we should check symmetricity of background
@@ -69,7 +68,14 @@ public class Background implements BackgroundModel {
 
   @Override
   public String toString() {
-    return background[0] + "," + background[1] + "," + background[2] + "," + background[3];
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < ALPHABET_SIZE; ++i) {
+      if (i != 0) {
+        builder.append(',');
+      }
+      builder.append(background[i]);
+    }
+    return builder.toString();
   }
 
   @Override

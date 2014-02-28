@@ -46,19 +46,19 @@ public class WordwiseBackground implements BackgroundModel {
   @Override
   public double mean_value(double[] values) {
     double sum = 0;
-    for (int letter = 0; letter < 4; ++letter) {
+    for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
       sum += values[letter];
     }
-    return sum / 4.0;
+    return sum / ALPHABET_SIZE;
   }
 
   @Override
   public double mean_square_value(double[] values) {
     double sum_square = 0.0;
-    for (int letter = 0; letter < 4; ++letter) {
+    for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
       sum_square += values[letter] * values[letter];
     }
-    return sum_square / 4.0;
+    return sum_square / ALPHABET_SIZE;
   }
 
   @Override

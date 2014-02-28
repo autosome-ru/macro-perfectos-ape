@@ -16,11 +16,11 @@ public class DiBackground implements DiBackgroundModel {
   }
 
   private static DiBackgroundModel fromArray(double[] background) {
-    if (background.length != 16) {
+    if (background.length != ALPHABET_SIZE) {
       throw new IllegalArgumentException("Background constructor accepts double array of length 4");
     }
     boolean wordwise = true;
-    for (int i = 0; i < 16; ++i) {
+    for (int i = 0; i < ALPHABET_SIZE; ++i) {
       if (Math.abs(background[i] - 1) > 0.0001) {
         wordwise = false;
       }
@@ -58,9 +58,9 @@ public class DiBackground implements DiBackgroundModel {
   }
 
   public static DiBackgroundModel fromString(String s) {
-    double[] background = new double[16];
+    double[] background = new double[ALPHABET_SIZE];
     StringTokenizer parser = new StringTokenizer(s);
-    for (int i = 0; i < 16; ++i) {
+    for (int i = 0; i < ALPHABET_SIZE; ++i) {
       background[i] = Double.valueOf(parser.nextToken(","));
     }
     return DiBackground.fromArray(background);
@@ -68,10 +68,14 @@ public class DiBackground implements DiBackgroundModel {
 
   @Override
   public String toString() {
-    return  background[0] + "," + background[1] + "," + background[2] + "," + background[3] + ", " +
-            background[4] + "," + background[5] + "," + background[6] + "," + background[7] + ", " +
-            background[8] + "," + background[9] + "," + background[10] + "," + background[11] + ", " +
-            background[12] + "," + background[13] + "," + background[14] + "," + background[15];
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < ALPHABET_SIZE; ++i) {
+      if (i != 0) {
+        builder.append(',');
+      }
+      builder.append(background[i]);
+    }
+    return builder.toString();
   }
 
   @Override
@@ -82,7 +86,7 @@ public class DiBackground implements DiBackgroundModel {
   @Override
   public double mean_value(double[] values) {
     double result = 0;
-    for (int letter = 0; letter < 16; ++letter) {
+    for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
       result += values[letter] * probability(letter);
     }
     return result;
@@ -91,7 +95,7 @@ public class DiBackground implements DiBackgroundModel {
   @Override
   public double mean_square_value(double[] values) {
     double mean_square = 0.0;
-    for (int letter = 0; letter < 16; ++letter) {
+    for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
       mean_square += values[letter] * values[letter] * probability(letter);
     }
     return mean_square;

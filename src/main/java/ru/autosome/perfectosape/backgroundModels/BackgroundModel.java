@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.backgroundModels;
 
 public interface BackgroundModel {
+  static final int ALPHABET_SIZE = 4;
   public double[] probability();
 
   public double probability(int index);
