@@ -2,16 +2,11 @@ package ru.autosome.perfectosape.calculations;
 
 import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.map.TDoubleDoubleMap;
-import gnu.trove.map.TDoubleObjectMap;
+
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
-import gnu.trove.map.hash.TDoubleObjectHashMap;
-import ru.autosome.perfectosape.*;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.perfectosape.motifModels.PWM;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class CountingPWM extends ScoringModelDistibutions {
 
@@ -40,11 +35,15 @@ public class CountingPWM extends ScoringModelDistibutions {
     return pwm.best_score();
   }
 
+  protected TDoubleDoubleMap initialCountDistribution() {
+    TDoubleDoubleMap scores = new TDoubleDoubleHashMap();
+    scores.put(0.0, 1.0);
+    return scores;
+  }
 
   @Override
   protected TDoubleDoubleMap count_distribution_above_threshold(double threshold) throws HashOverflowException {
-    TDoubleDoubleMap scores = new TDoubleDoubleHashMap();
-    scores.put(0.0, 1.0);
+    TDoubleDoubleMap scores = initialCountDistribution();
     for (int pos = 0; pos < pwm.length(); ++pos) {
       scores = recalc_score_hash(scores, pwm.matrix[pos], threshold - pwm.best_suffix(pos + 1));
       if (maxHashSize != null && scores.size() > maxHashSize) {

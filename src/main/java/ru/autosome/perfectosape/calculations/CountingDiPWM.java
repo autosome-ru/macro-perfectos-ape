@@ -1,12 +1,12 @@
 package ru.autosome.perfectosape.calculations;
 
 
+import gnu.trove.iterator.TDoubleDoubleIterator;
+import gnu.trove.map.TDoubleDoubleMap;
+import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.perfectosape.motifModels.DiPWM;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CountingDiPWM extends ScoringModelDistibutions {
   private Integer max_hash_size;
@@ -35,14 +35,19 @@ public class CountingDiPWM extends ScoringModelDistibutions {
     return new GaussianThresholdDinucleotideEstimator(dipwm, dibackground);
   }
 
-  private HashMap<Double, Double> count_distribution_above_threshold(double threshold) {
-    // scores[index_of_letter 'A'] are scores of words of specific (current) length ending with A
-    HashMap<Double, Double>[] scores = new HashMap[4];
+  protected TDoubleDoubleMap[] initialCountDistribution() {
+    TDoubleDoubleMap[] scores = new TDoubleDoubleMap[4];
     for(int i = 0; i < 4; ++i) {
-      scores[i] = new HashMap<Double, Double>();
+      scores[i] = new TDoubleDoubleHashMap();
       scores[i].put(0.0, 1.0);
     }
+    return scores;
+  }
 
+  @Override
+  protected TDoubleDoubleMap count_distribution_above_threshold(double threshold) {
+    // scores[index_of_letter 'A'] are scores of words of specific (current) length ending with A
+    TDoubleDoubleMap[] scores = initialCountDistribution();
     for (int column = 0; column < dipwm.matrix.length; ++column) {
       scores = recalc_score_hash(scores, dipwm.matrix[column], threshold - dipwm.best_suffix(column + 1));
       if (max_hash_size != null && scores[0].size() + scores[1].size() + scores[2].size() + scores[3].size() > max_hash_size) {
@@ -53,33 +58,36 @@ public class CountingDiPWM extends ScoringModelDistibutions {
     return combine_scores(scores);
   }
 
-  HashMap<Double,Double> combine_scores(HashMap<Double,Double>[] scores) {
-    HashMap<Double,Double> combined_scores = new HashMap<Double, Double>();
+  TDoubleDoubleMap combine_scores(TDoubleDoubleMap[] scores) {
+    TDoubleDoubleMap combined_scores = new TDoubleDoubleHashMap();
     for (int i = 0; i < 4; ++i) {
-      for (Double score : scores[i].keySet()) {
-        if (!combined_scores.containsKey(score)) {
-          combined_scores.put(score, 0.0);
-        }
-        combined_scores.put(score, combined_scores.get(score) + scores[i].get(score));
+      TDoubleDoubleIterator iterator = scores[i].iterator();
+      while(iterator.hasNext()) {
+        iterator.advance();
+        double score = iterator.key();
+        double count = iterator.value();
+        combined_scores.adjustOrPutValue(score, count, count);
       }
     }
     return combined_scores;
   }
 
-  private HashMap<Double, Double>[] recalc_score_hash(HashMap<Double, Double>[] scores, double[] column, double least_sufficient) {
-    HashMap<Double, Double>[] new_scores = new HashMap[4];
+  private TDoubleDoubleMap[] recalc_score_hash(TDoubleDoubleMap[] scores, double[] column, double least_sufficient) {
+    TDoubleDoubleMap[] new_scores = new TDoubleDoubleMap[4];
     for(int i = 0; i < 4; ++i) {
-      new_scores[i] = new HashMap<Double, Double>();
-      for (Map.Entry<Double, Double> entry : scores[i].entrySet()) {
-        double score = entry.getKey();
-        double count = entry.getValue();
+      new_scores[i] = new TDoubleDoubleHashMap();
+
+      TDoubleDoubleIterator iterator = scores[i].iterator();
+      while(iterator.hasNext()) {
+        iterator.advance();
+        double score = iterator.key();
+        double count = iterator.value();
+
         for (int letter = 0; letter < 4; ++letter) {
           double new_score = score + column[i*4 + letter];
           if (new_score >= least_sufficient) {
-            if (!new_scores[letter].containsKey(new_score)) {
-              new_scores[letter].put(new_score, 0.0);
-            }
-            new_scores[letter].put(new_score, new_scores[letter].get(new_score) + count * dibackground.count(letter));
+            double add = count * dibackground.count(letter);
+            new_scores[letter].adjustOrPutValue(new_score, add, add);
           }
         }
       }
