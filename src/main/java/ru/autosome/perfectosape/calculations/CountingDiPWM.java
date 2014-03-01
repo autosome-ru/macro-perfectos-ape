@@ -9,15 +9,15 @@ import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdAppro
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
 public class CountingDiPWM extends ScoringModelDistibutions {
-  private Integer max_hash_size;
+  private Integer maxHashSize;
 
   private final DiPWM dipwm;
   private final DiBackgroundModel dibackground;
 
-  public CountingDiPWM(DiPWM dipwm, DiBackgroundModel dibackground, Integer max_hash_size) {
+  public CountingDiPWM(DiPWM dipwm, DiBackgroundModel dibackground, Integer maxHashSize) {
     this.dipwm = dipwm;
     this.dibackground = dibackground;
-    this.max_hash_size = max_hash_size;
+    this.maxHashSize = maxHashSize;
   }
 
   @Override
@@ -50,7 +50,7 @@ public class CountingDiPWM extends ScoringModelDistibutions {
     TDoubleDoubleMap[] scores = initialCountDistribution();
     for (int column = 0; column < dipwm.matrix.length; ++column) {
       scores = recalc_score_hash(scores, dipwm.matrix[column], threshold - dipwm.best_suffix(column + 1));
-      if (max_hash_size != null && scores[0].size() + scores[1].size() + scores[2].size() + scores[3].size() > max_hash_size) {
+      if (exceedHashSizeLimit(scores)) {
         throw new IllegalArgumentException("Hash overflow in DiPWM::ThresholdByPvalue#count_distribution_above_threshold");
       }
     }
@@ -100,4 +100,7 @@ public class CountingDiPWM extends ScoringModelDistibutions {
     return Math.pow(dibackground.volume(), dipwm.length());
   }
 
+  protected boolean exceedHashSizeLimit(TDoubleDoubleMap[] scores) {
+    return maxHashSize != null && (scores[0].size() + scores[1].size() + scores[2].size() + scores[3].size()) > maxHashSize;
+  }
 }

@@ -73,7 +73,7 @@ public class FindPvalueAPE implements CanFindPvalue {
   @Override
   public PvalueInfo[] pvaluesByThresholds(double[] thresholds) throws HashOverflowException {
     CountingPWM countingPWM = new CountingPWM(pwm.discrete(discretization), background, maxHashSize);
-    TDoubleDoubleMap counts = countingPWM.counts_by_thresholds(upscaled_thresholds(thresholds));
+    TDoubleDoubleMap counts = countingPWM.counts_above_thresholds(upscaled_thresholds(thresholds));
 
     PvalueInfo[] infos = new PvalueInfo[thresholds.length];
     for (int i = 0; i < thresholds.length; ++i) {

@@ -46,7 +46,7 @@ public class CountingPWM extends ScoringModelDistibutions {
     TDoubleDoubleMap scores = initialCountDistribution();
     for (int pos = 0; pos < pwm.length(); ++pos) {
       scores = recalc_score_hash(scores, pwm.matrix[pos], threshold - pwm.best_suffix(pos + 1));
-      if (maxHashSize != null && scores.size() > maxHashSize) {
+      if (exceedHashSizeLimit(scores)) {
         throw new HashOverflowException("Hash overflow in PWM::ThresholdByPvalue#count_distribution_above_threshold");
       }
     }
@@ -74,5 +74,9 @@ public class CountingPWM extends ScoringModelDistibutions {
   @Override
   public double vocabularyVolume() {
     return Math.pow(background.volume(), pwm.length());
+  }
+
+  protected boolean exceedHashSizeLimit(TDoubleDoubleMap scores) {
+    return maxHashSize != null && scores.size() > maxHashSize;
   }
 }

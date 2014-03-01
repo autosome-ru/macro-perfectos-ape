@@ -44,7 +44,7 @@ abstract public class ScoringModelDistibutions {
     return cnt_distribution;
   }
 
-  public TDoubleDoubleMap counts_by_thresholds(double[] thresholds) throws HashOverflowException {
+  public TDoubleDoubleMap counts_above_thresholds(double[] thresholds) throws HashOverflowException {
     TDoubleDoubleMap scores = count_distribution_above_threshold(ArrayExtensions.min(thresholds));
     TDoubleDoubleMap result = new TDoubleDoubleHashMap();
     for (double threshold : thresholds) {
@@ -63,6 +63,24 @@ abstract public class ScoringModelDistibutions {
     return result;
   }
 
+  public Double count_above_threshold(double threshold) throws HashOverflowException {
+    return counts_above_thresholds(new double[]{threshold}).get(threshold);
+  }
+
+  ThresholdsRange thresholdsRangeByCount(double[] scores, List<Double> partial_sums, double look_for_count) {
+    int[] range_indices = ArrayExtensions.indices_of_range(partial_sums, look_for_count);
+    if (range_indices[0] == -1) {
+      return new ThresholdsRange(scores[0], best_score() + 1,
+                                            partial_sums.get(0), 0);
+    } else if (range_indices[0] == partial_sums.size()) {
+      return new ThresholdsRange(worst_score() - 1, scores[scores.length - 1],
+                                            vocabularyVolume(), partial_sums.get(scores.length - 1));
+    } else {
+      return new ThresholdsRange(scores[range_indices[1]], scores[range_indices[0]],
+                                            partial_sums.get(range_indices[1]), partial_sums.get(range_indices[0]));
+    }
+  }
+
   TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues(double[] pvalues) throws HashOverflowException {
     TDoubleDoubleMap scores_hash = count_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     double[] scores = ArrayExtensions.descending_sorted_hash_keys(scores_hash);
@@ -72,30 +90,13 @@ abstract public class ScoringModelDistibutions {
       counts[i] = scores_hash.get(scores[i]);
     }
     List<Double> partial_sums = ArrayExtensions.partial_sums(counts, 0.0);
-    TDoubleObjectMap<ThresholdsRange> results = new TDoubleObjectHashMap<ThresholdsRange>();
 
+    TDoubleObjectMap<ThresholdsRange> results = new TDoubleObjectHashMap<ThresholdsRange>();
     for (double pvalue : pvalues) {
       double look_for_count = pvalue * vocabularyVolume();
-
-      int[] range_indices = ArrayExtensions.indices_of_range(partial_sums, look_for_count);
-      ThresholdsRange thresholdsRange;
-      if (range_indices[0] == -1) {
-        thresholdsRange = new ThresholdsRange(scores[0], best_score() + 1,
-                                              partial_sums.get(0), 0);
-      } else if (range_indices[0] == partial_sums.size()) {
-        thresholdsRange = new ThresholdsRange(worst_score() - 1, scores[scores.length - 1],
-                                              vocabularyVolume(), partial_sums.get(scores.length - 1));
-      } else {
-        thresholdsRange = new ThresholdsRange(scores[range_indices[1]], scores[range_indices[0]],
-                                              partial_sums.get(range_indices[1]), partial_sums.get(range_indices[0]));
-      }
-      results.put(pvalue, thresholdsRange);
+      results.put(pvalue, thresholdsRangeByCount(scores, partial_sums, look_for_count));
     }
     return results;
-  }
-
-  public Double count_by_threshold(double threshold) throws HashOverflowException {
-    return counts_by_thresholds(new double[]{threshold}).get(threshold);
   }
 
   // "strong" means that threshold has real pvalue not more than requested one
