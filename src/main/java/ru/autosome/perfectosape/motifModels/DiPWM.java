@@ -127,27 +127,19 @@ public class DiPWM {
   }
 
   public double best_score() {
-    return best_suffix(0);
-  }
-
-  public double worst_score() {
-    return worst_suffix(0);
-  }
-  // best score of suffix s[i..l]
-  public double best_suffix(int i) {
     double best_score = Double.NEGATIVE_INFINITY;
     for (int letter = 0; letter < 4; ++letter) {
       best_score = max(best_score,
-                       best_suffix(i, letter));
+                       best_suffix(0, letter));
     }
     return best_score;
   }
 
-  public double worst_suffix(int i) {
+  public double worst_score() {
     double worst_score = Double.POSITIVE_INFINITY;
     for (int letter = 0; letter < 4; ++letter) {
       worst_score = min(worst_score,
-                        worst_suffix(i, letter));
+                        worst_suffix(0, letter));
     }
     return worst_score;
   }
@@ -156,10 +148,10 @@ public class DiPWM {
   // is the best score of suffix seq[pos:end] of word such that seq[pos] == letter
   // suffix of length 1 has no score (because it's dinculeotide model)
   // so such elements are equal zero
-  private double best_suffix(int pos, int letter) {
+  public double best_suffix(int pos, int letter) {
     return best_suffices()[pos][letter];
   }
-  private double worst_suffix(int pos, int letter) {
+  public double worst_suffix(int pos, int letter) {
     return worst_suffices()[pos][letter];
   }
 

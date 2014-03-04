@@ -3,6 +3,7 @@ package ru.autosome.perfectosape.calculations.findPvalue;
 import gnu.trove.map.TDoubleDoubleMap;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.calculations.CountingPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
@@ -70,9 +71,13 @@ public class FindPvalueAPE implements CanFindPvalue {
     return new PvalueInfo(non_upscaled_threshold, pvalue);
   }
 
+  ScoringModelDistibutions countingPWM() {
+    return new CountingPWM(pwm.discrete(discretization), background, maxHashSize);
+  }
+
   @Override
   public PvalueInfo[] pvaluesByThresholds(double[] thresholds) throws HashOverflowException {
-    CountingPWM countingPWM = new CountingPWM(pwm.discrete(discretization), background, maxHashSize);
+    ScoringModelDistibutions countingPWM = countingPWM();
     TDoubleDoubleMap counts = countingPWM.counts_above_thresholds(upscaled_thresholds(thresholds));
 
     PvalueInfo[] infos = new PvalueInfo[thresholds.length];

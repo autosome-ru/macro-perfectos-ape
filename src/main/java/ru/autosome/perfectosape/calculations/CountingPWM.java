@@ -4,6 +4,7 @@ import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.map.TDoubleDoubleMap;
 
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
+import ru.autosome.perfectosape.ScoreDistributionTop;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.perfectosape.motifModels.PWM;
@@ -26,15 +27,6 @@ public class CountingPWM extends ScoringModelDistibutions {
     return new GaussianThresholdEstimator(pwm, background);
   }
 
-  @Override
-  double worst_score() {
-    return pwm.worst_score();
-  }
-  @Override
-  double best_score() {
-    return pwm.best_score();
-  }
-
   protected TDoubleDoubleMap initialCountDistribution() {
     TDoubleDoubleMap scores = new TDoubleDoubleHashMap();
     scores.put(0.0, 1.0);
@@ -42,15 +34,18 @@ public class CountingPWM extends ScoringModelDistibutions {
   }
 
   @Override
-  protected TDoubleDoubleMap count_distribution_above_threshold(double threshold) throws HashOverflowException {
+  protected ScoreDistributionTop score_distribution_above_threshold(double threshold) throws HashOverflowException {
     TDoubleDoubleMap scores = initialCountDistribution();
     for (int pos = 0; pos < pwm.length(); ++pos) {
       scores = recalc_score_hash(scores, pwm.matrix[pos], threshold - pwm.best_suffix(pos + 1));
       if (exceedHashSizeLimit(scores)) {
-        throw new HashOverflowException("Hash overflow in PWM::ThresholdByPvalue#count_distribution_above_threshold");
+        throw new HashOverflowException("Hash overflow in PWM::ThresholdByPvalue#score_distribution_above_threshold");
       }
     }
-    return scores;
+    ScoreDistributionTop result = new ScoreDistributionTop(scores, vocabularyVolume(), threshold);
+    result.setWorstScore(pwm.worst_score());
+    result.setBestScore(pwm.best_score());
+    return result;
   }
 
   private TDoubleDoubleMap recalc_score_hash(TDoubleDoubleMap scores, double[] column, double least_sufficient) {
@@ -71,12 +66,11 @@ public class CountingPWM extends ScoringModelDistibutions {
     return new_scores;
   }
 
-  @Override
-  public double vocabularyVolume() {
+  private double vocabularyVolume() {
     return Math.pow(background.volume(), pwm.length());
   }
 
-  protected boolean exceedHashSizeLimit(TDoubleDoubleMap scores) {
+  private boolean exceedHashSizeLimit(TDoubleDoubleMap scores) {
     return maxHashSize != null && scores.size() > maxHashSize;
   }
 }
