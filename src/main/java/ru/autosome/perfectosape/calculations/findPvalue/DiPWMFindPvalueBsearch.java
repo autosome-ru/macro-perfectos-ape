@@ -3,7 +3,6 @@ package ru.autosome.perfectosape.calculations.findPvalue;
 import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.motifModels.DiPWM;
-import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.io.File;
 import java.io.FileNotFoundException;

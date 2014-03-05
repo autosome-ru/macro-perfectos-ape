@@ -2,19 +2,18 @@ package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.ArrayExtensions;
 import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.backgroundModels.*;
+import ru.autosome.perfectosape.backgroundModels.DiBackground;
+import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.findThreshold.DiPWMFindThresholdAPE;
-import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.importers.DiPWMImporter;
 import ru.autosome.perfectosape.importers.PMParser;
-import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.DataModel;
 import ru.autosome.perfectosape.motifModels.DiPWM;
-import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.Collections;

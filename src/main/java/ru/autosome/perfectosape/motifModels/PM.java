@@ -4,10 +4,19 @@ import gnu.trove.impl.unmodifiable.TUnmodifiableCharIntMap;
 import gnu.trove.map.TCharIntMap;
 import gnu.trove.map.hash.TCharIntHashMap;
 
-public class PM {
+public class PM implements Named {
   public static final int ALPHABET_SIZE = 4;
   public final double[][] matrix;
   public String name;
+
+  @Override
+  public String getName() {
+    return name;
+  }
+  @Override
+  public void setName(String name) {
+    this.name = name;
+  }
 
   protected static final TCharIntMap indexByLetter =
    new TUnmodifiableCharIntMap( new TCharIntHashMap(new char[]{'A','C','G','T'},

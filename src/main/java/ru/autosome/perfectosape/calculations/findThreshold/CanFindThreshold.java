@@ -1,6 +1,5 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;

@@ -1,6 +1,5 @@
 package ru.autosome.perfectosape.calculations.findPvalue;
 
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.formatters.OutputInformation;

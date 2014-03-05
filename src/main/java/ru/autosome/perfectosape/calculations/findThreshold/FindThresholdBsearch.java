@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
-import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.motifModels.PWM;
 

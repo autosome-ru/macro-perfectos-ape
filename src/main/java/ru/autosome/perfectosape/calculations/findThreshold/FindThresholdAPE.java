@@ -1,10 +1,9 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.CountingPWM;
-import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindThresholdAPE implements CanFindThreshold {

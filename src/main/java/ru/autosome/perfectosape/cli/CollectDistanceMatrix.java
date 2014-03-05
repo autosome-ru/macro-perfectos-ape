@@ -1,7 +1,6 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.api.FindThresholdAPE;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
@@ -19,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import static ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE.*;
 
 public class CollectDistanceMatrix {
   private static final String DOC =
@@ -139,7 +136,7 @@ public class CollectDistanceMatrix {
       extract_option(argv);
     }
     PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount);
-    pwmCollection = new PWMCollectionImporter(importer).loadPWMCollection(pathToCollectionOfPWMs);
+    pwmCollection = new PWMCollectionImporter<PWM>(importer).loadPWMCollection(pathToCollectionOfPWMs);
   }
 
   private CollectDistanceMatrix() {

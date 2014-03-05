@@ -122,8 +122,8 @@ public class FindPvalue {
       extract_option(argv);
     }
     pwm = new PWMImporter(background,
-                          data_model,
-                          effective_count).loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename));
+                                data_model,
+                                effective_count).loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename));
   }
 
   private FindPvalue() {

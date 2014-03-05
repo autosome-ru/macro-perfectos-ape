@@ -1,19 +1,12 @@
 package ru.autosome.perfectosape.calculations;
 
-import gnu.trove.iterator.TDoubleDoubleIterator;
-import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.TDoubleObjectMap;
-import gnu.trove.map.hash.TDoubleDoubleHashMap;
-import gnu.trove.map.hash.TDoubleObjectHashMap;
 import ru.autosome.perfectosape.ArrayExtensions;
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.ScoreDistributionTop;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdApproximation;
-
-import java.util.ArrayList;
-import java.util.List;
 
 abstract public class ScoringModelDistibutions {
   abstract CanFindThresholdApproximation gaussianThresholdEstimator();

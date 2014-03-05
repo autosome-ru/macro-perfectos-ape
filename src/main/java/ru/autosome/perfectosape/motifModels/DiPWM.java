@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import static java.lang.Math.*;
 
-public class DiPWM implements ScoringModel {
+public class DiPWM implements Named,ScoringModel {
   static final int ALPHABET_SIZE = 16;
   public final double[][] matrix;
   public String name;
@@ -40,6 +40,15 @@ public class DiPWM implements ScoringModel {
     indexByLetter.put("TC", 13);
     indexByLetter.put("TG", 14);
     indexByLetter.put("TT", 15);
+  }
+
+  @Override
+  public String getName() {
+    return name;
+  }
+  @Override
+  public void setName(String name) {
+    this.name = name;
   }
 
   public DiPWM(double[][] matrix, String name) {

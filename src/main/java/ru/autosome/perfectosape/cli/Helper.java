@@ -1,9 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
-import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.ArrayExtensions;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Helper {

@@ -4,7 +4,6 @@ import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.motifModels.DiPWM;
-import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.io.File;
 import java.io.FileNotFoundException;

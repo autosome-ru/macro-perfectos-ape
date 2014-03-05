@@ -1,11 +1,11 @@
 package ru.autosome.perfectosape.cli;
 
-import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
-import ru.autosome.perfectosape.calculations.*;
-import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.ComparePWM;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;

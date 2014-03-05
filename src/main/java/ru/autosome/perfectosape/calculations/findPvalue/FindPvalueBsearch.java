@@ -1,9 +1,8 @@
 package ru.autosome.perfectosape.calculations.findPvalue;
 
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.motifModels.PWM;
-import ru.autosome.perfectosape.PvalueBsearchList;
 
 import java.io.File;
 import java.io.FileNotFoundException;

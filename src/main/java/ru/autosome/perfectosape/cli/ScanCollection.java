@@ -1,6 +1,6 @@
 package ru.autosome.perfectosape.cli;
 
-import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
@@ -139,7 +139,7 @@ public class ScanCollection {
     }
 
     PWMImporter pwmImporter = new PWMImporter(collectionBackground, dataModel, effectiveCount);
-    PWMCollectionImporter collectionImporter = new PWMCollectionImporter(pwmImporter);
+    PWMCollectionImporter collectionImporter = new PWMCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
     List<ThresholdEvaluator> result = new ArrayList<ThresholdEvaluator>();
     for (PWM pwm: pwmList) {

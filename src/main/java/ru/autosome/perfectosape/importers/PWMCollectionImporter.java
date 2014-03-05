@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.importers;
 
-import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.perfectosape.motifModels.Named;
+import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,14 +9,14 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PWMCollectionImporter {
-  PWMImporter importer;
+public class PWMCollectionImporter <ModelType extends Named & ScoringModel> {
+  PWMImporterGeneralized<ModelType> importer;
   
-  public PWMCollectionImporter(PWMImporter importer) {
+  public PWMCollectionImporter(PWMImporterGeneralized<ModelType> importer) {
     this.importer = importer;
   }
 
-  public List<PWM> loadPWMCollection(File pathToPwms) throws FileNotFoundException {
+  public List<ModelType> loadPWMCollection(File pathToPwms) throws FileNotFoundException {
     if (pathToPwms.isDirectory()) {
       return loadPWMCollectionFromFolder(pathToPwms);
     } else {
@@ -23,22 +24,22 @@ public class PWMCollectionImporter {
     }
   }
 
-  private List<PWM> loadPWMCollectionFromFolder(File pathToPWMs) throws FileNotFoundException {
-    List<PWM> result = new ArrayList<PWM>();
+  private List<ModelType> loadPWMCollectionFromFolder(File pathToPWMs) throws FileNotFoundException {
+    List<ModelType> result = new ArrayList<ModelType>();
     File[] files = pathToPWMs.listFiles();
     if (files == null) {
       return result;
     }
     for (File file : files) {
-      PWM pwm = importer.loadPWMFromFile(file);
+      ModelType pwm = importer.loadPWMFromFile(file);
       result.add(pwm);
     }
     return result;
   }
 
-  private List<PWM> loadPWMCollectionFromFile(File pathToPWMs) {
+  private List<ModelType> loadPWMCollectionFromFile(File pathToPWMs) {
     try {
-      List<PWM> result = new ArrayList<PWM>();
+      List<ModelType> result = new ArrayList<ModelType>();
       BufferedPushbackReader reader = new BufferedPushbackReader(new FileInputStream(pathToPWMs));
       boolean canExtract = true;
       while (canExtract) {
@@ -47,7 +48,7 @@ public class PWMCollectionImporter {
         if (parser == null) {
           canExtract = false;
         } else {
-          PWM pwm = importer.loadPWMFromParser(parser);
+          ModelType pwm = importer.loadPWMFromParser(parser);
           result.add(pwm);
         }
       }
