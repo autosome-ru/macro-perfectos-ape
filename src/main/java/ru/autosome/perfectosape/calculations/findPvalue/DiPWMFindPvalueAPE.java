@@ -105,7 +105,7 @@ public class DiPWMFindPvalueAPE implements CanFindPvalue {
         @Override
         public Object run(PvalueInfo cell) {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(dibackground, dipwm.length());
-          return (int)numberOfRecognizedWords;
+          return (long)numberOfRecognizedWords;
         }
       });
     }

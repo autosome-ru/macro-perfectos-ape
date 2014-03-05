@@ -101,8 +101,8 @@ public class PWM extends PM {
       return this;
     }
     double[][] mat_result;
-    mat_result = new double[length()][];
-    for (int i = 0; i < length(); ++i) {
+    mat_result = new double[matrix.length][];
+    for (int i = 0; i < matrix.length; ++i) {
       mat_result[i] = new double[4];
       for (int j = 0; j < 4; ++j) {
         mat_result[i][j] = ceil(matrix[i][j] * rate);

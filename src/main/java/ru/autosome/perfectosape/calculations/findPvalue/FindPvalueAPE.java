@@ -105,7 +105,7 @@ public class FindPvalueAPE implements CanFindPvalue {
         @Override
         public Object run(PvalueInfo cell) {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, pwm.length());
-          return (int)numberOfRecognizedWords;
+          return (long)numberOfRecognizedWords;
         }
       });
     }

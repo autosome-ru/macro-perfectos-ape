@@ -150,7 +150,7 @@ public class FindThreshold {
         @Override
         public Object run(CanFindThreshold.ThresholdInfo cell) {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, pwm.length());
-          return (int)numberOfRecognizedWords;
+          return (long)numberOfRecognizedWords;
         }
       });
     }

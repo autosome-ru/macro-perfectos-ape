@@ -67,4 +67,3 @@ public class DiWordwiseBackground implements DiBackgroundModel {
     return sum_square / ALPHABET_SIZE;
   }
 }
-

@@ -173,9 +173,11 @@ public class DiPWM {
   private double[][] calculate_best_suffices() {
     double[][] result = new double[matrix.length + 1][];
     for(int letter = 0; letter < 4; ++letter) {
+      result[matrix.length] = new double[ALPHABET_SIZE];
       result[matrix.length][letter] = 0;
     }
     for(int i = matrix.length - 1; i >= 0; --i) {
+      result[i] = new double[ALPHABET_SIZE];
       for (int letter = 0; letter < 4; ++letter) {
         double best_score = Double.NEGATIVE_INFINITY;
         for(int next_letter = 0; next_letter < 4; ++next_letter) {
@@ -190,9 +192,11 @@ public class DiPWM {
   private double[][] calculate_worst_suffices() {
     double[][] result = new double[matrix.length + 1][];
     for(int letter = 0; letter < 4; ++letter) {
+      result[matrix.length] = new double[ALPHABET_SIZE];
       result[matrix.length][letter] = 0;
     }
     for(int i = matrix.length - 1; i >= 0; --i) {
+      result[i] = new double[ALPHABET_SIZE];
       for (int letter = 0; letter < 4; ++letter) {
         double worst_score = Double.POSITIVE_INFINITY;
         for(int next_letter = 0; next_letter < 4; ++next_letter) {
@@ -209,10 +213,10 @@ public class DiPWM {
       return this;
     }
     double[][] mat_result;
-    mat_result = new double[length()][];
+    mat_result = new double[matrix.length][];
     for (int i = 0; i < matrix.length; ++i) {
-      mat_result[i] = new double[4];
-      for (int j = 0; j < 4; ++j) {
+      mat_result[i] = new double[ALPHABET_SIZE];
+      for (int j = 0; j < ALPHABET_SIZE; ++j) {
         mat_result[i][j] = ceil(matrix[i][j] * rate);
       }
     }
