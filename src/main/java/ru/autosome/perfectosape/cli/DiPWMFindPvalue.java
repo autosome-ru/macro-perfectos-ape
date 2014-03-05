@@ -1,9 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.ArrayExtensions;
-import ru.autosome.perfectosape.backgroundModels.DiBackground;
-import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
-import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
+import ru.autosome.perfectosape.backgroundModels.*;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.DiPWMFindPvalueAPE;
@@ -62,9 +60,13 @@ public class DiPWMFindPvalue {
     return cache_calculator;
   }
 
-  private void initialize_defaults() {
-    discretization = 10000.0;
+  protected void initialize_default_background() {
     dibackground = new DiWordwiseBackground();
+  }
+
+  private void initialize_defaults() {
+    initialize_default_background();
+    discretization = 10000.0;
     thresholds = new double[0];
     max_hash_size = 10000000;
     data_model = DataModel.PWM;
@@ -94,10 +96,14 @@ public class DiPWMFindPvalue {
     thresholds = ArrayExtensions.toPrimitiveArray(thresholds_list);
   }
 
+  protected void extract_background(String str) {
+    dibackground = DiBackground.fromString(str);
+  }
+
   private void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b")) {
-      dibackground = DiBackground.fromString(argv.remove(0));
+      extract_background(argv.remove(0));
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {

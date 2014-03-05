@@ -6,7 +6,7 @@ import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
-import ru.autosome.perfectosape.importers.PWMCollectionImporter;
+import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.PWM;
 
@@ -16,6 +16,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class MultiSNPScan extends MultiSNPScanGeneralized {
+  @Override
+  protected String DOC_run_string(){
+    return "java ru.autosome.perfectosape.cli.MultiSNPScan";
+  }
   @Override
   protected String DOC_background_option() {
     return "[-b <background probabilities] ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25";
@@ -45,7 +49,7 @@ public class MultiSNPScan extends MultiSNPScanGeneralized {
     }
 
     PWMImporter pwmImporter = new PWMImporter(background, dataModel, effectiveCount);
-    PWMCollectionImporter importer = new PWMCollectionImporter<PWM>(pwmImporter);
+    MotifCollectionImporter importer = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
 
     pwmCollection = new ArrayList<ThresholdEvaluator>();

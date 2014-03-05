@@ -12,8 +12,8 @@ import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBsearch;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.formatters.ResultInfo;
+import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.importers.PMParser;
-import ru.autosome.perfectosape.importers.PWMCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.DataModel;
 import ru.autosome.perfectosape.motifModels.PWM;
@@ -139,7 +139,7 @@ public class ScanCollection {
     }
 
     PWMImporter pwmImporter = new PWMImporter(collectionBackground, dataModel, effectiveCount);
-    PWMCollectionImporter collectionImporter = new PWMCollectionImporter<PWM>(pwmImporter);
+    MotifCollectionImporter collectionImporter = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
     List<ThresholdEvaluator> result = new ArrayList<ThresholdEvaluator>();
     for (PWM pwm: pwmList) {

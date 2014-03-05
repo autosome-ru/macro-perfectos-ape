@@ -4,7 +4,7 @@ import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.motifModels.DataModel;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
-public class DiPWMImporter extends PWMImporterGeneralized<DiPWM> {
+public class DiPWMImporter extends MotifImporter<DiPWM> {
   DiBackgroundModel dibackground;
   DataModel dataModel;
   Double effectiveCount;

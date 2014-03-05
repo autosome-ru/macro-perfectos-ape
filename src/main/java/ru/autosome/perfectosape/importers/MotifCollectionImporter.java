@@ -9,10 +9,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PWMCollectionImporter <ModelType extends Named & ScoringModel> {
-  PWMImporterGeneralized<ModelType> importer;
+public class MotifCollectionImporter<ModelType extends Named & ScoringModel> {
+  MotifImporter<ModelType> importer;
   
-  public PWMCollectionImporter(PWMImporterGeneralized<ModelType> importer) {
+  public MotifCollectionImporter(MotifImporter<ModelType> importer) {
     this.importer = importer;
   }
 

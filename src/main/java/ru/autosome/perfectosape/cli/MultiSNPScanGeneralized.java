@@ -33,9 +33,10 @@ abstract public class MultiSNPScanGeneralized {
   abstract protected void load_collection_of_pwms() throws FileNotFoundException;
 
   protected abstract String DOC_background_option();
+  protected abstract String DOC_run_string();
   String documentString() {
     return "Command-line format:\n" +
-    "java ru.autosome.perfectosape.cli.MultiSNPScan <folder with pwms> <file with SNPs> [options]\n" +
+    DOC_run_string() + " <folder with pwms> <file with SNPs> [options]\n" +
     "\n" +
     "Options:\n" +
     "  [--pvalue-cutoff <maximal pvalue to be considered>] or [-P] - drop results having both allele-variant pvalues greater than given\n" +
@@ -51,8 +52,8 @@ abstract public class MultiSNPScanGeneralized {
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
     "\n" +
     "Examples:\n" +
-    "  java ru.autosome.perfectosape.cli.MultiSNPScan ./hocomoco/pwms/ snp.txt --precalc ./collection_thresholds\n" +
-    "  java ru.autosome.perfectosape.cli.MultiSNPScan ./hocomoco/pcms/ snp.txt --pcm -d 10\n";
+    "  " + DOC_run_string() + " ./hocomoco/pwms/ snp.txt --precalc ./collection_thresholds\n" +
+    "  " + DOC_run_string() + " ./hocomoco/pcms/ snp.txt --pcm -d 10\n";
   }
 
   protected Double discretization;

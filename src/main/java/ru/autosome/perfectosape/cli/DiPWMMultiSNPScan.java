@@ -7,7 +7,7 @@ import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.DiPWMFindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.DiPWMFindPvalueBsearch;
 import ru.autosome.perfectosape.importers.DiPWMImporter;
-import ru.autosome.perfectosape.importers.PWMCollectionImporter;
+import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
 import java.io.FileNotFoundException;
@@ -16,6 +16,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized {
+  @Override
+  protected String DOC_run_string(){
+    return "java ru.autosome.perfectosape.cli.DiPWMMultiSNPScan";
+  }
   @Override
   protected String DOC_background_option() {
     return "[-b <background probabilities] ACGT - 16 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2";
@@ -45,7 +49,7 @@ public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized {
     }
 
     DiPWMImporter pwmImporter = new DiPWMImporter(background, dataModel, effectiveCount);
-    PWMCollectionImporter importer = new PWMCollectionImporter<DiPWM>(pwmImporter);
+    MotifCollectionImporter importer = new MotifCollectionImporter<DiPWM>(pwmImporter);
     List<DiPWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
 
     pwmCollection = new ArrayList<ThresholdEvaluator>();

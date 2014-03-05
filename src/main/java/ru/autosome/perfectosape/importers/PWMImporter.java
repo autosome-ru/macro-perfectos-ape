@@ -6,7 +6,7 @@ import ru.autosome.perfectosape.motifModels.PCM;
 import ru.autosome.perfectosape.motifModels.PPM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
-public class PWMImporter extends PWMImporterGeneralized<PWM> {
+public class PWMImporter extends MotifImporter<PWM> {
   BackgroundModel background;
   DataModel dataModel;
   Double effectiveCount;

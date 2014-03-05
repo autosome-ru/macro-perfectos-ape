@@ -62,9 +62,13 @@ public class FindPvalue {
     return cache_calculator;
   }
 
-  private void initialize_defaults() {
-    discretization = 10000.0;
+  protected void initialize_default_background() {
     background = new WordwiseBackground();
+  }
+
+  private void initialize_defaults() {
+    initialize_default_background();
+    discretization = 10000.0;
     thresholds = new double[0];
     max_hash_size = 10000000;
     data_model = DataModel.PWM;
@@ -94,10 +98,14 @@ public class FindPvalue {
     thresholds = ArrayExtensions.toPrimitiveArray(thresholds_list);
   }
 
+  protected void extract_background(String str) {
+    background = Background.fromString(str);
+  }
+
   private void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b")) {
-      background = Background.fromString(argv.remove(0));
+      extract_background(argv.remove(0));
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {

@@ -7,7 +7,7 @@ import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.ComparePWM;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
-import ru.autosome.perfectosape.importers.PWMCollectionImporter;
+import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.DataModel;
 import ru.autosome.perfectosape.motifModels.PWM;
@@ -136,7 +136,7 @@ public class CollectDistanceMatrix {
       extract_option(argv);
     }
     PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount);
-    pwmCollection = new PWMCollectionImporter<PWM>(importer).loadPWMCollection(pathToCollectionOfPWMs);
+    pwmCollection = new MotifCollectionImporter<PWM>(importer).loadPWMCollection(pathToCollectionOfPWMs);
   }
 
   private CollectDistanceMatrix() {

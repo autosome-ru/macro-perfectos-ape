@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PWMImporterGeneralized <ModelType extends Named & ScoringModel> {
+public abstract class MotifImporter<ModelType extends Named & ScoringModel> {
   abstract public ModelType transformToPWM(double matrix[][], String name);
 
   public List<ModelType> loadPWMsFromFile(File pathToPWMs) throws FileNotFoundException {
