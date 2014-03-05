@@ -1,34 +1,36 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
-import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.motifModels.DiPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
-public class FindThresholdBsearch implements CanFindThreshold {
-  public static class Builder implements CanFindThreshold.PWMBuilder {
+public class DiPWMFindThresholdBsearch implements CanFindThreshold {
+  public static class Builder implements CanFindThreshold.DiPWMBuilder {
     File pathToThresholds;
-    PWM pwm;
+    DiPWM dipwm;
 
     public Builder(File pathToThresholds) {
       this.pathToThresholds = pathToThresholds;
     }
 
     @Override
-    public Builder applyMotif(PWM pwm) {
-      this.pwm = pwm;
+    public Builder applyMotif(DiPWM dipwm) {
+      this.dipwm = dipwm;
       return this;
     }
 
     @Override
     public CanFindThreshold build() {
-      if (pwm != null) {
+      if (dipwm != null) {
         try {
-          File thresholds_file = new File(pathToThresholds, pwm.name + ".thr");
+          File thresholds_file = new File(pathToThresholds, dipwm.name + ".thr");
           PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
-          return new FindThresholdBsearch(pwm, pvalueBsearchList);
+          return new DiPWMFindThresholdBsearch(dipwm, pvalueBsearchList);
         } catch (FileNotFoundException e) {
           return null;
         }
@@ -38,11 +40,11 @@ public class FindThresholdBsearch implements CanFindThreshold {
     }
   }
 
-  PWM pwm;
+  DiPWM dipwm;
   PvalueBsearchList bsearchList;
 
-  public FindThresholdBsearch(PWM pwm, PvalueBsearchList bsearchList) {
-    this.pwm = pwm;
+  public DiPWMFindThresholdBsearch(DiPWM dipwm, PvalueBsearchList bsearchList) {
+    this.dipwm = dipwm;
     this.bsearchList = bsearchList;
   }
 

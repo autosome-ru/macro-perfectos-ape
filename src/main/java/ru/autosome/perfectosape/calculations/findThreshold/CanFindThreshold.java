@@ -2,8 +2,10 @@ package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.formatters.ResultInfo;
+import ru.autosome.perfectosape.motifModels.DiPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 // TODO: Make use of strong/weak thresholds or thresholds depending on BoundaryType (it wasn't implemented for bsearch lists
@@ -19,7 +21,7 @@ public interface CanFindThreshold {
       this.expected_pvalue = expected_pvalue;
     }
 
-    public double numberOfRecognizedWords(BackgroundModel background, int length) {
+    public double numberOfRecognizedWords(GeneralizedBackgroundModel background, int length) {
       return real_pvalue * Math.pow(background.volume(), length);
     };
 
@@ -43,7 +45,12 @@ public interface CanFindThreshold {
   ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) throws HashOverflowException;
 
   public static interface Builder {
-    public Builder applyMotif(PWM pwm);
     public CanFindThreshold build();
+  }
+  public static interface PWMBuilder extends Builder {
+    public Builder applyMotif(PWM pwm);
+  }
+  public static interface DiPWMBuilder extends Builder {
+    public Builder applyMotif(DiPWM dipwm);
   }
 }

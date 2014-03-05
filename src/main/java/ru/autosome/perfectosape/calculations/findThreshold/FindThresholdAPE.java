@@ -8,7 +8,7 @@ import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindThresholdAPE implements CanFindThreshold {
-  public static class Builder implements CanFindThreshold.Builder {
+  public static class Builder implements CanFindThreshold.PWMBuilder {
     Double discretization;
     BackgroundModel background;
     Integer maxHashSize;

@@ -160,7 +160,7 @@ public class CollectDistanceMatrix {
   }
 
   List<PWMWithThreshold> collectThreshold() throws HashOverflowException {
-    CanFindThreshold.Builder roughCalcBuilder, preciseCalcBuilder;
+    CanFindThreshold.PWMBuilder roughCalcBuilder, preciseCalcBuilder;
     roughCalcBuilder = new ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE.Builder(background, roughDiscretization, maxHashSize);
     preciseCalcBuilder = new ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE.Builder(background, preciseDiscretization, maxHashSize);
     List<PWMWithThreshold> result = new ArrayList<PWMWithThreshold>();

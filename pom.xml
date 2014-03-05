@@ -123,6 +123,22 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>DiPWMFindThreshold</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>find-dinucleotide-threshold</finalName>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>ru.autosome.perfectosape.cli.DiPWMFindThreshold</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>MultiSNPScan</id>
                         <phase>package</phase>
                         <goals>
