@@ -1,17 +1,16 @@
 package ru.autosome.perfectosape.motifModels;
 
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
 import ru.autosome.perfectosape.importers.PMParser;
-import ru.autosome.perfectosape.Sequence;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static java.lang.Math.*;
 
-public class DiPWM {
+public class DiPWM implements ScoringModel {
   static final int ALPHABET_SIZE = 16;
   public final double[][] matrix;
   public String name;
@@ -68,6 +67,7 @@ public class DiPWM {
   }
 
   // length of TFBS, not of a matrix representation
+  @Override
   public int length() {
     return matrix.length + 1;
   }
@@ -122,6 +122,7 @@ public class DiPWM {
     return score(word.sequence, background);
   }
 
+  @Override
   public double score(Sequence word) throws IllegalArgumentException {
     return score(word, new DiWordwiseBackground());
   }

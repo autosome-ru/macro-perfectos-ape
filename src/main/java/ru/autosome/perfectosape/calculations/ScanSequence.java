@@ -1,8 +1,8 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.motifModels.PWM;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.Sequence;
+import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,17 +10,17 @@ import java.util.Map;
 
 public class ScanSequence {
   private final Sequence sequence;
-  private final PWM pwm;
+  private final ScoringModel pwm;
   ArrayList<Position> positions_to_check;
   private Map<Position, Double> cache_score_by_position;
 
-  public ScanSequence(Sequence sequence, PWM pwm, ArrayList<Position> positions_to_check) {
+  public ScanSequence(Sequence sequence, ScoringModel pwm, ArrayList<Position> positions_to_check) {
     this.sequence = sequence;
     this.pwm = pwm;
     this.positions_to_check = positions_to_check;
   }
 
-  public ScanSequence(Sequence sequence, PWM pwm) {
+  public ScanSequence(Sequence sequence, ScoringModel pwm) {
     this(sequence, pwm, sequence.subsequence_positions(pwm.length()));
   }
 

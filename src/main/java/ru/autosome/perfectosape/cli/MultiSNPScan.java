@@ -17,6 +17,7 @@ import ru.autosome.perfectosape.importers.PWMCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.DataModel;
 import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,12 +29,14 @@ import java.util.List;
 
 public class MultiSNPScan {
   public static class ThresholdEvaluator {
-    public PWM pwm;
+    public ScoringModel pwm;
     public CanFindPvalue pvalueCalculator;
+    public String name;
 
-    public ThresholdEvaluator(PWM pwm, CanFindPvalue pvalueCalculator) {
+    public ThresholdEvaluator(ScoringModel pwm, CanFindPvalue pvalueCalculator, String name) {
       this.pwm = pwm;
       this.pvalueCalculator = pvalueCalculator;
+      this.name = name;
     }
   }
 
@@ -53,8 +56,6 @@ public class MultiSNPScan {
 
   private double max_pvalue_cutoff;
   private double min_fold_change_cutoff;
-
-
 
   // Split by spaces and return last part
   // Input: "rs9929218 [Homo sapiens] GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
@@ -88,7 +89,7 @@ public class MultiSNPScan {
 
     pwmCollection = new ArrayList<ThresholdEvaluator>();
     for (PWM pwm: pwmList) {
-      pwmCollection.add(new ThresholdEvaluator(pwm, pvalueBuilder.applyMotif(pwm).build()));
+      pwmCollection.add(new ThresholdEvaluator(pwm, pvalueBuilder.applyMotif(pwm).build(),pwm.name));
     }
   }
 
@@ -218,7 +219,7 @@ public class MultiSNPScan {
       boolean foldChangeSignificant = (result.foldChange() >= min_fold_change_cutoff ||
                                         result.foldChange() <= 1.0/min_fold_change_cutoff);
       if (pvalueSignificant && foldChangeSignificant) {
-        System.out.println(snp_name + "\t" + motifEvaluator.pwm.name + "\t" + result.toString());
+        System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + result.toString());
       }
     }
   }

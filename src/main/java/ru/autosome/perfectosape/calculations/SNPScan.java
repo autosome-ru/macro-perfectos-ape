@@ -1,17 +1,19 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.Position;
+import ru.autosome.perfectosape.Sequence;
+import ru.autosome.perfectosape.SequenceWithSNP;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
-import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 import java.util.ArrayList;
 
 public class SNPScan {
-  final PWM pwm;
+  final ScoringModel pwm;
   final SequenceWithSNP sequenceWithSNP;
   final CanFindPvalue pvalueCalculator;
 
-  public SNPScan(PWM pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
+  public SNPScan(ScoringModel pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
     this.pwm = pwm;
     this.sequenceWithSNP = sequenceWithSNP;
     this.pvalueCalculator = pvalueCalculator;

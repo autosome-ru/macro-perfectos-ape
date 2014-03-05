@@ -1,24 +1,24 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
-import ru.autosome.perfectosape.motifModels.PWM;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.Sequence;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 import java.util.ArrayList;
 
 public class EstimateAffinityMinPvalue implements EstimateAffinity {
-  PWM pwm;
+  ScoringModel pwm;
   Sequence sequence;
   CanFindPvalue pvalueCalculator;
   ArrayList<Position> positions_to_check;
-  public EstimateAffinityMinPvalue(PWM pwm, Sequence sequence, CanFindPvalue pvalueCalculator, ArrayList<Position> positions_to_check) {
+  public EstimateAffinityMinPvalue(ScoringModel pwm, Sequence sequence, CanFindPvalue pvalueCalculator, ArrayList<Position> positions_to_check) {
     this.pwm = pwm;
     this.sequence = sequence;
     this.pvalueCalculator = pvalueCalculator;
     this.positions_to_check = positions_to_check;
   }
-  EstimateAffinityMinPvalue(PWM pwm, Sequence sequence, CanFindPvalue pvalueCalculator) {
+  EstimateAffinityMinPvalue(ScoringModel pwm, Sequence sequence, CanFindPvalue pvalueCalculator) {
     this(pwm, sequence, pvalueCalculator, sequence.subsequence_positions(pwm.length()));
   }
 

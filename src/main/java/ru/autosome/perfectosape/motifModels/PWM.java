@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.motifModels;
 
-import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.ArrayExtensions;
+import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.importers.PMParser;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 import static java.lang.Math.ceil;
 
-public class PWM extends PM {
+public class PWM extends PM implements ScoringModel {
   private double[] cache_best_suffices;
   private double[] cache_worst_suffices;
 
@@ -51,6 +52,7 @@ public class PWM extends PM {
     return score(word.sequence, background);
   }
 
+  @Override
   public double score(Sequence word) throws IllegalArgumentException {
     return score(word, new WordwiseBackground());
   }
