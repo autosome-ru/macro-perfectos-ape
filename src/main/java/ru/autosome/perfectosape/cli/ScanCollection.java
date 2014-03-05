@@ -124,7 +124,7 @@ public class ScanCollection {
 
   private List<ThresholdEvaluator> load_collection_of_pwms() throws FileNotFoundException {
 
-    CanFindPvalue.Builder roughPvalueBuilder, precisePvalueBuilder;
+    CanFindPvalue.PWMBuilder roughPvalueBuilder, precisePvalueBuilder;
     CanFindThreshold.Builder roughThresholdBuilder, preciseThresholdBuilder;
 
     if (thresholds_folder == null) {

@@ -14,7 +14,7 @@ import static java.lang.Math.*;
 public class DiPWM {
   static final int ALPHABET_SIZE = 16;
   public final double[][] matrix;
-  String name;
+  public String name;
 
   private double[][] cache_best_suffices;
   private double[][] cache_worst_suffices;

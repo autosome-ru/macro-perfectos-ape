@@ -2,6 +2,7 @@ package ru.autosome.perfectosape.formatters;
 
 import ru.autosome.perfectosape.StringExtensions;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.formatters.ResultInfo;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class OutputInformation {
     parameter_value_infos.add("# " + param_name + " = " + value.toString());
   }
 
-  public void background_parameter(String param_name, String description, BackgroundModel background) {
+  public void background_parameter(String param_name, String description, GeneralizedBackgroundModel background) {
     if (!background.is_wordwise()) {
       add_parameter(param_name, description, background.toString());
     }

@@ -1,39 +1,35 @@
 package ru.autosome.perfectosape.calculations.findPvalue;
 
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
-import ru.autosome.perfectosape.formatters.OutputInformation;
-import ru.autosome.perfectosape.motifModels.PWM;
 import ru.autosome.perfectosape.PvalueBsearchList;
+import ru.autosome.perfectosape.formatters.OutputInformation;
+import ru.autosome.perfectosape.motifModels.DiPWM;
+import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
-// Looks for rough pValue of motif under given threshold
-// using a sorted list of predefined threshold-pvalues pairs
-// by performing binary search
-
-public class FindPvalueBsearch implements CanFindPvalue {
-  public static class Builder implements CanFindPvalue.PWMBuilder {
+public class DiPWMFindPvalueBsearch implements CanFindPvalue {
+  public static class Builder implements CanFindPvalue.DiPWMBuilder {
     File pathToThresholds;
-    PWM pwm;
+    DiPWM dipwm;
 
     public Builder(File pathToThresholds) {
       this.pathToThresholds = pathToThresholds;
     }
 
     @Override
-    public CanFindPvalue.Builder applyMotif(PWM pwm) {
-      this.pwm = pwm;
+    public CanFindPvalue.Builder applyMotif(DiPWM dipwm) {
+      this.dipwm = dipwm;
       return this;
     }
 
     @Override
     public CanFindPvalue build() {
-      if (pwm != null) {
+      if (dipwm != null) {
         try {
-          File thresholds_file = new File(pathToThresholds, pwm.name + ".thr");
+          File thresholds_file = new File(pathToThresholds, dipwm.name + ".thr");
           PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
-          return new FindPvalueBsearch(pwm, pvalueBsearchList);
+          return new DiPWMFindPvalueBsearch(dipwm, pvalueBsearchList);
         } catch (FileNotFoundException e) {
           return null;
         }
@@ -43,17 +39,17 @@ public class FindPvalueBsearch implements CanFindPvalue {
     }
   }
 
-  PWM pwm;
+  DiPWM dipwm;
   PvalueBsearchList bsearchList;
 
-  public FindPvalueBsearch(PWM pwm, PvalueBsearchList bsearchList) {
-    this.pwm = pwm;
+  public DiPWMFindPvalueBsearch(DiPWM dipwm, PvalueBsearchList bsearchList) {
+    this.dipwm = dipwm;
     this.bsearchList = bsearchList;
   }
 
   @Override
-  public PvalueInfo[] pvaluesByThresholds(double[] thresholds) {
-    PvalueInfo[] results = new PvalueInfo[thresholds.length];
+  public CanFindPvalue.PvalueInfo[] pvaluesByThresholds(double[] thresholds) {
+    CanFindPvalue.PvalueInfo[] results = new CanFindPvalue.PvalueInfo[thresholds.length];
     for (int i = 0; i < thresholds.length; ++i) {
       results[i] = pvalueByThreshold(thresholds[i]);
     }
@@ -61,9 +57,9 @@ public class FindPvalueBsearch implements CanFindPvalue {
   }
 
   @Override
-  public PvalueInfo pvalueByThreshold(double threshold) {
+  public CanFindPvalue.PvalueInfo pvalueByThreshold(double threshold) {
     double pvalue = bsearchList.pvalue_by_threshold(threshold);
-    return new PvalueInfo(threshold, pvalue);
+    return new CanFindPvalue.PvalueInfo(threshold, pvalue);
   }
 
   // TODO: decide which parameters are relevant
@@ -77,4 +73,3 @@ public class FindPvalueBsearch implements CanFindPvalue {
     return infos;
   }
 }
-

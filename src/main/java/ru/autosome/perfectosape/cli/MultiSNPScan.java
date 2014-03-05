@@ -75,7 +75,7 @@ public class MultiSNPScan {
   }
 
   private void load_collection_of_pwms() throws FileNotFoundException {
-    CanFindPvalue.Builder pvalueBuilder;
+    CanFindPvalue.PWMBuilder pvalueBuilder;
     if (thresholds_folder == null) {
       pvalueBuilder = new FindPvalueAPE.Builder(discretization, background, max_hash_size);
     } else {

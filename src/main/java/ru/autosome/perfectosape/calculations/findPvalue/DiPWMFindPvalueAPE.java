@@ -1,51 +1,51 @@
 package ru.autosome.perfectosape.calculations.findPvalue;
 
 import gnu.trove.map.TDoubleDoubleMap;
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
+import ru.autosome.perfectosape.calculations.CountingDiPWM;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.formatters.OutputInformation;
-import ru.autosome.perfectosape.calculations.CountingPWM;
-import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.perfectosape.motifModels.DiPWM;
 
-public class FindPvalueAPE implements CanFindPvalue {
-  public static class Builder implements CanFindPvalue.PWMBuilder {
+public class DiPWMFindPvalueAPE implements CanFindPvalue {
+  public static class Builder implements CanFindPvalue.DiPWMBuilder {
     Double discretization;
-    BackgroundModel background;
+    DiBackgroundModel dibackground;
     Integer maxHashSize;
-    PWM pwm;
+    DiPWM dipwm;
 
-    public Builder(Double discretization, BackgroundModel background, Integer maxHashSize) {
+    public Builder(Double discretization, DiBackgroundModel dibackground, Integer maxHashSize) {
       this.discretization = discretization;
-      this.background = background;
+      this.dibackground = dibackground;
       this.maxHashSize = maxHashSize;
     }
 
     @Override
-    public CanFindPvalue.Builder applyMotif(PWM pwm) {
-      this.pwm = pwm;
+    public CanFindPvalue.Builder applyMotif(DiPWM dipwm) {
+      this.dipwm = dipwm;
       return this;
     }
 
     @Override
     public CanFindPvalue build() {
-      if (pwm != null) {
-        return new FindPvalueAPE(pwm, discretization, background, maxHashSize);
+      if (dipwm != null) {
+        return new DiPWMFindPvalueAPE(dipwm, discretization, dibackground, maxHashSize);
       } else {
         return null;
       }
     }
   }
 
-  PWM pwm;
+  DiPWM dipwm;
   Double discretization;
-  BackgroundModel background;
+  DiBackgroundModel dibackground;
   Integer maxHashSize;
 
-  public FindPvalueAPE(PWM pwm, Double discretization, BackgroundModel background, Integer maxHashSize) {
-    this.pwm = pwm;
+  public DiPWMFindPvalueAPE(DiPWM dipwm, Double discretization, DiBackgroundModel dibackground, Integer maxHashSize) {
+    this.dipwm = dipwm;
     this.discretization = discretization;
-    this.background = background;
+    this.dibackground = dibackground;
     this.maxHashSize = maxHashSize;
   }
 
@@ -66,13 +66,13 @@ public class FindPvalueAPE implements CanFindPvalue {
 
   PvalueInfo infos_by_count(TDoubleDoubleMap counts, double non_upscaled_threshold) {
     double count = counts.get(upscale_threshold(non_upscaled_threshold));
-    double vocabularyVolume = Math.pow(background.volume(), pwm.length());
+    double vocabularyVolume = Math.pow(dibackground.volume(), dipwm.length());
     double pvalue = count / vocabularyVolume;
     return new PvalueInfo(non_upscaled_threshold, pvalue);
   }
 
   ScoringModelDistibutions countingPWM() {
-    return new CountingPWM(pwm.discrete(discretization), background, maxHashSize);
+    return new CountingDiPWM(dipwm.discrete(discretization), dibackground, maxHashSize);
   }
 
   @Override
@@ -97,14 +97,14 @@ public class FindPvalueAPE implements CanFindPvalue {
   public OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
     infos.add_parameter("V", "discretization value", discretization);
-    infos.background_parameter("B", "background", background);
+    infos.background_parameter("B", "background", dibackground);
 
     infos.add_table_parameter("T", "threshold", "threshold");
-    if (background.is_wordwise()) {
+    if (dibackground.is_wordwise()) {
       infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords",new OutputInformation.Callback<PvalueInfo>() {
         @Override
         public Object run(PvalueInfo cell) {
-          double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, pwm.length());
+          double numberOfRecognizedWords = cell.numberOfRecognizedWords(dibackground, dipwm.length());
           return (int)numberOfRecognizedWords;
         }
       });
