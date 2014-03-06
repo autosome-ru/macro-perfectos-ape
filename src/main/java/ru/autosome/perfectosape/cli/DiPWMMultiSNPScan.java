@@ -22,7 +22,8 @@ public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized {
   }
   @Override
   protected String DOC_background_option() {
-    return "[-b <background probabilities] ACGT - 16 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2";
+    // ToDo: fix help string for diBackground
+    return "ACGT - 16 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2";
   }
 
   private DiBackgroundModel background;
