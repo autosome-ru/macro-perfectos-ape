@@ -4,7 +4,7 @@ import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.calculations.CountingDiPWM;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
-public class DiPWMFindThresholdAPE extends FindThresholdAPEGeneralized<DiPWM> {
+public class DiPWMFindThresholdAPE extends FindThresholdByDiscretization<DiPWM> {
   public class Builder extends FindThresholdBuilder<DiPWM> {
     Double discretization;
     DiBackgroundModel background;

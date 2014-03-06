@@ -4,7 +4,7 @@ import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.CountingPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
-public class FindThresholdAPE extends FindThresholdAPEGeneralized<PWM> {
+public class FindThresholdAPE extends FindThresholdByDiscretization<PWM> {
   public static class Builder extends FindThresholdBuilder<PWM> {
     Double discretization;
     BackgroundModel background;

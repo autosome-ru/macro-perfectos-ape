@@ -6,12 +6,12 @@ import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.motifModels.Discretable;
 import ru.autosome.perfectosape.motifModels.ScoringModel;
 
-public abstract class FindThresholdAPEGeneralized<ModelType extends Discretable<ModelType> & ScoringModel> implements CanFindThreshold {
+public abstract class FindThresholdByDiscretization<ModelType extends Discretable<ModelType> & ScoringModel> implements CanFindThreshold {
   Double discretization; // if discretization is null - it's not applied
   ModelType motif;
 
-  public FindThresholdAPEGeneralized(ModelType motif,
-                                    Double discretization) {
+  public FindThresholdByDiscretization(ModelType motif,
+                                       Double discretization) {
     this.motif = motif;
     this.discretization = discretization;
   }
