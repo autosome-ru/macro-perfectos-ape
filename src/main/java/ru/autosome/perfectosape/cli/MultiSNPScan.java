@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MultiSNPScan extends MultiSNPScanGeneralized {
+public class MultiSNPScan extends MultiSNPScanGeneralized<BackgroundModel> {
   @Override
   protected String DOC_run_string(){
     return "java ru.autosome.perfectosape.cli.MultiSNPScan";
@@ -25,7 +25,6 @@ public class MultiSNPScan extends MultiSNPScanGeneralized {
     return "ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25";
   }
 
-  private BackgroundModel background;
   private MultiSNPScan() {
     super();
   }

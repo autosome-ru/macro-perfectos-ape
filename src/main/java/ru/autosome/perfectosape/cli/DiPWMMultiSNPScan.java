@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized {
+public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized<DiBackgroundModel> {
   @Override
   protected String DOC_run_string(){
     return "java ru.autosome.perfectosape.cli.DiPWMMultiSNPScan";
@@ -26,7 +26,6 @@ public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized {
     return "ACGT - 16 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2";
   }
 
-  private DiBackgroundModel background;
   private DiPWMMultiSNPScan() {
     super();
   }

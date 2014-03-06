@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.SequenceWithSNP;
+import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.SNPScan;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
@@ -15,7 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class MultiSNPScanGeneralized {
+abstract public class MultiSNPScanGeneralized <BackgroundType extends GeneralizedBackgroundModel> {
   public static class ThresholdEvaluator {
     public ScoringModel pwm;
     public CanFindPvalue pvalueCalculator;
@@ -71,6 +72,8 @@ abstract public class MultiSNPScanGeneralized {
 
   protected double max_pvalue_cutoff;
   protected double min_fold_change_cutoff;
+
+  protected BackgroundType background;
 
   // Split by spaces and return last part
   // Input: "rs9929218 [Homo sapiens] GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
