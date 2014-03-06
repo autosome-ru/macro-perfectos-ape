@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static ru.autosome.perfectosape.calculations.ScanCollection.ThresholdEvaluator;
+import static ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE.*;
 
 public class ScanCollection {
 

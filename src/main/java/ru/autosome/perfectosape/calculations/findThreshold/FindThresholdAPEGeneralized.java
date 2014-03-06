@@ -1,45 +1,13 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.motifModels.Discretable;
-import ru.autosome.perfectosape.motifModels.PWM;
 import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 public abstract class FindThresholdAPEGeneralized<ModelType extends Discretable<ModelType> & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> implements CanFindThreshold {
-  public abstract class Builder implements CanFindThreshold.Builder<ModelType> {
-    Double discretization;
-    BackgroundType background;
-    Integer maxHashSize;
-    ModelType motif;
-
-    public Builder(BackgroundType background, Double discretization, Integer maxHashSize) {
-      this.background = background;
-      this.discretization = discretization;
-      this.maxHashSize = maxHashSize;
-    }
-
-    @Override
-    public CanFindThreshold.Builder applyMotif(ModelType motif) {
-      this.motif = motif;
-      return this;
-    }
-
-    public abstract CanFindThreshold thresholdCalculator();
-
-    @Override
-    public CanFindThreshold build() {
-      if (motif != null) {
-        return thresholdCalculator();
-      } else {
-        return null;
-      }
-    }
-  }
-
   BackgroundType background;
   Double discretization; // if discretization is null - it's not applied
   Integer maxHashSize; // if maxHashSize is null - it's not applied
