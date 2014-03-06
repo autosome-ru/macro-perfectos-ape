@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import static java.lang.Math.*;
 
-public class DiPWM implements Named,ScoringModel,Discretable<DiPWM> {
+public class DiPWM implements Named,ScoringModel,Discretable<DiPWM>,ScoreStatistics<DiBackgroundModel> {
   static final int ALPHABET_SIZE = 16;
   public final double[][] matrix;
   public String name;
@@ -234,6 +234,7 @@ public class DiPWM implements Named,ScoringModel,Discretable<DiPWM> {
     return new DiPWM(mat_result, name);
   }
 
+  @Override
   public double score_mean(DiBackgroundModel background) {
     double result = 0.0;
     for (double[] pos : matrix) {
@@ -242,6 +243,7 @@ public class DiPWM implements Named,ScoringModel,Discretable<DiPWM> {
     return result;
   }
 
+  @Override
   public double score_variance(DiBackgroundModel background) {
     double variance = 0.0;
     for (double[] pos : matrix) {

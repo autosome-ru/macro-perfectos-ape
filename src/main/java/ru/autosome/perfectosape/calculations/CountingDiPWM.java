@@ -23,7 +23,7 @@ public class CountingDiPWM extends ScoringModelDistibutions {
 
   @Override
   CanFindThresholdApproximation gaussianThresholdEstimator() {
-    return new GaussianThresholdDinucleotideEstimator(dipwm, dibackground);
+    return new GaussianThresholdEstimator(dipwm, dibackground);
   }
 
   protected TDoubleDoubleMap[] initialCountDistribution() {

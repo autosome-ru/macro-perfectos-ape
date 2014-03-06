@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import static java.lang.Math.ceil;
 
-public class PWM extends PM implements ScoringModel,Discretable<PWM> {
+public class PWM extends PM implements ScoringModel,Discretable<PWM>,ScoreStatistics<BackgroundModel> {
   private double[] cache_best_suffices;
   private double[] cache_worst_suffices;
 
@@ -145,6 +145,7 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM> {
     return new PWM(aligned_matrix, name);
   }
 
+  @Override
   public double score_mean(BackgroundModel background) {
     double result = 0.0;
     for (double[] pos : matrix) {
@@ -153,6 +154,7 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM> {
     return result;
   }
 
+  @Override
   public double score_variance(BackgroundModel background) {
     double variance = 0.0;
     for (double[] pos : matrix) {
