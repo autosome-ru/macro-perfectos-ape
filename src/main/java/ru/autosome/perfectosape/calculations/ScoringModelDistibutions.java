@@ -17,7 +17,7 @@ abstract public class ScoringModelDistibutions {
   }
 
   private ScoreDistributionTop score_distribution_under_pvalue(double pvalue) throws HashOverflowException {
-    final int maxNumberOfAttempts = 3;
+    final int maxNumberOfAttempts = 2;
     int numberOfAttempts = 0;
     ScoreDistributionTop scoreDistribution;
     CanFindThresholdApproximation gaussianThresholdEstimation = gaussianThresholdEstimator();
