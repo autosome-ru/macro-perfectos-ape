@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class DiPWMFindPvalue extends FindPvalueGeneralized<DiPWM> {
+public class DiPWMFindPvalue extends FindPvalueGeneralized<DiPWM, DiBackgroundModel> {
   @Override
   protected String DOC_background_option() {
     return "ACGT - 16 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2,0.2,0.3,0.3,0.2";
@@ -23,41 +23,33 @@ public class DiPWMFindPvalue extends FindPvalueGeneralized<DiPWM> {
     return "java ru.autosome.perfectosape.cli.DiPWMFindPvalue";
   }
 
-  protected DiBackgroundModel dibackground;
-  protected DiPWM dipwm;
-
   @Override
   protected CanFindPvalue calculator() throws FileNotFoundException {
     if (cache_calculator == null) {
       CanFindPvalue.DiPWMBuilder builder;
       if (thresholds_folder == null) {
-        builder = new DiPWMFindPvalueAPE.Builder(discretization, dibackground, max_hash_size);
+        builder = new DiPWMFindPvalueAPE.Builder(discretization, background, max_hash_size);
       } else {
         builder = new DiPWMFindPvalueBsearch.Builder(thresholds_folder);
       }
-      cache_calculator = builder.applyMotif(dipwm).build();
+      cache_calculator = builder.applyMotif(motif).build();
     }
     return cache_calculator;
   }
 
   @Override
   protected void initialize_default_background() {
-    dibackground = new DiWordwiseBackground();
+    background = new DiWordwiseBackground();
   }
 
   @Override
   protected void extract_background(String str) {
-    dibackground = DiBackground.fromString(str);
+    background = DiBackground.fromString(str);
   }
 
   @Override
   protected DiPWMImporter motifImporter() {
-    return new DiPWMImporter(dibackground, data_model, effective_count);
-  }
-
-  @Override
-  protected void setScoringModel(DiPWM motif) {
-    dipwm = motif;
+    return new DiPWMImporter(background, data_model, effective_count);
   }
 
   protected DiPWMFindPvalue() {

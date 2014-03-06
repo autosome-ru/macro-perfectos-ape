@@ -1,6 +1,8 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.ArrayExtensions;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.formatters.OutputInformation;
@@ -16,7 +18,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Named> {
+public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Named, BackgroundType extends GeneralizedBackgroundModel> {
 
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
@@ -44,6 +46,9 @@ public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Na
   protected DataModel data_model;
   protected double effective_count;
 
+  protected ModelType motif;
+  protected BackgroundType background;
+
   protected File thresholds_folder;
   CanFindPvalue cache_calculator;
 
@@ -51,7 +56,6 @@ public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Na
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
   protected abstract MotifImporter<ModelType> motifImporter();
-  protected abstract void setScoringModel(ModelType model);
 
   protected void initialize_defaults() {
     initialize_default_background();
@@ -113,7 +117,7 @@ public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Na
       extract_option(argv);
     }
 
-    setScoringModel( motifImporter().loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename)) );
+    motif = motifImporter().loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename));
   }
 
   OutputInformation report_table_layout() throws FileNotFoundException {

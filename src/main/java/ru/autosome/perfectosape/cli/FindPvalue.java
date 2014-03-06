@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class FindPvalue extends FindPvalueGeneralized<PWM> {
+public class FindPvalue extends FindPvalueGeneralized<PWM, BackgroundModel> {
   @Override
   protected String DOC_background_option() {
     return "ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25";
@@ -22,9 +22,6 @@ public class FindPvalue extends FindPvalueGeneralized<PWM> {
   protected String DOC_run_string() {
     return "java ru.autosome.perfectosape.cli.FindPvalue";
   }
-
-  protected BackgroundModel background;
-  protected PWM pwm;
 
   @Override
   protected CanFindPvalue calculator() throws FileNotFoundException {
@@ -35,7 +32,7 @@ public class FindPvalue extends FindPvalueGeneralized<PWM> {
       } else {
         builder = new FindPvalueBsearch.Builder(thresholds_folder);
       }
-      cache_calculator = builder.applyMotif(pwm).build();
+      cache_calculator = builder.applyMotif(motif).build();
     }
     return cache_calculator;
   }
@@ -53,11 +50,6 @@ public class FindPvalue extends FindPvalueGeneralized<PWM> {
   @Override
   protected PWMImporter motifImporter(){
     return new PWMImporter(background, data_model, effective_count);
-  }
-
-  @Override
-  protected void setScoringModel(PWM motif) {
-    pwm = motif;
   }
 
   protected FindPvalue() {
