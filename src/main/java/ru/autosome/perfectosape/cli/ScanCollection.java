@@ -5,7 +5,7 @@ import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
-import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBuilder;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBsearchBuilder;
@@ -134,7 +134,7 @@ public class ScanCollection {
       preciseThresholdBuilder = new FindThresholdAPE.Builder(collectionBackground, preciseDiscretization, maxHashSize);
 
     } else {
-      roughPvalueBuilder = precisePvalueBuilder = new FindPvalueBsearch.Builder(thresholds_folder);
+      roughPvalueBuilder = precisePvalueBuilder = new FindPvalueBsearchBuilder(thresholds_folder);
       roughThresholdBuilder = preciseThresholdBuilder = new FindThresholdBsearchBuilder(thresholds_folder);
     }
 

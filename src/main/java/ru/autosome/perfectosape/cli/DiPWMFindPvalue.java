@@ -3,10 +3,7 @@ package ru.autosome.perfectosape.cli;
 import ru.autosome.perfectosape.backgroundModels.DiBackground;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
-import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
-import ru.autosome.perfectosape.calculations.findPvalue.DiPWMFindPvalueAPE;
-import ru.autosome.perfectosape.calculations.findPvalue.DiPWMFindPvalueBsearch;
-import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBuilder;
+import ru.autosome.perfectosape.calculations.findPvalue.*;
 import ru.autosome.perfectosape.importers.DiPWMImporter;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
@@ -31,7 +28,7 @@ public class DiPWMFindPvalue extends FindPvalueGeneralized<DiPWM, DiBackgroundMo
       if (thresholds_folder == null) {
         builder = new DiPWMFindPvalueAPE.Builder(discretization, background, max_hash_size);
       } else {
-        builder = new DiPWMFindPvalueBsearch.Builder(thresholds_folder);
+        builder = new FindPvalueBsearchBuilder(thresholds_folder);
       }
       cache_calculator = builder.applyMotif(motif).build();
     }

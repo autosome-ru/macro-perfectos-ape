@@ -4,7 +4,7 @@ import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
-import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBuilder;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
@@ -44,7 +44,7 @@ public class MultiSNPScan extends MultiSNPScanGeneralized<BackgroundModel> {
     if (thresholds_folder == null) {
       pvalueBuilder = new FindPvalueAPE.Builder(discretization, background, max_hash_size);
     } else {
-      pvalueBuilder = new FindPvalueBsearch.Builder(thresholds_folder);
+      pvalueBuilder = new FindPvalueBsearchBuilder(thresholds_folder);
     }
 
     PWMImporter pwmImporter = new PWMImporter(background, dataModel, effectiveCount);

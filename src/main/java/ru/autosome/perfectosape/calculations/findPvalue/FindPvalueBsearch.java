@@ -12,24 +12,6 @@ import java.io.FileNotFoundException;
 // by performing binary search
 
 public class FindPvalueBsearch implements CanFindPvalue {
-  public static class Builder extends FindPvalueBuilder<PWM> {
-    File pathToThresholds;
-
-    public Builder(File pathToThresholds) {
-      this.pathToThresholds = pathToThresholds;
-    }
-
-    @Override
-    public CanFindPvalue pvalueCalculator() {
-      try {
-        File thresholds_file = new File(pathToThresholds, motif.getName() + ".thr");
-        PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
-        return new FindPvalueBsearch(pvalueBsearchList);
-      } catch (FileNotFoundException e) {
-        return null;
-      }
-    }
-  }
 
   PvalueBsearchList bsearchList;
 
@@ -63,4 +45,3 @@ public class FindPvalueBsearch implements CanFindPvalue {
     return infos;
   }
 }
-

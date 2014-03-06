@@ -1,8 +1,9 @@
 package ru.autosome.perfectosape.calculations.findPvalue;
 
+import ru.autosome.perfectosape.motifModels.Named;
 import ru.autosome.perfectosape.motifModels.ScoringModel;
 
-public abstract class FindPvalueBuilder<ModelType extends ScoringModel> {
+public abstract class FindPvalueBuilder<ModelType extends Named & ScoringModel> {
   ModelType motif;
   public abstract CanFindPvalue pvalueCalculator();
   public CanFindPvalue build() {
