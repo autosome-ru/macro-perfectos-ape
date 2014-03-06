@@ -9,31 +9,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class FindThresholdBsearch implements CanFindThreshold {
-  public static class Builder implements CanFindThreshold.Builder<PWM> {
+  public static class Builder extends FindThresholdBuilder<PWM> {
     File pathToThresholds;
-    PWM pwm;
 
     public Builder(File pathToThresholds) {
       this.pathToThresholds = pathToThresholds;
     }
 
     @Override
-    public Builder applyMotif(PWM pwm) {
-      this.pwm = pwm;
-      return this;
-    }
-
-    @Override
-    public CanFindThreshold build() {
-      if (pwm != null) {
-        try {
-          File thresholds_file = new File(pathToThresholds, pwm.name + ".thr");
-          PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
-          return new FindThresholdBsearch(pwm, pvalueBsearchList);
-        } catch (FileNotFoundException e) {
-          return null;
-        }
-      } else {
+    public CanFindThreshold thresholdCalculator() {
+      try {
+        File thresholds_file = new File(pathToThresholds, motif.getName() + ".thr");
+        PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
+        return new FindThresholdBsearch(motif, pvalueBsearchList);
+      } catch (FileNotFoundException e) {
         return null;
       }
     }

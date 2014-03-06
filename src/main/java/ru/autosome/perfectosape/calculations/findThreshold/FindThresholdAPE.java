@@ -1,19 +1,20 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
-import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
-import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.calculations.CountingPWM;
-import ru.autosome.perfectosape.calculations.HashOverflowException;
-import ru.autosome.perfectosape.motifModels.DiPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindThresholdAPE extends FindThresholdAPEGeneralized<PWM, BackgroundModel> {
-  public static class Builder extends FindThresholdAPEGeneralizedBuilder<PWM, BackgroundModel> {
-
+  public static class Builder extends FindThresholdBuilder<PWM> {
+    Double discretization;
+    BackgroundModel background;
+    Integer maxHashSize;
     public Builder(BackgroundModel background, Double discretization, Integer maxHashSize) {
-      super(background, discretization, maxHashSize);
+      this.background = background;
+      this.discretization = discretization;
+      this.maxHashSize = maxHashSize;
     }
+
 
     @Override
     public CanFindThreshold thresholdCalculator() {

@@ -7,6 +7,7 @@ import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.ComparePWM;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBuilder;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.DataModel;
@@ -157,7 +158,7 @@ public class CollectDistanceMatrix {
   }
 
   List<PWMWithThreshold> collectThreshold() throws HashOverflowException {
-    CanFindThreshold.Builder<PWM> roughCalcBuilder, preciseCalcBuilder;
+    FindThresholdBuilder<PWM> roughCalcBuilder, preciseCalcBuilder;
     roughCalcBuilder = new ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE.Builder(background, roughDiscretization, maxHashSize);
     preciseCalcBuilder = new ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE.Builder(background, preciseDiscretization, maxHashSize);
     List<PWMWithThreshold> result = new ArrayList<PWMWithThreshold>();

@@ -7,9 +7,9 @@ import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
-import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBsearch;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBuilder;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static ru.autosome.perfectosape.calculations.ScanCollection.ThresholdEvaluator;
-import static ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE.*;
 
 public class ScanCollection {
 
@@ -126,7 +125,7 @@ public class ScanCollection {
   private List<ThresholdEvaluator> load_collection_of_pwms() throws FileNotFoundException {
 
     CanFindPvalue.Builder<PWM> roughPvalueBuilder, precisePvalueBuilder;
-    CanFindThreshold.Builder<PWM> roughThresholdBuilder, preciseThresholdBuilder;
+    FindThresholdBuilder<PWM> roughThresholdBuilder, preciseThresholdBuilder;
 
     if (thresholds_folder == null) {
       roughPvalueBuilder = new FindPvalueAPE.Builder(roughDiscretization, collectionBackground, maxHashSize);
