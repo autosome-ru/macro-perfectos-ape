@@ -17,20 +17,27 @@ abstract public class ScoringModelDistibutions {
   }
 
   private ScoreDistributionTop score_distribution_under_pvalue(double pvalue) throws HashOverflowException {
+    final int maxNumberOfAttempts = 3;
+    int numberOfAttempts = 0;
     ScoreDistributionTop scoreDistribution;
     CanFindThresholdApproximation gaussianThresholdEstimation = gaussianThresholdEstimator();
     double pvalue_to_estimate_threshold = pvalue;
-    do {
-      try {
+    try {
+      do {
+        numberOfAttempts += 1;
+        if (numberOfAttempts > maxNumberOfAttempts) {
+          return score_distribution(); // calculate whole distribution
+        }
+        // calculate only top part of distribution cause it's faster
         double approximate_threshold = gaussianThresholdEstimation.thresholdByPvalue(pvalue_to_estimate_threshold);
         scoreDistribution = score_distribution_above_threshold(approximate_threshold);
-      } catch (ArithmeticException e) {
-        return score_distribution();
-      }
-      pvalue_to_estimate_threshold *= 2;
-    } while (scoreDistribution.top_part_pvalue() < pvalue);
+        pvalue_to_estimate_threshold *= 2;
+      } while (scoreDistribution.top_part_pvalue() < pvalue);
+      return scoreDistribution;
 
-    return scoreDistribution;
+    } catch (ArithmeticException e) {
+      return score_distribution();
+    }
   }
 
   public TDoubleDoubleMap counts_above_thresholds(double[] thresholds) throws HashOverflowException {
