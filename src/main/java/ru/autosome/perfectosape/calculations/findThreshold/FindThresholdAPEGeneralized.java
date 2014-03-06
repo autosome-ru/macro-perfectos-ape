@@ -1,24 +1,19 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.motifModels.Discretable;
 import ru.autosome.perfectosape.motifModels.ScoringModel;
 
-public abstract class FindThresholdAPEGeneralized<ModelType extends Discretable<ModelType> & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> implements CanFindThreshold {
-  BackgroundType background;
+public abstract class FindThresholdAPEGeneralized<ModelType extends Discretable<ModelType> & ScoringModel> implements CanFindThreshold {
   Double discretization; // if discretization is null - it's not applied
-  Integer maxHashSize; // if maxHashSize is null - it's not applied
   ModelType motif;
 
-  public FindThresholdAPEGeneralized(ModelType motif, BackgroundType background,
-                                    Double discretization, Integer max_hash_size) {
+  public FindThresholdAPEGeneralized(ModelType motif,
+                                    Double discretization) {
     this.motif = motif;
-    this.background = background;
     this.discretization = discretization;
-    this.maxHashSize = max_hash_size;
   }
 
   abstract ScoringModelDistibutions countingPWM(ModelType pwm);

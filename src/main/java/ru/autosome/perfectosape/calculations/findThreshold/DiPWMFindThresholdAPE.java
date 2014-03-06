@@ -4,7 +4,7 @@ import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.calculations.CountingDiPWM;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
-public class DiPWMFindThresholdAPE extends FindThresholdAPEGeneralized<DiPWM, DiBackgroundModel> {
+public class DiPWMFindThresholdAPE extends FindThresholdAPEGeneralized<DiPWM> {
   public class Builder extends FindThresholdBuilder<DiPWM> {
     Double discretization;
     DiBackgroundModel background;
@@ -22,9 +22,14 @@ public class DiPWMFindThresholdAPE extends FindThresholdAPEGeneralized<DiPWM, Di
     }
   }
 
+  Integer maxHashSize; // if maxHashSize is null - it's not applied
+  DiBackgroundModel background;
+
   public DiPWMFindThresholdAPE(DiPWM dipwm, DiBackgroundModel dibackground,
                           Double discretization, Integer max_hash_size) {
-    super(dipwm, dibackground, discretization, max_hash_size);
+    super(dipwm, discretization);
+    this.maxHashSize = max_hash_size;
+    this.background = dibackground;
   }
 
   @Override
