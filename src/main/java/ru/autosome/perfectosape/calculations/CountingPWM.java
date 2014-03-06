@@ -7,6 +7,7 @@ import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import ru.autosome.perfectosape.ScoreDistributionTop;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdApproximation;
+import ru.autosome.perfectosape.calculations.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class CountingPWM extends ScoringModelDistibutions {

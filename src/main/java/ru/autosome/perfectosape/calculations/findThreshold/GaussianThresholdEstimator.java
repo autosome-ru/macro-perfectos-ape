@@ -1,8 +1,7 @@
-package ru.autosome.perfectosape.calculations;
+package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.MathExtensions;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
-import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.perfectosape.motifModels.ScoreStatistics;
 
 public class GaussianThresholdEstimator<ModelType extends ScoreStatistics<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> implements CanFindThresholdApproximation {
