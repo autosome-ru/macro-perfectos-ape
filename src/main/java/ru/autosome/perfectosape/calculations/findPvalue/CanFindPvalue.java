@@ -4,9 +4,6 @@ import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.formatters.ResultInfo;
-import ru.autosome.perfectosape.motifModels.DiPWM;
-import ru.autosome.perfectosape.motifModels.PWM;
-import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 public interface CanFindPvalue {
   public static class PvalueInfo extends ResultInfo {
