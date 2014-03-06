@@ -8,7 +8,7 @@ import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
-import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBsearch;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBuilder;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.formatters.ResultInfo;
@@ -135,7 +135,7 @@ public class ScanCollection {
 
     } else {
       roughPvalueBuilder = precisePvalueBuilder = new FindPvalueBsearch.Builder(thresholds_folder);
-      roughThresholdBuilder = preciseThresholdBuilder = new FindThresholdBsearch.Builder(thresholds_folder);
+      roughThresholdBuilder = preciseThresholdBuilder = new FindThresholdBsearchBuilder(thresholds_folder);
     }
 
     PWMImporter pwmImporter = new PWMImporter(collectionBackground, dataModel, effectiveCount);

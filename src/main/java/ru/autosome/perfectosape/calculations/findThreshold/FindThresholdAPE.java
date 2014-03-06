@@ -15,12 +15,10 @@ public class FindThresholdAPE extends FindThresholdAPEGeneralized<PWM, Backgroun
       this.maxHashSize = maxHashSize;
     }
 
-
     @Override
     public CanFindThreshold thresholdCalculator() {
       return new FindThresholdAPE(motif, background, discretization, maxHashSize);
     }
-
   }
 
   public FindThresholdAPE(PWM pwm, BackgroundModel background,
