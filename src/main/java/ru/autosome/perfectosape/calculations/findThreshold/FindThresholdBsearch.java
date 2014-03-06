@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class FindThresholdBsearch implements CanFindThreshold {
-  public static class Builder implements CanFindThreshold.PWMBuilder {
+  public static class Builder implements CanFindThreshold.Builder<PWM> {
     File pathToThresholds;
     PWM pwm;
 

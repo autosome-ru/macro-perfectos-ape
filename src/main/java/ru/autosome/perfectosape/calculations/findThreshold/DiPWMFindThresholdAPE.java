@@ -7,7 +7,7 @@ import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
 public class DiPWMFindThresholdAPE implements CanFindThreshold {
-  public static class Builder implements CanFindThreshold.DiPWMBuilder {
+  public static class Builder implements CanFindThreshold.Builder<DiPWM> {
     Double discretization;
     DiBackgroundModel dibackground;
     Integer maxHashSize;
@@ -70,27 +70,23 @@ public class DiPWMFindThresholdAPE implements CanFindThreshold {
 
   @Override
   public CanFindThreshold.ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues) throws HashOverflowException {
-    CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[pvalues.length];
-    for (int i = 0; i < pvalues.length; ++i) {
-      result[i] = weakThresholdByPvalue(pvalues[i]);
-    }
-    return result;
+    return downscale_all(countingPWM(dipwm.discrete(discretization)).weak_thresholds(pvalues), discretization);
   }
 
   @Override
   public CanFindThreshold.ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) throws HashOverflowException {
-    CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[pvalues.length];
-    for (int i = 0; i < pvalues.length; ++i) {
-      result[i] = strongThresholdByPvalue(pvalues[i]);
-    }
-    return result;
+    return downscale_all( countingPWM(dipwm.discrete(discretization)).strong_thresholds(pvalues), discretization);
   }
 
   @Override
   public CanFindThreshold.ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) throws HashOverflowException {
-    CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[pvalues.length];
-    for (int i = 0; i < pvalues.length; ++i) {
-      result[i] = thresholdByPvalue(pvalues[i], boundaryType);
+    return downscale_all( countingPWM(dipwm.discrete(discretization)).thresholds(pvalues, boundaryType), discretization);
+  }
+
+  private CanFindThreshold.ThresholdInfo[] downscale_all(CanFindThreshold.ThresholdInfo[] thresholdInfos, double discretization) {
+    CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[thresholdInfos.length];
+    for (int i = 0; i < thresholdInfos.length; ++i) {
+      result[i] = thresholdInfos[i].downscale(discretization);
     }
     return result;
   }

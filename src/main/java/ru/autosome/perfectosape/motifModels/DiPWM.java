@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import static java.lang.Math.*;
 
-public class DiPWM implements Named,ScoringModel {
+public class DiPWM implements Named,ScoringModel,Discretable<DiPWM> {
   static final int ALPHABET_SIZE = 16;
   public final double[][] matrix;
   public String name;
@@ -218,6 +218,7 @@ public class DiPWM implements Named,ScoringModel {
     return result;
   }
 
+  @Override
   public DiPWM discrete(Double rate) {
     if (rate == null) {
       return this;

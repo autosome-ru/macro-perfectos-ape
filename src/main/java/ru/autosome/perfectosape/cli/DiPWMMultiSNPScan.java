@@ -41,7 +41,7 @@ public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized<DiBackgroundModel
 
   @Override
   protected void load_collection_of_pwms() throws FileNotFoundException {
-    CanFindPvalue.DiPWMBuilder pvalueBuilder;
+    CanFindPvalue.Builder<DiPWM> pvalueBuilder;
     if (thresholds_folder == null) {
       pvalueBuilder = new DiPWMFindPvalueAPE.Builder(discretization, background, max_hash_size);
     } else {

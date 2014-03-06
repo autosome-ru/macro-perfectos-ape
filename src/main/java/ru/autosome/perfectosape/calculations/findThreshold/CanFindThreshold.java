@@ -6,6 +6,7 @@ import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 // TODO: Make use of strong/weak thresholds or thresholds depending on BoundaryType (it wasn't implemented for bsearch lists
 public interface CanFindThreshold {
@@ -43,13 +44,8 @@ public interface CanFindThreshold {
   ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) throws HashOverflowException;
   ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) throws HashOverflowException;
 
-  public static interface Builder {
+  public static interface Builder<ModelType extends ScoringModel> {
     public CanFindThreshold build();
-  }
-  public static interface PWMBuilder extends Builder {
-    public Builder applyMotif(PWM pwm);
-  }
-  public static interface DiPWMBuilder extends Builder {
-    public Builder applyMotif(DiPWM dipwm);
+    public Builder applyMotif(ModelType motif);
   }
 }

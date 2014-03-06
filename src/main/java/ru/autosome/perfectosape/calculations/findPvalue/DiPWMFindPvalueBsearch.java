@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class DiPWMFindPvalueBsearch implements CanFindPvalue {
-  public static class Builder implements CanFindPvalue.DiPWMBuilder {
+  public static class Builder implements CanFindPvalue.Builder<DiPWM> {
     File pathToThresholds;
     DiPWM dipwm;
 
@@ -17,7 +17,7 @@ public class DiPWMFindPvalueBsearch implements CanFindPvalue {
     }
 
     @Override
-    public CanFindPvalue.Builder applyMotif(DiPWM dipwm) {
+    public CanFindPvalue.Builder<DiPWM> applyMotif(DiPWM dipwm) {
       this.dipwm = dipwm;
       return this;
     }

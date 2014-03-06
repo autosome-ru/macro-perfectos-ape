@@ -6,6 +6,7 @@ import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 public interface CanFindPvalue {
   public static class PvalueInfo extends ResultInfo {
@@ -28,13 +29,8 @@ public interface CanFindPvalue {
 
   public PvalueInfo pvalueByThreshold(double threshold) throws HashOverflowException;
 
-  public static interface Builder {
+  public static interface Builder<ModelType extends ScoringModel> {
     public CanFindPvalue build();
-  }
-  public static interface PWMBuilder extends Builder {
-    public Builder applyMotif(PWM pwm);
-  }
-  public static interface DiPWMBuilder extends Builder {
-    public Builder applyMotif(DiPWM dipwm);
+    public Builder applyMotif(ModelType motif);
   }
 }

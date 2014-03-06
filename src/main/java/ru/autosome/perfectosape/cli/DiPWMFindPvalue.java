@@ -26,7 +26,7 @@ public class DiPWMFindPvalue extends FindPvalueGeneralized<DiPWM, DiBackgroundMo
   @Override
   protected CanFindPvalue calculator() throws FileNotFoundException {
     if (cache_calculator == null) {
-      CanFindPvalue.DiPWMBuilder builder;
+      CanFindPvalue.Builder<DiPWM> builder;
       if (thresholds_folder == null) {
         builder = new DiPWMFindPvalueAPE.Builder(discretization, background, max_hash_size);
       } else {

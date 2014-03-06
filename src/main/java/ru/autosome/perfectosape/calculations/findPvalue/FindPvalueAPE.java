@@ -9,7 +9,7 @@ import ru.autosome.perfectosape.calculations.CountingPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindPvalueAPE implements CanFindPvalue {
-  public static class Builder implements CanFindPvalue.PWMBuilder {
+  public static class Builder implements CanFindPvalue.Builder<PWM> {
     Double discretization;
     BackgroundModel background;
     Integer maxHashSize;

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import static java.lang.Math.ceil;
 
-public class PWM extends PM implements ScoringModel {
+public class PWM extends PM implements ScoringModel,Discretable<PWM> {
   private double[] cache_best_suffices;
   private double[] cache_worst_suffices;
 
@@ -98,6 +98,7 @@ public class PWM extends PM implements ScoringModel {
     return cache_best_suffices;
   }
 
+  @Override
   public PWM discrete(Double rate) {
     if (rate == null) {
       return this;

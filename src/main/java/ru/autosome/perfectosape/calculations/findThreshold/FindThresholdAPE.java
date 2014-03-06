@@ -7,7 +7,7 @@ import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindThresholdAPE implements CanFindThreshold {
-  public static class Builder implements CanFindThreshold.PWMBuilder {
+  public static class Builder implements CanFindThreshold.Builder<PWM> {
     Double discretization;
     BackgroundModel background;
     Integer maxHashSize;
@@ -34,7 +34,6 @@ public class FindThresholdAPE implements CanFindThreshold {
       }
     }
   }
-
 
   BackgroundModel background;
   Double discretization; // if discretization is null - it's not applied

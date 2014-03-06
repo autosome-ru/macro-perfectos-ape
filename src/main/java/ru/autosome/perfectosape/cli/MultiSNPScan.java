@@ -40,7 +40,7 @@ public class MultiSNPScan extends MultiSNPScanGeneralized<BackgroundModel> {
 
   @Override
   protected void load_collection_of_pwms() throws FileNotFoundException {
-    CanFindPvalue.PWMBuilder pvalueBuilder;
+    CanFindPvalue.Builder<PWM> pvalueBuilder;
     if (thresholds_folder == null) {
       pvalueBuilder = new FindPvalueAPE.Builder(discretization, background, max_hash_size);
     } else {

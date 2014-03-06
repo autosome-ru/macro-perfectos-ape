@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 // by performing binary search
 
 public class FindPvalueBsearch implements CanFindPvalue {
-  public static class Builder implements CanFindPvalue.PWMBuilder {
+  public static class Builder implements CanFindPvalue.Builder<PWM> {
     File pathToThresholds;
     PWM pwm;
 
@@ -21,7 +21,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
     }
 
     @Override
-    public CanFindPvalue.Builder applyMotif(PWM pwm) {
+    public CanFindPvalue.Builder<PWM> applyMotif(PWM pwm) {
       this.pwm = pwm;
       return this;
     }
