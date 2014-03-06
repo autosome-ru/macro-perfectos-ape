@@ -1,12 +1,11 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.PvalueBsearchList;
-import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
-public class FindThresholdBsearchBuilder extends FindThresholdBuilder<PWM> {
+public class FindThresholdBsearchBuilder extends FindThresholdBuilder {
   File pathToThresholds;
 
   public FindThresholdBsearchBuilder(File pathToThresholds) {

@@ -1,8 +1,9 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.motifModels.Named;
+import ru.autosome.perfectosape.motifModels.ScoringModel;
 
-public abstract class FindThresholdBuilder<ModelType extends Named> {
+public abstract class FindThresholdBuilder<ModelType extends Named & ScoringModel> {
   ModelType motif;
   public abstract CanFindThreshold thresholdCalculator();
 

@@ -9,11 +9,10 @@ import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
 public class DiPWMFindPvalueAPE implements CanFindPvalue {
-  public static class Builder implements CanFindPvalue.Builder<DiPWM> {
+  public static class Builder extends FindPvalueBuilder<DiPWM> {
     Double discretization;
     DiBackgroundModel dibackground;
     Integer maxHashSize;
-    DiPWM dipwm;
 
     public Builder(Double discretization, DiBackgroundModel dibackground, Integer maxHashSize) {
       this.discretization = discretization;
@@ -22,18 +21,8 @@ public class DiPWMFindPvalueAPE implements CanFindPvalue {
     }
 
     @Override
-    public CanFindPvalue.Builder<DiPWM> applyMotif(DiPWM dipwm) {
-      this.dipwm = dipwm;
-      return this;
-    }
-
-    @Override
-    public CanFindPvalue build() {
-      if (dipwm != null) {
-        return new DiPWMFindPvalueAPE(dipwm, discretization, dibackground, maxHashSize);
-      } else {
-        return null;
-      }
+    public CanFindPvalue pvalueCalculator() {
+      return new DiPWMFindPvalueAPE(motif, discretization, dibackground, maxHashSize);
     }
   }
 

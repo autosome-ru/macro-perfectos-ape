@@ -8,41 +8,28 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class DiPWMFindPvalueBsearch implements CanFindPvalue {
-  public static class Builder implements CanFindPvalue.Builder<DiPWM> {
+  public static class Builder extends FindPvalueBuilder<DiPWM> {
     File pathToThresholds;
-    DiPWM dipwm;
 
     public Builder(File pathToThresholds) {
       this.pathToThresholds = pathToThresholds;
     }
 
     @Override
-    public CanFindPvalue.Builder<DiPWM> applyMotif(DiPWM dipwm) {
-      this.dipwm = dipwm;
-      return this;
-    }
-
-    @Override
-    public CanFindPvalue build() {
-      if (dipwm != null) {
-        try {
-          File thresholds_file = new File(pathToThresholds, dipwm.name + ".thr");
-          PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
-          return new DiPWMFindPvalueBsearch(dipwm, pvalueBsearchList);
-        } catch (FileNotFoundException e) {
-          return null;
-        }
-      } else {
+    public CanFindPvalue pvalueCalculator() {
+      try {
+        File thresholds_file = new File(pathToThresholds, motif.getName() + ".thr");
+        PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
+        return new DiPWMFindPvalueBsearch(pvalueBsearchList);
+      } catch (FileNotFoundException e) {
         return null;
       }
     }
   }
 
-  DiPWM dipwm;
   PvalueBsearchList bsearchList;
 
-  public DiPWMFindPvalueBsearch(DiPWM dipwm, PvalueBsearchList bsearchList) {
-    this.dipwm = dipwm;
+  public DiPWMFindPvalueBsearch(PvalueBsearchList bsearchList) {
     this.bsearchList = bsearchList;
   }
 

@@ -3,9 +3,9 @@ package ru.autosome.perfectosape.cli;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
-import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBuilder;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.PWM;
@@ -40,7 +40,7 @@ public class MultiSNPScan extends MultiSNPScanGeneralized<BackgroundModel> {
 
   @Override
   protected void load_collection_of_pwms() throws FileNotFoundException {
-    CanFindPvalue.Builder<PWM> pvalueBuilder;
+    FindPvalueBuilder<PWM> pvalueBuilder;
     if (thresholds_folder == null) {
       pvalueBuilder = new FindPvalueAPE.Builder(discretization, background, max_hash_size);
     } else {

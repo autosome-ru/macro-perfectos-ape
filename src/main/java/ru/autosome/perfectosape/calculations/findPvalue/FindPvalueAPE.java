@@ -9,11 +9,10 @@ import ru.autosome.perfectosape.calculations.CountingPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindPvalueAPE implements CanFindPvalue {
-  public static class Builder implements CanFindPvalue.Builder<PWM> {
+  public static class Builder extends FindPvalueBuilder<PWM> {
     Double discretization;
     BackgroundModel background;
     Integer maxHashSize;
-    PWM pwm;
 
     public Builder(Double discretization, BackgroundModel background, Integer maxHashSize) {
       this.discretization = discretization;
@@ -22,18 +21,8 @@ public class FindPvalueAPE implements CanFindPvalue {
     }
 
     @Override
-    public CanFindPvalue.Builder applyMotif(PWM pwm) {
-      this.pwm = pwm;
-      return this;
-    }
-
-    @Override
-    public CanFindPvalue build() {
-      if (pwm != null) {
-        return new FindPvalueAPE(pwm, discretization, background, maxHashSize);
-      } else {
-        return null;
-      }
+    public CanFindPvalue pvalueCalculator() {
+      return new FindPvalueAPE(motif, discretization, background, maxHashSize);
     }
   }
 

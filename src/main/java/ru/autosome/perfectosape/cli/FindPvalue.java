@@ -6,6 +6,7 @@ import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBuilder;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.PWM;
 
@@ -26,7 +27,7 @@ public class FindPvalue extends FindPvalueGeneralized<PWM, BackgroundModel> {
   @Override
   protected CanFindPvalue calculator() throws FileNotFoundException {
     if (cache_calculator == null) {
-      CanFindPvalue.Builder<PWM> builder;
+      FindPvalueBuilder<PWM> builder;
       if (thresholds_folder == null) {
         builder = new FindPvalueAPE.Builder(discretization, background, max_hash_size);
       } else {

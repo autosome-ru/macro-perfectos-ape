@@ -4,9 +4,9 @@ import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
-import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBuilder;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBuilder;
@@ -124,7 +124,7 @@ public class ScanCollection {
 
   private List<ThresholdEvaluator> load_collection_of_pwms() throws FileNotFoundException {
 
-    CanFindPvalue.Builder<PWM> roughPvalueBuilder, precisePvalueBuilder;
+    FindPvalueBuilder<PWM> roughPvalueBuilder, precisePvalueBuilder;
     FindThresholdBuilder<PWM> roughThresholdBuilder, preciseThresholdBuilder;
 
     if (thresholds_folder == null) {

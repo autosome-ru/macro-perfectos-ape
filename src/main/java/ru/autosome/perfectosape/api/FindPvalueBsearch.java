@@ -26,8 +26,7 @@ public class FindPvalueBsearch extends SingleTask<CanFindPvalue.PvalueInfo[]> {
 
   @Override
   public CanFindPvalue.PvalueInfo[] launchSingleTask() {
-    return new ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch(parameters.pwm,
-                                                                   parameters.bsearchList)
+    return new ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch(parameters.bsearchList)
             .pvaluesByThresholds(parameters.thresholds);
   }
 

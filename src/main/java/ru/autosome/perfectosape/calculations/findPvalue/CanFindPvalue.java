@@ -28,9 +28,4 @@ public interface CanFindPvalue {
   public PvalueInfo[] pvaluesByThresholds(double[] thresholds) throws HashOverflowException;
 
   public PvalueInfo pvalueByThreshold(double threshold) throws HashOverflowException;
-
-  public static interface Builder<ModelType extends ScoringModel> {
-    public CanFindPvalue build();
-    public Builder applyMotif(ModelType motif);
-  }
 }

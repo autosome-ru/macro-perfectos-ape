@@ -12,41 +12,28 @@ import java.io.FileNotFoundException;
 // by performing binary search
 
 public class FindPvalueBsearch implements CanFindPvalue {
-  public static class Builder implements CanFindPvalue.Builder<PWM> {
+  public static class Builder extends FindPvalueBuilder<PWM> {
     File pathToThresholds;
-    PWM pwm;
 
     public Builder(File pathToThresholds) {
       this.pathToThresholds = pathToThresholds;
     }
 
     @Override
-    public CanFindPvalue.Builder<PWM> applyMotif(PWM pwm) {
-      this.pwm = pwm;
-      return this;
-    }
-
-    @Override
-    public CanFindPvalue build() {
-      if (pwm != null) {
-        try {
-          File thresholds_file = new File(pathToThresholds, pwm.name + ".thr");
-          PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
-          return new FindPvalueBsearch(pwm, pvalueBsearchList);
-        } catch (FileNotFoundException e) {
-          return null;
-        }
-      } else {
+    public CanFindPvalue pvalueCalculator() {
+      try {
+        File thresholds_file = new File(pathToThresholds, motif.getName() + ".thr");
+        PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
+        return new FindPvalueBsearch(pvalueBsearchList);
+      } catch (FileNotFoundException e) {
         return null;
       }
     }
   }
 
-  PWM pwm;
   PvalueBsearchList bsearchList;
 
-  public FindPvalueBsearch(PWM pwm, PvalueBsearchList bsearchList) {
-    this.pwm = pwm;
+  public FindPvalueBsearch(PvalueBsearchList bsearchList) {
     this.bsearchList = bsearchList;
   }
 

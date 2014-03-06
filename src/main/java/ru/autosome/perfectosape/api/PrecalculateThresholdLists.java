@@ -48,8 +48,7 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
         if (interrupted()) {
           return results;
         }
-        results.put(pwm, new ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch(pwm,
-                                                                                 calculator().bsearch_list_for_pwm(pwm)) );
+        results.put(pwm, new ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearch(calculator().bsearch_list_for_pwm(pwm)) );
         tick();
       }
     } catch (Exception err) {
