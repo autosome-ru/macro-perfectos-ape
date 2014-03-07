@@ -4,8 +4,8 @@ import ru.autosome.perfectosape.ArrayExtensions;
 import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
-import ru.autosome.perfectosape.calculations.CountingPWM;
-import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingPWM;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.perfectosape.importers.PMParser;
 
 import java.util.ArrayList;

@@ -1,10 +1,11 @@
-package ru.autosome.perfectosape.calculations;
+package ru.autosome.perfectosape.calculations.ScoringModelDistributions;
 
 import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.TDoubleObjectMap;
 import ru.autosome.perfectosape.ArrayExtensions;
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.ScoreDistributionTop;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdApproximation;
 

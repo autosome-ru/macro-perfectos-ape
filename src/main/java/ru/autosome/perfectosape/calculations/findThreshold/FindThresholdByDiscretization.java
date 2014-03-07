@@ -2,7 +2,7 @@ package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
-import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 
 public abstract class FindThresholdByDiscretization implements CanFindThreshold {
   Double discretization; // if discretization is null - it's not applied

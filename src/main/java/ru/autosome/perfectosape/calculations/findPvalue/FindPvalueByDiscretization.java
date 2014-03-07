@@ -3,7 +3,7 @@ package ru.autosome.perfectosape.calculations.findPvalue;
 import gnu.trove.map.TDoubleDoubleMap;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
-import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.motifModels.Discretable;
 import ru.autosome.perfectosape.motifModels.ScoringModel;

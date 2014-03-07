@@ -1,4 +1,4 @@
-package ru.autosome.perfectosape.calculations;
+package ru.autosome.perfectosape.calculations.ScoringModelDistributions;
 
 
 import gnu.trove.iterator.TDoubleDoubleIterator;
@@ -6,6 +6,8 @@ import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import ru.autosome.perfectosape.ScoreDistributionTop;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.perfectosape.calculations.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.perfectosape.motifModels.DiPWM;

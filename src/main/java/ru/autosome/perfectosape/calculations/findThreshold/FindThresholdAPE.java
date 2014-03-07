@@ -1,7 +1,7 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
-import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.perfectosape.motifModels.Discretable;
 import ru.autosome.perfectosape.motifModels.ScoreDistribution;
 

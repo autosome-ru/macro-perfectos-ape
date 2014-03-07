@@ -1,12 +1,10 @@
 package ru.autosome.perfectosape.motifModels;
 
 import ru.autosome.perfectosape.Sequence;
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
-import ru.autosome.perfectosape.calculations.CountingDiPWM;
-import ru.autosome.perfectosape.calculations.CountingPWM;
-import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingDiPWM;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.perfectosape.importers.PMParser;
 
 import java.util.ArrayList;
