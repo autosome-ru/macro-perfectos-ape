@@ -23,7 +23,7 @@ public class FindPvalue {
     double threshold = 3;
     double[] thresholds = {3,5,7};
 
-    FindPvalueAPE calculator = new FindPvalueAPE(pwm, discretization, background, max_hash_size);
+    FindPvalueAPE calculator = new FindPvalueAPE(pwm, background, discretization, max_hash_size);
 
       // Single threshold
     CanFindPvalue.PvalueInfo info = null;

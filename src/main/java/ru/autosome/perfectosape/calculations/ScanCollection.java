@@ -76,8 +76,8 @@ public class ScanCollection {
     List<ScanCollection.SimilarityInfo> result;
     result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
 
-    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE(queryPWM, roughDiscretization, queryBackground, maxHashSize);
-    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE(queryPWM, preciseDiscretization, queryBackground, maxHashSize);
+    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE(queryPWM, queryBackground, roughDiscretization, maxHashSize);
+    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE(queryPWM, queryBackground, preciseDiscretization, maxHashSize);
 
     double roughQueryThreshold = queryThreshold(roughDiscretization);
     double preciseQueryThreshold = queryThreshold(preciseDiscretization);

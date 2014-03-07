@@ -157,8 +157,8 @@ public class EvalSimilarity {
   ComparePWM calculator() {
     ComparePWM result = new ComparePWM(firstPWM, secondPWM,
                                        firstBackground, secondBackground,
-                                       new FindPvalueAPE(firstPWM, discretization, firstBackground, maxHashSize),
-                                       new FindPvalueAPE(secondPWM, discretization, secondBackground, maxHashSize),
+                                       new FindPvalueAPE(firstPWM, firstBackground, discretization, maxHashSize),
+                                       new FindPvalueAPE(secondPWM, secondBackground, discretization, maxHashSize),
                                        discretization, maxPairHashSize);
     return result;
   }

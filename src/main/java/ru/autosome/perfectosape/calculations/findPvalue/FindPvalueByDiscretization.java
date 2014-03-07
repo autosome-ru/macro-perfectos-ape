@@ -97,7 +97,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
 
     @Override
     public CanFindPvalue pvalueCalculator() {
-      return new FindPvalueAPE(motif, discretization, background, maxHashSize);
+      return new FindPvalueAPE(motif, background, discretization, maxHashSize);
     }
   }
 }

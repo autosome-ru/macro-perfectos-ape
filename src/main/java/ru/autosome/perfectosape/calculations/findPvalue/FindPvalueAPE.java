@@ -19,13 +19,13 @@ public class FindPvalueAPE extends FindPvalueByDiscretization<PWM, BackgroundMod
 
     @Override
     public CanFindPvalue pvalueCalculator() {
-      return new FindPvalueAPE(motif, discretization, background, maxHashSize);
+      return new FindPvalueAPE(motif, background, discretization, maxHashSize);
     }
   }
 
   Integer maxHashSize;
 
-  public FindPvalueAPE(PWM pwm, Double discretization, BackgroundModel background, Integer maxHashSize) {
+  public FindPvalueAPE(PWM pwm, BackgroundModel background, Double discretization, Integer maxHashSize) {
     super(pwm, background, discretization);
     this.maxHashSize = maxHashSize;
   }
