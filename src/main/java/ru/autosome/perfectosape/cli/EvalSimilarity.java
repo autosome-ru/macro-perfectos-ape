@@ -215,10 +215,7 @@ public class EvalSimilarity {
       if (predefinedFirstThreshold != null) {
         cacheFirstThreshold = predefinedFirstThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE(firstPWM,
-                                                                  firstBackground,
-                                                                  discretization,
-                                                                  maxHashSize);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<PWM, BackgroundModel>(firstPWM, firstBackground, discretization, maxHashSize);
         cacheFirstThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }
@@ -230,10 +227,7 @@ public class EvalSimilarity {
       if (predefinedSecondThreshold != null) {
         cacheSecondThreshold = predefinedSecondThreshold;
       } else {
-          CanFindThreshold pvalue_calculator = new FindThresholdAPE(secondPWM,
-                                                                    secondBackground,
-                                                                    discretization,
-                                                                    maxHashSize);
+          CanFindThreshold pvalue_calculator = new FindThresholdAPE<PWM, BackgroundModel>(secondPWM, secondBackground, discretization, maxHashSize);
         cacheSecondThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }

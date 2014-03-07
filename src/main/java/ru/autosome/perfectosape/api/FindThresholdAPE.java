@@ -35,10 +35,10 @@ public class FindThresholdAPE extends SingleTask<CanFindThreshold.ThresholdInfo[
 
   @Override
   public CanFindThreshold.ThresholdInfo[] launchSingleTask() throws HashOverflowException {
-    return new ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE(parameters.pwm,
-                                                                      parameters.background,
-                                                                      parameters.discretization,
-                                                                      parameters.max_hash_size)
+    return new ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE<PWM, BackgroundModel>(parameters.pwm,
+                                                                                                            parameters.background,
+                                                                                                            parameters.discretization,
+                                                                                                            parameters.max_hash_size)
      .thresholdsByPvalues(parameters.pvalues, parameters.pvalue_boundary);
   }
 }

@@ -4,13 +4,15 @@ import ru.autosome.perfectosape.ArrayExtensions;
 import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.CountingPWM;
+import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.importers.PMParser;
 
 import java.util.ArrayList;
 
 import static java.lang.Math.ceil;
 
-public class PWM extends PM implements ScoringModel,Discretable<PWM>,ScoreStatistics<BackgroundModel> {
+public class PWM extends PM implements ScoringModel,Discretable<PWM>,ScoreStatistics<BackgroundModel>,ScoreDistribution<BackgroundModel> {
   private double[] cache_best_suffices;
   private double[] cache_worst_suffices;
 
@@ -164,5 +166,10 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,ScoreStatis
       variance += mean_square - squared_mean;
     }
     return variance;
+  }
+
+  @Override
+  public ScoringModelDistibutions scoringModelDistibutions(BackgroundModel background, Integer maxHashSize) {
+    return new CountingPWM(this, background, maxHashSize);
   }
 }

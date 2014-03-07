@@ -1,8 +1,12 @@
 package ru.autosome.perfectosape.motifModels;
 
 import ru.autosome.perfectosape.Sequence;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
+import ru.autosome.perfectosape.calculations.CountingDiPWM;
+import ru.autosome.perfectosape.calculations.CountingPWM;
+import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.importers.PMParser;
 
 import java.util.ArrayList;
@@ -10,7 +14,7 @@ import java.util.HashMap;
 
 import static java.lang.Math.*;
 
-public class DiPWM implements Named,ScoringModel,Discretable<DiPWM>,ScoreStatistics<DiBackgroundModel> {
+public class DiPWM implements Named,ScoringModel,Discretable<DiPWM>,ScoreStatistics<DiBackgroundModel>,ScoreDistribution<DiBackgroundModel> {
   static final int ALPHABET_SIZE = 16;
   public final double[][] matrix;
   public String name;
@@ -253,5 +257,10 @@ public class DiPWM implements Named,ScoringModel,Discretable<DiPWM>,ScoreStatist
       variance += mean_square - squared_mean;
     }
     return variance;
+  }
+
+  @Override
+  public ScoringModelDistibutions scoringModelDistibutions(DiBackgroundModel background, Integer maxHashSize) {
+    return new CountingDiPWM(this, background, maxHashSize);
   }
 }

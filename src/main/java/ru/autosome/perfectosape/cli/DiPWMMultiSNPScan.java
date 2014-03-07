@@ -4,7 +4,7 @@ import ru.autosome.perfectosape.backgroundModels.DiBackground;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
-import ru.autosome.perfectosape.calculations.findPvalue.DiPWMFindPvalueAPE;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.perfectosape.importers.DiPWMImporter;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
@@ -49,7 +49,7 @@ public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized<DiBackgroundModel
     for (DiPWM motif: pwmList) {
       CanFindPvalue pvalueCalculator;
       if (thresholds_folder == null) {
-        pvalueCalculator = new DiPWMFindPvalueAPE(motif, discretization, background, max_hash_size);
+        pvalueCalculator = new FindPvalueAPE<DiPWM, DiBackgroundModel>(motif, background, discretization, max_hash_size);
       } else {
         pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
       }

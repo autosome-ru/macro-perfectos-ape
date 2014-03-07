@@ -4,7 +4,7 @@ import ru.autosome.perfectosape.backgroundModels.DiBackground;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
-import ru.autosome.perfectosape.calculations.findPvalue.DiPWMFindPvalueAPE;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.perfectosape.importers.DiPWMImporter;
 import ru.autosome.perfectosape.motifModels.DiPWM;
@@ -27,7 +27,7 @@ public class DiPWMFindPvalue extends FindPvalueGeneralized<DiPWM, DiBackgroundMo
   protected CanFindPvalue calculator() throws FileNotFoundException {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
-        cache_calculator = new DiPWMFindPvalueAPE(motif, discretization, background, max_hash_size);
+        cache_calculator = new FindPvalueAPE<DiPWM, DiBackgroundModel>(motif, background, discretization, max_hash_size);
       } else {
         cache_calculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
       }

@@ -35,7 +35,7 @@ public class FindThreshold extends FindThresholdGeneralized<PWM, BackgroundModel
   }
   @Override
   CanFindThreshold calculator() {
-    return new FindThresholdAPE(motif, background, discretization, max_hash_size);
+    return new FindThresholdAPE<PWM, BackgroundModel>(motif, background, discretization, max_hash_size);
   }
 
   public FindThreshold() {

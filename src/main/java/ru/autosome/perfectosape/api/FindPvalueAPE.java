@@ -35,10 +35,10 @@ public class FindPvalueAPE extends SingleTask<PvalueInfo[]> {
   @Override
   public PvalueInfo[] launchSingleTask() throws HashOverflowException {
     ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE calculator =
-     new ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE(parameters.pwm,
-                                                                        parameters.background,
-                                                                        parameters.discretization,
-                                                                        parameters.max_hash_size);
+     new ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE<PWM, BackgroundModel>(parameters.pwm,
+                                                                                              parameters.background,
+                                                                                              parameters.discretization,
+                                                                                              parameters.max_hash_size);
     return calculator.pvaluesByThresholds(parameters.thresholds);
   }
 }

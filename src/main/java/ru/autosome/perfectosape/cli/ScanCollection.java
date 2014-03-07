@@ -128,8 +128,8 @@ public class ScanCollection {
     for (PWM pwm: pwmList) {
       if (thresholds_folder == null) {
         result.add(new ThresholdEvaluator(pwm,
-                                          new FindThresholdAPE(pwm, collectionBackground, roughDiscretization, maxHashSize),
-                                          new FindThresholdAPE(pwm, collectionBackground, preciseDiscretization, maxHashSize),
+                                          new FindThresholdAPE<PWM, BackgroundModel>(pwm, collectionBackground, roughDiscretization, maxHashSize),
+                                          new FindThresholdAPE<PWM, BackgroundModel>(pwm, collectionBackground, preciseDiscretization, maxHashSize),
                                           new FindPvalueAPE(pwm, collectionBackground, roughDiscretization, maxHashSize),
                                           new FindPvalueAPE(pwm, collectionBackground, preciseDiscretization, maxHashSize)));
       } else {

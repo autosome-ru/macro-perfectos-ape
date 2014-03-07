@@ -77,8 +77,8 @@ public class ScanCollection {
     List<ScanCollection.SimilarityInfo> result;
     result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
 
-    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE(queryPWM, queryBackground, roughDiscretization, maxHashSize);
-    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE(queryPWM, queryBackground, preciseDiscretization, maxHashSize);
+    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<PWM, BackgroundModel>(queryPWM, queryBackground, roughDiscretization, maxHashSize);
+    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<PWM, BackgroundModel>(queryPWM, queryBackground, preciseDiscretization, maxHashSize);
 
     double roughQueryThreshold = queryThreshold(roughDiscretization);
     double preciseQueryThreshold = queryThreshold(preciseDiscretization);
@@ -125,10 +125,7 @@ public class ScanCollection {
     if (queryPredefinedThreshold != null) {
       return queryPredefinedThreshold;
     } else {
-      CanFindThreshold pvalue_calculator = new FindThresholdAPE(queryPWM,
-                                                                queryBackground,
-                                                                discretization,
-                                                                maxHashSize);
+      CanFindThreshold pvalue_calculator = new FindThresholdAPE<PWM, BackgroundModel>(queryPWM, queryBackground, discretization, maxHashSize);
       return pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
     }
   }

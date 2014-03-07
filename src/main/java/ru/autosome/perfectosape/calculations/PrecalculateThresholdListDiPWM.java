@@ -3,7 +3,7 @@ package ru.autosome.perfectosape.calculations;
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
-import ru.autosome.perfectosape.calculations.findThreshold.DiPWMFindThresholdAPE;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
 public class PrecalculateThresholdListDiPWM extends PrecalculateThresholdListGeneralized<DiPWM> {
@@ -21,10 +21,7 @@ public class PrecalculateThresholdListDiPWM extends PrecalculateThresholdListGen
 
   @Override
   protected CanFindThreshold find_threshold_calculator(DiPWM motif) {
-    return new DiPWMFindThresholdAPE(motif,
-                                    background,
-                                    discretization,
-                                    max_hash_size);
+    return new FindThresholdAPE<DiPWM, DiBackgroundModel>(motif, background, discretization, max_hash_size);
   }
 
 }

@@ -21,9 +21,6 @@ public class PrecalculateThresholdList extends PrecalculateThresholdListGenerali
 
   @Override
   protected CanFindThreshold find_threshold_calculator(PWM motif) {
-    return new FindThresholdAPE(motif,
-                                background,
-                                discretization,
-                                max_hash_size);
+    return new FindThresholdAPE<PWM, BackgroundModel>(motif, background, discretization, max_hash_size);
   }
 }

@@ -26,7 +26,7 @@ public class FindThreshold {
     double pvalue = 0.0005;
     double[] pvalues = {0.0001, 0.0005, 0.001};
 
-    CanFindThreshold calculator = new FindThresholdAPE(pwm, background, discretization, max_hash_size);
+    CanFindThreshold calculator = new FindThresholdAPE<PWM, BackgroundModel>(pwm, background, discretization, max_hash_size);
 
     // Single threshold
     CanFindThreshold.ThresholdInfo info = null;
