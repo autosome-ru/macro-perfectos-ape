@@ -21,14 +21,14 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
     this.discretization = discretization;
   }
 
-  double upscale_threshold(double threshold) {
+  private double upscale_threshold(double threshold) {
     if (discretization == null) {
       return threshold;
     } else {
       return threshold * discretization;
     }
   }
-  double[] upscaled_thresholds(double[] thresholds) {
+  private double[] upscaled_thresholds(double[] thresholds) {
     double[] result = new double[thresholds.length];
     for (int i = 0; i < thresholds.length; ++i) {
       result[i] = upscale_threshold(thresholds[i]);
