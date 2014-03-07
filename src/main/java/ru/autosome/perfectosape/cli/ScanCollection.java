@@ -135,7 +135,7 @@ public class ScanCollection {
                                           new FindPvalueAPE(pwm, preciseDiscretization, collectionBackground, maxHashSize)));
       } else {
         result.add(new ThresholdEvaluator(pwm,
-                                          new FindThresholdBsearchBuilder(thresholds_folder).applyMotif(pwm).build(),
+                                          new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(pwm),
                                           null,
                                           new FindPvalueBsearchBuilder(thresholds_folder).applyMotif(pwm).build(),
                                           null));
