@@ -6,22 +6,6 @@ import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindThresholdAPE extends FindThresholdByDiscretization {
-  public static class Builder extends FindThresholdBuilder<PWM> {
-    Double discretization;
-    BackgroundModel background;
-    Integer maxHashSize;
-    public Builder(BackgroundModel background, Double discretization, Integer maxHashSize) {
-      this.background = background;
-      this.discretization = discretization;
-      this.maxHashSize = maxHashSize;
-    }
-
-    @Override
-    public CanFindThreshold thresholdCalculator() {
-      return new FindThresholdAPE(motif, background, discretization, maxHashSize);
-    }
-  }
-
   PWM motif;
   Integer maxHashSize; // if maxHashSize is null - it's not applied
   BackgroundModel background;

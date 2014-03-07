@@ -9,7 +9,6 @@ import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearchBuilder
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBuilder;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBsearchBuilder;
-import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBuilder;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
@@ -123,31 +122,24 @@ public class ScanCollection {
   }
 
   private List<ThresholdEvaluator> load_collection_of_pwms() throws FileNotFoundException {
-
-    FindPvalueBuilder<PWM> roughPvalueBuilder, precisePvalueBuilder;
-    FindThresholdBuilder<PWM> roughThresholdBuilder, preciseThresholdBuilder;
-
-    if (thresholds_folder == null) {
-      roughPvalueBuilder = new FindPvalueAPE.Builder(roughDiscretization, collectionBackground, maxHashSize);
-      roughThresholdBuilder = new FindThresholdAPE.Builder(collectionBackground, roughDiscretization, maxHashSize);
-      precisePvalueBuilder = new FindPvalueAPE.Builder(preciseDiscretization, collectionBackground, maxHashSize);
-      preciseThresholdBuilder = new FindThresholdAPE.Builder(collectionBackground, preciseDiscretization, maxHashSize);
-
-    } else {
-      roughPvalueBuilder = precisePvalueBuilder = new FindPvalueBsearchBuilder(thresholds_folder);
-      roughThresholdBuilder = preciseThresholdBuilder = new FindThresholdBsearchBuilder(thresholds_folder);
-    }
-
     PWMImporter pwmImporter = new PWMImporter(collectionBackground, dataModel, effectiveCount);
     MotifCollectionImporter collectionImporter = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
     List<ThresholdEvaluator> result = new ArrayList<ThresholdEvaluator>();
     for (PWM pwm: pwmList) {
-      result.add(new ThresholdEvaluator(pwm,
-                                        roughThresholdBuilder.applyMotif(pwm).build(),
-                                        preciseThresholdBuilder.applyMotif(pwm).build(),
-                                        roughPvalueBuilder.applyMotif(pwm).build(),
-                                        precisePvalueBuilder.applyMotif(pwm).build()));
+      if (thresholds_folder == null) {
+        result.add(new ThresholdEvaluator(pwm,
+                                          new FindThresholdAPE(pwm, collectionBackground, roughDiscretization, maxHashSize),
+                                          new FindThresholdAPE(pwm, collectionBackground, preciseDiscretization, maxHashSize),
+                                          new FindPvalueAPE(pwm, roughDiscretization, collectionBackground, maxHashSize),
+                                          new FindPvalueAPE(pwm, preciseDiscretization, collectionBackground, maxHashSize)));
+      } else {
+        result.add(new ThresholdEvaluator(pwm,
+                                          new FindThresholdBsearchBuilder(thresholds_folder).applyMotif(pwm).build(),
+                                          null,
+                                          new FindPvalueBsearchBuilder(thresholds_folder).applyMotif(pwm).build(),
+                                          null));
+      }
     }
     return result;
   }

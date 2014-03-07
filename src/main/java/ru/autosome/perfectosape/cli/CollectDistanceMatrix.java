@@ -8,7 +8,6 @@ import ru.autosome.perfectosape.calculations.ComparePWM;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
-import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBuilder;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.DataModel;

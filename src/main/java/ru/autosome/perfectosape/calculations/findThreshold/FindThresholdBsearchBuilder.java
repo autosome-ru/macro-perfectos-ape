@@ -1,18 +1,33 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.PvalueBsearchList;
+import ru.autosome.perfectosape.motifModels.Named;
+import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
-public class FindThresholdBsearchBuilder extends FindThresholdBuilder {
+public class FindThresholdBsearchBuilder<ModelType extends Named & ScoringModel> {
   File pathToThresholds;
+  ModelType motif;
+
+  public FindThresholdBsearchBuilder<ModelType> applyMotif(ModelType motif) {
+    this.motif = motif;
+    return this;
+  }
+
+  public CanFindThreshold build() {
+    if (motif != null) {
+      return thresholdCalculator();
+    } else {
+      return null;
+    }
+  }
 
   public FindThresholdBsearchBuilder(File pathToThresholds) {
     this.pathToThresholds = pathToThresholds;
   }
 
-  @Override
   public CanFindThreshold thresholdCalculator() {
     try {
       File thresholds_file = new File(pathToThresholds, motif.getName() + ".thr");
