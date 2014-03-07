@@ -7,6 +7,7 @@ import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.ComparePWM;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
+import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdBuilder;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
@@ -158,17 +159,14 @@ public class CollectDistanceMatrix {
   }
 
   List<PWMWithThreshold> collectThreshold() throws HashOverflowException {
-    FindThresholdBuilder<PWM> roughCalcBuilder, preciseCalcBuilder;
-    roughCalcBuilder = new ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE.Builder(background, roughDiscretization, maxHashSize);
-    preciseCalcBuilder = new ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE.Builder(background, preciseDiscretization, maxHashSize);
     List<PWMWithThreshold> result = new ArrayList<PWMWithThreshold>();
     for (PWM pwm: pwmCollection) {
-      CanFindThreshold roughThresholdCalculator = roughCalcBuilder.applyMotif(pwm).build();
+      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE(pwm, background, roughDiscretization, maxHashSize);
       CanFindThreshold.ThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double roughThreshold = roughThresholdInfo.threshold;
       double roughCount = roughThresholdInfo.numberOfRecognizedWords(background, pwm.length());
 
-      CanFindThreshold preciseThresholdCalculator = preciseCalcBuilder.applyMotif(pwm).build();
+      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE(pwm, background, preciseDiscretization, maxHashSize);
       CanFindThreshold.ThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double preciseThreshold = preciseThresholdInfo.threshold;
       double preciseCount = preciseThresholdInfo.numberOfRecognizedWords(background, pwm.length());
