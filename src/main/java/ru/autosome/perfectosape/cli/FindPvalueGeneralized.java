@@ -1,7 +1,6 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.ArrayExtensions;
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;

@@ -1,8 +1,8 @@
 package ru.autosome.perfectosape.api;
 
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.calculations.findPvalue.*;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.HashMap;

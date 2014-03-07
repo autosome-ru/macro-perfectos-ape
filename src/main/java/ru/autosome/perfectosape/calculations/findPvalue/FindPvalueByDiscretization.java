@@ -1,13 +1,11 @@
 package ru.autosome.perfectosape.calculations.findPvalue;
 
 import gnu.trove.map.TDoubleDoubleMap;
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.motifModels.Discretable;
-import ru.autosome.perfectosape.motifModels.PWM;
 import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 public abstract class FindPvalueByDiscretization <ModelType extends Discretable<ModelType> & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> implements CanFindPvalue {
@@ -82,22 +80,5 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
     infos.add_table_parameter("P", "P-value", "pvalue");
 
     return infos;
-  }
-
-  public static class Builder extends FindPvalueBuilder<PWM> {
-    Double discretization;
-    BackgroundModel background;
-    Integer maxHashSize;
-
-    public Builder(Double discretization, BackgroundModel background, Integer maxHashSize) {
-      this.discretization = discretization;
-      this.background = background;
-      this.maxHashSize = maxHashSize;
-    }
-
-    @Override
-    public CanFindPvalue pvalueCalculator() {
-      return new FindPvalueAPE(motif, background, discretization, maxHashSize);
-    }
   }
 }

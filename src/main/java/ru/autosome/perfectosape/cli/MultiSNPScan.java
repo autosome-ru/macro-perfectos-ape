@@ -3,9 +3,9 @@ package ru.autosome.perfectosape.cli;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearchBuilder;
-import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBuilder;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.PWM;
@@ -40,20 +40,19 @@ public class MultiSNPScan extends MultiSNPScanGeneralized<BackgroundModel> {
 
   @Override
   protected void load_collection_of_pwms() throws FileNotFoundException {
-    FindPvalueBuilder<PWM> pvalueBuilder;
-    if (thresholds_folder == null) {
-      pvalueBuilder = new FindPvalueAPE.Builder(discretization, background, max_hash_size);
-    } else {
-      pvalueBuilder = new FindPvalueBsearchBuilder(thresholds_folder);
-    }
-
     PWMImporter pwmImporter = new PWMImporter(background, dataModel, effectiveCount);
     MotifCollectionImporter importer = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
 
     pwmCollection = new ArrayList<ThresholdEvaluator>();
     for (PWM pwm: pwmList) {
-      pwmCollection.add(new ThresholdEvaluator(pwm, pvalueBuilder.applyMotif(pwm).build(),pwm.getName()));
+      CanFindPvalue pvalueCalculator;
+      if (thresholds_folder == null) {
+        pvalueCalculator = new FindPvalueAPE(pwm, background, discretization, max_hash_size);
+      } else {
+        pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(pwm);
+      }
+      pwmCollection.add(new ThresholdEvaluator(pwm, pvalueCalculator, pwm.getName()));
     }
   }
 

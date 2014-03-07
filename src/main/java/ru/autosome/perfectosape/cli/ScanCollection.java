@@ -136,7 +136,7 @@ public class ScanCollection {
         result.add(new ThresholdEvaluator(pwm,
                                           new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(pwm),
                                           null,
-                                          new FindPvalueBsearchBuilder(thresholds_folder).applyMotif(pwm).build(),
+                                          new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(pwm),
                                           null));
       }
     }

@@ -1,9 +1,7 @@
 package ru.autosome.perfectosape.formatters;
 
 import ru.autosome.perfectosape.StringExtensions;
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
-import ru.autosome.perfectosape.formatters.ResultInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;

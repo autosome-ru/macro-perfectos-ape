@@ -1,9 +1,9 @@
 package ru.autosome.perfectosape.converters;
 
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.motifModels.PCM;
 import ru.autosome.perfectosape.motifModels.PWM;
-import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 
 // TODO: extract interface for converters
 public class PCM2PWMConverter {

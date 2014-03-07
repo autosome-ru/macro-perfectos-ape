@@ -3,9 +3,9 @@ package ru.autosome.perfectosape.cli;
 import ru.autosome.perfectosape.backgroundModels.DiBackground;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
+import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.DiPWMFindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBsearchBuilder;
-import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueBuilder;
 import ru.autosome.perfectosape.importers.DiPWMImporter;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
 import ru.autosome.perfectosape.motifModels.DiPWM;
@@ -41,20 +41,19 @@ public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized<DiBackgroundModel
 
   @Override
   protected void load_collection_of_pwms() throws FileNotFoundException {
-    FindPvalueBuilder<DiPWM> pvalueBuilder;
-    if (thresholds_folder == null) {
-      pvalueBuilder = new DiPWMFindPvalueAPE.Builder(discretization, background, max_hash_size);
-    } else {
-      pvalueBuilder = new FindPvalueBsearchBuilder<DiPWM>(thresholds_folder);
-    }
-
     DiPWMImporter pwmImporter = new DiPWMImporter(background, dataModel, effectiveCount);
     MotifCollectionImporter<DiPWM> importer = new MotifCollectionImporter<DiPWM>(pwmImporter);
     List<DiPWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
 
     pwmCollection = new ArrayList<ThresholdEvaluator>();
     for (DiPWM motif: pwmList) {
-      pwmCollection.add(new ThresholdEvaluator(motif, pvalueBuilder.applyMotif(motif).build(), motif.getName()));
+      CanFindPvalue pvalueCalculator;
+      if (thresholds_folder == null) {
+        pvalueCalculator = new DiPWMFindPvalueAPE(motif, discretization, background, max_hash_size);
+      } else {
+        pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
+      }
+      pwmCollection.add(new ThresholdEvaluator(motif, pvalueCalculator, motif.getName()));
     }
   }
 

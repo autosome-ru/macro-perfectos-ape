@@ -1,8 +1,8 @@
 package ru.autosome.perfectosape.motifModels;
 
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
-import ru.autosome.perfectosape.importers.PMParser;
 import ru.autosome.perfectosape.converters.PPM2PCMConverter;
+import ru.autosome.perfectosape.importers.PMParser;
 
 public class PPM extends PM {
   public PPM(double[][] matrix, String name) throws IllegalArgumentException {

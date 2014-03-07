@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.PWMAligned;
+import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.motifModels.PWM;

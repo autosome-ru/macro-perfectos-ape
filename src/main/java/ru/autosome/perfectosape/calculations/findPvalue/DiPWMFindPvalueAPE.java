@@ -6,23 +6,6 @@ import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
 public class DiPWMFindPvalueAPE extends FindPvalueByDiscretization<DiPWM, DiBackgroundModel> {
-  public static class Builder extends FindPvalueBuilder<DiPWM> {
-    Double discretization;
-    DiBackgroundModel dibackground;
-    Integer maxHashSize;
-
-    public Builder(Double discretization, DiBackgroundModel dibackground, Integer maxHashSize) {
-      this.discretization = discretization;
-      this.dibackground = dibackground;
-      this.maxHashSize = maxHashSize;
-    }
-
-    @Override
-    public CanFindPvalue pvalueCalculator() {
-      return new DiPWMFindPvalueAPE(motif, discretization, dibackground, maxHashSize);
-    }
-  }
-
   Integer maxHashSize;
 
   public DiPWMFindPvalueAPE(DiPWM dipwm, Double discretization, DiBackgroundModel dibackground, Integer maxHashSize) {

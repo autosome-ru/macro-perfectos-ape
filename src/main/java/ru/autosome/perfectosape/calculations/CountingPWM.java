@@ -2,7 +2,6 @@ package ru.autosome.perfectosape.calculations;
 
 import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.map.TDoubleDoubleMap;
-
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import ru.autosome.perfectosape.ScoreDistributionTop;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;

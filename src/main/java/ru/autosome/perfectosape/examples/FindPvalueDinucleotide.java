@@ -1,6 +1,6 @@
 package ru.autosome.perfectosape.examples;
 
-import ru.autosome.perfectosape.*;
+import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
