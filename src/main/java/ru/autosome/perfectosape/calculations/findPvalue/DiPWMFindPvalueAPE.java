@@ -14,7 +14,7 @@ public class DiPWMFindPvalueAPE extends FindPvalueByDiscretization<DiPWM, DiBack
   }
 
   @Override
-  ScoringModelDistibutions countingPWM() {
+  ScoringModelDistibutions discretedScoringModel() {
     return new CountingDiPWM(motif.discrete(discretization), background, maxHashSize);
   }
 }

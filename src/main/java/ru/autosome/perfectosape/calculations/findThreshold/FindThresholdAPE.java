@@ -19,7 +19,7 @@ public class FindThresholdAPE extends FindThresholdByDiscretization {
   }
 
   @Override
-  ScoringModelDistibutions discretedModel() {
+  ScoringModelDistibutions discretedScoringModel() {
     return new CountingPWM(motif.discrete(discretization), background, maxHashSize);
   }
 }

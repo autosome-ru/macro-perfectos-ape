@@ -13,7 +13,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   ModelType motif;
   BackgroundType background;
 
-  abstract ScoringModelDistibutions countingPWM();
+  abstract ScoringModelDistibutions discretedScoringModel();
 
   FindPvalueByDiscretization(ModelType motif, BackgroundType background, Double discretization) {
     this.motif = motif;
@@ -45,8 +45,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
 
   @Override
   public PvalueInfo[] pvaluesByThresholds(double[] thresholds) throws HashOverflowException {
-    ScoringModelDistibutions countingPWM = countingPWM();
-    TDoubleDoubleMap counts = countingPWM.counts_above_thresholds(upscaled_thresholds(thresholds));
+    TDoubleDoubleMap counts = discretedScoringModel().counts_above_thresholds(upscaled_thresholds(thresholds));
 
     PvalueInfo[] infos = new PvalueInfo[thresholds.length];
     for (int i = 0; i < thresholds.length; ++i) {

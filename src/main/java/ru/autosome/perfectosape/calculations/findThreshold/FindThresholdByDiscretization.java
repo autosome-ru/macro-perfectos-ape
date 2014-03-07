@@ -11,36 +11,36 @@ public abstract class FindThresholdByDiscretization implements CanFindThreshold 
     this.discretization = discretization;
   }
 
-  abstract ScoringModelDistibutions discretedModel();
+  abstract ScoringModelDistibutions discretedScoringModel();
 
   @Override
   public CanFindThreshold.ThresholdInfo weakThresholdByPvalue(double pvalue) throws HashOverflowException {
-    return discretedModel().weak_threshold(pvalue).downscale(discretization);
+    return discretedScoringModel().weak_threshold(pvalue).downscale(discretization);
   }
 
   @Override
   public CanFindThreshold.ThresholdInfo strongThresholdByPvalue(double pvalue) throws HashOverflowException {
-    return discretedModel().strong_threshold(pvalue).downscale(discretization);
+    return discretedScoringModel().strong_threshold(pvalue).downscale(discretization);
   }
 
   @Override
   public CanFindThreshold.ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) throws HashOverflowException {
-    return discretedModel().threshold(pvalue, boundaryType).downscale(discretization);
+    return discretedScoringModel().threshold(pvalue, boundaryType).downscale(discretization);
   }
 
   @Override
   public CanFindThreshold.ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues) throws HashOverflowException {
-    return downscale_all(discretedModel().weak_thresholds(pvalues), discretization);
+    return downscale_all(discretedScoringModel().weak_thresholds(pvalues), discretization);
   }
 
   @Override
   public CanFindThreshold.ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) throws HashOverflowException {
-    return downscale_all(discretedModel().strong_thresholds(pvalues), discretization);
+    return downscale_all(discretedScoringModel().strong_thresholds(pvalues), discretization);
   }
 
   @Override
   public CanFindThreshold.ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) throws HashOverflowException {
-    return downscale_all(discretedModel().thresholds(pvalues, boundaryType), discretization);
+    return downscale_all(discretedScoringModel().thresholds(pvalues, boundaryType), discretization);
   }
 
   private CanFindThreshold.ThresholdInfo[] downscale_all(CanFindThreshold.ThresholdInfo[] thresholdInfos, double discretization) {
