@@ -2,6 +2,7 @@ package ru.autosome.perfectosape.api;
 
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.calculations.PrecalculateThresholdList;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.motifModels.PWM;
 
@@ -59,12 +60,12 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
     return results;
   }
 
-  ru.autosome.perfectosape.calculations.PrecalculateThresholdList calculator() {
-    return new ru.autosome.perfectosape.calculations.PrecalculateThresholdList(parameters.pvalues,
-                                                                           parameters.discretization,
-                                                                           parameters.background,
-                                                                           parameters.pvalue_boundary,
-                                                                           parameters.max_hash_size);
+  PrecalculateThresholdList calculator() {
+    return new PrecalculateThresholdList<PWM, BackgroundModel>(parameters.pvalues,
+                                                                          parameters.discretization,
+                                                                          parameters.background,
+                                                                          parameters.pvalue_boundary,
+                                                                          parameters.max_hash_size);
   }
 
 }

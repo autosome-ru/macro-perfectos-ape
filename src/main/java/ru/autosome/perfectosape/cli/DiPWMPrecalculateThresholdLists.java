@@ -3,7 +3,7 @@ package ru.autosome.perfectosape.cli;
 import ru.autosome.perfectosape.backgroundModels.DiBackground;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
-import ru.autosome.perfectosape.calculations.PrecalculateThresholdListDiPWM;
+import ru.autosome.perfectosape.calculations.PrecalculateThresholdList;
 import ru.autosome.perfectosape.importers.DiPWMImporter;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
@@ -22,8 +22,8 @@ public class DiPWMPrecalculateThresholdLists extends PrecalculateThresholdListsG
   }
 
   @Override
-  PrecalculateThresholdListDiPWM calculator() {
-    return new PrecalculateThresholdListDiPWM(pvalues, discretization, background, pvalue_boundary, max_hash_size);
+  PrecalculateThresholdList calculator() {
+    return new PrecalculateThresholdList<DiPWM, DiBackgroundModel>(pvalues, discretization, background, pvalue_boundary, max_hash_size);
   }
 
   @Override

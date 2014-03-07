@@ -5,7 +5,8 @@ import ru.autosome.perfectosape.calculations.ScoringModelDistibutions;
 import ru.autosome.perfectosape.motifModels.Discretable;
 import ru.autosome.perfectosape.motifModels.ScoreDistribution;
 
-public class FindThresholdAPE<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> extends FindThresholdByDiscretization {
+public class FindThresholdAPE<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType>,
+                              BackgroundType extends GeneralizedBackgroundModel> extends FindThresholdByDiscretization {
   ModelType motif;
   Integer maxHashSize; // if maxHashSize is null - it's not applied
   BackgroundType background;

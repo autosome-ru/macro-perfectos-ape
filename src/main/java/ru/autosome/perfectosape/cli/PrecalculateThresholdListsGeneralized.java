@@ -5,7 +5,6 @@ import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.PrecalculateThresholdList;
-import ru.autosome.perfectosape.calculations.PrecalculateThresholdListGeneralized;
 import ru.autosome.perfectosape.importers.MotifImporter;
 import ru.autosome.perfectosape.motifModels.DataModel;
 import ru.autosome.perfectosape.motifModels.Named;
@@ -29,7 +28,7 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
 
   abstract protected void initialize_default_background();
   abstract void extract_background(String s);
-  abstract PrecalculateThresholdListGeneralized calculator();
+  abstract PrecalculateThresholdList calculator();
   abstract MotifImporter<ModelType> motifImporter();
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
