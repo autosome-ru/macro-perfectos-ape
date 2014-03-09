@@ -1,10 +1,8 @@
 package ru.autosome.perfectosape.importers;
 
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
-import ru.autosome.perfectosape.motifModels.DataModel;
-import ru.autosome.perfectosape.motifModels.PCM;
-import ru.autosome.perfectosape.motifModels.PPM;
-import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
+import ru.autosome.perfectosape.motifModels.*;
 
 public class PWMImporter extends MotifImporter<PWM> {
   BackgroundModel background;

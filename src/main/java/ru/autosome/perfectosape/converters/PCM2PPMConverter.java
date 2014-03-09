@@ -1,30 +1,46 @@
 package ru.autosome.perfectosape.converters;
 
-import ru.autosome.perfectosape.motifModels.PCM;
-import ru.autosome.perfectosape.motifModels.PPM;
+import ru.autosome.perfectosape.motifModels.*;
 
-public class PCM2PPMConverter {
-  private final PCM pcm;
+public class PCM2PPMConverter <ModelTypeFrom extends PositionCountModel & Named,
+                               ModelTypeTo extends PositionFrequencyModel & Named> {
+  private final ModelTypeFrom pcm;
+  private final Class<ModelTypeTo> toClass;
 
-  public PCM2PPMConverter(PCM pcm) {
+  public PCM2PPMConverter(ModelTypeFrom pcm, Class<ModelTypeTo> toClass) {
     this.pcm = pcm;
+    this.toClass = toClass;
   }
 
-  public PPM convert() {
-    double new_matrix[][] = new double[pcm.matrix.length][];
-    for (int pos = 0; pos < pcm.matrix.length; ++pos) {
-      new_matrix[pos] = new double[pcm.ALPHABET_SIZE];
-
-      // columns can have different counts for some PCMs
-      double count = 0.0;
-      for(double element: pcm.matrix[pos]) {
-        count += element;
-      }
-
-      for (int letter = 0; letter < pcm.ALPHABET_SIZE; ++letter) {
-        new_matrix[pos][letter] = pcm.matrix[pos][letter] / count;
-      }
+  // columns can have different counts for some PCMs
+  double count(double[] pos) {
+    double count = 0.0;
+    for(double element: pos) {
+      count += element;
     }
-    return new PPM(new_matrix, pcm.name);
+    return count;
+  }
+
+  double[] convert_position(double[] pos) {
+    double count = count(pos);
+
+    double[] converted_pos = new double[pcm.alphabetSize()];
+    for (int letter = 0; letter < pcm.alphabetSize(); ++letter) {
+      converted_pos[letter] = pos[letter] / count;
+    }
+    return converted_pos;
+  }
+
+
+  public ModelTypeTo convert() {
+    double new_matrix[][] = new double[pcm.getMatrix().length][];
+    for (int pos = 0; pos < pcm.getMatrix().length; ++pos) {
+      new_matrix[pos] = convert_position(pcm.getMatrix()[pos]);
+    }
+    try{
+      return toClass.getConstructor(double[][].class, String.class).newInstance(new_matrix, pcm.getName());
+    } catch (Exception exception) {
+      throw new Error("Should not be here", exception);
+    }
   }
 }

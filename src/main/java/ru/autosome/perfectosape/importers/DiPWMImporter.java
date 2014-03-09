@@ -1,8 +1,7 @@
 package ru.autosome.perfectosape.importers;
 
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
-import ru.autosome.perfectosape.motifModels.DataModel;
-import ru.autosome.perfectosape.motifModels.DiPWM;
+import ru.autosome.perfectosape.motifModels.*;
 
 public class DiPWMImporter extends MotifImporter<DiPWM> {
   DiBackgroundModel dibackground;
@@ -21,9 +20,11 @@ public class DiPWMImporter extends MotifImporter<DiPWM> {
     DiPWM dipwm;
     switch (dataModel) {
       case PCM:
-        throw new Error("PCM dinucleotide mode not yet implemented");
+        dipwm = new DiPCM(matrix, name).to_pwm(dibackground);
+        break;
       case PPM:
-        throw new Error("PPM dinucleotide mode not yet implemented");
+        dipwm = new DiPPM(matrix, name).to_pwm(dibackground, effectiveCount);
+        break;
       case PWM:
         dipwm = new DiPWM(matrix, name);
         break;

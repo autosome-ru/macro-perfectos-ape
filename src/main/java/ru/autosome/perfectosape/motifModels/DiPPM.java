@@ -1,11 +1,11 @@
 package ru.autosome.perfectosape.motifModels;
 
-import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.converters.PPM2PCMConverter;
 import ru.autosome.perfectosape.importers.PMParser;
 
-public class PPM extends PM implements PositionFrequencyModel {
-  public PPM(double[][] matrix, String name) throws IllegalArgumentException {
+public class DiPPM extends DiPM implements PositionFrequencyModel {
+  public DiPPM(double[][] matrix, String name) throws IllegalArgumentException {
     super(matrix, name);
     for (int pos = 0; pos < matrix.length; ++pos) {
       double sum = 0;
@@ -18,18 +18,18 @@ public class PPM extends PM implements PositionFrequencyModel {
     }
   }
 
-  public PCM to_pcm(double count) {
-    PPM2PCMConverter<PPM, PCM> converter = new PPM2PCMConverter<PPM,PCM>(this, count, PCM.class);
+  public DiPCM to_pcm(double count) {
+    PPM2PCMConverter<DiPPM, DiPCM> converter = new PPM2PCMConverter<DiPPM, DiPCM>(this, count, DiPCM.class); // ToDo: !!!!!!!!!!!
     return converter.convert();
   }
-  public PWM to_pwm(BackgroundModel background, double count) {
+  public DiPWM to_pwm(DiBackgroundModel background, double count) {
     return to_pcm(count).to_pwm(background);
   }
 
-  public static PPM fromParser(PMParser parser) {
+  public static DiPPM fromParser(PMParser parser) {
     if (parser == null)  return null;
     double[][] matrix = parser.matrix();
     String name = parser.name();
-    return new PPM(matrix, name);
+    return new DiPPM(matrix, name);
   }
 }

@@ -3,8 +3,10 @@ package ru.autosome.perfectosape.motifModels;
 import gnu.trove.impl.unmodifiable.TUnmodifiableCharIntMap;
 import gnu.trove.map.TCharIntMap;
 import gnu.trove.map.hash.TCharIntHashMap;
+import ru.autosome.perfectosape.backgroundModels.BackgroundFactory;
+import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 
-public class PM implements Named {
+public class PM implements Named, MatrixModel, BackgroundCompatible<BackgroundModel> {
   public static final int ALPHABET_SIZE = 4;
   public final double[][] matrix;
   public String name;
@@ -16,6 +18,16 @@ public class PM implements Named {
   @Override
   public void setName(String name) {
     this.name = name;
+  }
+
+  @Override
+  public double[][] getMatrix() {
+    return matrix;
+  }
+
+  @Override
+  public int alphabetSize() {
+    return ALPHABET_SIZE;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   protected static final TCharIntMap indexByLetter =
@@ -50,5 +62,10 @@ public class PM implements Named {
       result.append("\n");
     }
     return result.toString();
+  }
+
+  @Override
+  public BackgroundFactory compatibleBackground() {
+    return new BackgroundFactory();
   }
 }

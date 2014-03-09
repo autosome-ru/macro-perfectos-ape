@@ -12,7 +12,10 @@ import java.util.ArrayList;
 
 import static java.lang.Math.ceil;
 
-public class PWM extends PM implements ScoringModel,Discretable<PWM>,ScoreStatistics<BackgroundModel>,ScoreDistribution<BackgroundModel> {
+public class PWM extends PM implements ScoringModel,Discretable<PWM>,
+                                        ScoreStatistics<BackgroundModel>,
+                                        ScoreDistribution<BackgroundModel>,
+                                        PositionWeightModel {
   private double[] cache_best_suffices;
   private double[] cache_worst_suffices;
 

@@ -1,6 +1,8 @@
 package ru.autosome.perfectosape.motifModels;
 
 import ru.autosome.perfectosape.Sequence;
+import ru.autosome.perfectosape.backgroundModels.AbstractBackgroundFactory;
+import ru.autosome.perfectosape.backgroundModels.DiBackgroundFactory;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
 import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingDiPWM;
@@ -12,55 +14,17 @@ import java.util.HashMap;
 
 import static java.lang.Math.*;
 
-public class DiPWM implements Named,ScoringModel,Discretable<DiPWM>,ScoreStatistics<DiBackgroundModel>,ScoreDistribution<DiBackgroundModel> {
-  static final int ALPHABET_SIZE = 16;
-  public final double[][] matrix;
-  public String name;
+public class DiPWM extends DiPM implements ScoringModel,
+                                            Discretable<DiPWM>,
+                                            ScoreStatistics<DiBackgroundModel>,
+                                            ScoreDistribution<DiBackgroundModel>,
+                                            PositionWeightModel {
 
   private double[][] cache_best_suffices;
   private double[][] cache_worst_suffices;
 
-  static HashMap<String, Integer> indexByLetter;
-  static {
-    indexByLetter = new HashMap<String, Integer>();
-    indexByLetter.put("AA", 0);
-    indexByLetter.put("AC", 1);
-    indexByLetter.put("AG", 2);
-    indexByLetter.put("AT", 3);
-
-    indexByLetter.put("CA", 4);
-    indexByLetter.put("CC", 5);
-    indexByLetter.put("CG", 6);
-    indexByLetter.put("CT", 7);
-
-    indexByLetter.put("GA", 8);
-    indexByLetter.put("GC", 9);
-    indexByLetter.put("GG", 10);
-    indexByLetter.put("GT", 11);
-
-    indexByLetter.put("TA", 12);
-    indexByLetter.put("TC", 13);
-    indexByLetter.put("TG", 14);
-    indexByLetter.put("TT", 15);
-  }
-
-  @Override
-  public String getName() {
-    return name;
-  }
-  @Override
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public DiPWM(double[][] matrix, String name) {
-    for (double[] pos : matrix) {
-      if (pos.length != ALPHABET_SIZE) {
-        throw new IllegalArgumentException("Matrix must have " + ALPHABET_SIZE + " elements in each position");
-      }
-    }
-    this.matrix = matrix;
-    this.name = name;
+    super(matrix, name);
   }
 
   public static DiPWM fromPWM(PWM pwm) {
@@ -75,28 +39,6 @@ public class DiPWM implements Named,ScoringModel,Discretable<DiPWM>,ScoreStatist
       matrix[matrix.length - 1][letter] += pwm.matrix[matrix.length][letter % 4];
     }
     return new DiPWM(matrix, pwm.name);
-  }
-
-  // length of TFBS, not of a matrix representation
-  @Override
-  public int length() {
-    return matrix.length + 1;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder result = new StringBuilder();
-    result.append(name).append("\n");
-    for (double[] pos : matrix) {
-      for (int letter_index = 0; letter_index < ALPHABET_SIZE; ++letter_index) {
-        if (letter_index != 0) {
-          result.append("\t");
-        }
-        result.append(pos[letter_index]);
-      }
-      result.append("\n");
-    }
-    return result.toString();
   }
 
   public static DiPWM fromParser(PMParser parser) {
