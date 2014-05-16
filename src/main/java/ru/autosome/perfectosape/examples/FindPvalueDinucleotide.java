@@ -2,14 +2,18 @@ package ru.autosome.perfectosape.examples;
 
 import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
+import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.importers.PMParser;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindPvalueDinucleotide {
-  static void print_result(CanFindPvalue.PvalueInfo info, BackgroundModel background, int pwmLength) {
+  static void print_result(CanFindPvalue.PvalueInfo info, DiBackgroundModel background, int pwmLength) {
     System.out.println( "threshold: " + info.threshold + "\n" +
                          "pvalue: " + info.pvalue + "\n" +
                          "number of recognized words: " + info.numberOfRecognizedWords(background, pwmLength) + "\n------------\n");
@@ -17,47 +21,30 @@ public class FindPvalueDinucleotide {
 
   public static void main(String[] args) {
     PWM pwm = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
-    BackgroundModel background = new WordwiseBackground();
+    DiBackgroundModel background = new DiWordwiseBackground();
     double discretization = 10000;
     Integer max_hash_size = null;
     double threshold = 3;
     double[] thresholds = {3,5,7};
 
     Sequence word = new Sequence("ACAGTGACAA");
-    DiPWM dipwm = DiPWM.fromPWM(pwm);
+    DiPWM dipwm_1 = DiPWM.fromPWM(pwm); // A way to transform mono-nucleotide to dinucleotide matrix
+
     System.out.println(pwm.score(word));
-    System.out.println(dipwm.score(word));
-/*
-    FindPvalueAPE calculator = new FindPvalueAPE(pwm, discretization, background, max_hash_size);
+    System.out.println(dipwm_1.score(word));
+
+
+    DiPWM dipwm_2 = DiPWM.fromParser(PMParser.from_file_or_stdin("test_data/dipwm/AP2A.di"));
+
+    FindPvalueAPE calculator = new FindPvalueAPE<DiPWM, DiBackgroundModel>(dipwm_2, background, discretization, max_hash_size);
 
     // Single threshold
-    CanFindPvalue.PvalueInfo info = calculator.pvalueByThreshold(threshold);
-    print_result(info);
-
-    // Multiple thresholds
-    CanFindPvalue.PvalueInfo[] infos = calculator.pvaluesByThresholds(thresholds);
-    for (int i = 0; i < infos.length; ++i) {
-      print_result(infos[i]);
+    CanFindPvalue.PvalueInfo info = null;
+    try {
+      info = calculator.pvalueByThreshold(threshold);
+    } catch (HashOverflowException e) {
+      e.printStackTrace();
     }
-
-    // api integration
-    double[][] matrix_cAVNCT = { {1.0, 2.0, 1.0, 1.0},
-                                {10.5, -3.0, 0.0, 0.0},
-                                {5.0, 5.0, 5.0, -10.0},
-                                {0.0, 0.0, 0.0, 0.0},
-                                {-1.0, 10.5, -1.0, 0.0},
-                                {0.0, 0.0, 0.0, 2.0}};
-    PWM pwm_manual_constructed = new PWM(matrix_cAVNCT, "PWM for cAVNCt consensus sequence");
-    double[] thresholds_2 = {15,16,17};
-    ru.autosome.perfectosape.api.FindPvalueAPE.Parameters parameters =
-     new ru.autosome.perfectosape.api.FindPvalueAPE.Parameters(pwm_manual_constructed,
-                                                               thresholds_2,
-                                                               discretization, background, max_hash_size);
-    ru.autosome.perfectosape.api.FindPvalueAPE bioumlCalculator = new ru.autosome.perfectosape.api.FindPvalueAPE(parameters);
-    CanFindPvalue.PvalueInfo[] infosBiouml = bioumlCalculator.call();
-    for (int i = 0; i < infosBiouml.length; ++i) {
-      print_result(infosBiouml[i]);
-    }
-    */
+    print_result(info, background, pwm.length());
   }
 }
