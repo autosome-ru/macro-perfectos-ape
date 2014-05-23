@@ -17,7 +17,7 @@ public class Background implements BackgroundModel {
 
   public static BackgroundModel fromArray(double[] background) {
     if (background.length != ALPHABET_SIZE) {
-      throw new IllegalArgumentException("Background constructor accepts double array of length 4");
+      throw new IllegalArgumentException("Background constructor accepts double array of length " + ALPHABET_SIZE);
     }
     boolean wordwise = true;
     for (int i = 0; i < ALPHABET_SIZE; ++i) {
@@ -33,18 +33,8 @@ public class Background implements BackgroundModel {
   }
 
   @Override
-  public double[] probability() {
-    return background;
-  }
-
-  @Override
   public double probability(int index) {
     return background[index];
-  }
-
-  @Override
-  public double[] count() {
-    return background;
   }
 
   @Override

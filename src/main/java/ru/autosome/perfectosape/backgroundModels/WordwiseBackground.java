@@ -5,22 +5,8 @@ public class WordwiseBackground implements BackgroundModel {
   }
 
   @Override
-  public double[] probability() {
-    double[] result;
-    result = new double[]{0.25, 0.25, 0.25, 0.25};
-    return result;
-  }
-
-  @Override
   public double probability(int index) {
     return 0.25;
-  }
-
-  @Override
-  public double[] count() {
-    double[] result;
-    result = new double[]{1.0, 1.0, 1.0, 1.0};
-    return result;
   }
 
   @Override

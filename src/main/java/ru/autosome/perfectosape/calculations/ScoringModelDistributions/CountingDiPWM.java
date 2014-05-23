@@ -7,7 +7,6 @@ import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import ru.autosome.perfectosape.ScoreDistributionTop;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
-import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.perfectosape.calculations.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.perfectosape.motifModels.DiPWM;
@@ -33,7 +32,7 @@ public class CountingDiPWM extends ScoringModelDistibutions {
     TDoubleDoubleMap[] scores = new TDoubleDoubleMap[4];
     for(int i = 0; i < 4; ++i) {
       scores[i] = new TDoubleDoubleHashMap();
-      scores[i].put(0.0, 1.0);
+      scores[i].put(0.0, dibackground.countAnyFirstLetter(i));
     }
     return scores;
   }
@@ -65,18 +64,18 @@ public class CountingDiPWM extends ScoringModelDistibutions {
     for(int i = 0; i < 4; ++i) {
       new_scores[i] = new TDoubleDoubleHashMap();
     }
-    for(int letter = 0; letter < 4; ++letter) {
-      TDoubleDoubleIterator iterator = scores[letter].iterator();
+    for(int previousLetter = 0; previousLetter < 4; ++previousLetter) {
+      TDoubleDoubleIterator iterator = scores[previousLetter].iterator();
       while(iterator.hasNext()) {
         iterator.advance();
         double score = iterator.key();
         double count = iterator.value();
 
-        for (int next_letter = 0; next_letter < 4; ++next_letter) {
-          double new_score = score + column[letter*4 + next_letter];
-          if (new_score >= least_sufficient[next_letter]) {
-            double add = count * dibackground.count(next_letter);
-            new_scores[next_letter].adjustOrPutValue(new_score, add, add);
+        for (int letter = 0; letter < 4; ++letter) {
+          double new_score = score + column[previousLetter*4 + letter];
+          if (new_score >= least_sufficient[letter]) {
+            double add = count * dibackground.conditionalCount(previousLetter, letter);
+            new_scores[letter].adjustOrPutValue(new_score, add, add);
           }
         }
       }

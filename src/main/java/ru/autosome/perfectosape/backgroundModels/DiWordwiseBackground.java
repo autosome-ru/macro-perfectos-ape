@@ -5,32 +5,22 @@ public class DiWordwiseBackground implements DiBackgroundModel {
   }
 
   @Override
-  public double[] probability() {
-    double[] result;
-    result = new double[]{0.25, 0.25, 0.25, 0.25,
-                          0.25, 0.25, 0.25, 0.25,
-                          0.25, 0.25, 0.25, 0.25,
-                          0.25, 0.25, 0.25, 0.25};
-    return result;
-  }
-
-  @Override
   public double probability(int index) {
-    return 0.25;
+    return 0.0625;
   }
 
   @Override
-  public double[] count() {
-    double[] result;
-    result = new double[]{1.0, 1.0, 1.0, 1.0,
-                          1.0, 1.0, 1.0, 1.0,
-                          1.0, 1.0, 1.0, 1.0,
-                          1.0, 1.0, 1.0, 1.0};
-    return result;
+  public double conditionalCount(int previousLetter, int letter) {
+    return 1.0;
   }
 
   @Override
-  public double count(int index) {
+  public double countAnyFirstLetter(int secondLetter) {
+    return 1.0;
+  }
+
+  @Override
+  public double countAnySecondLetter(int firstLetter) {
     return 1.0;
   }
 
