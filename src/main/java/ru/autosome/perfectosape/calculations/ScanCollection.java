@@ -99,7 +99,9 @@ public class ScanCollection {
       info = roughCalculation.jaccard(roughQueryThreshold,
                                       roughCollectionThreshold);
 
-      if (preciseRecalculationCutoff != null && info.similarity() >= preciseRecalculationCutoff) {
+      if (preciseRecalculationCutoff != null &&
+         info.similarity() >= preciseRecalculationCutoff &&
+         knownMotifEvaluator.preciseThresholdCalculator != null) {
         ComparePWM preciseCalculation = new ComparePWM(queryPWM, knownMotifEvaluator.pwm,
                                                      queryBackground, collectionBackground,
                                                      preciseQueryPvalueEvaluator,
