@@ -13,6 +13,7 @@ import ru.autosome.perfectosape.motifModels.DataModel;
 import ru.autosome.perfectosape.motifModels.Named;
 import ru.autosome.perfectosape.motifModels.ScoringModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -30,6 +31,7 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
       "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
       "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
       "  [-b <background probabilities] " + DOC_background_option() + "\n" +
+      "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
       "\n" +
       "Examples:\n" +
       "  " + DOC_run_string() + " motifs/diKLF4_f2.pat\n" +
@@ -48,6 +50,8 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
   protected double effective_count;
   BackgroundType background;
   ModelType motif;
+  protected File thresholds_folder;
+  CanFindThreshold cache_calculator;
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
@@ -61,6 +65,7 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
     max_hash_size = 10000000;
     data_model = DataModel.PWM;
     effective_count = 100;
+    thresholds_folder = null;
 
     pvalues = new double[1];
     pvalues[0] = 0.0005;
@@ -91,6 +96,8 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
       data_model = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
       effective_count = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--precalc")) {
+      thresholds_folder = new File(argv.remove(0));
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
