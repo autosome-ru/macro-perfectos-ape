@@ -1,4 +1,5 @@
 out/
+classes/
 .idea/
 target/
 .idea/workspace.xml
