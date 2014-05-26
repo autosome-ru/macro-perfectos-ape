@@ -18,7 +18,10 @@ import java.util.StringTokenizer;
 
 public class PrecalculateThresholdList<ModelType extends ScoringModel & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
                                                   BackgroundType extends GeneralizedBackgroundModel> {
-  public static final double[] PVALUE_LIST = new GeometricProgression(1E-15, 0.5, 1.05).values();
+  // We expect not to have P-values less than 1e-15 in common case.
+  // It's possible only for motifs of length 25 or more.
+  // For SNPScan differences in such low P-values actually doesn't matter
+  public static final double[] PVALUE_LIST = new GeometricProgression(1.0, 1E-15, 1.05).values();
 
   double[] pvalues;
   BoundaryType pvalue_boundary;
@@ -55,15 +58,15 @@ public class PrecalculateThresholdList<ModelType extends ScoringModel & Discreta
 
     public static Progression fromString(String s) {
       StringTokenizer parser = new StringTokenizer(s);
-      double min = Double.valueOf(parser.nextToken(","));
-      double max = Double.valueOf(parser.nextToken(","));
+      double from = Double.valueOf(parser.nextToken(","));
+      double to = Double.valueOf(parser.nextToken(","));
       double step = Double.valueOf(parser.nextToken(","));
       String progression_method = parser.nextToken();
 
       if (progression_method.equals("mul")) {
-        return new GeometricProgression(min, max, step);
+        return new GeometricProgression(from, to, step);
       } else if (progression_method.equals("add")) {
-        return new ArithmeticProgression(min, max, step);
+        return new ArithmeticProgression(from, to, step);
       } else {
         throw new IllegalArgumentException("Progression method for pvalue-list is either add or mul, but you specified " + progression_method);
       }
@@ -78,16 +81,29 @@ public class PrecalculateThresholdList<ModelType extends ScoringModel & Discreta
     @Override
     public double[] values() {
       ArrayList<Double> results = new ArrayList<Double>();
-      for (double x = from; x <= to; x *= step) {
-        results.add(x);
+      if (to >= from) {
+        for (double x = from; x <= to; x *= step) {
+          results.add(x);
+        }
+      } else {
+        for (double x = from; x >= to; x *= step) {
+          results.add(x);
+        }
       }
       return ArrayExtensions.toPrimitiveArray(results);
     }
 
-    public GeometricProgression(double min, double to, double step) {
-      this.from = min;
+    public GeometricProgression(double from, double to, double step) {
+      this.from = from;
       this.to = to;
-      this.step = step;
+      if (step <= 0) {
+        throw new IllegalArgumentException("Step should be positive");
+      }
+      if (to >= from) {
+        this.step = (step > 1.0) ? step : 1.0 / step;
+      } else {
+        this.step = (step < 1.0) ? step : 1.0 / step;
+      }
     }
   }
 
@@ -99,8 +115,14 @@ public class PrecalculateThresholdList<ModelType extends ScoringModel & Discreta
     @Override
     public double[] values() {
       ArrayList<Double> results = new ArrayList<Double>();
-      for (double x = from; x <= to; x += step) {
-        results.add(x);
+      if (to >= from) {
+        for (double x = from; x <= to; x += step) {
+          results.add(x);
+        }
+      } else {
+        for (double x = from; x >= to; x += step) {
+          results.add(x);
+        }
       }
       return ArrayExtensions.toPrimitiveArray(results);
     }
@@ -108,7 +130,11 @@ public class PrecalculateThresholdList<ModelType extends ScoringModel & Discreta
     ArithmeticProgression(double from, double to, double step) {
       this.from = from;
       this.to = to;
-      this.step = step;
+      if (to >= from) {
+        this.step = (step > 0.0) ? step : -step;
+      } else {
+        this.step = (step < 0.0) ? step : -step;
+      }
     }
   }
 
