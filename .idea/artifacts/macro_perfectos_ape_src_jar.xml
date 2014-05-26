@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="macro-perfectos-ape_src:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/macro_perfectos_ape_src_jar</output-path>
+    <root id="archive" name="macro-perfectos-ape_src_jar.jar">
+      <element id="directory" name="test_data">
+        <element id="dir-copy" path="$PROJECT_DIR$/test_data" />
+      </element>
+      <element id="directory" name="src">
+        <element id="dir-copy" path="$PROJECT_DIR$/src" />
+      </element>
+      <element id="directory" name="licenses">
+        <element id="dir-copy" path="$PROJECT_DIR$/licenses" />
+      </element>
+      <element id="directory" name="lib">
+        <element id="file-copy" path="$PROJECT_DIR$/lib/trove-3.0.3.zip" />
+      </element>
+      <element id="module-output" name="macro-perfectos-ape" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/trove-3.0.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
