@@ -21,6 +21,7 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
   protected Integer max_hash_size;
   protected DataModel data_model;
   protected double effective_count; // used for converting PPM --> PWM
+  boolean silence;
 
   protected java.io.File collection_folder;
   protected java.io.File results_dir;
@@ -41,6 +42,7 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
     pvalues = PrecalculateThresholdList.PVALUE_LIST;
     data_model = DataModel.PWM;
     effective_count = 100;
+    silence = false;
   }
 
   void setup_from_arglist(ArrayList<String> argv) {
@@ -93,6 +95,8 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
       data_model = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
       effective_count = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--silence")) {
+      silence = true;
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
@@ -101,7 +105,9 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
   void calculate_thresholds_for_collection() throws HashOverflowException, IOException {
     MotifImporter<ModelType> importer = motifImporter();
     for (File file : collection_folder.listFiles()) {
-      System.err.println(file);
+      if (!silence) {
+        System.err.println(file);
+      }
       ModelType motif = importer.loadPWMFromFile(file);
       File result_filename = new File(results_dir, motif.getName() + ".thr");
       PvalueBsearchList bsearchList = calculator().bsearch_list_for_pwm(motif);
@@ -121,6 +127,7 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
       "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
       "  [-b <background probabilities] " + DOC_background_option() + "\n" +
       "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
+      "  [--silence] - suppress logging\n" +
       "\n" +
       "Examples:\n" +
       "  " + DOC_run_string() + " ./hocomoco/ ./hocomoco_thresholds/\n" +
