@@ -116,7 +116,8 @@ public class ScoreDistributionTop {
   }
 
   public TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues(double[] pvalues) throws NotRepresentativeDistribution {
-    if (top_part_pvalue() < ArrayExtensions.max(pvalues)) {
+    double eps = 1e-10; // allowable discrepancy
+    if (top_part_pvalue() + eps < ArrayExtensions.max(pvalues)) {
       throw new NotRepresentativeDistribution("Score distribution covers values up to pvalue " + top_part_pvalue() +
                                                " but pvalue " + ArrayExtensions.max(pvalues)  + " was requested");
     }
