@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="macro-perfectos-ape_src:jar">
-    <output-path>$PROJECT_DIR$/classes/artifacts/macro_perfectos_ape_src_jar</output-path>
-    <root id="archive" name="macro-perfectos-ape_src_jar.jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/macro_perfectos_ape_src</output-path>
+    <root id="archive" name="macro-perfectos-ape_src.jar">
       <element id="directory" name="test_data">
         <element id="dir-copy" path="$PROJECT_DIR$/test_data" />
       </element>
