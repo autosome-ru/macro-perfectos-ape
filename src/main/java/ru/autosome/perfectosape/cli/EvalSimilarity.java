@@ -190,6 +190,9 @@ public class EvalSimilarity {
   OutputInformation report_table(ComparePWM.SimilarityInfo info) throws HashOverflowException {
     OutputInformation infos = report_table_layout();
     infos.add_resulting_value("S", "similarity", info.similarity());
+    if (firstBackground.is_wordwise() && secondBackground.is_wordwise()) {
+      infos.add_resulting_value("CS", "chi-square significance", info.chi_square_significance());
+    }
     infos.add_resulting_value("D", "distance (1-similarity)", info.distance());
     infos.add_resulting_value("L", "length of the alignment", info.alignment.length());
     infos.add_resulting_value("SH", "shift of the 2nd PWM relative to the 1st", info.alignment.shift());

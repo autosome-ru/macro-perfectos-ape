@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.calculations;
 
+
 import ru.autosome.perfectosape.PWMAligned;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
@@ -8,6 +9,8 @@ import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.commons.math3.stat.inference.TestUtils.chiSquareTest;
 
 public class ComparePWM {
   static public class SimilarityInfo extends AlignedPWMIntersection.SimilarityInfo {
@@ -39,6 +42,19 @@ public class ComparePWM {
 
     public int overlap() {
       return alignment.overlapSize();
+    }
+
+    // works only for wordwise background
+    public double chi_square_significance() {
+      long[][] contigency_table = new long[][]{
+                                    {(long)recognizedByBoth,   (long)recognizedByFirst},
+                                    {(long)recognizedBySecond, (long)Math.pow(4, alignment.length())
+                                                                - (long)recognizedByBoth
+                                                                - (long)recognizedByFirst
+                                                                - (long)recognizedBySecond  }};
+      System.err.println(contigency_table[0][0] + " " + contigency_table[0][1] +"\n" + contigency_table[1][0] + " " + contigency_table[1][1]);
+      System.err.println(chiSquareTest(contigency_table));
+      return chiSquareTest(contigency_table);
     }
   }
 

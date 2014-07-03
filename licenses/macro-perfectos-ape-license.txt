@@ -1,4 +1,6 @@
 MACRO-APE and PERFECTOS-APE are distributed under the WTFPL (see 'copying' for details).
 
-*-APE use Trove [http://trove.starlight-systems.com] 
-distributed under Lesser GNU General Public License, see 'LICENSE' and 'README-license.txt'
+MACRO-PERFECTOS-APE uses Apache Commons Math
+[http://commons.apache.org/math/] distributed under Apache License,
+version 2.0, and Trove [http://trove.starlight-systems.com]
+distributed under Lesser GNU General Public License.
