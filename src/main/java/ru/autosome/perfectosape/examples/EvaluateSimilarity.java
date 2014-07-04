@@ -23,8 +23,8 @@ public class EvaluateSimilarity {
       System.out.println("\n----------\n" + similarityInfo.similarity());
       System.out.println(similarityInfo.alignment);
       System.out.println(similarityInfo.recognizedByBoth);
-      //System.out.println("\n----------\n" + new PWMAligned(firstPWMCounting, secondPWMCounting, similarityInfo.alignment).first_pwm);
-      //System.out.println("\n----------\n" + new PWMAligned(firstPWMCounting, secondPWMCounting, similarityInfo.alignment).second_pwm);
+      //System.out.println("\n----------\n" + new MotifsAligned(firstPWMCounting, secondPWMCounting, similarityInfo.alignment).firstMotif);
+      //System.out.println("\n----------\n" + new MotifsAligned(firstPWMCounting, secondPWMCounting, similarityInfo.alignment).secondMotif);
 
     } catch (Exception e) {
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

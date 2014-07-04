@@ -1,6 +1,6 @@
 package ru.autosome.perfectosape.calculations;
 
-import ru.autosome.perfectosape.PWMAligned;
+import ru.autosome.perfectosape.MotifsAligned;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
@@ -11,12 +11,12 @@ import java.util.List;
 
 public class ComparePWM {
   static public class SimilarityInfo extends AlignedPWMIntersection.SimilarityInfo {
-    public final PWMAligned alignment;
-    public SimilarityInfo(PWMAligned alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond) {
+    public final MotifsAligned alignment;
+    public SimilarityInfo(MotifsAligned alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond) {
       super(recognizedByBoth, recognizedByFirst, recognizedBySecond);
       this.alignment = alignment;
     }
-    public SimilarityInfo(PWMAligned alignment, AlignedPWMIntersection.SimilarityInfo similarityInfo) {
+    public SimilarityInfo(MotifsAligned alignment, AlignedPWMIntersection.SimilarityInfo similarityInfo) {
       super(similarityInfo.recognizedByBoth,
             similarityInfo.recognizedByFirst,
             similarityInfo.recognizedBySecond);
@@ -148,20 +148,20 @@ public class ComparePWM {
       return result;
     }
 
-    double firstCountRenormMultiplier(PWMAligned alignment) {
+    double firstCountRenormMultiplier(MotifsAligned alignment) {
       return Math.pow(firstBackground.volume(), alignment.length() - firstPWM.length());
     }
-    double secondCountRenormMultiplier(PWMAligned alignment) {
+    double secondCountRenormMultiplier(MotifsAligned alignment) {
       return Math.pow(secondBackground.volume(), alignment.length() - secondPWM.length());
     }
 
     public SimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
                                              double firstCount, double secondCount) throws HashOverflowException {
-      PWMAligned bestAlignment = null;
+      MotifsAligned bestAlignment = null;
       double bestSimilarity = -1;
       double bestIntersection = 0;
       for (Position position: relative_alignments()) {
-        PWMAligned alignment = new PWMAligned(firstPWM, secondPWM, position);
+        MotifsAligned alignment = new MotifsAligned(firstPWM, secondPWM, position);
         AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment, firstBackground, secondBackground);
         double intersection = calculator.count_in_intersection(upscaleThreshold(thresholdFirst), upscaleThreshold(thresholdSecond));
 
@@ -188,7 +188,7 @@ public class ComparePWM {
                                                        double firstCount, double secondCount,
                                                        Position position) throws HashOverflowException {
 
-      PWMAligned alignment = new PWMAligned(firstPWM, secondPWM, position);
+      MotifsAligned alignment = new MotifsAligned(firstPWM, secondPWM, position);
       AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment, firstBackground, secondBackground);
       double intersection = calculator.count_in_intersection(upscaleThreshold(thresholdFirst), upscaleThreshold(thresholdSecond));
 

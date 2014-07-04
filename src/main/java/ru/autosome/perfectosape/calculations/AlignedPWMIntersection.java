@@ -4,7 +4,7 @@ import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
-import ru.autosome.perfectosape.PWMAligned;
+import ru.autosome.perfectosape.MotifsAligned;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.formatters.ResultInfo;
@@ -13,10 +13,10 @@ import ru.autosome.perfectosape.motifModels.PWM;
 public class AlignedPWMIntersection {
   public final BackgroundModel firstBackground;
   public final BackgroundModel secondBackground;
-  public final PWMAligned<PWM> alignment;
+  public final MotifsAligned<PWM> alignment;
   public Double maxPairHashSize;
 
-  public AlignedPWMIntersection(PWMAligned alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {
+  public AlignedPWMIntersection(MotifsAligned alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
     this.alignment = alignment;
@@ -25,7 +25,7 @@ public class AlignedPWMIntersection {
   public AlignedPWMIntersection(PWM firstPWM, PWM secondPWM, BackgroundModel firstBackground, BackgroundModel secondBackground, Position relativePosition) {
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
-    this.alignment = new PWMAligned(firstPWM, secondPWM, relativePosition);
+    this.alignment = new MotifsAligned(firstPWM, secondPWM, relativePosition);
   }
 
   public double count_in_intersection(double first_threshold, double second_threshold) throws HashOverflowException {
@@ -77,10 +77,10 @@ public class AlignedPWMIntersection {
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = initialScoreHash();
 
     for (int pos = 0; pos < alignment.length(); ++pos) {
-      double[] firstColumn = alignment.first_pwm.matrix[pos];
-      double[] secondColumn = alignment.second_pwm.matrix[pos];
-      double leastSufficientScoreFirst = threshold_first - alignment.first_pwm.best_suffix(pos + 1);
-      double leastSufficientScoreSecond = threshold_second - alignment.second_pwm.best_suffix(pos + 1);
+      double[] firstColumn = alignment.firstMotif.matrix[pos];
+      double[] secondColumn = alignment.secondMotif.matrix[pos];
+      double leastSufficientScoreFirst = threshold_first - alignment.firstMotif.best_suffix(pos + 1);
+      double leastSufficientScoreSecond = threshold_second - alignment.secondMotif.best_suffix(pos + 1);
 
       if (background.is_wordwise()) {
       scores = recalc_score_hash_wordwise(scores,

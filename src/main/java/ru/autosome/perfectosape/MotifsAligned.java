@@ -1,15 +1,13 @@
 package ru.autosome.perfectosape;
 
-import ru.autosome.perfectosape.motifModels.PWM;
-
-public class PWMAligned<T extends Alignable<T>> {
-  public final T first_pwm;
-  public final T second_pwm;
+public class MotifsAligned<T extends Alignable<T>> {
+  public final T firstMotif;
+  public final T secondMotif;
   public final Position relative_position;
 
   private int first_length, second_length;
 
-  public PWMAligned(T first_pwm_unaligned, T second_pwm_unaligned, Position relative_position) {
+  public MotifsAligned(T first_pwm_unaligned, T second_pwm_unaligned, Position relative_position) {
     first_length = first_pwm_unaligned.length();
     second_length = second_pwm_unaligned.length();
     this.relative_position = relative_position;
@@ -26,8 +24,8 @@ public class PWMAligned<T extends Alignable<T>> {
       first_tmp = first_tmp.leftAugment(-shift());
     }
 
-    first_pwm = first_tmp.rightAugment(length() - first_tmp.length());
-    second_pwm = second_tmp.rightAugment(length() - second_tmp.length());
+    firstMotif = first_tmp.rightAugment(length() - first_tmp.length());
+    secondMotif = second_tmp.rightAugment(length() - second_tmp.length());
   }
 
   public int shift() {
