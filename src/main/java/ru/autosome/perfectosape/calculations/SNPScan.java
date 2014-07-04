@@ -9,9 +9,9 @@ import ru.autosome.perfectosape.motifModels.ScoringModel;
 import java.util.ArrayList;
 
 public class SNPScan {
-  final ScoringModel pwm;
-  final SequenceWithSNP sequenceWithSNP;
-  final CanFindPvalue pvalueCalculator;
+  private final ScoringModel pwm;
+  private final SequenceWithSNP sequenceWithSNP;
+  private final CanFindPvalue pvalueCalculator;
 
   public SNPScan(ScoringModel pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
     this.pwm = pwm;
@@ -87,7 +87,7 @@ public class SNPScan {
     return sequenceWithSNP.positions_subsequence_overlaps_snp(pwm.length());
   }
 
-  public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) throws HashOverflowException {
+  RegionAffinityVariantInfo affinityVariantInfo(int allele_number) throws HashOverflowException {
       Sequence sequence = sequenceWithSNP.sequence_variants()[allele_number];
       Character allele = sequenceWithSNP.mid[allele_number];
       EstimateAffinityMinPvalue affinity_calculator =  new EstimateAffinityMinPvalue(pwm,

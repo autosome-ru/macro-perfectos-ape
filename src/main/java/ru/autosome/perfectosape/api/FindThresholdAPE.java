@@ -28,7 +28,7 @@ public class FindThresholdAPE extends SingleTask<CanFindThreshold.ThresholdInfo[
     }
   }
 
-  Parameters parameters;
+  private final Parameters parameters;
   public FindThresholdAPE(Parameters parameters) {
     super();
     this.parameters = parameters;

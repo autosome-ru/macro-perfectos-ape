@@ -7,7 +7,7 @@ import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.motifModels.PWM;
 
-public class PrecalculateThresholdList extends SingleTask<PvalueBsearchList> {
+class PrecalculateThresholdList extends SingleTask<PvalueBsearchList> {
   public static class Parameters {
     public Discretizer discretizer;
     public BackgroundModel background;
@@ -26,13 +26,13 @@ public class PrecalculateThresholdList extends SingleTask<PvalueBsearchList> {
       this.max_hash_size = max_hash_size;
     }
   }
-  Parameters parameters;
+  private final Parameters parameters;
   public PrecalculateThresholdList(Parameters parameters) {
     super();
     this.parameters = parameters;
   }
 
-  ru.autosome.perfectosape.calculations.PrecalculateThresholdList calculator() {
+  ru.autosome.perfectosape.calculations.PrecalculateThresholdList<PWM, BackgroundModel> calculator() {
     return new ru.autosome.perfectosape.calculations.PrecalculateThresholdList<PWM, BackgroundModel>(parameters.pvalues,
                                                                           parameters.discretizer,
                                                                           parameters.background,

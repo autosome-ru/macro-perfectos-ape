@@ -30,11 +30,11 @@ public class PM implements Named, MatrixModel, BackgroundCompatible<BackgroundMo
     return ALPHABET_SIZE;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  protected static final TCharIntMap indexByLetter =
+  static final TCharIntMap indexByLetter =
    new TUnmodifiableCharIntMap( new TCharIntHashMap(new char[]{'A','C','G','T'},
                                                     new int[] {0, 1, 2, 3}) );
 
-  public PM(double[][] matrix, String name) throws IllegalArgumentException {
+  PM(double[][] matrix, String name) throws IllegalArgumentException {
     for (double[] pos : matrix) {
       if (pos.length != ALPHABET_SIZE) {
         throw new IllegalArgumentException("Matrix must have " + ALPHABET_SIZE + " elements in each position");

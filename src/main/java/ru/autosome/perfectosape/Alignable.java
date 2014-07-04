@@ -1,6 +1,6 @@
 package ru.autosome.perfectosape;
 
-public interface Alignable<T extends Object> {
+public interface Alignable<T> {
   int length();
   T reverseComplement();
   T leftAugment(int shift);

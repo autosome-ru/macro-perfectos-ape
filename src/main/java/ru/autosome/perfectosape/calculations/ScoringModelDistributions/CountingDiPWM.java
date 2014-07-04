@@ -12,7 +12,7 @@ import ru.autosome.perfectosape.calculations.findThreshold.GaussianThresholdEsti
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
 public class CountingDiPWM extends ScoringModelDistibutions {
-  private Integer maxHashSize;
+  private final Integer maxHashSize;
 
   private final DiPWM dipwm;
   private final DiBackgroundModel dibackground;
@@ -25,10 +25,10 @@ public class CountingDiPWM extends ScoringModelDistibutions {
 
   @Override
   CanFindThresholdApproximation gaussianThresholdEstimator() {
-    return new GaussianThresholdEstimator(dipwm, dibackground);
+    return new GaussianThresholdEstimator<DiPWM, DiBackgroundModel>(dipwm, dibackground);
   }
 
-  protected TDoubleDoubleMap[] initialCountDistribution() {
+  TDoubleDoubleMap[] initialCountDistribution() {
     TDoubleDoubleMap[] scores = new TDoubleDoubleMap[4];
     for(int i = 0; i < 4; ++i) {
       scores[i] = new TDoubleDoubleHashMap();
@@ -97,11 +97,11 @@ public class CountingDiPWM extends ScoringModelDistibutions {
     return combined_scores;
   }
 
-  public double vocabularyVolume() {
+  double vocabularyVolume() {
     return Math.pow(dibackground.volume(), dipwm.length());
   }
 
-  protected boolean exceedHashSizeLimit(TDoubleDoubleMap[] scores) {
+  boolean exceedHashSizeLimit(TDoubleDoubleMap[] scores) {
     return maxHashSize != null && (scores[0].size() + scores[1].size() + scores[2].size() + scores[3].size()) > maxHashSize;
   }
 }

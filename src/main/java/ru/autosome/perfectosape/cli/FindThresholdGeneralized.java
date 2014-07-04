@@ -18,10 +18,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public abstract class FindThresholdGeneralized <ModelType extends ScoringModel & Named, BackgroundType extends GeneralizedBackgroundModel> {
+abstract class FindThresholdGeneralized <ModelType extends ScoringModel & Named, BackgroundType extends GeneralizedBackgroundModel> {
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
-  protected String documentString() {
+  String documentString() {
     return "Command-line format:\n" +
       DOC_run_string() + " <pat-file> [<list of P-values>...] [options]\n" +
       "\n" +
@@ -41,17 +41,17 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
 
   Discretizer discretizer;
 
-  BoundaryType pvalue_boundary;
+  private BoundaryType pvalue_boundary;
   Integer max_hash_size; // not int because it can be null
 
-  double[] pvalues;
+  private double[] pvalues;
 
-  protected String pm_filename;
-  protected DataModel data_model;
-  protected double effective_count;
+  private String pm_filename;
+  DataModel data_model;
+  double effective_count;
   BackgroundType background;
   ModelType motif;
-  protected File thresholds_folder;
+  File thresholds_folder;
   CanFindThreshold cache_calculator;
 
   protected abstract void initialize_default_background();
@@ -81,7 +81,7 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
     motif = motifImporter().loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename));
   }
 
-  protected void extract_option(ArrayList<String> argv) {
+  void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b")) {
       extract_background(argv.remove(0));
@@ -104,14 +104,14 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
     }
   }
 
-  protected void extract_pm_filename(ArrayList<String> argv) {
+  void extract_pm_filename(ArrayList<String> argv) {
     if (argv.isEmpty()) {
       throw new IllegalArgumentException("No input. You should specify input file");
     }
     pm_filename = argv.remove(0);
   }
 
-  protected void extract_pvalue_list(ArrayList<String> argv) {
+  void extract_pvalue_list(ArrayList<String> argv) {
     ArrayList<Double> pvalues_tmp = new ArrayList<Double>();
 
     try {

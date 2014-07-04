@@ -36,7 +36,7 @@ public class InputExtensions {
     return isDouble(s.replaceAll("\\s+", " ").split(" ")[0]);
   }
 
-  public static boolean isDouble(String s) {
+  private static boolean isDouble(String s) {
     try {
       Double.valueOf(s);
       return true;

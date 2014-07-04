@@ -15,7 +15,7 @@ import ru.autosome.perfectosape.motifModels.PWM;
 
 public class CountingPWM extends ScoringModelDistibutions implements Alignable<CountingPWM> {
 
-  final public Integer maxHashSize;
+  private final Integer maxHashSize;
 
   final public PWM pwm;
   final public BackgroundModel background;
@@ -45,10 +45,10 @@ public class CountingPWM extends ScoringModelDistibutions implements Alignable<C
 
   @Override
   CanFindThresholdApproximation gaussianThresholdEstimator() {
-    return new GaussianThresholdEstimator(pwm, background);
+    return new GaussianThresholdEstimator<PWM, BackgroundModel>(pwm, background);
   }
 
-  protected TDoubleDoubleMap initialCountDistribution() {
+  TDoubleDoubleMap initialCountDistribution() {
     TDoubleDoubleMap scores = new TDoubleDoubleHashMap();
     scores.put(0.0, 1.0);
     return scores;

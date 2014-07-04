@@ -7,9 +7,9 @@ import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import java.util.HashMap;
 
 public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgroundModel> {
-  public static final int ALPHABET_SIZE = 16;
+  static final int ALPHABET_SIZE = 16;
   public final double[][] matrix;
-  public String name;
+  String name;
 
   @Override
   public String getName() {
@@ -20,7 +20,7 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
     this.name = name;
   }
 
-  static HashMap<String, Integer> indexByLetter;
+  static final HashMap<String, Integer> indexByLetter;
   static {
     indexByLetter = new HashMap<String, Integer>();
     indexByLetter.put("AA", 0);
@@ -45,7 +45,7 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
   }
 
 
-  public DiPM(double[][] matrix, String name) throws IllegalArgumentException {
+  DiPM(double[][] matrix, String name) throws IllegalArgumentException {
     for (double[] pos : matrix) {
       if (pos.length != ALPHABET_SIZE) {
         throw new IllegalArgumentException("Matrix must have " + ALPHABET_SIZE + " elements in each position");
@@ -87,7 +87,7 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
   }
 
   @Override
-  public AbstractBackgroundFactory compatibleBackground() {
+  public AbstractBackgroundFactory<DiBackgroundModel> compatibleBackground() {
     return new DiBackgroundFactory();
   }
 }

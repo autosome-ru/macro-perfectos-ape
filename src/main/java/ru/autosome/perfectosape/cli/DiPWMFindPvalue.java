@@ -24,7 +24,7 @@ public class DiPWMFindPvalue extends FindPvalueGeneralized<DiPWM, DiBackgroundMo
   }
 
   @Override
-  protected CanFindPvalue calculator() throws FileNotFoundException {
+  protected CanFindPvalue calculator() {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
         cache_calculator = new FindPvalueAPE<DiPWM, DiBackgroundModel>(motif, background, discretizer, max_hash_size);
@@ -54,14 +54,14 @@ public class DiPWMFindPvalue extends FindPvalueGeneralized<DiPWM, DiBackgroundMo
     initialize_defaults();
   }
 
-  protected static DiPWMFindPvalue from_arglist(ArrayList<String> argv) {
+  private static DiPWMFindPvalue from_arglist(ArrayList<String> argv) {
     DiPWMFindPvalue result = new DiPWMFindPvalue();
     ru.autosome.perfectosape.cli.Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);
     return result;
   }
 
-  protected static DiPWMFindPvalue from_arglist(String[] args) {
+  private static DiPWMFindPvalue from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);

@@ -7,10 +7,10 @@ import ru.autosome.perfectosape.importers.PMParser;
 public class PPM extends PM implements PositionFrequencyModel {
   public PPM(double[][] matrix, String name) throws IllegalArgumentException {
     super(matrix, name);
-    for (int pos = 0; pos < matrix.length; ++pos) {
+    for (double[] pos : matrix) {
       double sum = 0;
       for (int letter = 0; letter < PPM.ALPHABET_SIZE; ++letter) {
-        sum += matrix[pos][letter];
+        sum += pos[letter];
       }
       if (Math.abs(sum - 1.0) > 0.001) {
         throw new IllegalArgumentException("sum of each column should be 1.0(+-0.001), but was " + sum);
@@ -18,7 +18,7 @@ public class PPM extends PM implements PositionFrequencyModel {
     }
   }
 
-  public PCM to_pcm(double count) {
+  PCM to_pcm(double count) {
     PPM2PCMConverter<PPM, PCM> converter = new PPM2PCMConverter<PPM,PCM>(this, count, PCM.class);
     return converter.convert();
   }

@@ -38,14 +38,14 @@ public class ComparePWM {
     public int overlap() {
       return alignment.overlapSize();
     }
-  };
+  }
 
-  public final CountingPWM firstPWMCounting;
-  public final CountingPWM secondPWMCounting;
-  public final CanFindPvalue firstPvalueCalculator;
-  public final CanFindPvalue secondPvalueCalculator;
-  public final Discretizer discretizer;
-  public Integer maxPairHashSize;
+  private final CountingPWM firstPWMCounting;
+  private final CountingPWM secondPWMCounting;
+  private final CanFindPvalue firstPvalueCalculator;
+  private final CanFindPvalue secondPvalueCalculator;
+  private final Discretizer discretizer;
+  private final Integer maxPairHashSize;
 
   public ComparePWM(CountingPWM firstPWMCounting, CountingPWM secondPWMCounting,
                     CanFindPvalue firstPvalueCalculator,

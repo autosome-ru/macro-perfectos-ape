@@ -39,16 +39,16 @@ public class MultiSNPScan extends MultiSNPScanGeneralized<BackgroundModel> {
   }
 
   @Override
-  protected void load_collection_of_pwms() throws FileNotFoundException {
+  protected void load_collection_of_pwms() {
     PWMImporter pwmImporter = new PWMImporter(background, dataModel, effectiveCount);
-    MotifCollectionImporter importer = new MotifCollectionImporter<PWM>(pwmImporter);
+    MotifCollectionImporter<PWM> importer = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
 
     pwmCollection = new ArrayList<ThresholdEvaluator>();
     for (PWM pwm: pwmList) {
       CanFindPvalue pvalueCalculator;
       if (thresholds_folder == null) {
-        pvalueCalculator = new FindPvalueAPE(pwm, background, discretizer, max_hash_size);
+        pvalueCalculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretizer, max_hash_size);
       } else {
         pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(pwm);
       }
@@ -56,14 +56,14 @@ public class MultiSNPScan extends MultiSNPScanGeneralized<BackgroundModel> {
     }
   }
 
-  protected static MultiSNPScanGeneralized from_arglist(ArrayList<String> argv) throws FileNotFoundException {
+  private static MultiSNPScanGeneralized from_arglist(ArrayList<String> argv) {
     MultiSNPScan result = new MultiSNPScan();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);
     return result;
   }
 
-  protected static MultiSNPScanGeneralized from_arglist(String[] args) throws FileNotFoundException {
+  private static MultiSNPScanGeneralized from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);

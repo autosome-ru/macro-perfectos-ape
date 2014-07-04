@@ -18,11 +18,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Named, BackgroundType extends GeneralizedBackgroundModel> {
+abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Named, BackgroundType extends GeneralizedBackgroundModel> {
 
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
-  protected String documentString() {
+  String documentString() {
     return "Command-line format:\n" +
      DOC_run_string() + " <pat-file> <threshold list>... [options]\n" +
      "\n" +
@@ -39,25 +39,25 @@ public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Na
      "  " + DOC_run_string() + " motifs/KLF4_f2.pat 7.32 4.31 5.42 -d 1000 -b 0.2,0.3,0.3,0.2\n";
   }
 
-  protected String pm_filename; // file with PM (not File instance because it can be .stdin)
-  protected Discretizer discretizer;
-  protected double[] thresholds;
-  protected Integer max_hash_size;
-  protected DataModel data_model;
-  protected double effective_count;
+  private String pm_filename; // file with PM (not File instance because it can be .stdin)
+  Discretizer discretizer;
+  double[] thresholds;
+  Integer max_hash_size;
+  DataModel data_model;
+  double effective_count;
 
-  protected ModelType motif;
-  protected BackgroundType background;
+  ModelType motif;
+  BackgroundType background;
 
-  protected File thresholds_folder;
+  File thresholds_folder;
   CanFindPvalue cache_calculator;
 
-  abstract protected CanFindPvalue calculator() throws FileNotFoundException;
+  abstract protected CanFindPvalue calculator();
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
   protected abstract MotifImporter<ModelType> motifImporter();
 
-  protected void initialize_defaults() {
+  void initialize_defaults() {
     initialize_default_background();
     discretizer = new Discretizer(10000.0);
     thresholds = new double[0];
@@ -67,14 +67,14 @@ public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Na
     effective_count = 100;
   }
 
-  protected void extract_pm_filename(ArrayList<String> argv) {
+  void extract_pm_filename(ArrayList<String> argv) {
     if (argv.isEmpty()) {
       throw new IllegalArgumentException("No input. You should specify input file");
     }
     pm_filename = argv.remove(0);
   }
 
-  protected void extract_threshold_lists(ArrayList<String> argv) {
+  void extract_threshold_lists(ArrayList<String> argv) {
     ArrayList<Double> thresholds_list = new ArrayList<Double>();
     try {
       while (!argv.isEmpty()) {
@@ -89,7 +89,7 @@ public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Na
     thresholds = ArrayExtensions.toPrimitiveArray(thresholds_list);
   }
 
-  protected void extract_option(ArrayList<String> argv) {
+  void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b")) {
       extract_background(argv.remove(0));
@@ -120,23 +120,23 @@ public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Na
     motif = motifImporter().loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename));
   }
 
-  OutputInformation report_table_layout() throws FileNotFoundException {
+  OutputInformation report_table_layout() {
     return calculator().report_table_layout();
   }
 
-  OutputInformation report_table(ArrayList<? extends ResultInfo> data) throws FileNotFoundException {
+  OutputInformation report_table(ArrayList<? extends ResultInfo> data) {
     OutputInformation result = report_table_layout();
     result.data = data;
     return result;
   }
 
-  <R extends ResultInfo> OutputInformation report_table(R[] data) throws FileNotFoundException {
+  <R extends ResultInfo> OutputInformation report_table(R[] data) {
     ArrayList<R> data_list = new ArrayList<R>(data.length);
     Collections.addAll(data_list, data);
     return report_table(data_list);
   }
 
-  OutputInformation report_table() throws HashOverflowException, FileNotFoundException {
+  OutputInformation report_table() throws HashOverflowException {
     CanFindPvalue.PvalueInfo[] results = calculator().pvaluesByThresholds(thresholds);
     return report_table(results);
   }

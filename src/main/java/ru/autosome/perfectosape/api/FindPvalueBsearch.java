@@ -4,7 +4,7 @@ import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.motifModels.PWM;
 
-public class FindPvalueBsearch extends SingleTask<CanFindPvalue.PvalueInfo[]> {
+class FindPvalueBsearch extends SingleTask<CanFindPvalue.PvalueInfo[]> {
   public static class Parameters {
     public PWM pwm;
     public PvalueBsearchList bsearchList;
@@ -18,7 +18,7 @@ public class FindPvalueBsearch extends SingleTask<CanFindPvalue.PvalueInfo[]> {
     }
   }
 
-  Parameters parameters;
+  private final Parameters parameters;
   public FindPvalueBsearch(Parameters parameters) {
     super();
     this.parameters = parameters;

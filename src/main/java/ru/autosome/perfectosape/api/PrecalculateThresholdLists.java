@@ -30,7 +30,7 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
       this.max_hash_size = max_hash_size;
     }
   }
-  Parameters parameters;
+  private final Parameters parameters;
   public PrecalculateThresholdLists(Parameters parameters) {
     super();
     this.parameters = parameters;
@@ -61,7 +61,7 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
     return results;
   }
 
-  PrecalculateThresholdList calculator() {
+  PrecalculateThresholdList<PWM, BackgroundModel> calculator() {
     return new PrecalculateThresholdList<PWM, BackgroundModel>( parameters.pvalues,
                                                                 parameters.discretizer,
                                                                 parameters.background,

@@ -24,7 +24,7 @@ public class PCM extends PM implements PositionCountModel {
     converter.background = background;
     return converter.convert();
   }
-  public PPM to_ppm(BackgroundModel background) {
+  public PPM to_ppm() {
     return new PCM2PPMConverter<PCM, PPM>(this, PPM.class).convert();
   }
 

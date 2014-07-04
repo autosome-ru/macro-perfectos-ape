@@ -11,14 +11,14 @@ public class DiBackground implements DiBackgroundModel {
   // TODO: whether we should check symmetricity of background
 
   // probabilities are absolute, not conditional. Indices are (4*firstLetter + secondLetter)
-  public DiBackground(double[] background) {
+  private DiBackground(double[] background) {
     if (Math.abs(ArrayExtensions.sum(background) - 1.0) > 0.0001) {
       throw new IllegalArgumentException("Background probabilities should be 1.0 being summarized");
     }
     this.background = background;
   }
 
-  public static DiBackgroundModel fromArray(double[] background) {
+  private static DiBackgroundModel fromArray(double[] background) {
     if (background.length != ALPHABET_SIZE) {
       throw new IllegalArgumentException("Background constructor accepts double array of length " + ALPHABET_SIZE);
     }

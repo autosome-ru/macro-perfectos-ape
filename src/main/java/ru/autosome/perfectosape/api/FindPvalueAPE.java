@@ -26,7 +26,7 @@ public class FindPvalueAPE extends SingleTask<PvalueInfo[]> {
     }
   }
 
-  Parameters parameters;
+  private final Parameters parameters;
 
   public FindPvalueAPE(Parameters parameters) {
     super();

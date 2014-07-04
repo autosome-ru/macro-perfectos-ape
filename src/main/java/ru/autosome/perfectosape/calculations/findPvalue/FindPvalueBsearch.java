@@ -9,7 +9,7 @@ import ru.autosome.perfectosape.formatters.OutputInformation;
 
 public class FindPvalueBsearch implements CanFindPvalue {
 
-  PvalueBsearchList bsearchList;
+  private final PvalueBsearchList bsearchList;
 
   public FindPvalueBsearch(PvalueBsearchList bsearchList) {
     this.bsearchList = bsearchList;

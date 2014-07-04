@@ -6,9 +6,9 @@ import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 
 public abstract class FindThresholdByDiscretization implements CanFindThreshold {
-  Discretizer discretizer;
+  final Discretizer discretizer;
 
-  public FindThresholdByDiscretization(Discretizer discretizer) {
+  FindThresholdByDiscretization(Discretizer discretizer) {
     this.discretizer = discretizer;
   }
 

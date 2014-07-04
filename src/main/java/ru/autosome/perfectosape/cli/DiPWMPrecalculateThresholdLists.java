@@ -45,14 +45,14 @@ public class DiPWMPrecalculateThresholdLists extends PrecalculateThresholdListsG
     initialize_defaults();
   }
 
-  protected static DiPWMPrecalculateThresholdLists from_arglist(ArrayList<String> argv) {
+  private static DiPWMPrecalculateThresholdLists from_arglist(ArrayList<String> argv) {
     DiPWMPrecalculateThresholdLists result = new DiPWMPrecalculateThresholdLists();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);
     return result;
   }
 
-  protected static DiPWMPrecalculateThresholdLists from_arglist(String[] args) {
+  private static DiPWMPrecalculateThresholdLists from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);

@@ -25,7 +25,7 @@ public class PvalueBsearchList {
       this.pvalue = info.real_pvalue;
     }
 
-    public static Comparator thresholdComparator =
+    public static final Comparator thresholdComparator =
      new Comparator<Object>() {
        Double val(Object obj) {
          double value;
@@ -50,7 +50,7 @@ public class PvalueBsearchList {
      };
 
     // reversed comparison (thresholds are sorted ascending, so pvalues descending)
-    public static Comparator pvalueComparator =
+    public static final Comparator pvalueComparator =
      new Comparator<Object>() {
        Double val(Object obj) {
          double value;
@@ -96,7 +96,7 @@ public class PvalueBsearchList {
   }
 
 
-  private List<ThresholdPvaluePair> list;
+  private final List<ThresholdPvaluePair> list;
   public PvalueBsearchList() {
     this.list = new ArrayList<ThresholdPvaluePair>();
   }
@@ -131,7 +131,7 @@ public class PvalueBsearchList {
     return reduced_infos;
   }
 
-  public double combine_pvalues(double pvalue_1, double pvalue_2) {
+  double combine_pvalues(double pvalue_1, double pvalue_2) {
     return Math.sqrt(pvalue_1 * pvalue_2);
   }
 
@@ -205,7 +205,7 @@ public class PvalueBsearchList {
     return result;
   }
 
-  public static List<ThresholdPvaluePair> load_thresholds_list(File file) throws FileNotFoundException {
+  private static List<ThresholdPvaluePair> load_thresholds_list(File file) throws FileNotFoundException {
     InputStream reader = new FileInputStream(file);
     List<String> lines = InputExtensions.readLinesFromInputStream(reader);
     return load_thresholds_list(lines);

@@ -55,23 +55,25 @@ public class ScanCollection {
     "  java ru.autosome.perfectosape.cli.ScanCollection ./query_motif.pwm ./hocomoco/ --precalc ./hocomoco_thresholds\n" +
     "  java ru.autosome.perfectosape.cli.ScanCollection ./query_motif.pcm ./hocomoco/ --pcm -p 0.0005 --precise 0.03\n";
 
-  DataModel dataModel;
-  Double effectiveCount;
-  BackgroundModel queryBackground, collectionBackground;
-  Discretizer roughDiscretizer, preciseDiscretizer;
-  Integer maxHashSize;
-  Integer maxPairHashSize;
-  double pvalue;
-  Double queryPredefinedThreshold;
-  Double similarityCutoff;
-  Double preciseRecalculationCutoff; // null means that no recalculation will be performed
-  BoundaryType pvalueBoundaryType;
-  boolean silenceLog;
-  String queryPMFilename;
-  File pathToCollectionOfPWMs;
-  File thresholds_folder;
-  PWM queryPWM;
-  List<ThresholdEvaluator> pwmCollection;
+  private DataModel dataModel;
+  private Double effectiveCount;
+  private BackgroundModel queryBackground;
+  private BackgroundModel collectionBackground;
+  private Discretizer roughDiscretizer;
+  private Discretizer preciseDiscretizer;
+  private Integer maxHashSize;
+  private Integer maxPairHashSize;
+  private double pvalue;
+  private Double queryPredefinedThreshold;
+  private Double similarityCutoff;
+  private Double preciseRecalculationCutoff; // null means that no recalculation will be performed
+  private BoundaryType pvalueBoundaryType;
+  private boolean silenceLog;
+  private String queryPMFilename;
+  private File pathToCollectionOfPWMs;
+  private File thresholds_folder;
+  private PWM queryPWM;
+  private List<ThresholdEvaluator> pwmCollection;
 
   private void initialize_defaults() {
     queryBackground = new WordwiseBackground();
@@ -94,14 +96,14 @@ public class ScanCollection {
     initialize_defaults();
   }
 
-  private static ScanCollection from_arglist(ArrayList<String> argv) throws FileNotFoundException {
+  private static ScanCollection from_arglist(ArrayList<String> argv) {
     ScanCollection result = new ScanCollection();
     Helper.print_help_if_requested(argv, DOC);
     result.setup_from_arglist(argv);
     return result;
   }
 
-  private static ScanCollection from_arglist(String[] args) throws FileNotFoundException {
+  private static ScanCollection from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
@@ -122,7 +124,7 @@ public class ScanCollection {
     }
   }
 
-  private List<ThresholdEvaluator> load_collection_of_pwms() throws FileNotFoundException {
+  private List<ThresholdEvaluator> load_collection_of_pwms() {
     PWMImporter pwmImporter = new PWMImporter(collectionBackground, dataModel, effectiveCount);
     MotifCollectionImporter<PWM> collectionImporter = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
@@ -145,7 +147,7 @@ public class ScanCollection {
     return result;
   }
 
-  void setup_from_arglist(ArrayList<String> argv) throws FileNotFoundException {
+  void setup_from_arglist(ArrayList<String> argv) {
     extract_query_pm_filename(argv);
     extract_path_to_collection_of_pwms(argv);
     while (argv.size() > 0) {
@@ -203,7 +205,7 @@ public class ScanCollection {
     }
   }
 
-  public OutputInformation report_table_layout() {
+  OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
     infos.add_parameter("MS", "minimal similarity to output", similarityCutoff);
     infos.add_parameter("P", "P-value", pvalue);

@@ -16,7 +16,7 @@ public class PMParser {
   }
 
   // trivial parser (helps to read matrix of unknown class)
-  public PMParser(double[][] matrix, String name) {
+  private PMParser(double[][] matrix, String name) {
     this.matrix = matrix;
     this.name = name;
   }
@@ -51,7 +51,7 @@ public class PMParser {
     }
   }
 
-  public static String parseName(String line) {
+  private static String parseName(String line) {
     String name;
     name = line.trim();
 
@@ -62,7 +62,7 @@ public class PMParser {
     return name;
   }
 
-  public static double[] parseMatrixLine(String line) {
+  private static double[] parseMatrixLine(String line) {
     StringTokenizer parser = new StringTokenizer(line.replaceAll("\\s+", " "));
     double[] data = new double[parser.countTokens()];
     for (int j = 0; j < data.length; ++j) {
@@ -95,7 +95,8 @@ public class PMParser {
     String name = "";
 
     try {
-      while(reader.eatEndOfLine()) { }
+      while(reader.eatEndOfLine()) {
+      }
 
       { // braces to scope variables
         String line = reader.readLine();

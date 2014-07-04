@@ -19,9 +19,9 @@ import java.util.List;
 
 abstract public class MultiSNPScanGeneralized <BackgroundType extends GeneralizedBackgroundModel> {
   public static class ThresholdEvaluator {
-    public ScoringModel pwm;
-    public CanFindPvalue pvalueCalculator;
-    public String name;
+    public final ScoringModel pwm;
+    public final CanFindPvalue pvalueCalculator;
+    public final String name;
 
     public ThresholdEvaluator(ScoringModel pwm, CanFindPvalue pvalueCalculator, String name) {
       this.pwm = pwm;
@@ -32,7 +32,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
 
   abstract protected void initialize_default_background();
   abstract void extract_background(String s);
-  abstract protected void load_collection_of_pwms() throws FileNotFoundException;
+  abstract protected void load_collection_of_pwms();
 
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
@@ -58,28 +58,28 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
     "  " + DOC_run_string() + " ./hocomoco/pcms/ snp.txt --pcm -d 10\n";
   }
 
-  protected Discretizer discretizer;
-  protected Integer max_hash_size;
+  Discretizer discretizer;
+  Integer max_hash_size;
 
-  protected File path_to_collection_of_pwms;
-  protected File path_to_file_w_snps;
+  File path_to_collection_of_pwms;
+  private File path_to_file_w_snps;
 
-  protected DataModel dataModel;
-  protected double effectiveCount;
-  protected File thresholds_folder;
+  DataModel dataModel;
+  double effectiveCount;
+  File thresholds_folder;
 
-  protected List<String> snp_list;
+  private List<String> snp_list;
   List<ThresholdEvaluator> pwmCollection;
 
-  protected double max_pvalue_cutoff;
-  protected double min_fold_change_cutoff;
+  private double max_pvalue_cutoff;
+  private double min_fold_change_cutoff;
 
-  protected BackgroundType background;
+  BackgroundType background;
 
   // Split by spaces and return last part
   // Input: "rs9929218 [Homo sapiens] GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
   // Output: "GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
-  protected static String last_part_of_string(String s) {
+  private static String last_part_of_string(String s) {
     String[] string_parts = s.replaceAll("\\s+", " ").split(" ");
     String result = string_parts[string_parts.length - 1];
     if (result.matches("[ACGTacgt]+(/[ACGTacgt]+)+") || result.matches("[ACGTacgt]+\\[(/?[ACGTacgt]+)+\\][ACGTacgt]+")) {
@@ -90,7 +90,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
   }
 
   // Output: "rs9929218"
-  protected static String first_part_of_string(String s) {
+  private static String first_part_of_string(String s) {
     return s.replaceAll("\\s+", " ").split(" ")[0];
   }
 
@@ -110,7 +110,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
     }
   }
 
-  protected void initialize_defaults() {
+  void initialize_defaults() {
     initialize_default_background();
     discretizer = new Discretizer(100.0);
     max_hash_size = 10000000;
@@ -122,11 +122,11 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
     min_fold_change_cutoff = 5.0;
   }
 
-  protected MultiSNPScanGeneralized() {
+  MultiSNPScanGeneralized() {
     initialize_defaults();
   }
 
-  void setup_from_arglist(ArrayList<String> argv) throws FileNotFoundException {
+  void setup_from_arglist(ArrayList<String> argv) {
     extract_path_to_collection_of_pwms(argv);
     extract_path_to_file_w_snps(argv);
 
@@ -137,7 +137,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
     load_snp_list();
   }
 
-  protected void extract_option(ArrayList<String> argv) {
+  void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b")) {
       extract_background(argv.remove(0));
@@ -165,7 +165,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
     }
   }
 
-  protected void load_snp_list() {
+  void load_snp_list() {
     try {
       InputStream reader = new FileInputStream(path_to_file_w_snps);
       snp_list = InputExtensions.filter_empty_strings(InputExtensions.readLinesFromInputStream(reader));
@@ -174,7 +174,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
     }
   }
 
-  protected void process_snp(String snp_input) throws HashOverflowException {
+  void process_snp(String snp_input) throws HashOverflowException {
     String snp_name = first_part_of_string(snp_input);
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
 

@@ -3,9 +3,10 @@ package ru.autosome.perfectosape;
 public class MotifsAligned<T extends Alignable<T>> {
   public final T firstMotifAligned;
   public final T secondMotifAligned;
-  public final Position relative_position;
+  private final Position relative_position;
 
-  private int first_length, second_length;
+  private final int first_length;
+  private final int second_length;
 
   public MotifsAligned(T first_pwm_unaligned, T second_pwm_unaligned, Position relative_position) {
     first_length = first_pwm_unaligned.length();
@@ -42,11 +43,11 @@ public class MotifsAligned<T extends Alignable<T>> {
     }
   }
 
-  public boolean isDirect() {
+  boolean isDirect() {
     return relative_position.directStrand;
   }
 
-  public boolean isReverseComplement() {
+  boolean isReverseComplement() {
     return !relative_position.directStrand;
   }
 

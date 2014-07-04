@@ -44,25 +44,28 @@ public class CollectDistanceMatrix {
     "  java ru.autosome.perfectosape.cli.CollectDistanceMatrix ./motifs/ -d 10\n";
 
 
-  Discretizer roughDiscretizer, preciseDiscretizer;
-  File pathToCollectionOfPWMs;
-  BackgroundModel background;
-  DataModel dataModel;
-  Integer maxHashSize, maxPairHashSize;
-  double effectiveCount;
-  BoundaryType pvalueBoundary;
-  double pvalue;
-  Double preciseRecalculationCutoff; // null means that no recalculation will be performed
+  private Discretizer roughDiscretizer;
+  private Discretizer preciseDiscretizer;
+  private File pathToCollectionOfPWMs;
+  private BackgroundModel background;
+  private DataModel dataModel;
+  private Integer maxHashSize;
+  private Integer maxPairHashSize;
+  private double effectiveCount;
+  private BoundaryType pvalueBoundary;
+  private double pvalue;
+  private Double preciseRecalculationCutoff; // null means that no recalculation will be performed
 
-  int numOfThreads, numThread;
-  List<PWM> pwmCollection;
+  private int numOfThreads;
+  private int numThread;
+  private List<PWM> pwmCollection;
 
   static class PWMWithThreshold {
-    PWM pwm;
-    double roughThreshold;
-    double roughCount;
-    double preciseThreshold;
-    double preciseCount;
+    final PWM pwm;
+    final double roughThreshold;
+    final double roughCount;
+    final double preciseThreshold;
+    final double preciseCount;
     PWMWithThreshold(PWM pwm,
                      double roughThreshold, double roughCount,
                      double preciseThreshold, double preciseCount) {
@@ -134,7 +137,7 @@ public class CollectDistanceMatrix {
     }
   }
 
-  void setup_from_arglist(List<String> argv) throws FileNotFoundException {
+  void setup_from_arglist(List<String> argv) {
     extract_path_to_collection_of_pwms(argv);
     while (argv.size() > 0) {
       extract_option(argv);
@@ -147,14 +150,14 @@ public class CollectDistanceMatrix {
     initialize_defaults();
   }
 
-  private static CollectDistanceMatrix from_arglist(List<String> argv) throws FileNotFoundException {
+  private static CollectDistanceMatrix from_arglist(List<String> argv) {
     CollectDistanceMatrix result = new CollectDistanceMatrix();
     ru.autosome.perfectosape.cli.Helper.print_help_if_requested(argv, DOC);
     result.setup_from_arglist(argv);
     return result;
   }
 
-  private static CollectDistanceMatrix from_arglist(String[] args) throws FileNotFoundException {
+  private static CollectDistanceMatrix from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
@@ -206,15 +209,17 @@ public class CollectDistanceMatrix {
     return info.distance();
   }
 
-  public void process() throws HashOverflowException {
+  private final static Comparator<PWMWithThreshold> nameComparator = new Comparator<PWMWithThreshold>() {
+    @Override
+    public int compare(PWMWithThreshold o1, PWMWithThreshold o2) {
+      return o1.pwm.name.compareTo(o2.pwm.name);
+    }
+  };
+
+  void process() throws HashOverflowException {
     int taskNum = 0;
     List<PWMWithThreshold> thresholds = collectThreshold();
-    Collections.sort(thresholds, new Comparator<PWMWithThreshold>() {
-      @Override
-      public int compare(PWMWithThreshold o1, PWMWithThreshold o2) {
-        return o1.pwm.name.compareTo(o2.pwm.name);
-      }
-    });
+    Collections.sort(thresholds, nameComparator);
 
     System.out.print("Motif name"+ "\t");
     for(PWMWithThreshold second: thresholds) {

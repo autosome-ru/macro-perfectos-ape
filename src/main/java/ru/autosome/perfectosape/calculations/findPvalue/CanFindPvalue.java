@@ -17,7 +17,7 @@ public interface CanFindPvalue {
 
     public double numberOfRecognizedWords(GeneralizedBackgroundModel background, int length) {
       return pvalue * Math.pow(background.volume(), length);
-    };
+    }
   }
 
   public OutputInformation report_table_layout();

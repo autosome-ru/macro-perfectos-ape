@@ -17,15 +17,15 @@ public class Sequence {
     this.sequence = sequence;
   }
 
-  public int length() {
+  int length() {
     return sequence.length();
   }
 
-  public Sequence reverse() {
+  Sequence reverse() {
     return new Sequence(new StringBuilder(sequence).reverse().toString());
   }
 
-  public Sequence complement() {
+  Sequence complement() {
     StringBuilder result = new StringBuilder(length());
     for (int i = 0; i < sequence.length(); ++i) {
       result.append(complements.get(sequence.charAt(i)));
@@ -34,7 +34,7 @@ public class Sequence {
   }
 
   // works on direct strand
-  public Sequence substring(int beginIndex, int endIndex) {
+  Sequence substring(int beginIndex, int endIndex) {
     return new Sequence(sequence.substring(beginIndex, endIndex));
   }
 

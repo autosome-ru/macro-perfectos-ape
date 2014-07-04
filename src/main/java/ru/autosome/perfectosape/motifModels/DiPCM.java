@@ -24,7 +24,7 @@ public class DiPCM extends DiPM implements PositionCountModel {
     converter.background = background;
     return converter.convert();
   }
-  public DiPPM to_ppm(DiBackgroundModel background) {
+  public DiPPM to_ppm() {
     return new PCM2PPMConverter<DiPCM, DiPPM>(this, DiPPM.class).convert();
   }
 

@@ -42,7 +42,7 @@ public class DiPWM extends DiPM implements ScoringModel,
     return new DiPWM(matrix, pwm.name);
   }
 
-  public static DiPWM fromParser(PMParser parser) {
+  private static DiPWM fromParser(PMParser parser) {
     double[][] matrix = parser.matrix();
     String name = parser.name();
     return new DiPWM(matrix, name);
@@ -72,7 +72,7 @@ public class DiPWM extends DiPM implements ScoringModel,
     return sum;
   }
 
-  public double score(Sequence word, DiBackgroundModel background) throws IllegalArgumentException {
+  double score(Sequence word, DiBackgroundModel background) throws IllegalArgumentException {
     return score(word.sequence, background);
   }
 
@@ -106,7 +106,7 @@ public class DiPWM extends DiPM implements ScoringModel,
   public double best_suffix(int pos, int letter) {
     return best_suffices()[pos][letter];
   }
-  public double worst_suffix(int pos, int letter) {
+  double worst_suffix(int pos, int letter) {
     return worst_suffices()[pos][letter];
   }
 

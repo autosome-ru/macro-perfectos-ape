@@ -15,7 +15,7 @@ public class Background implements BackgroundModel {
     this.background = background;
   }
 
-  public static BackgroundModel fromArray(double[] background) {
+  private static BackgroundModel fromArray(double[] background) {
     if (background.length != ALPHABET_SIZE) {
       throw new IllegalArgumentException("Background constructor accepts double array of length " + ALPHABET_SIZE);
     }

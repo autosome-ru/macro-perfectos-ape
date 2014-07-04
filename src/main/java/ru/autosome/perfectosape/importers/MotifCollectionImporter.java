@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MotifCollectionImporter<ModelType extends Named & ScoringModel> {
-  MotifImporter<ModelType> importer;
+  private final MotifImporter<ModelType> importer;
   
   public MotifCollectionImporter(MotifImporter<ModelType> importer) {
     this.importer = importer;
   }
 
-  public List<ModelType> loadPWMCollection(File pathToPwms) throws FileNotFoundException {
+  public List<ModelType> loadPWMCollection(File pathToPwms) {
     if (pathToPwms.isDirectory()) {
       return loadPWMCollectionFromFolder(pathToPwms);
     } else {
@@ -24,7 +24,7 @@ public class MotifCollectionImporter<ModelType extends Named & ScoringModel> {
     }
   }
 
-  private List<ModelType> loadPWMCollectionFromFolder(File pathToPWMs) throws FileNotFoundException {
+  private List<ModelType> loadPWMCollectionFromFolder(File pathToPWMs) {
     List<ModelType> result = new ArrayList<ModelType>();
     File[] files = pathToPWMs.listFiles();
     if (files == null) {

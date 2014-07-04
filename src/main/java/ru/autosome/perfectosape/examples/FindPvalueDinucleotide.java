@@ -11,13 +11,13 @@ import ru.autosome.perfectosape.motifModels.DiPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class FindPvalueDinucleotide {
-  static void print_result(CanFindPvalue.PvalueInfo info, GeneralizedBackgroundModel background, int pwmLength) {
+  private static void print_result(CanFindPvalue.PvalueInfo info, GeneralizedBackgroundModel background, int pwmLength) {
     System.out.println( "threshold: " + info.threshold + "\n" +
                          "pvalue: " + info.pvalue + "\n" +
                          "number of recognized words: " + info.numberOfRecognizedWords(background, pwmLength) + "\n------------\n");
   }
 
-  static void run_mono_and_di(PWM mono_pwm, BackgroundModel mono_background, Discretizer discretizer, Integer max_hash_size, double threshold) {
+  private static void run_mono_and_di(PWM mono_pwm, BackgroundModel mono_background, Discretizer discretizer, Integer max_hash_size, double threshold) {
     DiPWM di_pwm = DiPWM.fromPWM(mono_pwm);
     DiBackgroundModel di_background = DiBackground.fromMonoBackground(mono_background);
 
@@ -48,7 +48,7 @@ public class FindPvalueDinucleotide {
     Discretizer discretizer = new Discretizer(10000.0);
     Integer max_hash_size = null;
     double threshold = 7;
-    double[] thresholds = {3,5,7};
+//    double[] thresholds = {3,5,7};
 
     Sequence word = new Sequence("ACAGTGACAA");
     DiPWM dipwm = DiPWM.fromPWM(pwm); // A way to transform mono-nucleotide to dinucleotide matrix

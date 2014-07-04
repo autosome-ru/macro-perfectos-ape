@@ -157,12 +157,11 @@ public class EvalSimilarity {
   }
 
   ComparePWM calculator() {
-    ComparePWM result = new ComparePWM(new CountingPWM(firstPWM, firstBackground,maxHashSize),
-                                       new CountingPWM(secondPWM, secondBackground, maxHashSize),
-                                       new FindPvalueAPE(firstPWM, firstBackground, discretizer, maxHashSize),
-                                       new FindPvalueAPE(secondPWM, secondBackground, discretizer, maxHashSize),
-                                       discretizer, maxPairHashSize);
-    return result;
+    return new ComparePWM( new CountingPWM(firstPWM, firstBackground,maxHashSize),
+                           new CountingPWM(secondPWM, secondBackground, maxHashSize),
+                           new FindPvalueAPE<PWM, BackgroundModel>(firstPWM, firstBackground, discretizer, maxHashSize),
+                           new FindPvalueAPE<PWM, BackgroundModel>(secondPWM, secondBackground, discretizer, maxHashSize),
+                           discretizer, maxPairHashSize);
   }
 
   OutputInformation report_table_layout() {

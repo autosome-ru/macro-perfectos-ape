@@ -20,7 +20,7 @@ public class MultiSNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SNPScan.Re
     }
   }
 
-  Parameters parameters;
+  private final Parameters parameters;
   public MultiSNPScan(Parameters parameters) {
     super();
     this.parameters = parameters;

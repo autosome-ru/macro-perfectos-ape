@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MotifImporter<ModelType extends Named & ScoringModel> {
-  abstract public ModelType transformToPWM(double matrix[][], String name);
+  protected abstract ModelType transformToPWM(double matrix[][], String name);
 
   public List<ModelType> loadPWMsFromFile(File pathToPWMs) throws FileNotFoundException {
-    List pwms = new ArrayList();
+    List<ModelType> pwms = new ArrayList<ModelType>();
     BufferedPushbackReader reader = new BufferedPushbackReader(new FileInputStream(pathToPWMs));
     boolean canExtract = true;
     while (canExtract) {
@@ -30,8 +30,7 @@ public abstract class MotifImporter<ModelType extends Named & ScoringModel> {
   }
 
   public ModelType loadPWMFromParser(PMParser parser) {
-    ModelType pwm = transformToPWM(parser.matrix(), parser.name());
-    return pwm;
+    return transformToPWM(parser.matrix(), parser.name());
   }
 
   public List<ModelType> loadPWMsFromFolder(File pathToPWMs) {

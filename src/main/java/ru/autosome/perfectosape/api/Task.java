@@ -15,16 +15,16 @@ public abstract class Task <ResultType> implements Callable {
   }
   private Status status;
   private Integer currentTicks;
-  public java.io.PrintStream outputStream;
-  public boolean silent;
-  Listener listener;
+  private java.io.PrintStream outputStream;
+  private boolean silent;
+  private Listener listener;
   private final Object lock;
 
   public void setEventLister(Listener listener) {
     this.listener = listener;
   }
 
-  protected Task() {
+  Task() {
     lock = new Object();
     status = Status.INITIALIZED;
     currentTicks = 0;
@@ -32,7 +32,7 @@ public abstract class Task <ResultType> implements Callable {
     silent = false;
   }
 
-  public abstract Integer getTotalTicks();
+  protected abstract Integer getTotalTicks();
 
   void tick() {
     synchronized (lock) {
@@ -65,7 +65,7 @@ public abstract class Task <ResultType> implements Callable {
     }
   }
 
-  public boolean setStatus(Status newStatus) {
+  boolean setStatus(Status newStatus) {
     synchronized (lock) {
       if (status != Status.INTERRUPTED) {
         status = newStatus;

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class SequenceWithSNP {
 
   final public String left;
-  final public String right;
+  private final String right;
   final public char[] mid;
 
   // line should finish with sequence (which doesn't have spaces).
@@ -63,7 +63,7 @@ public class SequenceWithSNP {
     return result;
   }
 
-  public int length() {
+  int length() {
     return left.length() + 1 + right.length();
   }
 

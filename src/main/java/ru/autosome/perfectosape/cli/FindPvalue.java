@@ -24,10 +24,10 @@ public class FindPvalue extends FindPvalueGeneralized<PWM, BackgroundModel> {
   }
 
   @Override
-  protected CanFindPvalue calculator() throws FileNotFoundException {
+  protected CanFindPvalue calculator() {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
-        cache_calculator = new FindPvalueAPE(motif, background, discretizer, max_hash_size);
+        cache_calculator = new FindPvalueAPE<PWM, BackgroundModel>(motif, background, discretizer, max_hash_size);
       } else {
         cache_calculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
       }
@@ -54,14 +54,14 @@ public class FindPvalue extends FindPvalueGeneralized<PWM, BackgroundModel> {
     initialize_defaults();
   }
 
-  protected static FindPvalue from_arglist(ArrayList<String> argv) {
+  private static FindPvalue from_arglist(ArrayList<String> argv) {
     FindPvalue result = new FindPvalue();
     ru.autosome.perfectosape.cli.Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);
     return result;
   }
 
-  protected static FindPvalue from_arglist(String[] args) {
+  private static FindPvalue from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);

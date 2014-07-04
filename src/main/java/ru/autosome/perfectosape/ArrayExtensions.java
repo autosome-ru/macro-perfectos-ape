@@ -1,7 +1,5 @@
 package ru.autosome.perfectosape;
 
-import gnu.trove.TDoubleCollection;
-import gnu.trove.iterator.TDoubleIterator;
 import gnu.trove.map.TDoubleDoubleMap;
 
 import java.util.ArrayList;
@@ -10,15 +8,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class ArrayExtensions {
-  public static double sum(TDoubleCollection vals) {
-    TDoubleIterator iterator = vals.iterator();
-    double result = 0;
-    while(iterator.hasNext()) {
-      result += iterator.next();
-    }
-    return result;
-  }
-
   public static double max(double... array) throws IllegalArgumentException {
     if (array.length == 0) {
       throw new IllegalArgumentException("Can't calculate maximum of empty array");
@@ -80,20 +69,6 @@ public class ArrayExtensions {
       if (el.equals(obj)) return true;
     }
     return false;
-  }
-
-  public static Integer indexOf(double el, double[] list) {
-    for (int i = 0; i < list.length; ++i) {
-      if (list[i] == el) return i;
-    }
-    return null;
-  }
-
-  public static double[] toPrimitiveArray(Double[] wrappedArray) {
-    double[] array = new double[wrappedArray.length];
-    for (int i = 0; i < wrappedArray.length; i++)
-      array[i] = wrappedArray[i];
-    return array;
   }
 
   public static double[] toPrimitiveArray(Collection<Double> wrappedArray) {

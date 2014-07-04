@@ -5,8 +5,8 @@ import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.motifModels.ScoreStatistics;
 
 public class GaussianThresholdEstimator<ModelType extends ScoreStatistics<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> implements CanFindThresholdApproximation {
-  final ModelType motif;
-  final BackgroundType dibackground;
+  private final ModelType motif;
+  private final BackgroundType dibackground;
 
   public GaussianThresholdEstimator(ModelType motif, BackgroundType dibackground) {
     this.motif = motif;

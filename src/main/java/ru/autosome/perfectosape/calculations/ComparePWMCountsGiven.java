@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ComparePWMCountsGiven {
-  public final CountingPWM firstPWMCounting;
-  public final CountingPWM secondPWMCounting;
+  private final CountingPWM firstPWMCounting;
+  private final CountingPWM secondPWMCounting;
 
-  public Integer maxPairHashSize;
+  private final Integer maxPairHashSize;
 
   public ComparePWMCountsGiven(CountingPWM firstPWMCounting, CountingPWM secondPWMCounting,
                                Integer maxPairHashSize) {

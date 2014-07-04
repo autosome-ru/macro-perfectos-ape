@@ -12,7 +12,7 @@ import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class AlignedPWMIntersection {
-  public final MotifsAligned<CountingPWM> alignment;
+  private final MotifsAligned<CountingPWM> alignment;
   public Integer maxPairHashSize;
 
   public AlignedPWMIntersection(MotifsAligned<CountingPWM> alignment) {
@@ -29,7 +29,7 @@ public class AlignedPWMIntersection {
     return combine_intersection_values(intersections[0], intersections[1]);
   }
 
-  public double combine_intersection_values(double intersection_count_1, double intersection_count_2) {
+  double combine_intersection_values(double intersection_count_1, double intersection_count_2) {
     return Math.sqrt(intersection_count_1 * intersection_count_2);
   }
 

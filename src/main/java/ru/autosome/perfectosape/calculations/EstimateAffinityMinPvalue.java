@@ -8,10 +8,10 @@ import ru.autosome.perfectosape.motifModels.ScoringModel;
 import java.util.ArrayList;
 
 public class EstimateAffinityMinPvalue implements EstimateAffinity {
-  ScoringModel pwm;
-  Sequence sequence;
-  CanFindPvalue pvalueCalculator;
-  ArrayList<Position> positions_to_check;
+  private final ScoringModel pwm;
+  private final Sequence sequence;
+  private final CanFindPvalue pvalueCalculator;
+  private final ArrayList<Position> positions_to_check;
   public EstimateAffinityMinPvalue(ScoringModel pwm, Sequence sequence, CanFindPvalue pvalueCalculator, ArrayList<Position> positions_to_check) {
     this.pwm = pwm;
     this.sequence = sequence;

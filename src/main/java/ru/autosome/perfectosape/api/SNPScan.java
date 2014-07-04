@@ -7,7 +7,7 @@ import ru.autosome.perfectosape.calculations.SNPScan.RegionAffinityInfos;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.motifModels.PWM;
 
-public class SNPScan extends SingleTask<RegionAffinityInfos> {
+class SNPScan extends SingleTask<RegionAffinityInfos> {
   static public class Parameters {
     public SequenceWithSNP sequenceWithSNP;
     public PWM pwm;
@@ -20,7 +20,7 @@ public class SNPScan extends SingleTask<RegionAffinityInfos> {
     }
   }
 
-  Parameters parameters;
+  private final Parameters parameters;
   public SNPScan(Parameters parameters) {
     super();
     this.parameters = parameters;

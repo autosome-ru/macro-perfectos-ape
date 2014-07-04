@@ -43,8 +43,9 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     double sum = 0.0;
     for (int pos_index = 0; pos_index < length(); ++pos_index) {
       char letter = word.charAt(pos_index);
-      Integer letter_index = indexByLetter.get(letter);
-      if (letter_index != null) {
+
+      if (indexByLetter.containsKey(letter)) {
+        int letter_index = indexByLetter.get(letter);
         sum += matrix[pos_index][letter_index];
       } else if (letter == 'N') {
         sum += background.mean_value(matrix[pos_index]);
@@ -55,7 +56,7 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     return sum;
   }
 
-  public double score(Sequence word, BackgroundModel background) throws IllegalArgumentException {
+  double score(Sequence word, BackgroundModel background) throws IllegalArgumentException {
     return score(word.sequence, background);
   }
 
@@ -124,17 +125,13 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     for(int i = 0; i < n; ++i) {
       aligned_matrix[i] = new double[]{0,0,0,0};
     }
-    for(int i = 0; i < length(); ++i) {
-      aligned_matrix[n + i] = matrix[i];
-    }
+    System.arraycopy(matrix, 0, aligned_matrix, n, length());
     return new PWM(aligned_matrix, name);
   }
 
   public PWM rightAugment(int n) {
     double[][] aligned_matrix = new double[length() + n][];
-    for(int i = 0; i < length(); ++i) {
-      aligned_matrix[i] = matrix[i];
-    }
+    System.arraycopy(matrix, 0, aligned_matrix, 0, length());
     for(int i = 0; i < n; ++i) {
       aligned_matrix[length() + i] = new double[]{0,0,0,0};
     }

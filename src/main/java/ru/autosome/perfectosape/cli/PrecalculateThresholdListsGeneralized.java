@@ -15,18 +15,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Named & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> {
-  protected Discretizer discretizer;
-  protected BackgroundType background;
-  protected BoundaryType pvalue_boundary;
-  protected Integer max_hash_size;
-  protected DataModel data_model;
-  protected double effective_count; // used for converting PPM --> PWM
-  boolean silence;
+abstract class PrecalculateThresholdListsGeneralized<ModelType extends Named & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> {
+  Discretizer discretizer;
+  BackgroundType background;
+  BoundaryType pvalue_boundary;
+  Integer max_hash_size;
+  DataModel data_model;
+  double effective_count; // used for converting PPM --> PWM
+  private boolean silence;
 
-  protected java.io.File collection_folder;
-  protected java.io.File results_dir;
-  protected double[] pvalues;
+  private java.io.File collection_folder;
+  private java.io.File results_dir;
+  double[] pvalues;
 
   abstract protected void initialize_default_background();
   abstract void extract_background(String s);
@@ -35,7 +35,7 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
 
-  protected void initialize_defaults() {
+  void initialize_defaults() {
     initialize_default_background();
     discretizer = new Discretizer(1000.0);
     pvalue_boundary = BoundaryType.LOWER;
@@ -56,7 +56,7 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
     create_results_folder();
   }
 
-  protected void extract_collection_folder_name(ArrayList<String> argv) {
+  void extract_collection_folder_name(ArrayList<String> argv) {
     try {
       collection_folder = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
@@ -64,7 +64,7 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
     }
   }
 
-  protected void extract_output_folder_name(ArrayList<String> argv) {
+  void extract_output_folder_name(ArrayList<String> argv) {
     try {
       results_dir = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
@@ -72,13 +72,13 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
     }
   }
 
-  protected void create_results_folder() {
+  void create_results_folder() {
     if (!results_dir.exists()) {
       results_dir.mkdir();
     }
   }
 
-  protected void extract_option(ArrayList<String> argv) {
+  void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b")) {
       extract_background(argv.remove(0));

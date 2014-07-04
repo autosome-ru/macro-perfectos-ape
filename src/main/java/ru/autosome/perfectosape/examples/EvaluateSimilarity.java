@@ -29,7 +29,7 @@ public class EvaluateSimilarity {
       //System.out.println("\n----------\n" + new MotifsAligned(firstPWMCounting, secondPWMCounting, similarityInfo.alignment).secondMotifAligned);
 
     } catch (Exception e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      e.printStackTrace();
     }
   }
 }
