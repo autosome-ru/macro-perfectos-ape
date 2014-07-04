@@ -49,7 +49,7 @@ public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized<DiBackgroundModel
     for (DiPWM motif: pwmList) {
       CanFindPvalue pvalueCalculator;
       if (thresholds_folder == null) {
-        pvalueCalculator = new FindPvalueAPE<DiPWM, DiBackgroundModel>(motif, background, discretization, max_hash_size);
+        pvalueCalculator = new FindPvalueAPE<DiPWM, DiBackgroundModel>(motif, background, discretizer, max_hash_size);
       } else {
         pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
       }

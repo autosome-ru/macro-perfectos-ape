@@ -16,10 +16,10 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
 
   abstract ScoringModelDistibutions discretedScoringModel();
 
-  FindPvalueByDiscretization(ModelType motif, BackgroundType background, Double discretization) {
+  FindPvalueByDiscretization(ModelType motif, BackgroundType background, Discretizer discretizer) {
     this.motif = motif;
     this.background = background;
-    this.discretizer = new Discretizer(discretization);
+    this.discretizer = discretizer;
   }
 
   PvalueInfo infos_by_count(TDoubleDoubleMap counts, double non_upscaled_threshold) {
@@ -49,7 +49,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   @Override
   public OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
-    infos.add_parameter("V", "discretization value", discretizer.discretization);
+    infos.add_parameter("V", "discretization value", discretizer);
     infos.background_parameter("B", "background", background);
 
     infos.add_table_parameter("T", "threshold", "threshold");

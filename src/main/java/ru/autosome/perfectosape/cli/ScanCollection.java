@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
@@ -57,7 +58,7 @@ public class ScanCollection {
   DataModel dataModel;
   Double effectiveCount;
   BackgroundModel queryBackground, collectionBackground;
-  Double roughDiscretization, preciseDiscretization;
+  Discretizer roughDiscretizer, preciseDiscretizer;
   Integer maxHashSize;
   Integer maxPairHashSize;
   double pvalue;
@@ -75,8 +76,8 @@ public class ScanCollection {
   private void initialize_defaults() {
     queryBackground = new WordwiseBackground();
     collectionBackground = new WordwiseBackground();
-    roughDiscretization = 1.0;
-    preciseDiscretization = 10.0;
+    roughDiscretizer = new Discretizer(1.0);
+    preciseDiscretizer = new Discretizer(10.0);
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
     dataModel = DataModel.PWM;
@@ -129,10 +130,10 @@ public class ScanCollection {
     for (PWM pwm: pwmList) {
       if (thresholds_folder == null) {
         result.add(new ThresholdEvaluator(pwm,
-                                          new FindThresholdAPE<PWM, BackgroundModel>(pwm, collectionBackground, roughDiscretization, maxHashSize),
-                                          new FindThresholdAPE<PWM, BackgroundModel>(pwm, collectionBackground, preciseDiscretization, maxHashSize),
-                                          new FindPvalueAPE(pwm, collectionBackground, roughDiscretization, maxHashSize),
-                                          new FindPvalueAPE(pwm, collectionBackground, preciseDiscretization, maxHashSize)));
+                                          new FindThresholdAPE<PWM, BackgroundModel>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
+                                          new FindThresholdAPE<PWM, BackgroundModel>(pwm, collectionBackground, preciseDiscretizer, maxHashSize),
+                                          new FindPvalueAPE(pwm, collectionBackground, roughDiscretizer, maxHashSize),
+                                          new FindPvalueAPE(pwm, collectionBackground, preciseDiscretizer, maxHashSize)));
       } else {
         result.add(new ThresholdEvaluator(pwm,
                                           new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(pwm),
@@ -172,9 +173,9 @@ public class ScanCollection {
     } else if (opt.equals("--max-2d-hash-size")) {
       maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("--rough-discretization") || opt.equals("-d")) {
-      roughDiscretization = Double.valueOf(argv.remove(0));
+      roughDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--precise-discretization")) {
-      preciseDiscretization = Double.valueOf(argv.remove(0));
+      preciseDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--boundary")) {
       pvalueBoundaryType = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
@@ -208,11 +209,11 @@ public class ScanCollection {
     infos.add_parameter("P", "P-value", pvalue);
     infos.add_parameter("PB", "P-value boundary", pvalueBoundaryType);
     if (preciseRecalculationCutoff != null) {
-      infos.add_parameter("VR", "discretization value, rough", roughDiscretization);
-      infos.add_parameter("VP", "discretization value, precise", preciseDiscretization);
+      infos.add_parameter("VR", "discretization value, rough", roughDiscretizer);
+      infos.add_parameter("VP", "discretization value, precise", preciseDiscretizer);
       infos.add_parameter("MP", "minimal similarity for the 2nd pass in \'precise\' mode", preciseRecalculationCutoff);
     } else {
-      infos.add_parameter("V", "discretization value", roughDiscretization);
+      infos.add_parameter("V", "discretization value", roughDiscretizer);
     }
     infos.background_parameter("BQ", "background for query matrix", queryBackground);
     infos.background_parameter("BC", "background for collection", collectionBackground);
@@ -239,8 +240,8 @@ public class ScanCollection {
     calculator = new ru.autosome.perfectosape.calculations.ScanCollection(pwmCollection, queryPWM);
     calculator.pvalue = pvalue;
     calculator.queryPredefinedThreshold = queryPredefinedThreshold;
-    calculator.roughDiscretization = roughDiscretization;
-    calculator.preciseDiscretization = preciseDiscretization;
+    calculator.roughDiscretizer = roughDiscretizer;
+    calculator.preciseDiscretizer = preciseDiscretizer;
     calculator.queryBackground = queryBackground;
     calculator.collectionBackground = collectionBackground;
     calculator.pvalueBoundaryType = pvalueBoundaryType;

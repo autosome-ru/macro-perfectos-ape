@@ -4,6 +4,7 @@ import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import ru.autosome.perfectosape.Alignable;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.ScoreDistributionTop;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
@@ -38,8 +39,8 @@ public class CountingPWM extends ScoringModelDistibutions implements Alignable<C
     return new CountingPWM(pwm.rightAugment(shift), background, maxHashSize);
   }
 
-  public CountingPWM discrete(Double rate) {
-    return new CountingPWM(pwm.discrete(rate), background, maxHashSize);
+  public CountingPWM discrete(Discretizer discretizer) {
+    return new CountingPWM(pwm.discrete(discretizer), background, maxHashSize);
   }
 
   @Override

@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.calculations.findPvalue;
 
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.perfectosape.motifModels.Discretable;
@@ -10,13 +11,13 @@ public class FindPvalueAPE<ModelType extends ScoringModel & Discretable<ModelTyp
                            BackgroundType extends GeneralizedBackgroundModel> extends FindPvalueByDiscretization<ModelType, BackgroundType> {
   Integer maxHashSize;
 
-  public FindPvalueAPE(ModelType pwm, BackgroundType background, Double discretization, Integer maxHashSize) {
-    super(pwm, background, discretization);
+  public FindPvalueAPE(ModelType pwm, BackgroundType background, Discretizer discretizer, Integer maxHashSize) {
+    super(pwm, background, discretizer);
     this.maxHashSize = maxHashSize;
   }
 
   @Override
   ScoringModelDistibutions discretedScoringModel() {
-    return motif.discrete(discretizer.discretization).scoringModelDistibutions(background, maxHashSize);
+    return motif.discrete(discretizer).scoringModelDistibutions(background, maxHashSize);
   }
 }

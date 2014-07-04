@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.cli;
 
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.SequenceWithSNP;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
@@ -57,7 +58,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
     "  " + DOC_run_string() + " ./hocomoco/pcms/ snp.txt --pcm -d 10\n";
   }
 
-  protected Double discretization;
+  protected Discretizer discretizer;
   protected Integer max_hash_size;
 
   protected File path_to_collection_of_pwms;
@@ -111,7 +112,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
 
   protected void initialize_defaults() {
     initialize_default_background();
-    discretization = 100.0;
+    discretizer = new Discretizer(100.0);
     max_hash_size = 10000000;
 
     dataModel = DataModel.PWM;
@@ -143,7 +144,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretization = Double.valueOf(argv.remove(0));
+      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--pcm")) {
       dataModel = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {

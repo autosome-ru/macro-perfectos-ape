@@ -2,6 +2,7 @@ package ru.autosome.perfectosape.motifModels;
 
 import ru.autosome.perfectosape.Alignable;
 import ru.autosome.perfectosape.ArrayExtensions;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
@@ -105,19 +106,8 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
   }
 
   @Override
-  public PWM discrete(Double rate) {
-    if (rate == null) {
-      return this;
-    }
-    double[][] mat_result;
-    mat_result = new double[matrix.length][];
-    for (int i = 0; i < matrix.length; ++i) {
-      mat_result[i] = new double[4];
-      for (int j = 0; j < 4; ++j) {
-        mat_result[i][j] = ceil(matrix[i][j] * rate);
-      }
-    }
-    return new PWM(mat_result, name);
+  public PWM discrete(Discretizer discretizer) {
+    return new PWM(discretizer.discrete(matrix), name);
   }
 
   public PWM reverseComplement() {

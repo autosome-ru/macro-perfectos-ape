@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
@@ -39,7 +40,7 @@ public class EvalSimilarity {
     "  java ru.autosome.perfectosape.cli.EvalSimilarity motifs/KLF4_f2.pat motifs/SP1_f1.pat -p 0.0005 -d 100 -b 0.3,0.2,0.2,0.3\n";
 
   private BackgroundModel firstBackground, secondBackground;
-  private Double discretization;
+  private Discretizer discretizer;
   private double pvalue;
   private BoundaryType pvalueBoundary;
   private String firstPMFilename, secondPMFilename;
@@ -78,7 +79,7 @@ public class EvalSimilarity {
     effectiveCountFirst = 100.0;
     effectiveCountSecond = 100.0;
     pvalue = 0.0005;
-    discretization = 10.0;
+    discretizer = new Discretizer(10.0);
 
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
@@ -102,7 +103,7 @@ public class EvalSimilarity {
     } else if (opt.equals("--max-2d-hash-size")) {
       maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretization = Double.valueOf(argv.remove(0));
+      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--boundary")) {
       pvalueBoundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
@@ -158,16 +159,16 @@ public class EvalSimilarity {
   ComparePWM calculator() {
     ComparePWM result = new ComparePWM(new CountingPWM(firstPWM, firstBackground,maxHashSize),
                                        new CountingPWM(secondPWM, secondBackground, maxHashSize),
-                                       new FindPvalueAPE(firstPWM, firstBackground, discretization, maxHashSize),
-                                       new FindPvalueAPE(secondPWM, secondBackground, discretization, maxHashSize),
-                                       discretization, maxPairHashSize);
+                                       new FindPvalueAPE(firstPWM, firstBackground, discretizer, maxHashSize),
+                                       new FindPvalueAPE(secondPWM, secondBackground, discretizer, maxHashSize),
+                                       discretizer, maxPairHashSize);
     return result;
   }
 
   OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
 
-    infos.add_parameter("V", "discretization", discretization);
+    infos.add_parameter("V", "discretization", discretizer);
     if (predefinedFirstThreshold == null || predefinedSecondThreshold == null) {
       infos.add_parameter("P", "requested P-value", pvalue);
     }
@@ -216,7 +217,7 @@ public class EvalSimilarity {
       if (predefinedFirstThreshold != null) {
         cacheFirstThreshold = predefinedFirstThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<PWM, BackgroundModel>(firstPWM, firstBackground, discretization, maxHashSize);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<PWM, BackgroundModel>(firstPWM, firstBackground, discretizer, maxHashSize);
         cacheFirstThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }
@@ -228,7 +229,7 @@ public class EvalSimilarity {
       if (predefinedSecondThreshold != null) {
         cacheSecondThreshold = predefinedSecondThreshold;
       } else {
-          CanFindThreshold pvalue_calculator = new FindThresholdAPE<PWM, BackgroundModel>(secondPWM, secondBackground, discretization, maxHashSize);
+          CanFindThreshold pvalue_calculator = new FindThresholdAPE<PWM, BackgroundModel>(secondPWM, secondBackground, discretizer, maxHashSize);
         cacheSecondThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }

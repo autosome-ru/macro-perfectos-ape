@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.motifModels;
 
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.AbstractBackgroundFactory;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundFactory;
@@ -163,19 +164,8 @@ public class DiPWM extends DiPM implements ScoringModel,
   }
 
   @Override
-  public DiPWM discrete(Double rate) {
-    if (rate == null) {
-      return this;
-    }
-    double[][] mat_result;
-    mat_result = new double[matrix.length][];
-    for (int i = 0; i < matrix.length; ++i) {
-      mat_result[i] = new double[ALPHABET_SIZE];
-      for (int j = 0; j < ALPHABET_SIZE; ++j) {
-        mat_result[i][j] = ceil(matrix[i][j] * rate);
-      }
-    }
-    return new DiPWM(mat_result, name);
+  public DiPWM discrete(Discretizer discretizer) {
+    return new DiPWM(discretizer.discrete(matrix), name);
   }
 
   @Override

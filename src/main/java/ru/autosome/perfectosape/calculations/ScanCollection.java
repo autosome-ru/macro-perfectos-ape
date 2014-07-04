@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.calculations;
 
 import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.MotifsAligned;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingPWM;
@@ -61,7 +62,7 @@ public class ScanCollection {
   public final PWM queryPWM;
   public double pvalue;
   public Double queryPredefinedThreshold;
-  public Double roughDiscretization, preciseDiscretization;
+  public Discretizer roughDiscretizer, preciseDiscretizer;
   public BackgroundModel queryBackground, collectionBackground;
   public BoundaryType pvalueBoundaryType;
   public Integer maxHashSize, maxPairHashSize;
@@ -78,11 +79,11 @@ public class ScanCollection {
     List<ScanCollection.SimilarityInfo> result;
     result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
 
-    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<PWM, BackgroundModel>(queryPWM, queryBackground, roughDiscretization, maxHashSize);
-    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<PWM, BackgroundModel>(queryPWM, queryBackground, preciseDiscretization, maxHashSize);
+    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<PWM, BackgroundModel>(queryPWM, queryBackground, roughDiscretizer, maxHashSize);
+    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<PWM, BackgroundModel>(queryPWM, queryBackground, preciseDiscretizer, maxHashSize);
 
-    double roughQueryThreshold = queryThreshold(roughDiscretization);
-    double preciseQueryThreshold = queryThreshold(preciseDiscretization);
+    double roughQueryThreshold = queryThreshold(roughDiscretizer);
+    double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
 
 
     for (ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
@@ -92,7 +93,7 @@ public class ScanCollection {
                                                    new CountingPWM(knownMotifEvaluator.pwm, collectionBackground, maxHashSize),
                                                    roughQueryPvalueEvaluator,
                                                    knownMotifEvaluator.roughPvalueCalculator,
-                                                   roughDiscretization, maxPairHashSize);
+                                                   roughDiscretizer, maxPairHashSize);
 
       Double roughCollectionThreshold = knownMotifEvaluator.roughThresholdCalculator
                                          .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
@@ -105,9 +106,10 @@ public class ScanCollection {
          knownMotifEvaluator.preciseThresholdCalculator != null) {
         ComparePWM preciseCalculation = new ComparePWM(new CountingPWM(queryPWM, queryBackground, maxHashSize),
                                                        new CountingPWM(knownMotifEvaluator.pwm, collectionBackground, maxHashSize),
-                                                     preciseQueryPvalueEvaluator,
-                                                     knownMotifEvaluator.precisePvalueCalculator,
-                                                     preciseDiscretization, maxPairHashSize);
+                                                       preciseQueryPvalueEvaluator,
+                                                       knownMotifEvaluator.precisePvalueCalculator,
+                                                       preciseDiscretizer,
+                                                       maxPairHashSize);
 
         Double preciseCollectionThreshold = knownMotifEvaluator.preciseThresholdCalculator
                                              .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
@@ -124,11 +126,11 @@ public class ScanCollection {
   }
 
 
-  double queryThreshold(Double discretization) throws HashOverflowException {
+  double queryThreshold(Discretizer discretizer) throws HashOverflowException {
     if (queryPredefinedThreshold != null) {
       return queryPredefinedThreshold;
     } else {
-      CanFindThreshold pvalue_calculator = new FindThresholdAPE<PWM, BackgroundModel>(queryPWM, queryBackground, discretization, maxHashSize);
+      CanFindThreshold pvalue_calculator = new FindThresholdAPE<PWM, BackgroundModel>(queryPWM, queryBackground, discretizer, maxHashSize);
       return pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
     }
   }

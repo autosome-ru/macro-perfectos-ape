@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.calculations.findThreshold;
 
 import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.formatters.ResultInfo;
@@ -20,16 +21,11 @@ public interface CanFindThreshold {
 
     public double numberOfRecognizedWords(GeneralizedBackgroundModel background, int length) {
       return real_pvalue * Math.pow(background.volume(), length);
-    };
-
+    }
 
     // generate infos for non-disreeted matrix from infos for discreeted matrix
-    public ThresholdInfo downscale(Double discretization) {
-      if (discretization == null) {
-        return this;
-      } else {
-        return new ThresholdInfo(threshold / discretization, real_pvalue, expected_pvalue);
-      }
+    public ThresholdInfo downscale(Discretizer discretizer) {
+      return new ThresholdInfo(discretizer.downscale(threshold), real_pvalue, expected_pvalue);
     }
   }
 

@@ -50,12 +50,12 @@ public class ComparePWM {
   public ComparePWM(CountingPWM firstPWMCounting, CountingPWM secondPWMCounting,
                     CanFindPvalue firstPvalueCalculator,
                     CanFindPvalue secondPvalueCalculator,
-                    Double discretization, Integer maxPairHashSize) {
-    this.firstPWMCounting = firstPWMCounting.discrete(discretization);
-    this.secondPWMCounting = secondPWMCounting.discrete(discretization);
+                    Discretizer discretizer, Integer maxPairHashSize) {
+    this.firstPWMCounting = firstPWMCounting.discrete(discretizer);
+    this.secondPWMCounting = secondPWMCounting.discrete(discretizer);
     this.firstPvalueCalculator = firstPvalueCalculator;
     this.secondPvalueCalculator = secondPvalueCalculator;
-    this.discretizer = new Discretizer(discretization);
+    this.discretizer = discretizer;
     this.maxPairHashSize = maxPairHashSize;
   }
 

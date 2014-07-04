@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.cli;
 
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.DiBackground;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
@@ -38,7 +39,7 @@ public class DiPWMFindThreshold extends FindThresholdGeneralized<DiPWM, DiBackgr
   CanFindThreshold calculator() {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
-        cache_calculator = new FindThresholdAPE<DiPWM, DiBackgroundModel>(motif, background, discretization, max_hash_size);
+        cache_calculator = new FindThresholdAPE<DiPWM, DiBackgroundModel>(motif, background, discretizer, max_hash_size);
       } else {
         cache_calculator = new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(motif);
       }

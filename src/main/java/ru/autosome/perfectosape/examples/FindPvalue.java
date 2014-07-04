@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.examples;
 
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
@@ -18,12 +19,12 @@ public class FindPvalue {
   public static void main(String[] args) {
     PWM pwm = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
     BackgroundModel background = new WordwiseBackground();
-    double discretization = 10000;
+    Discretizer discretizer = new Discretizer(10000.0);
     Integer max_hash_size = null;
     double threshold = 3;
     double[] thresholds = {3,5,7};
 
-    FindPvalueAPE calculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretization, max_hash_size);
+    FindPvalueAPE calculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretizer, max_hash_size);
 
       // Single threshold
     CanFindPvalue.PvalueInfo info = null;
@@ -57,7 +58,7 @@ public class FindPvalue {
     ru.autosome.perfectosape.api.FindPvalueAPE.Parameters parameters =
      new ru.autosome.perfectosape.api.FindPvalueAPE.Parameters(pwm_manual_constructed,
                                                               thresholds_2,
-                                                              discretization, background, max_hash_size);
+                                                              discretizer, background, max_hash_size);
     ru.autosome.perfectosape.api.FindPvalueAPE bioumlCalculator = new ru.autosome.perfectosape.api.FindPvalueAPE(parameters);
     CanFindPvalue.PvalueInfo[] infosBiouml = bioumlCalculator.call();
     for (int i = 0; i < infosBiouml.length; ++i) {

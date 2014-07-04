@@ -2,6 +2,7 @@ package ru.autosome.perfectosape.calculations;
 
 import ru.autosome.perfectosape.ArrayExtensions;
 import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
@@ -26,20 +27,20 @@ public class PrecalculateThresholdList<ModelType extends ScoringModel & Discreta
   double[] pvalues;
   BoundaryType pvalue_boundary;
 
-  double discretization;
+  Discretizer discretizer;
   BackgroundType background;
   Integer max_hash_size;
 
-  public PrecalculateThresholdList(double[] pvalues, double discretization, BackgroundType background, BoundaryType pvalue_boundary, Integer max_hash_size) {
+  public PrecalculateThresholdList(double[] pvalues, Discretizer discretizer, BackgroundType background, BoundaryType pvalue_boundary, Integer max_hash_size) {
     this.pvalues = pvalues;
-    this.discretization = discretization;
+    this.discretizer = discretizer;
     this.background = background;
     this.pvalue_boundary = pvalue_boundary;
     this.max_hash_size = max_hash_size;
   }
 
   protected CanFindThreshold find_threshold_calculator(ModelType motif) {
-    return new FindThresholdAPE<ModelType, BackgroundType>(motif, background, discretization, max_hash_size);
+    return new FindThresholdAPE<ModelType, BackgroundType>(motif, background, discretizer, max_hash_size);
   }
 
   public PvalueBsearchList bsearch_list_for_pwm(ModelType motif) throws HashOverflowException {

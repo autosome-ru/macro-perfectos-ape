@@ -2,6 +2,7 @@ package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.ArrayExtensions;
 import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
@@ -38,7 +39,7 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
       "  " + DOC_run_string() + "  motifs/diKLF4_f2.pat 0.001 0.0001 0.0005 -d 1000 -b 0.4,0.3,0.2,0.1\n";
   }
 
-  Double discretization;
+  Discretizer discretizer;
 
   BoundaryType pvalue_boundary;
   Integer max_hash_size; // not int because it can be null
@@ -60,7 +61,7 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
 
   void initialize_defaults() {
     initialize_default_background();
-    discretization = 10000.0;
+    discretizer = new Discretizer(10000.0);
     pvalue_boundary = BoundaryType.LOWER;
     max_hash_size = 10000000;
     data_model = DataModel.PWM;
@@ -87,7 +88,7 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretization = Double.valueOf(argv.remove(0));
+      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--boundary")) {
       pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
@@ -128,7 +129,7 @@ public abstract class FindThresholdGeneralized <ModelType extends ScoringModel &
   OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
 
-    infos.add_parameter("V", "discretization value", discretization);
+    infos.add_parameter("V", "discretization value", discretizer);
     infos.add_parameter("PB", "P-value boundary", pvalue_boundary);
 
     infos.background_parameter("B", "background", background);

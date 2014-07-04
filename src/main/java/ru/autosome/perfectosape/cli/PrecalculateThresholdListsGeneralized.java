@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Named & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> {
-  protected double discretization;
+  protected Discretizer discretizer;
   protected BackgroundType background;
   protected BoundaryType pvalue_boundary;
   protected Integer max_hash_size;
@@ -36,7 +37,7 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
 
   protected void initialize_defaults() {
     initialize_default_background();
-    discretization = 1000;
+    discretizer = new Discretizer(1000.0);
     pvalue_boundary = BoundaryType.LOWER;
     max_hash_size = 10000000;
     pvalues = PrecalculateThresholdList.PVALUE_LIST;
@@ -86,7 +87,7 @@ public abstract class PrecalculateThresholdListsGeneralized<ModelType extends Na
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretization = Double.valueOf(argv.remove(0));
+      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--boundary")) {
       pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {

@@ -44,7 +44,7 @@ public class CollectDistanceMatrix {
     "  java ru.autosome.perfectosape.cli.CollectDistanceMatrix ./motifs/ -d 10\n";
 
 
-  Double roughDiscretization, preciseDiscretization;
+  Discretizer roughDiscretizer, preciseDiscretizer;
   File pathToCollectionOfPWMs;
   BackgroundModel background;
   DataModel dataModel;
@@ -75,8 +75,8 @@ public class CollectDistanceMatrix {
   }
 
   private void initialize_defaults() {
-    roughDiscretization = 1.0;
-    preciseDiscretization = 10.0;
+    roughDiscretizer = new Discretizer(1.0);
+    preciseDiscretizer = new Discretizer(10.0);
 
     background = new WordwiseBackground();
     maxHashSize = 10000000;
@@ -113,9 +113,9 @@ public class CollectDistanceMatrix {
     } else if (opt.equals("--max-2d-hash-size")) {
       maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("--rough-discretization") || opt.equals("-d")) {
-      roughDiscretization = Double.valueOf(argv.remove(0));
+      roughDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--precise-discretization")) {
-      preciseDiscretization = Double.valueOf(argv.remove(0));
+      preciseDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--pcm")) {
       dataModel = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
@@ -163,12 +163,12 @@ public class CollectDistanceMatrix {
   List<PWMWithThreshold> collectThreshold() throws HashOverflowException {
     List<PWMWithThreshold> result = new ArrayList<PWMWithThreshold>();
     for (PWM pwm: pwmCollection) {
-      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<PWM, BackgroundModel>(pwm, background, roughDiscretization, maxHashSize);
+      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<PWM, BackgroundModel>(pwm, background, roughDiscretizer, maxHashSize);
       CanFindThreshold.ThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double roughThreshold = roughThresholdInfo.threshold;
       double roughCount = roughThresholdInfo.numberOfRecognizedWords(background, pwm.length());
 
-      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<PWM, BackgroundModel>(pwm, background, preciseDiscretization, maxHashSize);
+      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<PWM, BackgroundModel>(pwm, background, preciseDiscretizer, maxHashSize);
       CanFindThreshold.ThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double preciseThreshold = preciseThresholdInfo.threshold;
       double preciseCount = preciseThresholdInfo.numberOfRecognizedWords(background, pwm.length());
@@ -184,20 +184,20 @@ public class CollectDistanceMatrix {
     ComparePWM.SimilarityInfo info;
 
     ComparePWMCountsGiven roughCalc;
-    roughCalc = new ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize).discrete(roughDiscretization),
-                                          new CountingPWM(second.pwm, background, maxHashSize).discrete(roughDiscretization),
+    roughCalc = new ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize).discrete(roughDiscretizer),
+                                          new CountingPWM(second.pwm, background, maxHashSize).discrete(roughDiscretizer),
                                           maxPairHashSize);
 
-    Discretizer roughDiscretizer = new Discretizer(roughDiscretization);
-    Discretizer preciseDiscretizer = new Discretizer(preciseDiscretization);
+    Discretizer roughDiscretizer = this.roughDiscretizer;
+    Discretizer preciseDiscretizer = this.preciseDiscretizer;
 
     info = roughCalc.jaccard( roughDiscretizer.upscale(first.roughThreshold),
                               roughDiscretizer.upscale(second.roughThreshold),
                               first.roughCount, second.roughCount);
     if (preciseRecalculationCutoff != null && info.similarity() > preciseRecalculationCutoff) {
       ComparePWMCountsGiven preciseCalc;
-      preciseCalc = new ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize).discrete(preciseDiscretization),
-                                              new CountingPWM(second.pwm, background, maxHashSize).discrete(preciseDiscretization),
+      preciseCalc = new ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize).discrete(this.preciseDiscretizer),
+                                              new CountingPWM(second.pwm, background, maxHashSize).discrete(this.preciseDiscretizer),
                                               maxPairHashSize);
       info = preciseCalc.jaccard( preciseDiscretizer.upscale(first.preciseThreshold),
                                   preciseDiscretizer.upscale(second.preciseThreshold),

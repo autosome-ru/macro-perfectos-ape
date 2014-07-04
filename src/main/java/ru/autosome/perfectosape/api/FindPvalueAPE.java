@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.api;
 
 
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.motifModels.PWM;
@@ -10,16 +11,16 @@ import static ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE.Pva
 public class FindPvalueAPE extends SingleTask<PvalueInfo[]> {
   public static class Parameters {
     public PWM pwm;
-    public Double discretization;
+    public Discretizer discretizer;
     public BackgroundModel background;
     public Integer max_hash_size;
     double[] thresholds;
 
     public Parameters() { }
-    public Parameters(PWM pwm, double[] thresholds, Double discretization, BackgroundModel background, Integer max_hash_size) {
+    public Parameters(PWM pwm, double[] thresholds, Discretizer discretizer, BackgroundModel background, Integer max_hash_size) {
       this.pwm = pwm;
       this.thresholds = thresholds;
-      this.discretization = discretization;
+      this.discretizer = discretizer;
       this.background = background;
       this.max_hash_size = max_hash_size;
     }
@@ -37,7 +38,7 @@ public class FindPvalueAPE extends SingleTask<PvalueInfo[]> {
     ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE calculator =
      new ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE<PWM, BackgroundModel>(parameters.pwm,
                                                                                               parameters.background,
-                                                                                              parameters.discretization,
+                                                                                              parameters.discretizer,
                                                                                               parameters.max_hash_size);
     return calculator.pvaluesByThresholds(parameters.thresholds);
   }
