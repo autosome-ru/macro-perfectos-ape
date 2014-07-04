@@ -17,6 +17,6 @@ public class FindPvalueAPE<ModelType extends ScoringModel & Discretable<ModelTyp
 
   @Override
   ScoringModelDistibutions discretedScoringModel() {
-    return motif.discrete(discretization).scoringModelDistibutions(background, maxHashSize);
+    return motif.discrete(discretizer.discretization).scoringModelDistibutions(background, maxHashSize);
   }
 }

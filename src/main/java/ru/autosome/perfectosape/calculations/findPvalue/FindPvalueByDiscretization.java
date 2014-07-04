@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.calculations.findPvalue;
 
 import gnu.trove.map.TDoubleDoubleMap;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
@@ -9,7 +10,7 @@ import ru.autosome.perfectosape.motifModels.Discretable;
 import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 public abstract class FindPvalueByDiscretization <ModelType extends Discretable<ModelType> & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> implements CanFindPvalue {
-  Double discretization; // if discretization is null - it's not applied
+  Discretizer discretizer;
   ModelType motif;
   BackgroundType background;
 
@@ -18,26 +19,11 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   FindPvalueByDiscretization(ModelType motif, BackgroundType background, Double discretization) {
     this.motif = motif;
     this.background = background;
-    this.discretization = discretization;
-  }
-
-  private double upscale_threshold(double threshold) {
-    if (discretization == null) {
-      return threshold;
-    } else {
-      return threshold * discretization;
-    }
-  }
-  private double[] upscaled_thresholds(double[] thresholds) {
-    double[] result = new double[thresholds.length];
-    for (int i = 0; i < thresholds.length; ++i) {
-      result[i] = upscale_threshold(thresholds[i]);
-    }
-    return result;
+    this.discretizer = new Discretizer(discretization);
   }
 
   PvalueInfo infos_by_count(TDoubleDoubleMap counts, double non_upscaled_threshold) {
-    double count = counts.get(upscale_threshold(non_upscaled_threshold));
+    double count = counts.get(discretizer.upscale(non_upscaled_threshold));
     double vocabularyVolume = Math.pow(background.volume(), motif.length());
     double pvalue = count / vocabularyVolume;
     return new PvalueInfo(non_upscaled_threshold, pvalue);
@@ -45,7 +31,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
 
   @Override
   public PvalueInfo[] pvaluesByThresholds(double[] thresholds) throws HashOverflowException {
-    TDoubleDoubleMap counts = discretedScoringModel().counts_above_thresholds(upscaled_thresholds(thresholds));
+    TDoubleDoubleMap counts = discretedScoringModel().counts_above_thresholds(discretizer.upscale(thresholds));
 
     PvalueInfo[] infos = new PvalueInfo[thresholds.length];
     for (int i = 0; i < thresholds.length; ++i) {
@@ -63,7 +49,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   @Override
   public OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
-    infos.add_parameter("V", "discretization value", discretization);
+    infos.add_parameter("V", "discretization value", discretizer.discretization);
     infos.background_parameter("B", "background", background);
 
     infos.add_table_parameter("T", "threshold", "threshold");

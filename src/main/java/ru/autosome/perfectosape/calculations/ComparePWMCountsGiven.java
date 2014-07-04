@@ -11,24 +11,14 @@ public class ComparePWMCountsGiven {
   public final CountingPWM firstPWMCounting;
   public final CountingPWM secondPWMCounting;
 
-  public final Double discretization; // PWMs are already stored discreted, disretization needed in order to upscale thresholds
   public Integer maxPairHashSize;
 
   public ComparePWMCountsGiven(CountingPWM firstPWMCounting, CountingPWM secondPWMCounting,
-                               Double discretization, Integer maxPairHashSize) {
+                               Integer maxPairHashSize) {
     this.firstPWMCounting = firstPWMCounting;
     this.secondPWMCounting = secondPWMCounting;
-    this.discretization = discretization;
-    this.maxPairHashSize = maxPairHashSize;
-  }
 
-  // TODO: Extract disretizator as a class. Operations of discretization are duplicated many times, and logic isn't trivial (case of null discretization, ceiling mode)
-  private double upscaleThreshold(double threshold) {
-    if (discretization == null) {
-      return threshold;
-    } else {
-      return threshold * discretization;
-    }
+    this.maxPairHashSize = maxPairHashSize;
   }
 
   private List<Position> relative_alignments() {
@@ -68,8 +58,7 @@ public class ComparePWMCountsGiven {
     MotifsAligned<CountingPWM> alignment = new MotifsAligned<CountingPWM>(firstPWMCounting, secondPWMCounting, position);
     AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment);
     calculator.maxPairHashSize = maxPairHashSize;
-    double intersection = calculator.count_in_intersection(upscaleThreshold(thresholdFirst),
-                                                           upscaleThreshold(thresholdSecond));
+    double intersection = calculator.count_in_intersection(thresholdFirst, thresholdSecond);
 
     double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
     double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);

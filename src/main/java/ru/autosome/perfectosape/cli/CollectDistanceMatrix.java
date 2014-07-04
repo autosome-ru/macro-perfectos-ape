@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.BoundaryType;
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
@@ -180,21 +181,27 @@ public class CollectDistanceMatrix {
   }
 
   double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) throws HashOverflowException {
-    ComparePWMCountsGiven calc;
     ComparePWM.SimilarityInfo info;
 
-    calc = new ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize),
-                                                new CountingPWM(second.pwm, background, maxHashSize),
-                                                roughDiscretization, maxPairHashSize);
+    ComparePWMCountsGiven roughCalc;
+    roughCalc = new ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize).discrete(roughDiscretization),
+                                          new CountingPWM(second.pwm, background, maxHashSize).discrete(roughDiscretization),
+                                          maxPairHashSize);
 
-    info = calc.jaccard(first.roughThreshold, second.roughThreshold,
-                        first.roughCount, second.roughCount);
+    Discretizer roughDiscretizer = new Discretizer(roughDiscretization);
+    Discretizer preciseDiscretizer = new Discretizer(preciseDiscretization);
+
+    info = roughCalc.jaccard( roughDiscretizer.upscale(first.roughThreshold),
+                              roughDiscretizer.upscale(second.roughThreshold),
+                              first.roughCount, second.roughCount);
     if (preciseRecalculationCutoff != null && info.similarity() > preciseRecalculationCutoff) {
-      calc = new ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize),
-                                                  new CountingPWM(second.pwm, background, maxHashSize),
-                                                  preciseDiscretization, maxPairHashSize);
-      info = calc.jaccard(first.preciseThreshold, second.preciseThreshold,
-                          first.preciseCount, second.preciseCount);
+      ComparePWMCountsGiven preciseCalc;
+      preciseCalc = new ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize).discrete(preciseDiscretization),
+                                              new CountingPWM(second.pwm, background, maxHashSize).discrete(preciseDiscretization),
+                                              maxPairHashSize);
+      info = preciseCalc.jaccard( preciseDiscretizer.upscale(first.preciseThreshold),
+                                  preciseDiscretizer.upscale(second.preciseThreshold),
+                                  first.preciseCount, second.preciseCount);
     }
     return info.distance();
   }

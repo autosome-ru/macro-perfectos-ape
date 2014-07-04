@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.calculations;
 
+import ru.autosome.perfectosape.Discretizer;
 import ru.autosome.perfectosape.MotifsAligned;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
@@ -43,7 +44,7 @@ public class ComparePWM {
   public final CountingPWM secondPWMCounting;
   public final CanFindPvalue firstPvalueCalculator;
   public final CanFindPvalue secondPvalueCalculator;
-  public final Double discretization;
+  public final Discretizer discretizer;
   public Integer maxPairHashSize;
 
   public ComparePWM(CountingPWM firstPWMCounting, CountingPWM secondPWMCounting,
@@ -54,13 +55,12 @@ public class ComparePWM {
     this.secondPWMCounting = secondPWMCounting.discrete(discretization);
     this.firstPvalueCalculator = firstPvalueCalculator;
     this.secondPvalueCalculator = secondPvalueCalculator;
-    this.discretization = discretization;
+    this.discretizer = new Discretizer(discretization);
     this.maxPairHashSize = maxPairHashSize;
   }
 
   private ComparePWMCountsGiven calculatorWithCountsGiven() {
-    return new ComparePWMCountsGiven(firstPWMCounting, secondPWMCounting,
-                                     discretization, maxPairHashSize);
+    return new ComparePWMCountsGiven(firstPWMCounting, secondPWMCounting, maxPairHashSize);
   }
 
   public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
@@ -71,7 +71,8 @@ public class ComparePWM {
                           .pvalueByThreshold(threshold_second)
                           .numberOfRecognizedWords(secondPWMCounting.background, secondPWMCounting.length());
 
-    return calculatorWithCountsGiven().jaccard(threshold_first, threshold_second,
+    return calculatorWithCountsGiven().jaccard(discretizer.upscale(threshold_first),
+                                               discretizer.upscale(threshold_second),
                                                firstCount, secondCount);
   }
 
@@ -83,7 +84,8 @@ public class ComparePWM {
     double secondCount = secondPvalueCalculator
                           .pvalueByThreshold(threshold_second)
                           .numberOfRecognizedWords(secondPWMCounting.background, secondPWMCounting.length());
-    return calculatorWithCountsGiven().jaccardAtPosition(threshold_first, threshold_second,
+    return calculatorWithCountsGiven().jaccardAtPosition(discretizer.upscale(threshold_first),
+                                                         discretizer.upscale(threshold_second),
                                                          firstCount, secondCount, position);
   }
 
@@ -100,5 +102,4 @@ public class ComparePWM {
     return jaccard(threshold_first, threshold_second);
   }
   */
-
 }
