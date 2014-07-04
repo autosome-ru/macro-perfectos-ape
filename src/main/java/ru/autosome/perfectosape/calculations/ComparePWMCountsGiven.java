@@ -49,32 +49,17 @@ public class ComparePWMCountsGiven {
 
   public ComparePWM.SimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
                                 double firstCount, double secondCount) throws HashOverflowException {
-    MotifsAligned<CountingPWM> bestAlignment = null;
     double bestSimilarity = -1;
-    double bestIntersection = 0;
+    ComparePWM.SimilarityInfo bestSimilarityInfo = null;
     for (Position position: relative_alignments()) {
-      MotifsAligned<CountingPWM> alignment = new MotifsAligned<CountingPWM>(firstPWMCounting, secondPWMCounting, position);
-      AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment);
-      calculator.maxPairHashSize = maxPairHashSize;
-      double intersection = calculator.count_in_intersection(upscaleThreshold(thresholdFirst),
-                                                             upscaleThreshold(thresholdSecond));
-
-      double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
-      double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
-      double similarity = AlignedPWMIntersection.SimilarityInfo.jaccardByCounts(firstCountRenormed,
-                                                                                secondCountRenormed,
-                                                                                intersection);
+      ComparePWM.SimilarityInfo similarityInfo = jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, position);
+      double similarity = similarityInfo.similarity();
       if (similarity > bestSimilarity) {
-        bestAlignment = alignment;
         bestSimilarity = similarity;
-        bestIntersection = intersection;
+        bestSimilarityInfo = similarityInfo;
       }
     }
-
-    double firstCountRenormedBest = firstCount * firstCountRenormMultiplier(bestAlignment);
-    double secondCountRenormedBest = secondCount * secondCountRenormMultiplier(bestAlignment);
-
-    return new ComparePWM.SimilarityInfo(bestAlignment, bestIntersection, firstCountRenormedBest, secondCountRenormedBest);
+    return bestSimilarityInfo;
   }
 
   public ComparePWM.SimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
@@ -83,7 +68,8 @@ public class ComparePWMCountsGiven {
     MotifsAligned<CountingPWM> alignment = new MotifsAligned<CountingPWM>(firstPWMCounting, secondPWMCounting, position);
     AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment);
     calculator.maxPairHashSize = maxPairHashSize;
-    double intersection = calculator.count_in_intersection(upscaleThreshold(thresholdFirst), upscaleThreshold(thresholdSecond));
+    double intersection = calculator.count_in_intersection(upscaleThreshold(thresholdFirst),
+                                                           upscaleThreshold(thresholdSecond));
 
     double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
     double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
