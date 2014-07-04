@@ -1,8 +1,8 @@
 package ru.autosome.perfectosape;
 
 public class MotifsAligned<T extends Alignable<T>> {
-  public final T firstMotif;
-  public final T secondMotif;
+  public final T firstMotifAligned;
+  public final T secondMotifAligned;
   public final Position relative_position;
 
   private int first_length, second_length;
@@ -24,8 +24,8 @@ public class MotifsAligned<T extends Alignable<T>> {
       first_tmp = first_tmp.leftAugment(-shift());
     }
 
-    firstMotif = first_tmp.rightAugment(length() - first_tmp.length());
-    secondMotif = second_tmp.rightAugment(length() - second_tmp.length());
+    firstMotifAligned = first_tmp.rightAugment(length() - first_tmp.length());
+    secondMotifAligned = second_tmp.rightAugment(length() - second_tmp.length());
   }
 
   public int shift() {

@@ -34,15 +34,15 @@ public class AlignedPWMIntersection {
   }
 
   private double[] counts_for_two_matrices(double threshold_first, double threshold_second) throws HashOverflowException {
-    if (alignment.firstMotif.background.equals(alignment.secondMotif.background)) {
-      final BackgroundModel background = alignment.firstMotif.background;
+    if (alignment.firstMotifAligned.background.equals(alignment.secondMotifAligned.background)) {
+      final BackgroundModel background = alignment.firstMotifAligned.background;
       double result = get_counts(threshold_first, threshold_second, background);
 
       return new double[] {result, result};
     } else {
       // unoptimized code (two-pass instead of one) but it's rare case
-      double first_result = get_counts(threshold_first, threshold_second, alignment.firstMotif.background);
-      double second_result = get_counts(threshold_first, threshold_second, alignment.secondMotif.background);
+      double first_result = get_counts(threshold_first, threshold_second, alignment.firstMotifAligned.background);
+      double second_result = get_counts(threshold_first, threshold_second, alignment.secondMotifAligned.background);
 
       return new double[] {first_result, second_result};
     }
@@ -72,10 +72,10 @@ public class AlignedPWMIntersection {
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = initialScoreHash();
 
     for (int pos = 0; pos < alignment.length(); ++pos) {
-      double[] firstColumn = alignment.firstMotif.pwm.matrix[pos];
-      double[] secondColumn = alignment.secondMotif.pwm.matrix[pos];
-      double leastSufficientScoreFirst = threshold_first - alignment.firstMotif.pwm.best_suffix(pos + 1);
-      double leastSufficientScoreSecond = threshold_second - alignment.secondMotif.pwm.best_suffix(pos + 1);
+      double[] firstColumn = alignment.firstMotifAligned.pwm.matrix[pos];
+      double[] secondColumn = alignment.secondMotifAligned.pwm.matrix[pos];
+      double leastSufficientScoreFirst = threshold_first - alignment.firstMotifAligned.pwm.best_suffix(pos + 1);
+      double leastSufficientScoreSecond = threshold_second - alignment.secondMotifAligned.pwm.best_suffix(pos + 1);
 
       if (background.is_wordwise()) {
       scores = recalc_score_hash_wordwise(scores,
