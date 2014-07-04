@@ -13,7 +13,7 @@ import ru.autosome.perfectosape.motifModels.PWM;
 public class AlignedPWMIntersection {
   public final BackgroundModel firstBackground;
   public final BackgroundModel secondBackground;
-  public final PWMAligned alignment;
+  public final PWMAligned<PWM> alignment;
   public Double maxPairHashSize;
 
   public AlignedPWMIntersection(PWMAligned alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {

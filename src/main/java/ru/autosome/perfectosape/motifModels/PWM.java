@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.motifModels;
 
+import ru.autosome.perfectosape.Alignable;
 import ru.autosome.perfectosape.ArrayExtensions;
 import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
@@ -15,7 +16,7 @@ import static java.lang.Math.ceil;
 public class PWM extends PM implements ScoringModel,Discretable<PWM>,
                                         ScoreStatistics<BackgroundModel>,
                                         ScoreDistribution<BackgroundModel>,
-                                        PositionWeightModel {
+                                        PositionWeightModel, Alignable<PWM> {
   private double[] cache_best_suffices;
   private double[] cache_worst_suffices;
 

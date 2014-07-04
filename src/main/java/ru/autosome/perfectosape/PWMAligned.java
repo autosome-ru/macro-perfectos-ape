@@ -2,20 +2,20 @@ package ru.autosome.perfectosape;
 
 import ru.autosome.perfectosape.motifModels.PWM;
 
-public class PWMAligned {
-  public final PWM first_pwm;
-  public final PWM second_pwm;
+public class PWMAligned<T extends Alignable<T>> {
+  public final T first_pwm;
+  public final T second_pwm;
   public final Position relative_position;
 
   private int first_length, second_length;
 
-  public PWMAligned(PWM first_pwm_unaligned, PWM second_pwm_unaligned, Position relative_position) {
+  public PWMAligned(T first_pwm_unaligned, T second_pwm_unaligned, Position relative_position) {
     first_length = first_pwm_unaligned.length();
     second_length = second_pwm_unaligned.length();
     this.relative_position = relative_position;
 
-    PWM first_tmp = first_pwm_unaligned;
-    PWM second_tmp = second_pwm_unaligned;
+    T first_tmp = first_pwm_unaligned;
+    T second_tmp = second_pwm_unaligned;
     if (isReverseComplement()) {
       second_tmp = second_tmp.reverseComplement();
     }
