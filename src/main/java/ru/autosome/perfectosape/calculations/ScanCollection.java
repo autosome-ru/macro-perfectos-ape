@@ -84,13 +84,14 @@ public class ScanCollection {
 
     double roughQueryThreshold = queryThreshold(roughDiscretizer);
     double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
-
+    CountingPWM queryCounting = new CountingPWM(queryPWM, queryBackground, maxHashSize);
 
     for (ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
       ComparePWM.SimilarityInfo info;
       boolean precise = false;
-      ComparePWM roughCalculation = new ComparePWM(new CountingPWM(queryPWM, queryBackground, maxHashSize),
-                                                   new CountingPWM(knownMotifEvaluator.pwm, collectionBackground, maxHashSize),
+      CountingPWM collectionMotifCounting = new CountingPWM(knownMotifEvaluator.pwm, collectionBackground, maxHashSize);
+
+      ComparePWM roughCalculation = new ComparePWM(queryCounting, collectionMotifCounting,
                                                    roughQueryPvalueEvaluator,
                                                    knownMotifEvaluator.roughPvalueCalculator,
                                                    roughDiscretizer, maxPairHashSize);
@@ -104,8 +105,7 @@ public class ScanCollection {
       if (preciseRecalculationCutoff != null &&
          info.similarity() >= preciseRecalculationCutoff &&
          knownMotifEvaluator.preciseThresholdCalculator != null) {
-        ComparePWM preciseCalculation = new ComparePWM(new CountingPWM(queryPWM, queryBackground, maxHashSize),
-                                                       new CountingPWM(knownMotifEvaluator.pwm, collectionBackground, maxHashSize),
+        ComparePWM preciseCalculation = new ComparePWM(queryCounting, collectionMotifCounting,
                                                        preciseQueryPvalueEvaluator,
                                                        knownMotifEvaluator.precisePvalueCalculator,
                                                        preciseDiscretizer,

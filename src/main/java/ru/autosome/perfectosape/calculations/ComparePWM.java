@@ -44,49 +44,52 @@ public class ComparePWM {
   private final CountingPWM secondPWMCounting;
   private final CanFindPvalue firstPvalueCalculator;
   private final CanFindPvalue secondPvalueCalculator;
-  private final Discretizer discretizer;
   private final Integer maxPairHashSize;
+  private final Discretizer discretizer;
 
   public ComparePWM(CountingPWM firstPWMCounting, CountingPWM secondPWMCounting,
                     CanFindPvalue firstPvalueCalculator,
                     CanFindPvalue secondPvalueCalculator,
-                    Discretizer discretizer, Integer maxPairHashSize) {
-    this.firstPWMCounting = firstPWMCounting.discrete(discretizer);
-    this.secondPWMCounting = secondPWMCounting.discrete(discretizer);
+                    Discretizer discretizer,
+                    Integer maxPairHashSize) {
+    this.firstPWMCounting = firstPWMCounting;
+    this.secondPWMCounting = secondPWMCounting;
     this.firstPvalueCalculator = firstPvalueCalculator;
     this.secondPvalueCalculator = secondPvalueCalculator;
-    this.discretizer = discretizer;
     this.maxPairHashSize = maxPairHashSize;
+    this.discretizer = discretizer;
   }
 
   private ComparePWMCountsGiven calculatorWithCountsGiven() {
-    return new ComparePWMCountsGiven(firstPWMCounting, secondPWMCounting, maxPairHashSize);
+    return new ComparePWMCountsGiven(firstPWMCounting.discrete(discretizer),
+                                     secondPWMCounting.discrete(discretizer),
+                                     maxPairHashSize);
+  }
+
+  double firstCount(double thresholdFirst) throws HashOverflowException {
+    return firstPvalueCalculator
+            .pvalueByThreshold(thresholdFirst)
+            .numberOfRecognizedWords(firstPWMCounting.background, firstPWMCounting.length());
+  }
+
+  double secondCount(double thresholdSecond) throws HashOverflowException {
+    return secondPvalueCalculator
+            .pvalueByThreshold(thresholdSecond)
+            .numberOfRecognizedWords(secondPWMCounting.background, secondPWMCounting.length());
   }
 
   public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
-    double firstCount = firstPvalueCalculator
-                         .pvalueByThreshold(threshold_first)
-                         .numberOfRecognizedWords(firstPWMCounting.background, firstPWMCounting.length());
-    double secondCount = secondPvalueCalculator
-                          .pvalueByThreshold(threshold_second)
-                          .numberOfRecognizedWords(secondPWMCounting.background, secondPWMCounting.length());
-
     return calculatorWithCountsGiven().jaccard(discretizer.upscale(threshold_first),
                                                discretizer.upscale(threshold_second),
-                                               firstCount, secondCount);
+                                               firstCount(threshold_first), secondCount(threshold_second));
   }
 
   public SimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
                                           Position position) throws HashOverflowException {
-    double firstCount = firstPvalueCalculator
-                         .pvalueByThreshold(threshold_first)
-                         .numberOfRecognizedWords(firstPWMCounting.background, firstPWMCounting.length());
-    double secondCount = secondPvalueCalculator
-                          .pvalueByThreshold(threshold_second)
-                          .numberOfRecognizedWords(secondPWMCounting.background, secondPWMCounting.length());
     return calculatorWithCountsGiven().jaccardAtPosition(discretizer.upscale(threshold_first),
                                                          discretizer.upscale(threshold_second),
-                                                         firstCount, secondCount, position);
+                                                         firstCount(threshold_first), secondCount(threshold_second),
+                                                         position);
   }
 
   /*

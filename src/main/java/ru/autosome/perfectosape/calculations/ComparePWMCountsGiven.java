@@ -56,8 +56,7 @@ public class ComparePWMCountsGiven {
                                                      double firstCount, double secondCount,
                                                      Position position) throws HashOverflowException {
     MotifsAligned<CountingPWM> alignment = new MotifsAligned<CountingPWM>(firstPWMCounting, secondPWMCounting, position);
-    AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment);
-    calculator.maxPairHashSize = maxPairHashSize;
+    AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment, maxPairHashSize);
     double intersection = calculator.count_in_intersection(thresholdFirst, thresholdSecond);
 
     double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);

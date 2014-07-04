@@ -13,14 +13,16 @@ import ru.autosome.perfectosape.motifModels.PWM;
 
 public class AlignedPWMIntersection {
   private final MotifsAligned<CountingPWM> alignment;
-  public Integer maxPairHashSize;
+  private final Integer maxPairHashSize;
 
-  public AlignedPWMIntersection(MotifsAligned<CountingPWM> alignment) {
+  public AlignedPWMIntersection(MotifsAligned<CountingPWM> alignment, Integer maxPairHashSize) {
     this.alignment = alignment;
+    this.maxPairHashSize = maxPairHashSize;
   }
 
-  public AlignedPWMIntersection(CountingPWM firstPWMCounting, CountingPWM secondPWMCounting, Position relativePosition) {
+  public AlignedPWMIntersection(CountingPWM firstPWMCounting, CountingPWM secondPWMCounting, Position relativePosition, Integer maxPairHashSize) {
     this.alignment = new MotifsAligned<CountingPWM>(firstPWMCounting, secondPWMCounting, relativePosition);
+    this.maxPairHashSize = maxPairHashSize;
   }
 
   public double count_in_intersection(double first_threshold, double second_threshold) throws HashOverflowException {
