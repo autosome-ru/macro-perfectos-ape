@@ -13,11 +13,9 @@ public class EvaluateSimilarity {
     PWM firstPWM = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
     PWM secondPWM = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/SP1_f1.pwm"));
     try {
-      CountingPWM firstPWMCounting = new CountingPWM(firstPWM.discrete(10.0), new WordwiseBackground(), null);
-      CountingPWM secondPWMCounting = new CountingPWM(secondPWM.discrete(10.0), new WordwiseBackground(), null);
-//      ComparePWM calculation = new ComparePWM(firstPWMCounting, secondPWMCounting);
-      ComparePWM calculation = new ComparePWM(new CountingPWM(firstPWM, new WordwiseBackground(), null),
-                                              new CountingPWM(secondPWM, new WordwiseBackground(), null),
+      CountingPWM firstPWMCounting = new CountingPWM(firstPWM.discrete(null), new WordwiseBackground(), null);
+      CountingPWM secondPWMCounting = new CountingPWM(secondPWM.discrete(null), new WordwiseBackground(), null);
+      ComparePWM calculation = new ComparePWM(firstPWMCounting, secondPWMCounting,
                                               new FindPvalueAPE< PWM, BackgroundModel>(firstPWM, new WordwiseBackground(), 10.0, null),
                                               new FindPvalueAPE< PWM, BackgroundModel>(secondPWM, new WordwiseBackground(), 10.0, null), 10.0, null);
       ComparePWM.SimilarityInfo similarityInfo = calculation.jaccard(3, 3);
