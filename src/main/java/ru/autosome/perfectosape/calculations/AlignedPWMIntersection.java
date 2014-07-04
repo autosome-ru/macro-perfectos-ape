@@ -7,25 +7,20 @@ import gnu.trove.map.hash.TDoubleObjectHashMap;
 import ru.autosome.perfectosape.MotifsAligned;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingPWM;
 import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 public class AlignedPWMIntersection {
-  public final BackgroundModel firstBackground;
-  public final BackgroundModel secondBackground;
-  public final MotifsAligned<PWM> alignment;
-  public Double maxPairHashSize;
+  public final MotifsAligned<CountingPWM> alignment;
+  public Integer maxPairHashSize;
 
-  public AlignedPWMIntersection(MotifsAligned alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {
-    this.firstBackground = firstBackground;
-    this.secondBackground = secondBackground;
+  public AlignedPWMIntersection(MotifsAligned<CountingPWM> alignment) {
     this.alignment = alignment;
   }
 
-  public AlignedPWMIntersection(PWM firstPWM, PWM secondPWM, BackgroundModel firstBackground, BackgroundModel secondBackground, Position relativePosition) {
-    this.firstBackground = firstBackground;
-    this.secondBackground = secondBackground;
-    this.alignment = new MotifsAligned(firstPWM, secondPWM, relativePosition);
+  public AlignedPWMIntersection(CountingPWM firstPWMCounting, CountingPWM secondPWMCounting, Position relativePosition) {
+    this.alignment = new MotifsAligned<CountingPWM>(firstPWMCounting, secondPWMCounting, relativePosition);
   }
 
   public double count_in_intersection(double first_threshold, double second_threshold) throws HashOverflowException {
@@ -39,15 +34,15 @@ public class AlignedPWMIntersection {
   }
 
   private double[] counts_for_two_matrices(double threshold_first, double threshold_second) throws HashOverflowException {
-    if (firstBackground.equals(secondBackground)) {
-      final BackgroundModel background = firstBackground;
+    if (alignment.firstMotif.background.equals(alignment.secondMotif.background)) {
+      final BackgroundModel background = alignment.firstMotif.background;
       double result = get_counts(threshold_first, threshold_second, background);
 
       return new double[] {result, result};
     } else {
       // unoptimized code (two-pass instead of one) but it's rare case
-      double first_result = get_counts(threshold_first, threshold_second, firstBackground);
-      double second_result = get_counts(threshold_first, threshold_second, secondBackground);
+      double first_result = get_counts(threshold_first, threshold_second, alignment.firstMotif.background);
+      double second_result = get_counts(threshold_first, threshold_second, alignment.secondMotif.background);
 
       return new double[] {first_result, second_result};
     }
@@ -77,10 +72,10 @@ public class AlignedPWMIntersection {
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = initialScoreHash();
 
     for (int pos = 0; pos < alignment.length(); ++pos) {
-      double[] firstColumn = alignment.firstMotif.matrix[pos];
-      double[] secondColumn = alignment.secondMotif.matrix[pos];
-      double leastSufficientScoreFirst = threshold_first - alignment.firstMotif.best_suffix(pos + 1);
-      double leastSufficientScoreSecond = threshold_second - alignment.secondMotif.best_suffix(pos + 1);
+      double[] firstColumn = alignment.firstMotif.pwm.matrix[pos];
+      double[] secondColumn = alignment.secondMotif.pwm.matrix[pos];
+      double leastSufficientScoreFirst = threshold_first - alignment.firstMotif.pwm.best_suffix(pos + 1);
+      double leastSufficientScoreSecond = threshold_second - alignment.secondMotif.pwm.best_suffix(pos + 1);
 
       if (background.is_wordwise()) {
       scores = recalc_score_hash_wordwise(scores,

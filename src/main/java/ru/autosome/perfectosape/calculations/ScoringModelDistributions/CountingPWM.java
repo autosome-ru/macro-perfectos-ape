@@ -3,6 +3,7 @@ package ru.autosome.perfectosape.calculations.ScoringModelDistributions;
 import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
+import ru.autosome.perfectosape.Alignable;
 import ru.autosome.perfectosape.ScoreDistributionTop;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
@@ -11,17 +12,34 @@ import ru.autosome.perfectosape.calculations.findThreshold.CanFindThresholdAppro
 import ru.autosome.perfectosape.calculations.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.perfectosape.motifModels.PWM;
 
-public class CountingPWM extends ScoringModelDistibutions {
+public class CountingPWM extends ScoringModelDistibutions implements Alignable<CountingPWM> {
 
-  private Integer maxHashSize;
+  final public Integer maxHashSize;
 
-  final PWM pwm;
-  final BackgroundModel background;
+  final public PWM pwm;
+  final public BackgroundModel background;
 
   public CountingPWM(PWM pwm, BackgroundModel background, Integer maxHashSize) {
     this.pwm = pwm;
     this.background = background;
     this.maxHashSize = maxHashSize;
+  }
+
+  public int length() {
+    return pwm.length();
+  }
+  public CountingPWM reverseComplement() {
+    return new CountingPWM(pwm.reverseComplement(), background, maxHashSize);
+  }
+  public CountingPWM leftAugment(int shift) {
+    return new CountingPWM(pwm.leftAugment(shift), background, maxHashSize);
+  }
+  public CountingPWM rightAugment(int shift) {
+    return new CountingPWM(pwm.rightAugment(shift), background, maxHashSize);
+  }
+
+  public CountingPWM discrete(Double rate) {
+    return new CountingPWM(pwm.discrete(rate), background, maxHashSize);
   }
 
   @Override

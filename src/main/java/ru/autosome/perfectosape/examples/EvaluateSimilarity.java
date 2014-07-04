@@ -16,7 +16,8 @@ public class EvaluateSimilarity {
       CountingPWM firstPWMCounting = new CountingPWM(firstPWM.discrete(10.0), new WordwiseBackground(), null);
       CountingPWM secondPWMCounting = new CountingPWM(secondPWM.discrete(10.0), new WordwiseBackground(), null);
 //      ComparePWM calculation = new ComparePWM(firstPWMCounting, secondPWMCounting);
-      ComparePWM calculation = new ComparePWM(firstPWM, secondPWM, new WordwiseBackground(), new WordwiseBackground(),
+      ComparePWM calculation = new ComparePWM(new CountingPWM(firstPWM, new WordwiseBackground(), null),
+                                              new CountingPWM(secondPWM, new WordwiseBackground(), null),
                                               new FindPvalueAPE< PWM, BackgroundModel>(firstPWM, new WordwiseBackground(), 10.0, null),
                                               new FindPvalueAPE< PWM, BackgroundModel>(secondPWM, new WordwiseBackground(), 10.0, null), 10.0, null);
       ComparePWM.SimilarityInfo similarityInfo = calculation.jaccard(3, 3);

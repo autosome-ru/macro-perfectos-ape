@@ -3,6 +3,7 @@ package ru.autosome.perfectosape.calculations;
 import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.MotifsAligned;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingPWM;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
@@ -87,8 +88,8 @@ public class ScanCollection {
     for (ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
       ComparePWM.SimilarityInfo info;
       boolean precise = false;
-      ComparePWM roughCalculation = new ComparePWM(queryPWM, knownMotifEvaluator.pwm,
-                                                   queryBackground, collectionBackground,
+      ComparePWM roughCalculation = new ComparePWM(new CountingPWM(queryPWM, queryBackground, maxHashSize),
+                                                   new CountingPWM(knownMotifEvaluator.pwm, collectionBackground, maxHashSize),
                                                    roughQueryPvalueEvaluator,
                                                    knownMotifEvaluator.roughPvalueCalculator,
                                                    roughDiscretization, maxPairHashSize);
@@ -102,8 +103,8 @@ public class ScanCollection {
       if (preciseRecalculationCutoff != null &&
          info.similarity() >= preciseRecalculationCutoff &&
          knownMotifEvaluator.preciseThresholdCalculator != null) {
-        ComparePWM preciseCalculation = new ComparePWM(queryPWM, knownMotifEvaluator.pwm,
-                                                     queryBackground, collectionBackground,
+        ComparePWM preciseCalculation = new ComparePWM(new CountingPWM(queryPWM, queryBackground, maxHashSize),
+                                                       new CountingPWM(knownMotifEvaluator.pwm, collectionBackground, maxHashSize),
                                                      preciseQueryPvalueEvaluator,
                                                      knownMotifEvaluator.precisePvalueCalculator,
                                                      preciseDiscretization, maxPairHashSize);

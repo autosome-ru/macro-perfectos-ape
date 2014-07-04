@@ -6,6 +6,7 @@ import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.ComparePWM;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingPWM;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
 import ru.autosome.perfectosape.importers.MotifCollectionImporter;
@@ -181,15 +182,15 @@ public class CollectDistanceMatrix {
     ComparePWM.ComparePWMCountsGiven calc;
     ComparePWM.SimilarityInfo info;
 
-    calc = new ComparePWM.ComparePWMCountsGiven(first.pwm, second.pwm,
-                                                background, background,
+    calc = new ComparePWM.ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize),
+                                                new CountingPWM(second.pwm, background, maxHashSize),
                                                 roughDiscretization, maxPairHashSize);
 
     info = calc.jaccard(first.roughThreshold, second.roughThreshold,
                         first.roughCount, second.roughCount);
     if (preciseRecalculationCutoff != null && info.similarity() > preciseRecalculationCutoff) {
-      calc = new ComparePWM.ComparePWMCountsGiven(first.pwm, second.pwm,
-                                                  background, background,
+      calc = new ComparePWM.ComparePWMCountsGiven(new CountingPWM(first.pwm, background, maxHashSize),
+                                                  new CountingPWM(second.pwm, background, maxHashSize),
                                                   preciseDiscretization, maxPairHashSize);
       info = calc.jaccard(first.preciseThreshold, second.preciseThreshold,
                           first.preciseCount, second.preciseCount);

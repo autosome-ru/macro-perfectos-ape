@@ -6,6 +6,7 @@ import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
 import ru.autosome.perfectosape.calculations.ComparePWM;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
+import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingPWM;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
@@ -155,8 +156,8 @@ public class EvalSimilarity {
   }
 
   ComparePWM calculator() {
-    ComparePWM result = new ComparePWM(firstPWM, secondPWM,
-                                       firstBackground, secondBackground,
+    ComparePWM result = new ComparePWM(new CountingPWM(firstPWM, firstBackground,maxHashSize),
+                                       new CountingPWM(secondPWM, secondBackground, maxHashSize),
                                        new FindPvalueAPE(firstPWM, firstBackground, discretization, maxHashSize),
                                        new FindPvalueAPE(secondPWM, secondBackground, discretization, maxHashSize),
                                        discretization, maxPairHashSize);
