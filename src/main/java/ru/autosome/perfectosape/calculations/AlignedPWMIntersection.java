@@ -7,6 +7,7 @@ import gnu.trove.map.hash.TDoubleObjectHashMap;
 import ru.autosome.perfectosape.PairAligned;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
+import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.motifModels.PWM;
 
@@ -243,11 +244,11 @@ public class AlignedPWMIntersection {
       }
     }
 
-    public Double realPvalueFirst(BackgroundModel background, int alignmentLength) {
+    public Double realPvalueFirst(GeneralizedBackgroundModel background, int alignmentLength) {
       double vocabularyVolume = Math.pow(background.volume(), alignmentLength);
       return recognizedByFirst / vocabularyVolume;
     }
-    public Double realPvalueSecond(BackgroundModel background, int alignmentLength) {
+    public Double realPvalueSecond(GeneralizedBackgroundModel background, int alignmentLength) {
       double vocabularyVolume = Math.pow(background.volume(), alignmentLength);
       return recognizedBySecond / vocabularyVolume;
     }

@@ -4,6 +4,7 @@ import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.CompareModels;
 import ru.autosome.perfectosape.calculations.ComparePWM;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
@@ -187,7 +188,7 @@ public class EvalSimilarity {
     return infos;
   }
 
-  OutputInformation report_table(ComparePWM.SimilarityInfo info) throws HashOverflowException {
+  OutputInformation report_table(CompareModels.SimilarityInfo info) throws HashOverflowException {
     OutputInformation infos = report_table_layout();
     infos.add_resulting_value("S", "similarity", info.similarity());
     infos.add_resulting_value("D", "distance (1-similarity)", info.distance());
@@ -235,7 +236,7 @@ public class EvalSimilarity {
   }
 
   OutputInformation report_table() throws Exception {
-    ComparePWM.SimilarityInfo results = calculator().jaccard(thresholdFirst(), thresholdSecond());
+    CompareModels.SimilarityInfo results = calculator().jaccard(thresholdFirst(), thresholdSecond());
     return report_table(results);
   }
 

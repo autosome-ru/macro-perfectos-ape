@@ -4,6 +4,7 @@ import ru.autosome.perfectosape.BoundaryType;
 import ru.autosome.perfectosape.backgroundModels.Background;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.backgroundModels.WordwiseBackground;
+import ru.autosome.perfectosape.calculations.CompareModels;
 import ru.autosome.perfectosape.calculations.ComparePWM;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
@@ -179,7 +180,7 @@ public class CollectDistanceMatrix {
 
   double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) throws HashOverflowException {
     ComparePWM.ComparePWMCountsGiven calc;
-    ComparePWM.SimilarityInfo info;
+    CompareModels.SimilarityInfo info;
 
     calc = new ComparePWM.ComparePWMCountsGiven(first.pwm, second.pwm,
                                                 background, background,

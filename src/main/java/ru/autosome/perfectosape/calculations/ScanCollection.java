@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ScanCollection {
 
-  static public class SimilarityInfo extends ComparePWM.SimilarityInfo {
+  static public class SimilarityInfo extends CompareModels.SimilarityInfo {
     public PWM collectionPWM;
     public boolean precise;
 
@@ -23,7 +23,7 @@ public class ScanCollection {
       this.collectionPWM = collectionPWM;
       this.precise = precise;
     }
-    public SimilarityInfo(PWM collectionPWM, ComparePWM.SimilarityInfo similarityInfo, boolean precise) {
+    public SimilarityInfo(PWM collectionPWM, CompareModels.SimilarityInfo similarityInfo, boolean precise) {
       super(similarityInfo.alignment,
             similarityInfo.recognizedByBoth,
             similarityInfo.recognizedByFirst,
@@ -85,7 +85,7 @@ public class ScanCollection {
 
 
     for (ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
-      ComparePWM.SimilarityInfo info;
+      CompareModels.SimilarityInfo info;
       boolean precise = false;
       ComparePWM roughCalculation = new ComparePWM(queryPWM, knownMotifEvaluator.pwm,
                                                    queryBackground, collectionBackground,

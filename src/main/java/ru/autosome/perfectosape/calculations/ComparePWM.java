@@ -10,37 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ComparePWM {
-  static public class SimilarityInfo extends AlignedPWMIntersection.SimilarityInfo {
-    public final PairAligned alignment;
-    public SimilarityInfo(PairAligned alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond) {
-      super(recognizedByBoth, recognizedByFirst, recognizedBySecond);
-      this.alignment = alignment;
-    }
-    public SimilarityInfo(PairAligned alignment, AlignedPWMIntersection.SimilarityInfo similarityInfo) {
-      super(similarityInfo.recognizedByBoth,
-            similarityInfo.recognizedByFirst,
-            similarityInfo.recognizedBySecond);
-      this.alignment = alignment;
-    }
-    public Double realPvalueFirst(BackgroundModel background) {
-      return realPvalueFirst(background, alignment.length());
-    }
-    public Double realPvalueSecond(BackgroundModel background) {
-      return realPvalueSecond(background, alignment.length());
-    }
-
-    public int shift() {
-      return alignment.shift();
-    }
-
-    public String orientation() {
-      return alignment.orientation();
-    }
-
-    public int overlap() {
-      return alignment.overlapSize();
-    }
-  }
 
   public final PWM firstPWM;
   public final PWM secondPWM;
@@ -86,13 +55,13 @@ public class ComparePWM {
   }
 
 
-  public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
+  public CompareModels.SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
     return calculatorWithCountsGiven().jaccard(threshold_first, threshold_second,
                                                firstCount(threshold_first),
                                                secondCount(threshold_second));
   }
 
-  public SimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
+  public CompareModels.SimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
                                           Position position) throws HashOverflowException {
 
     return calculatorWithCountsGiven().jaccardAtPosition(threshold_first, threshold_second,
@@ -159,12 +128,12 @@ public class ComparePWM {
       return Math.pow(secondBackground.volume(), alignment.length() - secondPWM.length());
     }
 
-    public SimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
+    public CompareModels.SimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
                                   double firstCount, double secondCount) throws HashOverflowException {
       double bestSimilarity = -1;
-      SimilarityInfo bestSimilarityInfo = null;
+      CompareModels.SimilarityInfo bestSimilarityInfo = null;
       for (Position position: relative_alignments()) {
-        SimilarityInfo similarityInfo;
+        CompareModels.SimilarityInfo similarityInfo;
         similarityInfo = jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, position);
         double similarity = similarityInfo.similarity();
         if (similarity > bestSimilarity) {
@@ -175,7 +144,7 @@ public class ComparePWM {
       return bestSimilarityInfo;
     }
 
-    public SimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
+    public CompareModels.SimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
                                                        double firstCount, double secondCount,
                                                        Position position) throws HashOverflowException {
 
@@ -186,7 +155,7 @@ public class ComparePWM {
       double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
       double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
 
-      return new SimilarityInfo(alignment, intersection, firstCountRenormed, secondCountRenormed);
+      return new CompareModels.SimilarityInfo(alignment, intersection, firstCountRenormed, secondCountRenormed);
     }
 
   }
