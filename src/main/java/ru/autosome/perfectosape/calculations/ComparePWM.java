@@ -73,28 +73,32 @@ public class ComparePWM {
                                      discretization, maxPairHashSize);
   }
 
-  public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
-    double firstCount = firstPvalueCalculator
-                         .pvalueByThreshold(threshold_first)
-                         .numberOfRecognizedWords(firstBackground, firstPWM.length());
-    double secondCount = secondPvalueCalculator
-                          .pvalueByThreshold(threshold_second)
-                          .numberOfRecognizedWords(secondBackground, secondPWM.length());
+  double firstCount(double threshold_first) throws HashOverflowException {
+    return firstPvalueCalculator
+           .pvalueByThreshold(threshold_first)
+           .numberOfRecognizedWords(firstBackground, firstPWM.length());
+  }
 
+  double secondCount(double threshold_second) throws HashOverflowException {
+    return secondPvalueCalculator
+            .pvalueByThreshold(threshold_second)
+            .numberOfRecognizedWords(secondBackground, secondPWM.length());
+  }
+
+
+  public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
     return calculatorWithCountsGiven().jaccard(threshold_first, threshold_second,
-                                               firstCount, secondCount);
+                                               firstCount(threshold_first),
+                                               secondCount(threshold_second));
   }
 
   public SimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
                                           Position position) throws HashOverflowException {
-    double firstCount = firstPvalueCalculator
-                         .pvalueByThreshold(threshold_first)
-                         .numberOfRecognizedWords(firstBackground, firstPWM.length());
-    double secondCount = secondPvalueCalculator
-                          .pvalueByThreshold(threshold_second)
-                          .numberOfRecognizedWords(secondBackground, secondPWM.length());
+
     return calculatorWithCountsGiven().jaccardAtPosition(threshold_first, threshold_second,
-                                                         firstCount, secondCount, position);
+                                                         firstCount(threshold_first),
+                                                         secondCount(threshold_second),
+                                                         position);
   }
 
   /*
