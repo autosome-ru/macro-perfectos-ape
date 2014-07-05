@@ -2,14 +2,14 @@ package ru.autosome.perfectosape;
 
 import ru.autosome.perfectosape.motifModels.Alignable;
 
-public class PWMAligned<ModelType extends Alignable<ModelType>> {
+public class PairAligned<ModelType extends Alignable<ModelType>> {
   public final ModelType firstModelAligned;
   public final ModelType secondModelAligned;
   public final Position relative_position;
 
   private int first_length, second_length;
 
-  public PWMAligned(ModelType first_model_unaligned, ModelType second_model_unaligned, Position relative_position) {
+  public PairAligned(ModelType first_model_unaligned, ModelType second_model_unaligned, Position relative_position) {
     first_length = first_model_unaligned.length();
     second_length = second_model_unaligned.length();
     this.relative_position = relative_position;

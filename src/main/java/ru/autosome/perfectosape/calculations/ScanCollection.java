@@ -1,7 +1,7 @@
 package ru.autosome.perfectosape.calculations;
 
 import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.PWMAligned;
+import ru.autosome.perfectosape.PairAligned;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
@@ -18,7 +18,7 @@ public class ScanCollection {
     public PWM collectionPWM;
     public boolean precise;
 
-    public SimilarityInfo(PWM collectionPWM, PWMAligned alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond, boolean precise) {
+    public SimilarityInfo(PWM collectionPWM, PairAligned alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond, boolean precise) {
       super(alignment, recognizedByBoth, recognizedByFirst, recognizedBySecond);
       this.collectionPWM = collectionPWM;
       this.precise = precise;
