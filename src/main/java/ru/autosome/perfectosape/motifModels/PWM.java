@@ -41,8 +41,8 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     double sum = 0.0;
     for (int pos_index = 0; pos_index < length(); ++pos_index) {
       char letter = word.charAt(pos_index);
-      Integer letter_index = indexByLetter.get(letter);
-      if (letter_index != null) {
+      if (indexByLetter.containsKey(letter)) {
+        int letter_index = indexByLetter.get(letter);
         sum += matrix[pos_index][letter_index];
       } else if (letter == 'N') {
         sum += background.mean_value(matrix[pos_index]);
