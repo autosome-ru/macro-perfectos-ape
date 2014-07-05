@@ -11,7 +11,7 @@ import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingP
 import ru.autosome.perfectosape.formatters.ResultInfo;
 import ru.autosome.perfectosape.motifModels.PWM;
 
-public class AlignedPWMIntersection {
+public class AlignedPWMIntersection implements IntersectionCount {
   private final MotifsAligned<CountingPWM> alignment;
   private final Integer maxPairHashSize;
 

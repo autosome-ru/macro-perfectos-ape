@@ -55,9 +55,8 @@ public class ComparePWMCountsGiven {
   public ComparePWM.SimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
                                                      double firstCount, double secondCount,
                                                      Position position) throws HashOverflowException {
-    MotifsAligned<CountingPWM> alignment = new MotifsAligned<CountingPWM>(firstPWMCounting, secondPWMCounting, position);
-    AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment, maxPairHashSize);
-    double intersection = calculator.count_in_intersection(thresholdFirst, thresholdSecond);
+    MotifsAligned alignment = alignment(position);
+    double intersection = calculator(alignment).count_in_intersection(thresholdFirst, thresholdSecond);
 
     double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
     double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
@@ -65,4 +64,10 @@ public class ComparePWMCountsGiven {
     return new ComparePWM.SimilarityInfo(alignment, intersection, firstCountRenormed, secondCountRenormed);
   }
 
+  IntersectionCount calculator(MotifsAligned alignment) {
+    return new AlignedPWMIntersection(alignment, maxPairHashSize);
+  }
+  MotifsAligned alignment(Position position) {
+    return new MotifsAligned<CountingPWM>(firstPWMCounting, secondPWMCounting, position);
+  }
 }
