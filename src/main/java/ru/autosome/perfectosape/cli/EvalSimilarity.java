@@ -194,8 +194,8 @@ public class EvalSimilarity {
     infos.add_resulting_value("L", "length of the alignment", info.alignment.length());
     infos.add_resulting_value("SH", "shift of the 2nd PWM relative to the 1st", info.alignment.shift());
     infos.add_resulting_value("OR", "orientation of the 2nd PWM relative to the 1st", info.alignment.orientation());
-    infos.add_resulting_value("A1", "aligned 1st matrix", info.alignment.first_pwm_alignment());
-    infos.add_resulting_value("A2", "aligned 2nd matrix", info.alignment.second_pwm_alignment());
+    infos.add_resulting_value("A1", "aligned 1st matrix", info.alignment.first_model_alignment());
+    infos.add_resulting_value("A2", "aligned 2nd matrix", info.alignment.second_model_alignment());
     infos.add_resulting_value("W", "number of words recognized by both models (model = PWM + threshold)", info.recognizedByBoth );
     infos.add_resulting_value("W1", "number of words and recognized by the first model", info.recognizedByFirst );
     infos.add_resulting_value("P1", "P-value for the 1st matrix", info.realPvalueFirst(firstBackground));

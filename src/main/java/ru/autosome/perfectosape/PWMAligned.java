@@ -1,21 +1,21 @@
 package ru.autosome.perfectosape;
 
-import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.perfectosape.motifModels.Alignable;
 
-public class PWMAligned {
-  public final PWM first_pwm;
-  public final PWM second_pwm;
+public class PWMAligned<ModelType extends Alignable<ModelType>> {
+  public final ModelType firstModelAligned;
+  public final ModelType secondModelAligned;
   public final Position relative_position;
 
   private int first_length, second_length;
 
-  public PWMAligned(PWM first_pwm_unaligned, PWM second_pwm_unaligned, Position relative_position) {
-    first_length = first_pwm_unaligned.length();
-    second_length = second_pwm_unaligned.length();
+  public PWMAligned(ModelType first_model_unaligned, ModelType second_model_unaligned, Position relative_position) {
+    first_length = first_model_unaligned.length();
+    second_length = second_model_unaligned.length();
     this.relative_position = relative_position;
 
-    PWM first_tmp = first_pwm_unaligned;
-    PWM second_tmp = second_pwm_unaligned;
+    ModelType first_tmp = first_model_unaligned;
+    ModelType second_tmp = second_model_unaligned;
     if (isReverseComplement()) {
       second_tmp = second_tmp.reverseComplement();
     }
@@ -26,8 +26,8 @@ public class PWMAligned {
       first_tmp = first_tmp.leftAugment(-shift());
     }
 
-    first_pwm = first_tmp.rightAugment(length() - first_tmp.length());
-    second_pwm = second_tmp.rightAugment(length() - second_tmp.length());
+    firstModelAligned = first_tmp.rightAugment(length() - first_tmp.length());
+    secondModelAligned = second_tmp.rightAugment(length() - second_tmp.length());
   }
 
   public int shift() {
@@ -87,7 +87,7 @@ public class PWMAligned {
   }
 
 
-  public String first_pwm_alignment() {
+  public String first_model_alignment() {
     StringBuilder builder = new StringBuilder();
     for (int pos = 0; pos < length(); ++pos) {
       if (isFirstOverlapsPosition(pos)) {
@@ -99,7 +99,7 @@ public class PWMAligned {
     return builder.toString();
   }
 
-  public String second_pwm_alignment() {
+  public String second_model_alignment() {
     StringBuilder builder = new StringBuilder();
     for (int pos = 0; pos < length(); ++pos) {
       if (isSecondOverlapsPosition(pos)) {
@@ -117,6 +117,6 @@ public class PWMAligned {
 
   @Override
   public String toString() {
-    return first_pwm_alignment() + "\n" + second_pwm_alignment();
+    return first_model_alignment() + "\n" + second_model_alignment();
   }
 }

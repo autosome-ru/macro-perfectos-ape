@@ -15,7 +15,7 @@ import static java.lang.Math.ceil;
 public class PWM extends PM implements ScoringModel,Discretable<PWM>,
                                         ScoreStatistics<BackgroundModel>,
                                         ScoreDistribution<BackgroundModel>,
-                                        PositionWeightModel {
+                                        PositionWeightModel, Alignable<PWM> {
   private double[] cache_best_suffices;
   private double[] cache_worst_suffices;
 
@@ -119,6 +119,7 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     return new PWM(mat_result, name);
   }
 
+  @Override
   public PWM reverseComplement() {
     double[][] matrix_revcomp;
     matrix_revcomp = ArrayExtensions.reverse(matrix);
@@ -128,6 +129,7 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     return new PWM(matrix_revcomp, name);
   }
 
+  @Override
   public PWM leftAugment(int n) {
     double[][] aligned_matrix = new double[length() + n][];
     for(int i = 0; i < n; ++i) {
@@ -139,6 +141,7 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     return new PWM(aligned_matrix, name);
   }
 
+  @Override
   public PWM rightAugment(int n) {
     double[][] aligned_matrix = new double[length() + n][];
     for(int i = 0; i < length(); ++i) {

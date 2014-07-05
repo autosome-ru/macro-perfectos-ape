@@ -13,7 +13,7 @@ import ru.autosome.perfectosape.motifModels.PWM;
 public class AlignedPWMIntersection {
   public final BackgroundModel firstBackground;
   public final BackgroundModel secondBackground;
-  public final PWMAligned alignment;
+  public final PWMAligned<PWM> alignment;
   public Double maxPairHashSize;
 
   public AlignedPWMIntersection(PWMAligned alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {
@@ -77,10 +77,10 @@ public class AlignedPWMIntersection {
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = initialScoreHash();
 
     for (int pos = 0; pos < alignment.length(); ++pos) {
-      double[] firstColumn = alignment.first_pwm.matrix[pos];
-      double[] secondColumn = alignment.second_pwm.matrix[pos];
-      double leastSufficientScoreFirst = threshold_first - alignment.first_pwm.best_suffix(pos + 1);
-      double leastSufficientScoreSecond = threshold_second - alignment.second_pwm.best_suffix(pos + 1);
+      double[] firstColumn = alignment.firstModelAligned.matrix[pos];
+      double[] secondColumn = alignment.secondModelAligned.matrix[pos];
+      double leastSufficientScoreFirst = threshold_first - alignment.firstModelAligned.best_suffix(pos + 1);
+      double leastSufficientScoreSecond = threshold_second - alignment.secondModelAligned.best_suffix(pos + 1);
 
       if (background.is_wordwise()) {
       scores = recalc_score_hash_wordwise(scores,
