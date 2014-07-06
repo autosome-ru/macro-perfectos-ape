@@ -1,28 +1,28 @@
 package ru.autosome.macroape;
 
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.backgroundModel.mono.Background;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
+import ru.autosome.commons.backgroundModel.mono.Background;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.MotifCollectionImporter;
 import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.importer.PWMImporter;
-import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.macroape.calculation.generalized.ScanCollectionSimilarityInfo;
+import ru.autosome.macroape.calculation.generalized.ThresholdEvaluator;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static ru.autosome.macroape.calculation.mono.ScanCollection.ThresholdEvaluator;
 
 public class ScanCollection {
 
@@ -70,7 +70,7 @@ public class ScanCollection {
   File pathToCollectionOfPWMs;
   File thresholds_folder;
   PWM queryPWM;
-  List<ThresholdEvaluator> pwmCollection;
+  List<ThresholdEvaluator<PWM>> pwmCollection;
 
   private void initialize_defaults() {
     queryBackground = new WordwiseBackground();
@@ -121,11 +121,12 @@ public class ScanCollection {
     }
   }
 
-  private List<ThresholdEvaluator> load_collection_of_pwms() {
+  private List<ThresholdEvaluator<PWM>> load_collection_of_pwms() {
     PWMImporter pwmImporter = new PWMImporter(collectionBackground, dataModel, effectiveCount);
     MotifCollectionImporter<PWM> collectionImporter = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
-    List<ThresholdEvaluator> result = new ArrayList<ThresholdEvaluator>();
+    List<ThresholdEvaluator<PWM>> result;
+    result = new ArrayList<ThresholdEvaluator<PWM>>();
     for (PWM pwm: pwmList) {
       if (thresholds_folder == null) {
         result.add(new ThresholdEvaluator(pwm,
@@ -223,9 +224,9 @@ public class ScanCollection {
     infos.add_table_parameter_without_description("overlap", "overlap");
     infos.add_table_parameter_without_description("orientation", "orientation");
     if (preciseRecalculationCutoff != null) {
-      infos.add_table_parameter_without_description("precise mode", "precision_mode", new OutputInformation.Callback<ru.autosome.macroape.calculation.mono.ScanCollection.SimilarityInfo>(){
+      infos.add_table_parameter_without_description("precise mode", "precision_mode", new OutputInformation.Callback<ScanCollectionSimilarityInfo>(){
         @Override
-        public String run(ru.autosome.macroape.calculation.mono.ScanCollection.SimilarityInfo cell) {
+        public String run(ScanCollectionSimilarityInfo cell) {
           return cell.precise ? "*" : ".";
         }
       });
@@ -264,7 +265,7 @@ public class ScanCollection {
   }
 
   List<? extends ResultInfo> process() throws Exception {
-    List<ru.autosome.macroape.calculation.mono.ScanCollection.SimilarityInfo> infos;
+    List<ScanCollectionSimilarityInfo> infos;
     infos = calculator().similarityInfos();
     return infos;
   }
