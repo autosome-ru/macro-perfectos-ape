@@ -1,5 +1,6 @@
 package ru.autosome.perfectosape.motifModels;
 
+import ru.autosome.perfectosape.ArrayExtensions;
 import ru.autosome.perfectosape.Sequence;
 import ru.autosome.perfectosape.backgroundModels.AbstractBackgroundFactory;
 import ru.autosome.perfectosape.backgroundModels.DiBackgroundFactory;
@@ -18,7 +19,7 @@ public class DiPWM extends DiPM implements ScoringModel,
                                             Discretable<DiPWM>,
                                             ScoreStatistics<DiBackgroundModel>,
                                             ScoreDistribution<DiBackgroundModel>,
-                                            PositionWeightModel {
+                                            PositionWeightModel, Alignable<DiPWM> {
 
   private double[][] cache_best_suffices;
   private double[][] cache_worst_suffices;
@@ -202,5 +203,50 @@ public class DiPWM extends DiPM implements ScoringModel,
   @Override
   public ScoringModelDistibutions scoringModelDistibutions(DiBackgroundModel background, Integer maxHashSize) {
     return new CountingDiPWM(this, background, maxHashSize);
+  }
+
+  @Override
+  public DiPWM reverseComplement() {
+    double[][] matrix_revcomp = new double[matrix.length][];
+    for (int i = 0; i < matrix.length; ++i) {
+      matrix_revcomp[i] = new double[16];
+      for (int first_letter_index = 0; first_letter_index < 4; ++first_letter_index) {
+        for (int second_letter_index = 0; second_letter_index < 4; ++second_letter_index) {
+          matrix_revcomp[i][4*first_letter_index + second_letter_index] = matrix[matrix.length - 1 - i][4*second_letter_index + first_letter_index];
+        }
+      }
+    }
+
+    return new DiPWM(matrix_revcomp, name);
+  }
+
+  @Override
+  public DiPWM leftAugment(int n) {
+    double[][] aligned_matrix = new double[matrix.length + n][];
+    for(int i = 0; i < n; ++i) {
+      aligned_matrix[i] = new double[]{0,0,0,0,
+                                       0,0,0,0,
+                                       0,0,0,0,
+                                       0,0,0,0};
+    }
+    for(int i = 0; i < matrix.length; ++i) {
+      aligned_matrix[n + i] = matrix[i];
+    }
+    return new DiPWM(aligned_matrix, name);
+  }
+
+  @Override
+  public DiPWM rightAugment(int n) {
+    double[][] aligned_matrix = new double[matrix.length + n][];
+    for(int i = 0; i < matrix.length; ++i) {
+      aligned_matrix[i] = matrix[i];
+    }
+    for(int i = 0; i < n; ++i) {
+      aligned_matrix[matrix.length + i] = new double[]{0,0,0,0,
+                                                  0,0,0,0,
+                                                  0,0,0,0,
+                                                  0,0,0,0};
+    }
+    return new DiPWM(aligned_matrix, name);
   }
 }

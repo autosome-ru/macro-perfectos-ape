@@ -3,29 +3,29 @@ package ru.autosome.perfectosape.calculations;
 import ru.autosome.perfectosape.PairAligned;
 import ru.autosome.perfectosape.Position;
 import ru.autosome.perfectosape.backgroundModels.BackgroundModel;
-import ru.autosome.perfectosape.calculations.ScoringModelDistributions.CountingPWM;
+import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
 import ru.autosome.perfectosape.calculations.findThreshold.CanFindThreshold;
 import ru.autosome.perfectosape.calculations.findThreshold.FindThresholdAPE;
+import ru.autosome.perfectosape.motifModels.DiPWM;
 import ru.autosome.perfectosape.motifModels.PWM;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComparePWM {
-
-  public final PWM firstPWM;
-  public final PWM secondPWM;
-  public final BackgroundModel firstBackground;
-  public final BackgroundModel secondBackground;
+public class CompareDiPWM {
+  public final DiPWM firstPWM;
+  public final DiPWM secondPWM;
+  public final DiBackgroundModel firstBackground;
+  public final DiBackgroundModel secondBackground;
   public final CanFindPvalue firstPvalueCalculator;
   public final CanFindPvalue secondPvalueCalculator;
   public final Double discretization;
   public Integer maxPairHashSize;
 
-  public ComparePWM(PWM firstPWM, PWM secondPWM,
-                    BackgroundModel firstBackground,
-                    BackgroundModel secondBackground,
+  public CompareDiPWM(DiPWM firstPWM, DiPWM secondPWM,
+                    DiBackgroundModel firstBackground,
+                    DiBackgroundModel secondBackground,
                     CanFindPvalue firstPvalueCalculator,
                     CanFindPvalue secondPvalueCalculator,
                     Double discretization, Integer maxPairHashSize) {
@@ -39,16 +39,16 @@ public class ComparePWM {
     this.maxPairHashSize = maxPairHashSize;
   }
 
-  private ComparePWMCountsGiven calculatorWithCountsGiven() {
-    return new ComparePWMCountsGiven(firstPWM, secondPWM,
+  private CompareDiPWMCountsGiven calculatorWithCountsGiven() {
+    return new CompareDiPWMCountsGiven(firstPWM, secondPWM,
                                      firstBackground, secondBackground,
                                      discretization, maxPairHashSize);
   }
 
   double firstCount(double threshold_first) throws HashOverflowException {
     return firstPvalueCalculator
-           .pvalueByThreshold(threshold_first)
-           .numberOfRecognizedWords(firstBackground, firstPWM.length());
+            .pvalueByThreshold(threshold_first)
+            .numberOfRecognizedWords(firstBackground, firstPWM.length());
   }
 
   double secondCount(double threshold_second) throws HashOverflowException {
@@ -65,7 +65,7 @@ public class ComparePWM {
   }
 
   public CompareModels.SimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
-                                          Position position) throws HashOverflowException {
+                                                        Position position) throws HashOverflowException {
 
     return calculatorWithCountsGiven().jaccardAtPosition(threshold_first, threshold_second,
                                                          firstCount(threshold_first),
@@ -73,10 +73,9 @@ public class ComparePWM {
                                                          position);
   }
 
-
   public CompareModels.SimilarityInfo jaccard_by_pvalue(double pvalue) throws HashOverflowException {
-    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<PWM,BackgroundModel>(firstPWM, firstBackground, discretization, null);
-    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<PWM,BackgroundModel>(secondPWM, secondBackground, discretization, null);
+    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<DiPWM,DiBackgroundModel>(firstPWM, firstBackground, discretization, null);
+    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<DiPWM,DiBackgroundModel>(secondPWM, secondBackground, discretization, null);
 
     double threshold_first = canFindThresholdFirst.strongThresholdByPvalue(pvalue).threshold;
     double threshold_second = canFindThresholdSecond.strongThresholdByPvalue(pvalue).threshold;
@@ -84,27 +83,26 @@ public class ComparePWM {
   }
 
   public CompareModels.SimilarityInfo jaccard_by_weak_pvalue(double pvalue) throws HashOverflowException {
-    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<PWM,BackgroundModel>(firstPWM, firstBackground, discretization, null);
-    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<PWM,BackgroundModel>(secondPWM, secondBackground, discretization, null);
+    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<DiPWM,DiBackgroundModel>(firstPWM, firstBackground, discretization, null);
+    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<DiPWM,DiBackgroundModel>(secondPWM, secondBackground, discretization, null);
 
     double threshold_first = canFindThresholdFirst.weakThresholdByPvalue(pvalue).threshold;
     double threshold_second = canFindThresholdSecond.weakThresholdByPvalue(pvalue).threshold;
     return jaccard(threshold_first, threshold_second);
   }
 
-
-  public static class ComparePWMCountsGiven {
-    public final PWM firstPWM; // here we store discreted PWMs
-    public final PWM secondPWM;
-    public final BackgroundModel firstBackground;
-    public final BackgroundModel secondBackground;
+  public static class CompareDiPWMCountsGiven {
+    public final DiPWM firstPWM; // here we store discreted PWMs
+    public final DiPWM secondPWM;
+    public final DiBackgroundModel firstBackground;
+    public final DiBackgroundModel secondBackground;
     public final Double discretization; // PWMs are already stored discreted, disretization needed in order to upscale thresholds
     public Integer maxPairHashSize;
 
-    public ComparePWMCountsGiven(PWM firstPWM, PWM secondPWM,
-                                BackgroundModel firstBackground,
-                                BackgroundModel secondBackground,
-                                Double discretization, Integer maxPairHashSize) {
+    public CompareDiPWMCountsGiven(DiPWM firstPWM, DiPWM secondPWM,
+                                 DiBackgroundModel firstBackground,
+                                 DiBackgroundModel secondBackground,
+                                 Double discretization, Integer maxPairHashSize) {
       this.firstPWM = firstPWM.discrete(discretization);
       this.secondPWM = secondPWM.discrete(discretization);
       this.firstBackground = firstBackground;
@@ -138,7 +136,7 @@ public class ComparePWM {
     }
 
     public CompareModels.SimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
-                                  double firstCount, double secondCount) throws HashOverflowException {
+                                                double firstCount, double secondCount) throws HashOverflowException {
       double bestSimilarity = -1;
       CompareModels.SimilarityInfo bestSimilarityInfo = null;
       for (Position position: relative_alignments()) {
@@ -154,11 +152,11 @@ public class ComparePWM {
     }
 
     public CompareModels.SimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
-                                                       double firstCount, double secondCount,
-                                                       Position position) throws HashOverflowException {
+                                                          double firstCount, double secondCount,
+                                                          Position position) throws HashOverflowException {
 
-      PairAligned alignment = new PairAligned<PWM>(firstPWM, secondPWM, position);
-      AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment, firstBackground, secondBackground);
+      PairAligned alignment = new PairAligned<DiPWM>(firstPWM, secondPWM, position);
+      AlignedDiPWMIntersection calculator = new AlignedDiPWMIntersection(alignment, firstBackground, secondBackground);
       double intersection = calculator.count_in_intersection(upscaleThreshold(thresholdFirst), upscaleThreshold(thresholdSecond));
 
       double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);

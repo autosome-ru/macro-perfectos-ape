@@ -113,12 +113,11 @@ public class AlignedPWMIntersection {
         sum += second_iterator.value();
       }
     }
-
     return sum;
   }
 
   // 2d-hash which has first level keys initialized, but second level is empty
-  TDoubleObjectHashMap<TDoubleDoubleHashMap> feedHashToRecalc(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores,
+  TDoubleObjectHashMap<TDoubleDoubleHashMap> seedHashToRecalc(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores,
                                                               double[] firstColumn, double leastSufficientScoreFirst) {
     TDoubleObjectHashMap<TDoubleDoubleHashMap> result = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
 
@@ -143,7 +142,7 @@ public class AlignedPWMIntersection {
                                                                double[] firstColumn, double[] secondColumn,
                                                                double leastSufficientScoreFirst, double leastSufficientScoreSecond,
                                                                BackgroundModel background) {
-    TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = feedHashToRecalc(scores, firstColumn, leastSufficientScoreFirst);
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = seedHashToRecalc(scores, firstColumn, leastSufficientScoreFirst);
 
     TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
     while (iterator.hasNext()) {
@@ -180,7 +179,7 @@ public class AlignedPWMIntersection {
   TDoubleObjectHashMap<TDoubleDoubleHashMap> recalc_score_hash_wordwise(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores,
                                                                         double[] firstColumn, double[] secondColumn,
                                                                         double leastSufficientScoreFirst, double leastSufficientScoreSecond) {
-    TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = feedHashToRecalc(scores, firstColumn, leastSufficientScoreFirst);
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> new_scores = seedHashToRecalc(scores, firstColumn, leastSufficientScoreFirst);
 
     TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
     while (iterator.hasNext()) {
