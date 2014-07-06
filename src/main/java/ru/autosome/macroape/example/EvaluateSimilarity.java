@@ -4,11 +4,11 @@ import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.macroape.calculation.generalized.CompareModel;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.macroape.calculation.generalized.SimilarityInfo;
 
 public class EvaluateSimilarity {
   public static void main(String[] args){
@@ -27,7 +27,7 @@ public class EvaluateSimilarity {
                                               new FindPvalueAPE<PWM, BackgroundModel>(firstPWM, background, discretization, null),
                                               new FindPvalueAPE<PWM, BackgroundModel>(secondPWM, background, discretization, null),
                                              discretization, null);
-      CompareModel.SimilarityInfo similarityInfo = comparator.jaccard_by_weak_pvalue(0.0005);
+      SimilarityInfo similarityInfo = comparator.jaccard_by_weak_pvalue(0.0005);
       System.out.println("\n----------\n" + similarityInfo.similarity());
       System.out.println(similarityInfo.alignment);
       System.out.println(similarityInfo.recognizedByBoth);
@@ -47,7 +47,7 @@ public class EvaluateSimilarity {
                                                    new FindPvalueAPE<DiPWM, DiBackgroundModel>(secondDiPWM, dibackground, discretization, null),
                                                    discretization, null);
 
-      CompareModel.SimilarityInfo diSimilarityInfo = dicomparator.jaccard_by_weak_pvalue(0.0005);
+      SimilarityInfo diSimilarityInfo = dicomparator.jaccard_by_weak_pvalue(0.0005);
       System.out.println("\n----------\n" + diSimilarityInfo.similarity());
       System.out.println(diSimilarityInfo.alignment);
       System.out.println(diSimilarityInfo.recognizedByBoth);

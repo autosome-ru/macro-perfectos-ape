@@ -5,7 +5,6 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.macroape.calculation.generalized.CompareModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
@@ -13,6 +12,8 @@ import ru.autosome.commons.importer.MotifCollectionImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.macroape.calculation.generalized.SimilarityInfo;
+import ru.autosome.macroape.calculation.mono.ComparePWMCountsGiven;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -178,17 +179,17 @@ public class CollectDistanceMatrix {
   }
 
   double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) throws HashOverflowException {
-    ru.autosome.macroape.calculation.mono.CompareModel.ComparePWMCountsGiven calc;
-    CompareModel.SimilarityInfo info;
+    ComparePWMCountsGiven calc;
+    SimilarityInfo info;
 
-    calc = new ru.autosome.macroape.calculation.mono.CompareModel.ComparePWMCountsGiven(first.pwm, second.pwm,
+    calc = new ComparePWMCountsGiven(first.pwm, second.pwm,
                                                 background, background,
                                                 roughDiscretization, maxPairHashSize);
 
     info = calc.jaccard(first.roughThreshold, second.roughThreshold,
                         first.roughCount, second.roughCount);
     if (preciseRecalculationCutoff != null && info.similarity() > preciseRecalculationCutoff) {
-      calc = new ru.autosome.macroape.calculation.mono.CompareModel.ComparePWMCountsGiven(first.pwm, second.pwm,
+      calc = new ComparePWMCountsGiven(first.pwm, second.pwm,
                                                   background, background,
                                                   preciseDiscretization, maxPairHashSize);
       info = calc.jaccard(first.preciseThreshold, second.preciseThreshold,

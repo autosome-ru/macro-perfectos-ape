@@ -3,12 +3,12 @@ package ru.autosome.macroape.cli.generalized;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.macroape.calculation.generalized.CompareModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.motifModel.*;
+import ru.autosome.macroape.calculation.generalized.SimilarityInfo;
 
 import java.util.ArrayList;
 
@@ -156,7 +156,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     return infos;
   }
 
-  protected OutputInformation report_table(CompareModel.SimilarityInfo info) throws HashOverflowException {
+  protected OutputInformation report_table(SimilarityInfo info) throws HashOverflowException {
     OutputInformation infos = report_table_layout();
     infos.add_resulting_value("S", "similarity", info.similarity());
     infos.add_resulting_value("D", "distance (1-similarity)", info.distance());

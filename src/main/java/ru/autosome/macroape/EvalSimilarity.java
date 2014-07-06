@@ -5,13 +5,13 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.macroape.calculation.generalized.CompareModel;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.macroape.calculation.generalized.SimilarityInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,7 +89,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
 
   OutputInformation report_table() throws Exception {
-    CompareModel.SimilarityInfo results = calculator().jaccard(thresholdFirst(), thresholdSecond());
+    SimilarityInfo results = calculator().jaccard(thresholdFirst(), thresholdSecond());
     return report_table(results);
   }
 

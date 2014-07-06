@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ScanCollection {
 
-  static public class SimilarityInfo extends ru.autosome.macroape.calculation.generalized.CompareModel.SimilarityInfo {
+  static public class SimilarityInfo extends ru.autosome.macroape.calculation.generalized.SimilarityInfo {
     public final PWM collectionPWM;
     public final boolean precise;
 
@@ -24,7 +24,7 @@ public class ScanCollection {
       this.collectionPWM = collectionPWM;
       this.precise = precise;
     }
-    public SimilarityInfo(PWM collectionPWM, ru.autosome.macroape.calculation.generalized.CompareModel.SimilarityInfo similarityInfo, boolean precise) {
+    public SimilarityInfo(PWM collectionPWM, ru.autosome.macroape.calculation.generalized.SimilarityInfo similarityInfo, boolean precise) {
       super(similarityInfo.alignment,
             similarityInfo.recognizedByBoth,
             similarityInfo.recognizedByFirst,
@@ -86,7 +86,7 @@ public class ScanCollection {
 
 
     for (ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
-      ru.autosome.macroape.calculation.generalized.CompareModel.SimilarityInfo info;
+      ru.autosome.macroape.calculation.generalized.SimilarityInfo info;
       boolean precise = false;
       ru.autosome.macroape.calculation.mono.CompareModel roughCalculation = new ru.autosome.macroape.calculation.mono.CompareModel(queryPWM, knownMotifEvaluator.pwm,
                                                    queryBackground, collectionBackground,

@@ -4,6 +4,8 @@ import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.macroape.model.PairAligned;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
@@ -12,47 +14,14 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.motifModel.mono.PWM;
 
-public class AlignedModelIntersection {
-  public final BackgroundModel firstBackground;
-  public final BackgroundModel secondBackground;
-  public final PairAligned<PWM> alignment;
-  public Double maxPairHashSize;
+public class AlignedModelIntersection extends ru.autosome.macroape.calculation.generalized.AlignedModelIntersection<PWM, BackgroundModel> {
 
   public AlignedModelIntersection(PairAligned<PWM> alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {
-    this.firstBackground = firstBackground;
-    this.secondBackground = secondBackground;
-    this.alignment = alignment;
+    super(alignment, firstBackground, secondBackground);
   }
 
   public AlignedModelIntersection(PWM firstPWM, PWM secondPWM, BackgroundModel firstBackground, BackgroundModel secondBackground, Position relativePosition) {
-    this.firstBackground = firstBackground;
-    this.secondBackground = secondBackground;
-    this.alignment = new PairAligned<PWM>(firstPWM, secondPWM, relativePosition);
-  }
-
-  public double count_in_intersection(double first_threshold, double second_threshold) throws HashOverflowException {
-    double[] intersections = counts_for_two_matrices(first_threshold, second_threshold);
-
-    return combine_intersection_values(intersections[0], intersections[1]);
-  }
-
-  public double combine_intersection_values(double intersection_count_1, double intersection_count_2) {
-    return Math.sqrt(intersection_count_1 * intersection_count_2);
-  }
-
-  private double[] counts_for_two_matrices(double threshold_first, double threshold_second) throws HashOverflowException {
-    if (firstBackground.equals(secondBackground)) {
-      final BackgroundModel background = firstBackground;
-      double result = get_counts(threshold_first, threshold_second, background);
-
-      return new double[] {result, result};
-    } else {
-      // unoptimized code (two-pass instead of one) but it's rare case
-      double first_result = get_counts(threshold_first, threshold_second, firstBackground);
-      double second_result = get_counts(threshold_first, threshold_second, secondBackground);
-
-      return new double[] {first_result, second_result};
-    }
+    super(firstPWM, secondPWM, firstBackground, secondBackground,relativePosition);
   }
 
 
@@ -74,7 +43,8 @@ public class AlignedModelIntersection {
     return scores;
   }
 
-  private double get_counts(double threshold_first, double threshold_second, BackgroundModel background) throws HashOverflowException {
+  @Override
+  protected double get_counts(double threshold_first, double threshold_second, BackgroundModel background) throws HashOverflowException {
     // scores_on_first_pwm, scores_on_second_pwm --> count
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = initialScoreHash();
 
@@ -212,45 +182,45 @@ public class AlignedModelIntersection {
     return new_scores;
   }
 
-  public static class SimilarityInfo extends ResultInfo {
-    public final double recognizedByBoth;
-    public final double recognizedByFirst;
-    public final double recognizedBySecond;
-
-    public SimilarityInfo(double recognizedByBoth, double recognizedByFirst, double recognizedBySecond) {
-      this.recognizedByFirst = recognizedByFirst;
-      this.recognizedBySecond = recognizedBySecond;
-      this.recognizedByBoth = recognizedByBoth;
-    }
-
-    public static Double jaccardByCounts(double recognizedByFirst, double recognizedBySecond, double recognizedByBoth) {
-      if (recognizedByFirst == 0 || recognizedBySecond == 0) {
-        return null;
-      }
-      double union = recognizedByFirst + recognizedBySecond - recognizedByBoth;
-      return recognizedByBoth / union;
-    }
-
-    public Double similarity() {
-      return jaccardByCounts(recognizedByFirst, recognizedBySecond, recognizedByBoth);
-    }
-
-    public Double distance() {
-      Double similarity = similarity();
-      if (similarity == null) {
-        return null;
-      } else {
-        return 1.0 - similarity;
-      }
-    }
-
-    public Double realPvalueFirst(GeneralizedBackgroundModel background, int alignmentLength) {
-      double vocabularyVolume = Math.pow(background.volume(), alignmentLength);
-      return recognizedByFirst / vocabularyVolume;
-    }
-    public Double realPvalueSecond(GeneralizedBackgroundModel background, int alignmentLength) {
-      double vocabularyVolume = Math.pow(background.volume(), alignmentLength);
-      return recognizedBySecond / vocabularyVolume;
-    }
-  }
+//  public static class SimilarityInfo extends ResultInfo {
+//    public final double recognizedByBoth;
+//    public final double recognizedByFirst;
+//    public final double recognizedBySecond;
+//
+//    public SimilarityInfo(double recognizedByBoth, double recognizedByFirst, double recognizedBySecond) {
+//      this.recognizedByFirst = recognizedByFirst;
+//      this.recognizedBySecond = recognizedBySecond;
+//      this.recognizedByBoth = recognizedByBoth;
+//    }
+//
+//    public static Double jaccardByCounts(double recognizedByFirst, double recognizedBySecond, double recognizedByBoth) {
+//      if (recognizedByFirst == 0 || recognizedBySecond == 0) {
+//        return null;
+//      }
+//      double union = recognizedByFirst + recognizedBySecond - recognizedByBoth;
+//      return recognizedByBoth / union;
+//    }
+//
+//    public Double similarity() {
+//      return jaccardByCounts(recognizedByFirst, recognizedBySecond, recognizedByBoth);
+//    }
+//
+//    public Double distance() {
+//      Double similarity = similarity();
+//      if (similarity == null) {
+//        return null;
+//      } else {
+//        return 1.0 - similarity;
+//      }
+//    }
+//
+//    public Double realPvalueFirst(GeneralizedBackgroundModel background, int alignmentLength) {
+//      double vocabularyVolume = Math.pow(background.volume(), alignmentLength);
+//      return recognizedByFirst / vocabularyVolume;
+//    }
+//    public Double realPvalueSecond(GeneralizedBackgroundModel background, int alignmentLength) {
+//      double vocabularyVolume = Math.pow(background.volume(), alignmentLength);
+//      return recognizedBySecond / vocabularyVolume;
+//    }
+//  }
 }
