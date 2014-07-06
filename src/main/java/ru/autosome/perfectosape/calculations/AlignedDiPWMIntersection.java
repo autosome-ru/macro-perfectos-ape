@@ -20,7 +20,7 @@ public class AlignedDiPWMIntersection {
   public final PairAligned<DiPWM> alignment;
   public Double maxPairHashSize;
 
-  public AlignedDiPWMIntersection(PairAligned alignment, DiBackgroundModel firstBackground, DiBackgroundModel secondBackground) {
+  public AlignedDiPWMIntersection(PairAligned<DiPWM> alignment, DiBackgroundModel firstBackground, DiBackgroundModel secondBackground) {
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
     this.alignment = alignment;
@@ -29,7 +29,7 @@ public class AlignedDiPWMIntersection {
   public AlignedDiPWMIntersection(DiPWM firstPWM, DiPWM secondPWM, DiBackgroundModel firstBackground, DiBackgroundModel secondBackground, Position relativePosition) {
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
-    this.alignment = new PairAligned(firstPWM, secondPWM, relativePosition);
+    this.alignment = new PairAligned<DiPWM>(firstPWM, secondPWM, relativePosition);
   }
   public double count_in_intersection(double first_threshold, double second_threshold) throws HashOverflowException {
     double[] intersections = counts_for_two_matrices(first_threshold, second_threshold);

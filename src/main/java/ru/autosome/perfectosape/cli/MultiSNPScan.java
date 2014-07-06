@@ -41,14 +41,14 @@ public class MultiSNPScan extends MultiSNPScanGeneralized<BackgroundModel> {
   @Override
   protected void load_collection_of_pwms() throws FileNotFoundException {
     PWMImporter pwmImporter = new PWMImporter(background, dataModel, effectiveCount);
-    MotifCollectionImporter importer = new MotifCollectionImporter<PWM>(pwmImporter);
+    MotifCollectionImporter<PWM> importer = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
 
     pwmCollection = new ArrayList<ThresholdEvaluator>();
     for (PWM pwm: pwmList) {
       CanFindPvalue pvalueCalculator;
       if (thresholds_folder == null) {
-        pvalueCalculator = new FindPvalueAPE(pwm, background, discretization, max_hash_size);
+        pvalueCalculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretization, max_hash_size);
       } else {
         pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(pwm);
       }

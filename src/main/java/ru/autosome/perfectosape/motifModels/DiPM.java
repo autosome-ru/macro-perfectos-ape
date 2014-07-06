@@ -87,7 +87,7 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
   }
 
   @Override
-  public AbstractBackgroundFactory compatibleBackground() {
+  public DiBackgroundFactory compatibleBackground() {
     return new DiBackgroundFactory();
   }
 }

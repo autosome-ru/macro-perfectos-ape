@@ -123,7 +123,7 @@ public class ScanCollection {
 
   private List<ThresholdEvaluator> load_collection_of_pwms() throws FileNotFoundException {
     PWMImporter pwmImporter = new PWMImporter(collectionBackground, dataModel, effectiveCount);
-    MotifCollectionImporter collectionImporter = new MotifCollectionImporter<PWM>(pwmImporter);
+    MotifCollectionImporter<PWM> collectionImporter = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
     List<ThresholdEvaluator> result = new ArrayList<ThresholdEvaluator>();
     for (PWM pwm: pwmList) {
@@ -131,8 +131,8 @@ public class ScanCollection {
         result.add(new ThresholdEvaluator(pwm,
                                           new FindThresholdAPE<PWM, BackgroundModel>(pwm, collectionBackground, roughDiscretization, maxHashSize),
                                           new FindThresholdAPE<PWM, BackgroundModel>(pwm, collectionBackground, preciseDiscretization, maxHashSize),
-                                          new FindPvalueAPE(pwm, collectionBackground, roughDiscretization, maxHashSize),
-                                          new FindPvalueAPE(pwm, collectionBackground, preciseDiscretization, maxHashSize)));
+                                          new FindPvalueAPE<PWM, BackgroundModel>(pwm, collectionBackground, roughDiscretization, maxHashSize),
+                                          new FindPvalueAPE<PWM, BackgroundModel>(pwm, collectionBackground, preciseDiscretization, maxHashSize)));
       } else {
         result.add(new ThresholdEvaluator(pwm,
                                           new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(pwm),

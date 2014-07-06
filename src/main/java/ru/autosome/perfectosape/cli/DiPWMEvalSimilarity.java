@@ -122,8 +122,8 @@ public class DiPWMEvalSimilarity extends EvalSimilarityGeneralized<DiPWM, DiBack
   CompareDiPWM calculator() {
     CompareDiPWM result = new CompareDiPWM(firstPWM, secondPWM,
                                            firstBackground, secondBackground,
-                                           new FindPvalueAPE(firstPWM, firstBackground, discretization, maxHashSize),
-                                           new FindPvalueAPE(secondPWM, secondBackground, discretization, maxHashSize),
+                                           new FindPvalueAPE<DiPWM, DiBackgroundModel>(firstPWM, firstBackground, discretization, maxHashSize),
+                                           new FindPvalueAPE<DiPWM, DiBackgroundModel>(secondPWM, secondBackground, discretization, maxHashSize),
                                            discretization, maxPairHashSize);
     return result;
   }

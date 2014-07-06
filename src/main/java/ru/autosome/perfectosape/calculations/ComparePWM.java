@@ -157,7 +157,7 @@ public class ComparePWM {
                                                        double firstCount, double secondCount,
                                                        Position position) throws HashOverflowException {
 
-      PairAligned alignment = new PairAligned<PWM>(firstPWM, secondPWM, position);
+      PairAligned<PWM> alignment = new PairAligned<PWM>(firstPWM, secondPWM, position);
       AlignedPWMIntersection calculator = new AlignedPWMIntersection(alignment, firstBackground, secondBackground);
       double intersection = calculator.count_in_intersection(upscaleThreshold(thresholdFirst), upscaleThreshold(thresholdSecond));
 

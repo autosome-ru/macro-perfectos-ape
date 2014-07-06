@@ -22,7 +22,7 @@ public class DiPWMPrecalculateThresholdLists extends PrecalculateThresholdListsG
   }
 
   @Override
-  PrecalculateThresholdList calculator() {
+  PrecalculateThresholdList<DiPWM, DiBackgroundModel> calculator() {
     return new PrecalculateThresholdList<DiPWM, DiBackgroundModel>(pvalues, discretization, background, pvalue_boundary, max_hash_size);
   }
 

@@ -49,10 +49,6 @@ public class WordwiseBackground implements BackgroundModel {
 
   @Override
   public boolean equals(Object other) {
-    if (other instanceof BackgroundModel) {
-      return ((BackgroundModel)other).is_wordwise();
-    } else {
-      return false;
-    }
+    return other instanceof BackgroundModel && ((BackgroundModel) other).is_wordwise();
   }
 }

@@ -60,7 +60,7 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
     return results;
   }
 
-  PrecalculateThresholdList calculator() {
+  PrecalculateThresholdList<PWM, BackgroundModel> calculator() {
     return new PrecalculateThresholdList<PWM, BackgroundModel>(parameters.pvalues,
                                                                           parameters.discretization,
                                                                           parameters.background,

@@ -25,7 +25,7 @@ public class CountingDiPWM extends ScoringModelDistibutions {
 
   @Override
   CanFindThresholdApproximation gaussianThresholdEstimator() {
-    return new GaussianThresholdEstimator(dipwm, dibackground);
+    return new GaussianThresholdEstimator<DiPWM, DiBackgroundModel>(dipwm, dibackground);
   }
 
   protected TDoubleDoubleMap[] initialCountDistribution() {

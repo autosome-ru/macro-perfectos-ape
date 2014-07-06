@@ -17,7 +17,7 @@ public class AlignedPWMIntersection {
   public final PairAligned<PWM> alignment;
   public Double maxPairHashSize;
 
-  public AlignedPWMIntersection(PairAligned alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {
+  public AlignedPWMIntersection(PairAligned<PWM> alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
     this.alignment = alignment;
@@ -26,7 +26,7 @@ public class AlignedPWMIntersection {
   public AlignedPWMIntersection(PWM firstPWM, PWM secondPWM, BackgroundModel firstBackground, BackgroundModel secondBackground, Position relativePosition) {
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
-    this.alignment = new PairAligned(firstPWM, secondPWM, relativePosition);
+    this.alignment = new PairAligned<PWM>(firstPWM, secondPWM, relativePosition);
   }
 
   public double count_in_intersection(double first_threshold, double second_threshold) throws HashOverflowException {

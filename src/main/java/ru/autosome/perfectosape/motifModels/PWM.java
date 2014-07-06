@@ -135,18 +135,14 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     for(int i = 0; i < n; ++i) {
       aligned_matrix[i] = new double[]{0,0,0,0};
     }
-    for(int i = 0; i < length(); ++i) {
-      aligned_matrix[n + i] = matrix[i];
-    }
+    System.arraycopy(matrix, 0, aligned_matrix, n, length());
     return new PWM(aligned_matrix, name);
   }
 
   @Override
   public PWM rightAugment(int n) {
     double[][] aligned_matrix = new double[length() + n][];
-    for(int i = 0; i < length(); ++i) {
-      aligned_matrix[i] = matrix[i];
-    }
+    System.arraycopy(matrix, 0, aligned_matrix, 0, length());
     for(int i = 0; i < n; ++i) {
       aligned_matrix[length() + i] = new double[]{0,0,0,0};
     }

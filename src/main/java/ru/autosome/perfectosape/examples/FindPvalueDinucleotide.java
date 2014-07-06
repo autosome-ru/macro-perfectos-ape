@@ -47,7 +47,7 @@ public class FindPvalueDinucleotide {
     double discretization = 10000;
     Integer max_hash_size = null;
     double threshold = 7;
-    double[] thresholds = {3,5,7};
+//    double[] thresholds = {3,5,7};
 
     Sequence word = new Sequence("ACAGTGACAA");
     DiPWM dipwm = DiPWM.fromPWM(pwm); // A way to transform mono-nucleotide to dinucleotide matrix

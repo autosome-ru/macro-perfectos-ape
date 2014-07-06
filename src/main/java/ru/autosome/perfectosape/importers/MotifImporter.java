@@ -13,7 +13,7 @@ public abstract class MotifImporter<ModelType extends Named & ScoringModel> {
   abstract public ModelType transformToPWM(double matrix[][], String name);
 
   public List<ModelType> loadPWMsFromFile(File pathToPWMs) throws FileNotFoundException {
-    List pwms = new ArrayList();
+    List<ModelType> pwms = new ArrayList<ModelType>();
     BufferedPushbackReader reader = new BufferedPushbackReader(new FileInputStream(pathToPWMs));
     boolean canExtract = true;
     while (canExtract) {

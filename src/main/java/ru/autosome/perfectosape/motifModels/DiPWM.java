@@ -229,18 +229,14 @@ public class DiPWM extends DiPM implements ScoringModel,
                                        0,0,0,0,
                                        0,0,0,0};
     }
-    for(int i = 0; i < matrix.length; ++i) {
-      aligned_matrix[n + i] = matrix[i];
-    }
+    System.arraycopy(matrix, 0, aligned_matrix, n, matrix.length);
     return new DiPWM(aligned_matrix, name);
   }
 
   @Override
   public DiPWM rightAugment(int n) {
     double[][] aligned_matrix = new double[matrix.length + n][];
-    for(int i = 0; i < matrix.length; ++i) {
-      aligned_matrix[i] = matrix[i];
-    }
+    System.arraycopy(matrix, 0, aligned_matrix, 0, matrix.length);
     for(int i = 0; i < n; ++i) {
       aligned_matrix[matrix.length + i] = new double[]{0,0,0,0,
                                                   0,0,0,0,

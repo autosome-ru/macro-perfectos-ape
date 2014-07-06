@@ -31,7 +31,7 @@ public class PrecalculateThresholdList extends SingleTask<PvalueBsearchList> {
     this.parameters = parameters;
   }
 
-  ru.autosome.perfectosape.calculations.PrecalculateThresholdList calculator() {
+  ru.autosome.perfectosape.calculations.PrecalculateThresholdList<PWM,BackgroundModel> calculator() {
     return new ru.autosome.perfectosape.calculations.PrecalculateThresholdList<PWM, BackgroundModel>(parameters.pvalues,
                                                                           parameters.discretization,
                                                                           parameters.background,

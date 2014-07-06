@@ -22,7 +22,7 @@ public class PrecalculateThresholdLists extends PrecalculateThresholdListsGenera
   }
 
   @Override
-  PrecalculateThresholdList calculator() {
+  PrecalculateThresholdList<PWM, BackgroundModel> calculator() {
     return new PrecalculateThresholdList<PWM,BackgroundModel>(pvalues, discretization, background, pvalue_boundary, max_hash_size);
   }
 
