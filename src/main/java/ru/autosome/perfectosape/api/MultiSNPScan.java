@@ -1,9 +1,10 @@
 package ru.autosome.perfectosape.api;
 
-import ru.autosome.perfectosape.SequenceWithSNP;
-import ru.autosome.perfectosape.calculations.SNPScan;
-import ru.autosome.perfectosape.calculations.findPvalue.CanFindPvalue;
-import ru.autosome.perfectosape.motifModels.PWM;
+import ru.autosome.commons.api.Task;
+import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.calculation.SNPScan;
+import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +27,8 @@ public class MultiSNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SNPScan.Re
     this.parameters = parameters;
   }
 
-  ru.autosome.perfectosape.calculations.SNPScan calculator(PWM pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
-    return new ru.autosome.perfectosape.calculations.SNPScan(pwm,
+  ru.autosome.perfectosape.calculation.SNPScan calculator(PWM pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
+    return new ru.autosome.perfectosape.calculation.SNPScan(pwm,
                                                       sequenceWithSNP,
                                                       pvalueCalculator);
   }
