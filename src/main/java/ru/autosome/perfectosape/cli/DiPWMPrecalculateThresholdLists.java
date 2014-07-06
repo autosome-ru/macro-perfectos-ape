@@ -33,7 +33,7 @@ public class DiPWMPrecalculateThresholdLists extends PrecalculateThresholdListsG
 
   @Override
   protected String DOC_background_option() {
-    return "ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25";
+    return "ACGT - 16 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.02,0.03,0.03,0.02,0.08,0.12,0.12,0.08,0.08,0.12,0.12,0.08,0.02,0.03,0.03,0.02";
   }
 
   @Override

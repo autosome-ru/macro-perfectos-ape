@@ -26,7 +26,7 @@ public class EvalSimilarity extends EvalSimilarityGeneralized<PWM, BackgroundMod
   }
   @Override
   protected String DOC_run_string() {
-    return "java ru.autosome.perfectosape.cli.FindPvalue";
+    return "java ru.autosome.perfectosape.cli.EvalSimilarity";
   }
 
   private void initialize_defaults() {
