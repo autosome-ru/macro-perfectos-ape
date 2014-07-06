@@ -4,7 +4,7 @@ import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.macroape.calculation.generalized.ComparableCountsGiven;
+import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 
 public class CompareModel extends ru.autosome.macroape.calculation.generalized.CompareModel<PWM, BackgroundModel> {
 
@@ -20,7 +20,7 @@ public class CompareModel extends ru.autosome.macroape.calculation.generalized.C
   }
 
   @Override
-  protected ComparableCountsGiven calculatorWithCountsGiven() {
+  protected CompareModelsCountsGiven calculatorWithCountsGiven() {
     return new ComparePWMCountsGiven(firstPWM, secondPWM,
                                      firstBackground, secondBackground,
                                      discretization, maxPairHashSize);

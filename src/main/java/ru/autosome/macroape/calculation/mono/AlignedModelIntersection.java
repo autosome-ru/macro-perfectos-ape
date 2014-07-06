@@ -181,46 +181,4 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
     }
     return new_scores;
   }
-
-//  public static class SimilarityInfo extends ResultInfo {
-//    public final double recognizedByBoth;
-//    public final double recognizedByFirst;
-//    public final double recognizedBySecond;
-//
-//    public SimilarityInfo(double recognizedByBoth, double recognizedByFirst, double recognizedBySecond) {
-//      this.recognizedByFirst = recognizedByFirst;
-//      this.recognizedBySecond = recognizedBySecond;
-//      this.recognizedByBoth = recognizedByBoth;
-//    }
-//
-//    public static Double jaccardByCounts(double recognizedByFirst, double recognizedBySecond, double recognizedByBoth) {
-//      if (recognizedByFirst == 0 || recognizedBySecond == 0) {
-//        return null;
-//      }
-//      double union = recognizedByFirst + recognizedBySecond - recognizedByBoth;
-//      return recognizedByBoth / union;
-//    }
-//
-//    public Double similarity() {
-//      return jaccardByCounts(recognizedByFirst, recognizedBySecond, recognizedByBoth);
-//    }
-//
-//    public Double distance() {
-//      Double similarity = similarity();
-//      if (similarity == null) {
-//        return null;
-//      } else {
-//        return 1.0 - similarity;
-//      }
-//    }
-//
-//    public Double realPvalueFirst(GeneralizedBackgroundModel background, int alignmentLength) {
-//      double vocabularyVolume = Math.pow(background.volume(), alignmentLength);
-//      return recognizedByFirst / vocabularyVolume;
-//    }
-//    public Double realPvalueSecond(GeneralizedBackgroundModel background, int alignmentLength) {
-//      double vocabularyVolume = Math.pow(background.volume(), alignmentLength);
-//      return recognizedBySecond / vocabularyVolume;
-//    }
-//  }
 }

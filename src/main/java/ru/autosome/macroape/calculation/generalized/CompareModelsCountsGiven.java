@@ -5,14 +5,14 @@ import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.model.PairAligned;
 
 import java.util.ArrayList;
 import java.util.List;
 
 abstract public class CompareModelsCountsGiven <ModelType extends Alignable<ModelType> & Discretable<ModelType>,
-                                                BackgroundType extends GeneralizedBackgroundModel>
-                                                implements ComparableCountsGiven {
+                                                BackgroundType extends GeneralizedBackgroundModel> {
 
   public final ModelType firstPWM; // here we store discreted PWMs
   public final ModelType secondPWM;
@@ -58,7 +58,6 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
     return Math.pow(secondBackground.volume(), alignment.length() - secondPWM.length());
   }
 
-  @Override
   public SimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
                                 double firstCount, double secondCount) throws HashOverflowException {
     double bestSimilarity = -1;
@@ -75,8 +74,20 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
     return bestSimilarityInfo;
   }
 
+  public SimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
+                                          double firstCount, double secondCount,
+                                          Position position) throws HashOverflowException {
+    PairAligned<ModelType> alignment = new PairAligned<ModelType>(firstPWM, secondPWM, position);
+    double intersection = calculator(alignment).count_in_intersection(upscaleThreshold(thresholdFirst),
+                                                                      upscaleThreshold(thresholdSecond));
 
-  abstract public SimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
-                                                   double firstCount, double secondCount,
-                                                   Position position) throws HashOverflowException;
+    double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
+    double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
+
+    return new SimilarityInfo(alignment, intersection, firstCountRenormed, secondCountRenormed);
+  }
+
+  protected abstract ru.autosome.macroape.calculation
+                      .generalized.AlignedModelIntersection
+                      <ModelType, BackgroundType> calculator(PairAligned<ModelType> alignment);
 }

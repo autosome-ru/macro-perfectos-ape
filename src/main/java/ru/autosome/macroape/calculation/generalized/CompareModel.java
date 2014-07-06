@@ -38,7 +38,7 @@ abstract public class CompareModel <ModelType extends Alignable<ModelType> &Disc
     this.maxPairHashSize = maxPairHashSize;
   }
 
-  abstract protected ComparableCountsGiven calculatorWithCountsGiven();
+  abstract protected CompareModelsCountsGiven calculatorWithCountsGiven();
 
   double firstCount(double threshold_first) throws HashOverflowException {
     return firstPvalueCalculator
