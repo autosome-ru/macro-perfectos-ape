@@ -10,7 +10,7 @@ import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 
-abstract public class CompareModel <ModelType extends Alignable<ModelType> &Discretable<ModelType> &ScoreDistribution<BackgroundType>,
+abstract public class CompareModels<ModelType extends Alignable<ModelType> &Discretable<ModelType> &ScoreDistribution<BackgroundType>,
                                     BackgroundType extends GeneralizedBackgroundModel> {
 
   public final ModelType firstPWM;
@@ -22,12 +22,12 @@ abstract public class CompareModel <ModelType extends Alignable<ModelType> &Disc
   public final Double discretization;
   public final Integer maxPairHashSize;
 
-  public CompareModel(ModelType firstPWM, ModelType secondPWM,
-                      BackgroundType firstBackground,
-                      BackgroundType secondBackground,
-                      CanFindPvalue firstPvalueCalculator,
-                      CanFindPvalue secondPvalueCalculator,
-                      Double discretization, Integer maxPairHashSize) {
+  public CompareModels(ModelType firstPWM, ModelType secondPWM,
+                       BackgroundType firstBackground,
+                       BackgroundType secondBackground,
+                       CanFindPvalue firstPvalueCalculator,
+                       CanFindPvalue secondPvalueCalculator,
+                       Double discretization, Integer maxPairHashSize) {
     this.firstPWM = firstPWM;
     this.secondPWM = secondPWM;
     this.firstBackground = firstBackground;

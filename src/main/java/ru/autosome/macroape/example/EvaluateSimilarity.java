@@ -9,6 +9,7 @@ import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.calculation.generalized.SimilarityInfo;
+import ru.autosome.macroape.calculation.mono.CompareModels;
 
 public class EvaluateSimilarity {
   public static void main(String[] args){
@@ -22,7 +23,7 @@ public class EvaluateSimilarity {
       BackgroundModel background = new WordwiseBackground();
 //      BackgroundModel background = new Background(new double[]{0.25,0.25,0.25,0.25});
 
-      ru.autosome.macroape.calculation.mono.CompareModel comparator = new ru.autosome.macroape.calculation.mono.CompareModel( firstPWM, secondPWM,
+      CompareModels comparator = new CompareModels( firstPWM, secondPWM,
                                               background, background,
                                               new FindPvalueAPE<PWM, BackgroundModel>(firstPWM, background, discretization, null),
                                               new FindPvalueAPE<PWM, BackgroundModel>(secondPWM, background, discretization, null),
@@ -41,7 +42,7 @@ public class EvaluateSimilarity {
 //                                                                      0.0625,0.0625,0.0625,0.0625,
 //                                                                      0.0625,0.0625,0.0625,0.0625,
 //                                                                      0.0625,0.0625,0.0625,0.0625});
-      ru.autosome.macroape.calculation.di.CompareModel dicomparator = new ru.autosome.macroape.calculation.di.CompareModel(firstDiPWM , secondDiPWM,
+      ru.autosome.macroape.calculation.di.CompareModels dicomparator = new ru.autosome.macroape.calculation.di.CompareModels(firstDiPWM , secondDiPWM,
                                                    dibackground, dibackground,
                                                    new FindPvalueAPE<DiPWM, DiBackgroundModel>(firstDiPWM, dibackground, discretization, null),
                                                    new FindPvalueAPE<DiPWM, DiBackgroundModel>(secondDiPWM, dibackground, discretization, null),

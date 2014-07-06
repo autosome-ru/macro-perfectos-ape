@@ -12,6 +12,7 @@ import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.calculation.generalized.SimilarityInfo;
+import ru.autosome.macroape.calculation.mono.CompareModels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,8 +76,8 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     return from_arglist(argv);
   }
 
-  ru.autosome.macroape.calculation.mono.CompareModel calculator() {
-    ru.autosome.macroape.calculation.mono.CompareModel result = new ru.autosome.macroape.calculation.mono.CompareModel(firstPWM, secondPWM,
+  CompareModels calculator() {
+    CompareModels result = new CompareModels(firstPWM, secondPWM,
                                        firstBackground, secondBackground,
                                        new FindPvalueAPE<PWM, BackgroundModel>(firstPWM, firstBackground, discretization, maxHashSize),
                                        new FindPvalueAPE<PWM, BackgroundModel>(secondPWM, secondBackground, discretization, maxHashSize),

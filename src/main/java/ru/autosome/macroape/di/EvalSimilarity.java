@@ -15,6 +15,7 @@ import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
+import ru.autosome.macroape.calculation.di.CompareModels;
 import ru.autosome.macroape.calculation.generalized.SimilarityInfo;
 
 import java.util.ArrayList;
@@ -124,8 +125,8 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     return from_arglist(argv);
   }
 
-  ru.autosome.macroape.calculation.di.CompareModel calculator() {
-    ru.autosome.macroape.calculation.di.CompareModel result = new ru.autosome.macroape.calculation.di.CompareModel(firstPWM, secondPWM,
+  CompareModels calculator() {
+    CompareModels result = new CompareModels(firstPWM, secondPWM,
                                            firstBackground, secondBackground,
                                            new FindPvalueAPE<DiPWM, DiBackgroundModel>(firstPWM, firstBackground, discretization, maxHashSize),
                                            new FindPvalueAPE<DiPWM, DiBackgroundModel>(secondPWM, secondBackground, discretization, maxHashSize),

@@ -13,7 +13,7 @@ import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.calculation.generalized.SimilarityInfo;
-import ru.autosome.macroape.calculation.mono.ComparePWMCountsGiven;
+import ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -179,17 +179,17 @@ public class CollectDistanceMatrix {
   }
 
   double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) throws HashOverflowException {
-    ComparePWMCountsGiven calc;
+    CompareModelsCountsGiven calc;
     SimilarityInfo info;
 
-    calc = new ComparePWMCountsGiven(first.pwm, second.pwm,
+    calc = new CompareModelsCountsGiven(first.pwm, second.pwm,
                                                 background, background,
                                                 roughDiscretization, maxPairHashSize);
 
     info = calc.jaccard(first.roughThreshold, second.roughThreshold,
                         first.roughCount, second.roughCount);
     if (preciseRecalculationCutoff != null && info.similarity() > preciseRecalculationCutoff) {
-      calc = new ComparePWMCountsGiven(first.pwm, second.pwm,
+      calc = new CompareModelsCountsGiven(first.pwm, second.pwm,
                                                   background, background,
                                                   preciseDiscretization, maxPairHashSize);
       info = calc.jaccard(first.preciseThreshold, second.preciseThreshold,

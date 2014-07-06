@@ -88,7 +88,7 @@ public class ScanCollection {
     for (ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
       ru.autosome.macroape.calculation.generalized.SimilarityInfo info;
       boolean precise = false;
-      ru.autosome.macroape.calculation.mono.CompareModel roughCalculation = new ru.autosome.macroape.calculation.mono.CompareModel(queryPWM, knownMotifEvaluator.pwm,
+      CompareModels roughCalculation = new CompareModels(queryPWM, knownMotifEvaluator.pwm,
                                                    queryBackground, collectionBackground,
                                                    roughQueryPvalueEvaluator,
                                                    knownMotifEvaluator.roughPvalueCalculator,
@@ -103,7 +103,7 @@ public class ScanCollection {
       if (preciseRecalculationCutoff != null &&
          info.similarity() >= preciseRecalculationCutoff &&
          knownMotifEvaluator.preciseThresholdCalculator != null) {
-        ru.autosome.macroape.calculation.mono.CompareModel preciseCalculation = new ru.autosome.macroape.calculation.mono.CompareModel(queryPWM, knownMotifEvaluator.pwm,
+        CompareModels preciseCalculation = new CompareModels(queryPWM, knownMotifEvaluator.pwm,
                                                      queryBackground, collectionBackground,
                                                      preciseQueryPvalueEvaluator,
                                                      knownMotifEvaluator.precisePvalueCalculator,
