@@ -93,14 +93,14 @@ public class ScanCollection {
     initialize_defaults();
   }
 
-  private static ScanCollection from_arglist(ArrayList<String> argv) throws FileNotFoundException {
+  private static ScanCollection from_arglist(ArrayList<String> argv) {
     ScanCollection result = new ScanCollection();
     Helper.print_help_if_requested(argv, DOC);
     result.setup_from_arglist(argv);
     return result;
   }
 
-  private static ScanCollection from_arglist(String[] args) throws FileNotFoundException {
+  private static ScanCollection from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
@@ -121,7 +121,7 @@ public class ScanCollection {
     }
   }
 
-  private List<ThresholdEvaluator> load_collection_of_pwms() throws FileNotFoundException {
+  private List<ThresholdEvaluator> load_collection_of_pwms() {
     PWMImporter pwmImporter = new PWMImporter(collectionBackground, dataModel, effectiveCount);
     MotifCollectionImporter<PWM> collectionImporter = new MotifCollectionImporter<PWM>(pwmImporter);
     List<PWM> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
@@ -144,7 +144,7 @@ public class ScanCollection {
     return result;
   }
 
-  void setup_from_arglist(ArrayList<String> argv) throws FileNotFoundException {
+  void setup_from_arglist(ArrayList<String> argv) {
     extract_query_pm_filename(argv);
     extract_path_to_collection_of_pwms(argv);
     while (argv.size() > 0) {

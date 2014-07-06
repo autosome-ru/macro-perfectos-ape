@@ -39,7 +39,7 @@ public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized<DiBackgroundModel
   }
 
   @Override
-  protected void load_collection_of_pwms() throws FileNotFoundException {
+  protected void load_collection_of_pwms() {
     DiPWMImporter pwmImporter = new DiPWMImporter(background, dataModel, effectiveCount);
     MotifCollectionImporter<DiPWM> importer = new MotifCollectionImporter<DiPWM>(pwmImporter);
     List<DiPWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
@@ -56,14 +56,14 @@ public class DiPWMMultiSNPScan extends MultiSNPScanGeneralized<DiBackgroundModel
     }
   }
 
-  protected static MultiSNPScanGeneralized from_arglist(ArrayList<String> argv) throws FileNotFoundException {
+  protected static MultiSNPScanGeneralized from_arglist(ArrayList<String> argv) {
     DiPWMMultiSNPScan result = new DiPWMMultiSNPScan();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);
     return result;
   }
 
-  protected static MultiSNPScanGeneralized from_arglist(String[] args) throws FileNotFoundException {
+  protected static MultiSNPScanGeneralized from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);

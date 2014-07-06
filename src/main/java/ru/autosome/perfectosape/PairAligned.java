@@ -7,7 +7,8 @@ public class PairAligned<ModelType extends Alignable<ModelType>> {
   public final ModelType secondModelAligned;
   public final Position relative_position;
 
-  private int first_length, second_length;
+  private final int first_length;
+  private final int second_length;
 
   public PairAligned(ModelType first_model_unaligned, ModelType second_model_unaligned, Position relative_position) {
     first_length = first_model_unaligned.length();

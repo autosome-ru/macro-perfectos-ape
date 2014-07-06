@@ -25,7 +25,7 @@ public class PvalueBsearchList {
       this.pvalue = info.real_pvalue;
     }
 
-    public static Comparator thresholdComparator =
+    public static final Comparator thresholdComparator =
      new Comparator<Object>() {
        Double val(Object obj) {
          double value;
@@ -50,7 +50,7 @@ public class PvalueBsearchList {
      };
 
     // reversed comparison (thresholds are sorted ascending, so pvalues descending)
-    public static Comparator pvalueComparator =
+    public static final Comparator pvalueComparator =
      new Comparator<Object>() {
        Double val(Object obj) {
          double value;
@@ -96,7 +96,7 @@ public class PvalueBsearchList {
   }
 
 
-  private List<ThresholdPvaluePair> list;
+  private final List<ThresholdPvaluePair> list;
   public PvalueBsearchList() {
     this.list = new ArrayList<ThresholdPvaluePair>();
   }

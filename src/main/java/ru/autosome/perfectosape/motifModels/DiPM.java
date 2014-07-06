@@ -20,7 +20,7 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
     this.name = name;
   }
 
-  static HashMap<String, Integer> indexByLetter;
+  static final HashMap<String, Integer> indexByLetter;
   static {
     indexByLetter = new HashMap<String, Integer>();
     indexByLetter.put("AA", 0);

@@ -56,11 +56,11 @@ public class CollectDistanceMatrix {
   List<PWM> pwmCollection;
 
   static class PWMWithThreshold {
-    PWM pwm;
-    double roughThreshold;
-    double roughCount;
-    double preciseThreshold;
-    double preciseCount;
+    final PWM pwm;
+    final double roughThreshold;
+    final double roughCount;
+    final double preciseThreshold;
+    final double preciseCount;
     PWMWithThreshold(PWM pwm,
                      double roughThreshold, double roughCount,
                      double preciseThreshold, double preciseCount) {
@@ -132,7 +132,7 @@ public class CollectDistanceMatrix {
     }
   }
 
-  void setup_from_arglist(List<String> argv) throws FileNotFoundException {
+  void setup_from_arglist(List<String> argv) {
     extract_path_to_collection_of_pwms(argv);
     while (argv.size() > 0) {
       extract_option(argv);
@@ -145,14 +145,14 @@ public class CollectDistanceMatrix {
     initialize_defaults();
   }
 
-  private static CollectDistanceMatrix from_arglist(List<String> argv) throws FileNotFoundException {
+  private static CollectDistanceMatrix from_arglist(List<String> argv) {
     CollectDistanceMatrix result = new CollectDistanceMatrix();
     ru.autosome.perfectosape.cli.Helper.print_help_if_requested(argv, DOC);
     result.setup_from_arglist(argv);
     return result;
   }
 
-  private static CollectDistanceMatrix from_arglist(String[] args) throws FileNotFoundException {
+  private static CollectDistanceMatrix from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);

@@ -23,12 +23,12 @@ public class PrecalculateThresholdList<ModelType extends ScoringModel & Discreta
   // For SNPScan differences in such low P-values actually doesn't matter
   public static final double[] PVALUE_LIST = new GeometricProgression(1.0, 1E-15, 1.05).values();
 
-  double[] pvalues;
-  BoundaryType pvalue_boundary;
+  final double[] pvalues;
+  final BoundaryType pvalue_boundary;
 
-  double discretization;
-  BackgroundType background;
-  Integer max_hash_size;
+  final double discretization;
+  final BackgroundType background;
+  final Integer max_hash_size;
 
   public PrecalculateThresholdList(double[] pvalues, double discretization, BackgroundType background, BoundaryType pvalue_boundary, Integer max_hash_size) {
     this.pvalues = pvalues;
@@ -74,9 +74,9 @@ public class PrecalculateThresholdList<ModelType extends ScoringModel & Discreta
   }
 
   public static class GeometricProgression extends Progression {
-    double from;
-    double to;
-    double step;
+    final double from;
+    final double to;
+    final double step;
 
     @Override
     public double[] values() {
@@ -108,9 +108,9 @@ public class PrecalculateThresholdList<ModelType extends ScoringModel & Discreta
   }
 
   public static class ArithmeticProgression extends Progression {
-    double from;
-    double to;
-    double step;
+    final double from;
+    final double to;
+    final double step;
 
     @Override
     public double[] values() {

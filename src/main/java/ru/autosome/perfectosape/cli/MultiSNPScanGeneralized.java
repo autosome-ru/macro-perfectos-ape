@@ -18,9 +18,9 @@ import java.util.List;
 
 abstract public class MultiSNPScanGeneralized <BackgroundType extends GeneralizedBackgroundModel> {
   public static class ThresholdEvaluator {
-    public ScoringModel pwm;
-    public CanFindPvalue pvalueCalculator;
-    public String name;
+    public final ScoringModel pwm;
+    public final CanFindPvalue pvalueCalculator;
+    public final String name;
 
     public ThresholdEvaluator(ScoringModel pwm, CanFindPvalue pvalueCalculator, String name) {
       this.pwm = pwm;
@@ -31,7 +31,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
 
   abstract protected void initialize_default_background();
   abstract void extract_background(String s);
-  abstract protected void load_collection_of_pwms() throws FileNotFoundException;
+  abstract protected void load_collection_of_pwms();
 
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
@@ -125,7 +125,7 @@ abstract public class MultiSNPScanGeneralized <BackgroundType extends Generalize
     initialize_defaults();
   }
 
-  void setup_from_arglist(ArrayList<String> argv) throws FileNotFoundException {
+  void setup_from_arglist(ArrayList<String> argv) {
     extract_path_to_collection_of_pwms(argv);
     extract_path_to_file_w_snps(argv);
 

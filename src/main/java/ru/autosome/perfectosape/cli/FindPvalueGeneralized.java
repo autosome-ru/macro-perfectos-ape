@@ -51,7 +51,7 @@ public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Na
   protected File thresholds_folder;
   CanFindPvalue cache_calculator;
 
-  abstract protected CanFindPvalue calculator() throws FileNotFoundException;
+  abstract protected CanFindPvalue calculator();
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
   protected abstract MotifImporter<ModelType> motifImporter();
@@ -119,23 +119,23 @@ public abstract class FindPvalueGeneralized <ModelType extends ScoringModel & Na
     motif = motifImporter().loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename));
   }
 
-  OutputInformation report_table_layout() throws FileNotFoundException {
+  OutputInformation report_table_layout() {
     return calculator().report_table_layout();
   }
 
-  OutputInformation report_table(ArrayList<? extends ResultInfo> data) throws FileNotFoundException {
+  OutputInformation report_table(ArrayList<? extends ResultInfo> data) {
     OutputInformation result = report_table_layout();
     result.data = data;
     return result;
   }
 
-  <R extends ResultInfo> OutputInformation report_table(R[] data) throws FileNotFoundException {
+  <R extends ResultInfo> OutputInformation report_table(R[] data) {
     ArrayList<R> data_list = new ArrayList<R>(data.length);
     Collections.addAll(data_list, data);
     return report_table(data_list);
   }
 
-  OutputInformation report_table() throws HashOverflowException, FileNotFoundException {
+  OutputInformation report_table() throws HashOverflowException {
     CanFindPvalue.PvalueInfo[] results = calculator().pvaluesByThresholds(thresholds);
     return report_table(results);
   }

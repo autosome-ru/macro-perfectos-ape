@@ -11,7 +11,7 @@ import java.util.Map;
 public class ScanSequence {
   private final Sequence sequence;
   private final ScoringModel pwm;
-  ArrayList<Position> positions_to_check;
+  final ArrayList<Position> positions_to_check;
   private Map<Position, Double> cache_score_by_position;
 
   public ScanSequence(Sequence sequence, ScoringModel pwm, ArrayList<Position> positions_to_check) {

@@ -5,9 +5,9 @@ import ru.autosome.perfectosape.backgroundModels.GeneralizedBackgroundModel;
 import ru.autosome.perfectosape.motifModels.*;
 
 public class PWMImporter extends MotifImporter<PWM> {
-  BackgroundModel background;
-  DataModel dataModel;
-  Double effectiveCount;
+  final BackgroundModel background;
+  final DataModel dataModel;
+  final Double effectiveCount;
 
   public PWMImporter(BackgroundModel background, DataModel dataModel, Double effectiveCount) {
     this.background = background;

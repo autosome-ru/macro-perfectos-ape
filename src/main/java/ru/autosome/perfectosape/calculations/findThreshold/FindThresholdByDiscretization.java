@@ -5,7 +5,7 @@ import ru.autosome.perfectosape.calculations.HashOverflowException;
 import ru.autosome.perfectosape.calculations.ScoringModelDistributions.ScoringModelDistibutions;
 
 public abstract class FindThresholdByDiscretization implements CanFindThreshold {
-  Double discretization; // if discretization is null - it's not applied
+  final Double discretization; // if discretization is null - it's not applied
 
   public FindThresholdByDiscretization(Double discretization) {
     this.discretization = discretization;

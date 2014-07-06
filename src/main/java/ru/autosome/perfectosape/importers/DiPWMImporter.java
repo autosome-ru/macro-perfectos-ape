@@ -4,9 +4,9 @@ import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
 import ru.autosome.perfectosape.motifModels.*;
 
 public class DiPWMImporter extends MotifImporter<DiPWM> {
-  DiBackgroundModel dibackground;
-  DataModel dataModel;
-  Double effectiveCount;
+  final DiBackgroundModel dibackground;
+  final DataModel dataModel;
+  final Double effectiveCount;
 
   public DiPWMImporter(DiBackgroundModel dibackground, DataModel dataModel, Double effectiveCount) {
     this.dibackground = dibackground;

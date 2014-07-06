@@ -24,7 +24,7 @@ public class FindPvalue extends FindPvalueGeneralized<PWM, BackgroundModel> {
   }
 
   @Override
-  protected CanFindPvalue calculator() throws FileNotFoundException {
+  protected CanFindPvalue calculator() {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
         cache_calculator = new FindPvalueAPE<PWM, BackgroundModel>(motif, background, discretization, max_hash_size);

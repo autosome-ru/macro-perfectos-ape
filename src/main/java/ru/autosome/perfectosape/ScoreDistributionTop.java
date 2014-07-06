@@ -18,26 +18,26 @@ public class ScoreDistributionTop {
     public NotRepresentativeDistribution(String msg) { super(msg); }
   }
 
-  private double left_score_boundary; // score distribution left boundary. `-INF` if distribution is full.
+  private final double left_score_boundary; // score distribution left boundary. `-INF` if distribution is full.
                                       // or `threshold` if distribution if above threshold
-  private TDoubleDoubleMap score_count_hash; // score --> count mapping
-  private double total_count; // sum of all counts under score distribution (not only under top part)
+  private final TDoubleDoubleMap score_count_hash; // score --> count mapping
+  private final double total_count; // sum of all counts under score distribution (not only under top part)
 
-  private Double best_score;  // best score and worst score are used to estimate score when it is
-  private Double worst_score;
+  private Double cache_best_score;  // best score and worst score are used to estimate score when it is
+  private Double cache_worst_score;
 
 
   public double getWorstScore() {
-    if (worst_score != null) {
-      return worst_score;
+    if (cache_worst_score != null) {
+      return cache_worst_score;
     } else {
       return Double.NEGATIVE_INFINITY;
     }
   }
-  public void setWorstScore(double value) { worst_score = value; }
+  public void setWorstScore(double value) { cache_worst_score = value; }
 
   public double getBestScore() {
-    if (best_score == null) { // cache
+    if (cache_best_score == null) { // cache
       double max_score = Double.NEGATIVE_INFINITY;
       TDoubleDoubleIterator iterator = score_count_hash.iterator();
       while (iterator.hasNext()) {
@@ -45,11 +45,11 @@ public class ScoreDistributionTop {
         double score = iterator.key();
         max_score = Math.max(score, max_score);
       }
-      best_score = max_score;
+      cache_best_score = max_score;
     }
-    return best_score;
+    return cache_best_score;
   }
-  public void setBestScore(double value) { best_score = value; }
+  public void setBestScore(double value) { cache_best_score = value; }
 
   public ScoreDistributionTop(TDoubleDoubleMap score_count_hash, double total_count, double left_score_boundary) {
     this.score_count_hash = score_count_hash;
@@ -188,8 +188,10 @@ public class ScoreDistributionTop {
   // first threshold < second threshold
   // first count > second count
   public static class ThresholdsRange {
-    double first_threshold, second_threshold;
-    double first_count, second_count;
+    final double first_threshold;
+    final double second_threshold;
+    final double first_count;
+    final double second_count;
     ThresholdsRange(double first_threshold, double second_threshold, double first_count, double second_count) {
       this.first_threshold = first_threshold;
       this.second_threshold = second_threshold;

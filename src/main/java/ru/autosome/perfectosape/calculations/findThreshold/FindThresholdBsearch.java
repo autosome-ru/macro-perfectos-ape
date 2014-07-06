@@ -5,7 +5,7 @@ import ru.autosome.perfectosape.PvalueBsearchList;
 import ru.autosome.perfectosape.calculations.HashOverflowException;
 
 public class FindThresholdBsearch implements CanFindThreshold  {
-  PvalueBsearchList bsearchList;
+  final PvalueBsearchList bsearchList;
 
   FindThresholdBsearch(PvalueBsearchList bsearchList) {
     this.bsearchList = bsearchList;

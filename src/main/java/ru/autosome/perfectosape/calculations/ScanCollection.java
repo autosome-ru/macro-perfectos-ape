@@ -15,8 +15,8 @@ import java.util.List;
 public class ScanCollection {
 
   static public class SimilarityInfo extends CompareModels.SimilarityInfo {
-    public PWM collectionPWM;
-    public boolean precise;
+    public final PWM collectionPWM;
+    public final boolean precise;
 
     public SimilarityInfo(PWM collectionPWM, PairAligned alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond, boolean precise) {
       super(alignment, recognizedByBoth, recognizedByFirst, recognizedBySecond);
@@ -37,12 +37,12 @@ public class ScanCollection {
   }
 
   public static class ThresholdEvaluator {
-    public PWM pwm;
-    public CanFindThreshold roughThresholdCalculator;
-    public CanFindThreshold preciseThresholdCalculator;
+    public final PWM pwm;
+    public final CanFindThreshold roughThresholdCalculator;
+    public final CanFindThreshold preciseThresholdCalculator;
 
-    public CanFindPvalue roughPvalueCalculator;
-    public CanFindPvalue precisePvalueCalculator;
+    public final CanFindPvalue roughPvalueCalculator;
+    public final CanFindPvalue precisePvalueCalculator;
 
     public ThresholdEvaluator(PWM pwm,
                               CanFindThreshold roughThresholdCalculator, CanFindThreshold preciseThresholdCalculator,
@@ -55,7 +55,7 @@ public class ScanCollection {
     }
   }
 
-  List<ThresholdEvaluator> thresholdEvaluators;
+  final List<ThresholdEvaluator> thresholdEvaluators;
 
   public final PWM queryPWM;
   public double pvalue;

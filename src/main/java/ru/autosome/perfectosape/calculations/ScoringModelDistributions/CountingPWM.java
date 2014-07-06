@@ -13,7 +13,7 @@ import ru.autosome.perfectosape.motifModels.PWM;
 
 public class CountingPWM extends ScoringModelDistibutions {
 
-  private Integer maxHashSize;
+  private final Integer maxHashSize;
 
   final PWM pwm;
   final BackgroundModel background;

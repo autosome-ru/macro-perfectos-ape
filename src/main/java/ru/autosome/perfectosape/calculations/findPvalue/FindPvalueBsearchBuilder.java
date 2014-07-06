@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class FindPvalueBsearchBuilder {
-  File pathToThresholds;
+  final File pathToThresholds;
 
   public FindPvalueBsearchBuilder(File pathToThresholds) {
     this.pathToThresholds = pathToThresholds;

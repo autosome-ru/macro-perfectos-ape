@@ -21,7 +21,7 @@ public class ComparePWM {
   public final CanFindPvalue firstPvalueCalculator;
   public final CanFindPvalue secondPvalueCalculator;
   public final Double discretization;
-  public Integer maxPairHashSize;
+  public final Integer maxPairHashSize;
 
   public ComparePWM(PWM firstPWM, PWM secondPWM,
                     BackgroundModel firstBackground,
@@ -99,7 +99,7 @@ public class ComparePWM {
     public final BackgroundModel firstBackground;
     public final BackgroundModel secondBackground;
     public final Double discretization; // PWMs are already stored discreted, disretization needed in order to upscale thresholds
-    public Integer maxPairHashSize;
+    public final Integer maxPairHashSize;
 
     public ComparePWMCountsGiven(PWM firstPWM, PWM secondPWM,
                                 BackgroundModel firstBackground,

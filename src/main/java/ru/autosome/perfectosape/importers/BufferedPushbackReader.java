@@ -8,8 +8,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class BufferedPushbackReader extends BufferedReader {
-  private BufferedReader reader;
-  private Deque<Character> buf;
+  private final BufferedReader reader;
+  private final Deque<Character> buf;
   public BufferedPushbackReader(InputStream in) {
     super(new InputStreamReader(in));
     buf = new ArrayDeque<Character>();
@@ -109,18 +109,18 @@ public class BufferedPushbackReader extends BufferedReader {
     reader.close();
   }
 
-  public void unread(char[] cbuf, int off, int len) throws IOException {
+  public void unread(char[] cbuf, int off, int len) {
     for (int pos = off+len-1; pos >= off; --pos) {
       buf.push(cbuf[pos]);
     }
   }
-  public void unread(char[] cbuf) throws IOException {
+  public void unread(char[] cbuf) {
     unread(cbuf, 0 , cbuf.length);
   }
-  public void unread(int c) throws IOException {
+  public void unread(int c) {
     buf.push((char)c);
   }
-  public void unreadLine(String s) throws IOException {
+  public void unreadLine(String s) {
     unread((s + "\n").toCharArray());
   }
 }

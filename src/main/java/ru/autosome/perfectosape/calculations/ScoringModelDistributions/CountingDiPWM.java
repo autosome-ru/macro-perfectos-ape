@@ -12,7 +12,7 @@ import ru.autosome.perfectosape.calculations.findThreshold.GaussianThresholdEsti
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
 public class CountingDiPWM extends ScoringModelDistibutions {
-  private Integer maxHashSize;
+  private final Integer maxHashSize;
 
   private final DiPWM dipwm;
   private final DiBackgroundModel dibackground;

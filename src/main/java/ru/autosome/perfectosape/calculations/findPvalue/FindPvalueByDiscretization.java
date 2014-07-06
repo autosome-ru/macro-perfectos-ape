@@ -9,9 +9,9 @@ import ru.autosome.perfectosape.motifModels.Discretable;
 import ru.autosome.perfectosape.motifModels.ScoringModel;
 
 public abstract class FindPvalueByDiscretization <ModelType extends Discretable<ModelType> & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> implements CanFindPvalue {
-  Double discretization; // if discretization is null - it's not applied
-  ModelType motif;
-  BackgroundType background;
+  final Double discretization; // if discretization is null - it's not applied
+  final ModelType motif;
+  final BackgroundType background;
 
   abstract ScoringModelDistibutions discretedScoringModel();
 
