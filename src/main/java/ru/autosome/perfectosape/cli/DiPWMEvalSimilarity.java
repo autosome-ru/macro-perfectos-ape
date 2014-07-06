@@ -1,14 +1,14 @@
 package ru.autosome.perfectosape.cli;
 
 import ru.autosome.perfectosape.BoundaryType;
-import ru.autosome.perfectosape.backgroundModels.DiBackground;
-import ru.autosome.perfectosape.backgroundModels.DiBackgroundModel;
-import ru.autosome.perfectosape.backgroundModels.DiWordwiseBackground;
+import ru.autosome.perfectosape.backgroundModels.*;
 import ru.autosome.perfectosape.calculations.CompareDiPWM;
 import ru.autosome.perfectosape.calculations.CompareModels;
 import ru.autosome.perfectosape.calculations.findPvalue.FindPvalueAPE;
 import ru.autosome.perfectosape.formatters.OutputInformation;
 import ru.autosome.perfectosape.importers.DiPWMImporter;
+import ru.autosome.perfectosape.importers.PMParser;
+import ru.autosome.perfectosape.importers.PWMImporter;
 import ru.autosome.perfectosape.motifModels.DataModel;
 import ru.autosome.perfectosape.motifModels.DiPWM;
 
@@ -25,9 +25,22 @@ public class DiPWMEvalSimilarity extends EvalSimilarityGeneralized<DiPWM, DiBack
     return "java ru.autosome.perfectosape.cli.DiPWMEvalSimilarity";
   }
 
+  protected String DOC_additional_options() {
+    return "These options can be used for PWM vs DiPWM comparison:\n" +
+           "  [--first-from-mononucleotide]  - obtain first DiPWM from mononucleotide PWM/PCM/PPM.\n" +
+           "  [--second-from-mononucleotide] - obtain second DiPWM from mononucleotide PWM/PCM/PPM.\n" +
+           "  [--first-mono-background <background>]  - ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
+           "  [--second-mono-background <background>] - ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
+           "                                            Mononucleotide background for PCM/PPM --> PWM conversion of mononucleotide models\n";
+  }
+
+  boolean firstPWMFromMononucleotide, secondPWMFromMononucleotide;
+  BackgroundModel firstBackgroundMononucleotide, secondBackgroundMononucleotide;
+
   private void initialize_defaults() {
     firstBackground = new DiWordwiseBackground();
     secondBackground = new DiWordwiseBackground();
+
     dataModelFirst = DataModel.PWM;
     dataModelSecond = DataModel.PWM;
     effectiveCountFirst = 100.0;
@@ -38,6 +51,11 @@ public class DiPWMEvalSimilarity extends EvalSimilarityGeneralized<DiPWM, DiBack
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
     pvalueBoundary = BoundaryType.UPPER;
+
+    firstPWMFromMononucleotide = false;
+    secondPWMFromMononucleotide = false;
+    firstBackgroundMononucleotide = new WordwiseBackground();
+    secondBackgroundMononucleotide = new WordwiseBackground();
   }
 
   @Override
@@ -45,13 +63,43 @@ public class DiPWMEvalSimilarity extends EvalSimilarityGeneralized<DiPWM, DiBack
     return DiBackground.fromString(str);
   }
 
+  protected boolean recognize_additional_options(String opt, ArrayList<String> argv) {
+    if (opt.equals("--first-from-mononucleotide")) {
+      firstPWMFromMononucleotide= true;
+      return true;
+    } else if (opt.equals("--second-from-mononucleotide")) {
+      secondPWMFromMononucleotide = true;
+      return true;
+    } else if (opt.equals("--first-mono-background")) {
+      firstBackgroundMononucleotide = Background.fromString(argv.remove(0));
+      return true;
+    } else if (opt.equals("--second-mono-background")) {
+      secondBackgroundMononucleotide = Background.fromString(argv.remove(0));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @Override
-  protected DiPWMImporter firstMotifImporter(){
-    return new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst);
+  protected void extractFirstPWM() {
+    if (firstPWMFromMononucleotide) {
+      PWMImporter firstMotifImporter = new PWMImporter(firstBackgroundMononucleotide, dataModelFirst, effectiveCountFirst);
+      firstPWM = DiPWM.fromPWM( firstMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(firstPMFilename)) );
+    } else {
+      DiPWMImporter firstMotifImporter = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst);
+      firstPWM = firstMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(firstPMFilename));
+    }
   }
   @Override
-  protected DiPWMImporter secondMotifImporter(){
-    return new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond);
+  protected void extractSecondPWM() {
+    if (secondPWMFromMononucleotide) {
+      PWMImporter secondMotifImporter = new PWMImporter(secondBackgroundMononucleotide, dataModelSecond, effectiveCountSecond);
+      secondPWM = DiPWM.fromPWM( secondMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(secondPMFilename)) );
+    } else {
+      DiPWMImporter secondMotifImporter = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond);
+      secondPWM = secondMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(secondPMFilename));
+    }
   }
 
   private DiPWMEvalSimilarity() {

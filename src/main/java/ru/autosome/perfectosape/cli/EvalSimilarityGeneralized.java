@@ -19,6 +19,9 @@ public abstract class EvalSimilarityGeneralized <ModelType extends ScoringModel 
                                                  BackgroundType extends GeneralizedBackgroundModel> {
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
+  protected String DOC_additional_options() {
+    return "";
+  }
 
   protected String documentString() {
    return "Command-line format:\n" +
@@ -34,6 +37,7 @@ public abstract class EvalSimilarityGeneralized <ModelType extends ScoringModel 
     "  [-b <background probabilities] " + DOC_background_option() + "\n" +
     "  [--first-threshold <threshold for the first matrix>]\n" +
     "  [--second-threshold <threshold for the second matrix>]\n" +
+    DOC_additional_options() +
     "\n" +
     "Examples:\n" +
     "  "+ DOC_run_string() + " motifs/KLF4_f2.pat motifs/SP1_f1.pat -p 0.0005 -d 100 -b 0.3,0.2,0.2,0.3\n";
@@ -58,9 +62,9 @@ public abstract class EvalSimilarityGeneralized <ModelType extends ScoringModel 
 
 
   protected abstract BackgroundType extract_background(String str);
-  protected abstract MotifImporter<ModelType> firstMotifImporter();
-  protected abstract MotifImporter<ModelType> secondMotifImporter();
 
+  protected abstract void extractFirstPWM();
+  protected abstract void extractSecondPWM();
 
   void setup_from_arglist(ArrayList<String> argv) {
     extract_first_pm_filename(argv);
@@ -68,8 +72,8 @@ public abstract class EvalSimilarityGeneralized <ModelType extends ScoringModel 
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    firstPWM = firstMotifImporter().loadPWMFromParser(PMParser.from_file_or_stdin(firstPMFilename));
-    secondPWM = secondMotifImporter().loadPWMFromParser(PMParser.from_file_or_stdin(secondPMFilename));
+    extractFirstPWM();
+    extractSecondPWM();
   }
 
   protected void extract_first_pm_filename(ArrayList<String> argv) {
@@ -84,6 +88,10 @@ public abstract class EvalSimilarityGeneralized <ModelType extends ScoringModel 
       throw new IllegalArgumentException("No input. You should specify input file");
     }
     secondPMFilename = argv.remove(0);
+  }
+
+  protected boolean recognize_additional_options(String opt, ArrayList<String> argv) {
+    return false;
   }
 
   protected void extract_option(ArrayList<String> argv) {
@@ -121,7 +129,9 @@ public abstract class EvalSimilarityGeneralized <ModelType extends ScoringModel 
     } else if (opt.equals("--second-threshold")) {
       predefinedSecondThreshold = Double.valueOf(argv.remove(0));
     } else {
-      throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      if (!recognize_additional_options(opt, argv)) {
+        throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      }
     }
   }
 

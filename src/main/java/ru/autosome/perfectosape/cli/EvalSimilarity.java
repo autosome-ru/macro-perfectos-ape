@@ -50,13 +50,16 @@ public class EvalSimilarity extends EvalSimilarityGeneralized<PWM, BackgroundMod
   }
 
   @Override
-  protected PWMImporter firstMotifImporter(){
-    return new PWMImporter(firstBackground, dataModelFirst, effectiveCountFirst);
+  protected void extractFirstPWM() {
+    PWMImporter firstMotifImporter = new PWMImporter(firstBackground, dataModelFirst, effectiveCountFirst);
+    firstPWM = firstMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(firstPMFilename));
   }
   @Override
-  protected PWMImporter secondMotifImporter(){
-    return new PWMImporter(secondBackground, dataModelSecond, effectiveCountSecond);
+  protected void extractSecondPWM() {
+    PWMImporter secondMotifImporter = new PWMImporter(secondBackground, dataModelSecond, effectiveCountSecond);
+    secondPWM = secondMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(secondPMFilename));
   }
+
 
   private EvalSimilarity() {
     initialize_defaults();
