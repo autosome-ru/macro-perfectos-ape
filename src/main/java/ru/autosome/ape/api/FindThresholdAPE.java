@@ -38,9 +38,9 @@ public class FindThresholdAPE extends SingleTask<CanFindThreshold.ThresholdInfo[
   @Override
   public CanFindThreshold.ThresholdInfo[] launchSingleTask() throws HashOverflowException {
     return new ru.autosome.ape.calculation.findThreshold.FindThresholdAPE<PWM, BackgroundModel>(parameters.pwm,
-                                                                                                            parameters.background,
-                                                                                                            parameters.discretizer,
-                                                                                                            parameters.max_hash_size)
+                                                                                                parameters.background,
+                                                                                                parameters.discretizer,
+                                                                                                parameters.max_hash_size)
      .thresholdsByPvalues(parameters.pvalues, parameters.pvalue_boundary);
   }
 }

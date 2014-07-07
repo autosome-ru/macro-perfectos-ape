@@ -41,7 +41,6 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
     return parameters.pwmCollection.size();
   }
 
-
   public Map<PWM, CanFindPvalue> call() {
     Map<PWM, CanFindPvalue> results;
     setStatus(Status.RUNNING);
@@ -63,11 +62,11 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
   }
 
   PrecalculateThresholdList<PWM, BackgroundModel> calculator() {
-    return new PrecalculateThresholdList<PWM, BackgroundModel>(parameters.pvalues,
-                                                                          parameters.discretizer,
-                                                                          parameters.background,
-                                                                          parameters.pvalue_boundary,
-                                                                          parameters.max_hash_size);
+    return new PrecalculateThresholdList<PWM, BackgroundModel>( parameters.pvalues,
+                                                                parameters.discretizer,
+                                                                parameters.background,
+                                                                parameters.pvalue_boundary,
+                                                                parameters.max_hash_size);
   }
 
 }
