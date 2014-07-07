@@ -29,7 +29,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     "  [-d <discretization level>]\n" +
     "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
     "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
-    "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
+    "  [--effective-count[-first|-second] <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
     "  [--boundary lower|upper] Upper boundary (default) means that the obtained P-value is greater than or equal to the requested P-value\n" +
     "  [-b <background probabilities] " + DOC_background_option() + "\n" +
     "  [--first-threshold <threshold for the first matrix>]\n" +
@@ -120,6 +120,10 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
       Double effectiveCount = Double.valueOf(argv.remove(0));
       effectiveCountFirst = effectiveCount;
       effectiveCountSecond = effectiveCount;
+    } else if (opt.equals("--effective-count-first")) {
+      effectiveCountFirst = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--effective-count-second")) {
+      effectiveCountSecond = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--first-threshold")) {
       predefinedFirstThreshold = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--second-threshold")) {

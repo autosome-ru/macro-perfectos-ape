@@ -5,7 +5,6 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.importer.PWMImporter;
@@ -79,10 +78,6 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   CompareModels calculator() {
     return new CompareModels(firstPWM, secondPWM, firstBackground, secondBackground, discretization, maxPairHashSize, maxHashSize);
   }
-
-
-
-
 
   OutputInformation report_table() throws Exception {
     CompareModelsCountsGiven.SimilarityInfo results = calculator().jaccard(thresholdFirst(), thresholdSecond());
