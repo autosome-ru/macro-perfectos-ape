@@ -9,10 +9,11 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
+import ru.autosome.macroape.calculation.generalized.CompareModels;
 
 import java.util.ArrayList;
 
-public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
+public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
                                                  BackgroundType extends GeneralizedBackgroundModel> {
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
@@ -61,6 +62,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
   protected abstract BackgroundType extract_background(String str);
   protected abstract void extractFirstPWM();
   protected abstract void extractSecondPWM();
+  protected abstract CompareModels<ModelType, BackgroundType> calculator();
 
   protected void setup_from_arglist(ArrayList<String> argv) {
     extract_first_pm_filename(argv);
@@ -182,6 +184,14 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     return infos;
   }
 
+  protected CompareModelsCountsGiven.SimilarityInfo<ModelType> results() throws HashOverflowException {
+    return calculator().jaccard(thresholdFirst(), thresholdSecond());
+  }
+
+  protected OutputInformation report_table() throws Exception {
+    return report_table(results());
+  }
+
   protected double thresholdFirst() throws HashOverflowException {
     if (cacheFirstThreshold == null) {
       if (predefinedFirstThreshold != null) {
@@ -205,6 +215,4 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     }
     return cacheSecondThreshold;
   }
-
-
 }

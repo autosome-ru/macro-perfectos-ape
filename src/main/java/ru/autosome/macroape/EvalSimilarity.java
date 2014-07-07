@@ -5,12 +5,10 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 import ru.autosome.macroape.calculation.mono.CompareModels;
 
 import java.util.ArrayList;
@@ -75,13 +73,9 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     return from_arglist(argv);
   }
 
-  CompareModels calculator() {
+  @Override
+  protected CompareModels calculator() {
     return new CompareModels(firstPWM, secondPWM, firstBackground, secondBackground, discretization, maxPairHashSize, maxHashSize);
-  }
-
-  OutputInformation report_table() throws Exception {
-    CompareModelsCountsGiven.SimilarityInfo results = calculator().jaccard(thresholdFirst(), thresholdSecond());
-    return report_table(results);
   }
 
   public static void main(String[] args) {
