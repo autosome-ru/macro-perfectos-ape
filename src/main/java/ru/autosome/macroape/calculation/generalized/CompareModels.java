@@ -1,16 +1,20 @@
 package ru.autosome.macroape.calculation.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
+import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.motifModel.di.DiPWM;
 
-abstract public class CompareModels<ModelType extends Alignable<ModelType> &Discretable<ModelType> &ScoreDistribution<BackgroundType>,
+abstract public class CompareModels<ModelType extends Alignable<ModelType> &Discretable<ModelType> &ScoreDistribution<BackgroundType> &ScoringModel,
                                     BackgroundType extends GeneralizedBackgroundModel> {
 
   public final ModelType firstPWM;
@@ -34,6 +38,21 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     this.secondBackground = secondBackground;
     this.firstPvalueCalculator = firstPvalueCalculator;
     this.secondPvalueCalculator = secondPvalueCalculator;
+    this.discretization = discretization;
+    this.maxPairHashSize = maxPairHashSize;
+  }
+
+  public CompareModels(ModelType firstPWM, ModelType secondPWM,
+                       BackgroundType firstBackground,
+                       BackgroundType secondBackground,
+                       Double discretization,
+                       Integer maxPairHashSize, Integer maxHashSize) {
+    this.firstPWM = firstPWM;
+    this.secondPWM = secondPWM;
+    this.firstBackground = firstBackground;
+    this.secondBackground = secondBackground;
+    this.firstPvalueCalculator = new FindPvalueAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretization, maxHashSize);
+    this.secondPvalueCalculator = new FindPvalueAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretization, maxHashSize);
     this.discretization = discretization;
     this.maxPairHashSize = maxPairHashSize;
   }

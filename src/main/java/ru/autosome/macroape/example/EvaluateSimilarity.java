@@ -23,11 +23,7 @@ public class EvaluateSimilarity {
       BackgroundModel background = new WordwiseBackground();
 //      BackgroundModel background = new Background(new double[]{0.25,0.25,0.25,0.25});
 
-      CompareModels comparator = new CompareModels( firstPWM, secondPWM,
-                                              background, background,
-                                              new FindPvalueAPE<PWM, BackgroundModel>(firstPWM, background, discretization, null),
-                                              new FindPvalueAPE<PWM, BackgroundModel>(secondPWM, background, discretization, null),
-                                             discretization, null);
+      CompareModels comparator = new CompareModels(firstPWM, secondPWM, background, background, discretization, null, null);
       CompareModelsCountsGiven.SimilarityInfo similarityInfo = comparator.jaccard_by_weak_pvalue(0.0005);
       System.out.println("\n----------\n" + similarityInfo.similarity());
       System.out.println(similarityInfo.alignment);
