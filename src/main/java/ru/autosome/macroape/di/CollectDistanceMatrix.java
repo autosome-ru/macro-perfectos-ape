@@ -1,34 +1,35 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.di;
 
-import ru.autosome.commons.backgroundModel.mono.Background;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.backgroundModel.di.DiBackground;
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven;
+import ru.autosome.macroape.calculation.di.CompareModelsCountsGiven;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.CollectDistanceMatrix<PWM, BackgroundModel> {
+public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.CollectDistanceMatrix<DiPWM, DiBackgroundModel> {
   @Override
   protected String DOC_background_option() {
-    return "ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25";
+    return "ACGT - 16 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.02,0.03,0.03,0.02,0.08,0.12,0.12,0.08,0.08,0.12,0.12,0.08,0.02,0.03,0.03,0.02";
   }
   @Override
   protected String DOC_run_string() {
     return "java ru.autosome.macroape.CollectDistanceMatrix";
   }
 
+
   private void initialize_defaults() {
     roughDiscretization = 1.0;
     preciseDiscretization = 10.0;
 
-    background = new WordwiseBackground();
+    background = new DiWordwiseBackground();
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
     dataModel = DataModel.PWM;
@@ -46,8 +47,13 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
 
 
   @Override
-  protected BackgroundModel extract_background(String str) {
-    return Background.fromString(str);
+  protected DiBackgroundModel extract_background(String str) {
+    return DiBackground.fromString(str);
+  }
+
+  @Override
+  protected DiPWMImporter motifImporter() {
+    return new DiPWMImporter(background, dataModel, effectiveCount);
   }
 
   private CollectDistanceMatrix() {
@@ -69,15 +75,10 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
 
 
   @Override
-  protected PWMImporter motifImporter() {
-    return new PWMImporter(background, dataModel, effectiveCount);
-  }
-
-  @Override
-  protected CompareModelsCountsGiven calculator(PWM firstModel, PWM secondModel) {
+  protected CompareModelsCountsGiven calculator(DiPWM firstModel, DiPWM secondModel) {
     return new CompareModelsCountsGiven(firstModel, secondModel,
-                                 background, background,
-                                 roughDiscretization, maxPairHashSize);
+                                        background, background,
+                                        roughDiscretization, maxPairHashSize);
   }
 
 

@@ -2,10 +2,10 @@ package ru.autosome.macroape.calculation.generalized;
 
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
-import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.model.PairAligned;
 
 import java.util.ArrayList;
@@ -58,12 +58,12 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
     return Math.pow(secondBackground.volume(), alignment.length() - secondPWM.length());
   }
 
-  public SimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
+  public SimilarityInfo<ModelType> jaccard(double thresholdFirst, double thresholdSecond,
                                 double firstCount, double secondCount) throws HashOverflowException {
     double bestSimilarity = -1;
-    SimilarityInfo bestSimilarityInfo = null;
+    SimilarityInfo<ModelType> bestSimilarityInfo = null;
     for (Position position: relative_alignments()) {
-      SimilarityInfo similarityInfo;
+      SimilarityInfo<ModelType> similarityInfo;
       similarityInfo = jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, position);
       double similarity = similarityInfo.similarity();
       if (similarity > bestSimilarity) {
@@ -74,7 +74,7 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
     return bestSimilarityInfo;
   }
 
-  public SimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
+  public SimilarityInfo<ModelType> jaccardAtPosition(double thresholdFirst, double thresholdSecond,
                                           double firstCount, double secondCount,
                                           Position position) throws HashOverflowException {
     PairAligned<ModelType> alignment = new PairAligned<ModelType>(firstPWM, secondPWM, position);
@@ -84,10 +84,68 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
     double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
     double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
 
-    return new SimilarityInfo(alignment, intersection, firstCountRenormed, secondCountRenormed);
+    return new SimilarityInfo<ModelType>(alignment, intersection, firstCountRenormed, secondCountRenormed);
   }
 
   protected abstract ru.autosome.macroape.calculation
                       .generalized.AlignedModelIntersection
                       <ModelType, BackgroundType> calculator(PairAligned<ModelType> alignment);
+
+  public static class SimilarityInfo<ModelType extends Alignable<ModelType>> extends ResultInfo {
+    public final PairAligned<ModelType> alignment;
+    public final double recognizedByBoth;
+    public final double recognizedByFirst;
+    public final double recognizedBySecond;
+
+    public SimilarityInfo(PairAligned<ModelType> alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond) {
+      this.recognizedByFirst = recognizedByFirst;
+      this.recognizedBySecond = recognizedBySecond;
+      this.recognizedByBoth = recognizedByBoth;
+      this.alignment = alignment;
+    }
+
+    public Double realPvalueFirst(GeneralizedBackgroundModel background) {
+      double vocabularyVolume = Math.pow(background.volume(), alignment.length());
+      return recognizedByFirst / vocabularyVolume;
+    }
+    public Double realPvalueSecond(GeneralizedBackgroundModel background) {
+      double vocabularyVolume = Math.pow(background.volume(), alignment.length());
+      return recognizedBySecond / vocabularyVolume;
+    }
+
+    public int shift() {
+      return alignment.shift();
+    }
+
+    public String orientation() {
+      return alignment.orientation();
+    }
+
+    public int overlap() {
+      return alignment.overlapSize();
+    }
+
+
+    public static Double jaccardByCounts(double recognizedByFirst, double recognizedBySecond, double recognizedByBoth) {
+      if (recognizedByFirst == 0 || recognizedBySecond == 0) {
+        return null;
+      }
+      double union = recognizedByFirst + recognizedBySecond - recognizedByBoth;
+      return recognizedByBoth / union;
+    }
+
+    public Double similarity() {
+      return jaccardByCounts(recognizedByFirst, recognizedBySecond, recognizedByBoth);
+    }
+
+    public Double distance() {
+      Double similarity = similarity();
+      if (similarity == null) {
+        return null;
+      } else {
+        return 1.0 - similarity;
+      }
+    }
+
+  }
 }

@@ -3,7 +3,6 @@ package ru.autosome.macroape.calculation.di;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.macroape.calculation.generalized.ThresholdEvaluator;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class ScanCollection extends ru.autosome.macroape.calculation.generalized
                                                                    discretization, max_hash_size);
   }
 
-  public ScanCollection(List<ThresholdEvaluator<DiPWM>> thresholdEvaluators, DiPWM queryPWM) {
+  public ScanCollection(List<ru.autosome.macroape.di.ScanCollection.ThresholdEvaluator> thresholdEvaluators, DiPWM queryPWM) {
     super(thresholdEvaluators, queryPWM);
   }
 }

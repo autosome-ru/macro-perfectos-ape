@@ -11,7 +11,7 @@ import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.macroape.calculation.generalized.SimilarityInfo;
+import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 import ru.autosome.macroape.calculation.mono.CompareModels;
 
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
 
   OutputInformation report_table() throws Exception {
-    SimilarityInfo results = calculator().jaccard(thresholdFirst(), thresholdSecond());
+    CompareModelsCountsGiven.SimilarityInfo results = calculator().jaccard(thresholdFirst(), thresholdSecond());
     return report_table(results);
   }
 

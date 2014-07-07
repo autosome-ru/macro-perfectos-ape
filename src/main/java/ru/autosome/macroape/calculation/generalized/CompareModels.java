@@ -52,14 +52,14 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
             .numberOfRecognizedWords(secondBackground, secondPWM.length());
   }
 
-  public SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
+  public CompareModelsCountsGiven.SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
     return calculatorWithCountsGiven()
             .jaccard(threshold_first, threshold_second,
                      firstCount(threshold_first),
                      secondCount(threshold_second));
   }
 
-  public SimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
+  public CompareModelsCountsGiven.SimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
                                           Position position) throws HashOverflowException {
     return calculatorWithCountsGiven()
             .jaccardAtPosition(threshold_first, threshold_second,
@@ -68,7 +68,7 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
                                position);
   }
 
-  public SimilarityInfo jaccard_by_pvalue(double pvalue) throws HashOverflowException {
+  public CompareModelsCountsGiven.SimilarityInfo jaccard_by_pvalue(double pvalue) throws HashOverflowException {
     CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<ModelType,BackgroundType>(firstPWM, firstBackground, discretization, null);
     CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretization, null);
 
@@ -77,7 +77,7 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     return jaccard(threshold_first, threshold_second);
   }
 
-  public SimilarityInfo jaccard_by_weak_pvalue(double pvalue) throws HashOverflowException {
+  public CompareModelsCountsGiven.SimilarityInfo jaccard_by_weak_pvalue(double pvalue) throws HashOverflowException {
     CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<ModelType,BackgroundType>(firstPWM, firstBackground, discretization, null);
     CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<ModelType,BackgroundType>(secondPWM, secondBackground, discretization, null);
 

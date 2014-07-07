@@ -1,12 +1,12 @@
 package ru.autosome.macroape.cli.generalized;
 
+import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
+import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.Background;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.MotifCollectionImporter;
@@ -18,8 +18,6 @@ import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.macroape.calculation.generalized.ScanCollectionSimilarityInfo;
-import ru.autosome.macroape.calculation.generalized.ThresholdEvaluator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,6 +26,25 @@ import java.util.List;
 
 public abstract class ScanCollection<ModelType extends Named & ScoringModel & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
                                      BackgroundType extends GeneralizedBackgroundModel> {
+
+  public class ThresholdEvaluator {
+    public final ModelType pwm;
+    public final CanFindThreshold roughThresholdCalculator;
+    public final CanFindThreshold preciseThresholdCalculator;
+
+    public final CanFindPvalue roughPvalueCalculator;
+    public final CanFindPvalue precisePvalueCalculator;
+
+    public ThresholdEvaluator(ModelType pwm,
+                              CanFindThreshold roughThresholdCalculator, CanFindThreshold preciseThresholdCalculator,
+                              CanFindPvalue roughPvalueCalculator, CanFindPvalue precisePvalueCalculator) {
+      this.pwm = pwm;
+      this.roughThresholdCalculator = roughThresholdCalculator;
+      this.preciseThresholdCalculator = preciseThresholdCalculator;
+      this.roughPvalueCalculator = roughPvalueCalculator;
+      this.precisePvalueCalculator = precisePvalueCalculator;
+    }
+  }
   protected DataModel dataModel;
   protected Double effectiveCount;
   protected BackgroundType queryBackground, collectionBackground;
@@ -44,7 +61,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
   protected File pathToCollectionOfPWMs;
   protected File thresholds_folder;
   protected ModelType queryPWM;
-  protected List<ThresholdEvaluator<ModelType>> pwmCollection;
+  protected List<ThresholdEvaluator> pwmCollection;
 
   abstract protected String DOC_background_option();
   abstract protected String DOC_run_string();
@@ -160,9 +177,9 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     infos.add_table_parameter_without_description("overlap", "overlap");
     infos.add_table_parameter_without_description("orientation", "orientation");
     if (preciseRecalculationCutoff != null) {
-      infos.add_table_parameter_without_description("precise mode", "precision_mode", new OutputInformation.Callback<ScanCollectionSimilarityInfo>(){
+      infos.add_table_parameter_without_description("precise mode", "precision_mode", new OutputInformation.Callback<ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo>(){
         @Override
-        public String run(ScanCollectionSimilarityInfo cell) {
+        public String run(ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo cell) {
           return cell.precise ? "*" : ".";
         }
       });
@@ -183,30 +200,30 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
   }
 
   protected List<? extends ResultInfo> process() throws Exception {
-    List<ScanCollectionSimilarityInfo> infos;
+    List<ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo> infos;
     infos = calculator().similarityInfos();
     return infos;
   }
 
-  protected List<ThresholdEvaluator<ModelType>> load_collection_of_pwms() {
+  protected List<ThresholdEvaluator> load_collection_of_pwms() {
     MotifImporter<ModelType> pwmImporter = motifImporter(collectionBackground, dataModel, effectiveCount);
     MotifCollectionImporter<ModelType> collectionImporter = new MotifCollectionImporter<ModelType>(pwmImporter);
     List<ModelType> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
-    List<ThresholdEvaluator<ModelType>> result;
-    result = new ArrayList<ThresholdEvaluator<ModelType>>();
+    List<ThresholdEvaluator> result;
+    result = new ArrayList<ThresholdEvaluator>();
     for (ModelType pwm: pwmList) {
       if (thresholds_folder == null) {
-        result.add(new ThresholdEvaluator<ModelType>( pwm,
-                                               new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretization, maxHashSize),
-                                               new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretization, maxHashSize),
-                                               new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretization, maxHashSize),
-                                               new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretization, maxHashSize)));
+        result.add(new ThresholdEvaluator( pwm,
+                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretization, maxHashSize),
+                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretization, maxHashSize),
+                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretization, maxHashSize),
+                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretization, maxHashSize)));
       } else {
-        result.add(new ThresholdEvaluator<ModelType>( pwm,
-                                               new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(pwm),
-                                               null,
-                                               new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(pwm),
-                                               null));
+        result.add(new ThresholdEvaluator( pwm,
+                                           new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(pwm),
+                                           null,
+                                           new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(pwm),
+                                           null));
       }
     }
     return result;

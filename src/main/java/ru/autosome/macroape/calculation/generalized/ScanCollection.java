@@ -8,13 +8,14 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.motifModel.*;
+import ru.autosome.macroape.model.PairAligned;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ScanCollection <ModelType extends Alignable<ModelType> & Named & ScoringModel & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
 
-  protected final List<ThresholdEvaluator<ModelType>> thresholdEvaluators;
+  protected final List<ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator> thresholdEvaluators;
 
   public final ModelType queryPWM;
   public double pvalue;
@@ -27,7 +28,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
   public Double preciseRecalculationCutoff; // null means that no recalculation will be performed
 
 
-  public ScanCollection(List<ThresholdEvaluator<ModelType>> thresholdEvaluators, ModelType queryPWM) {
+  public ScanCollection(List<ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator> thresholdEvaluators, ModelType queryPWM) {
     this.thresholdEvaluators = thresholdEvaluators;
     this.queryPWM = queryPWM;
   }
@@ -37,9 +38,9 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
                                                                           CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
                                                                           Double discretization, Integer maxHashSize);
 
-  public List<ScanCollectionSimilarityInfo> similarityInfos() throws HashOverflowException {
-    List<ScanCollectionSimilarityInfo> result;
-    result = new ArrayList<ScanCollectionSimilarityInfo>(thresholdEvaluators.size());
+  public List<SimilarityInfo> similarityInfos() throws HashOverflowException {
+    List<SimilarityInfo> result;
+    result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
 
     FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, roughDiscretization, maxHashSize);
     FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, preciseDiscretization, maxHashSize);
@@ -48,8 +49,8 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
     double preciseQueryThreshold = queryThreshold(preciseDiscretization);
 
 
-    for (ThresholdEvaluator<ModelType> knownMotifEvaluator: thresholdEvaluators) {
-      ru.autosome.macroape.calculation.generalized.SimilarityInfo info;
+    for (ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
+      CompareModelsCountsGiven.SimilarityInfo info;
       boolean precise = false;
       CompareModels roughCalculation = calculation(queryPWM, knownMotifEvaluator.pwm,
                                                    queryBackground, collectionBackground,
@@ -80,7 +81,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
         precise = true;
       }
       if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
-        result.add(new ScanCollectionSimilarityInfo<ModelType>(knownMotifEvaluator.pwm, info, precise));
+        result.add(new SimilarityInfo(knownMotifEvaluator.pwm, info, precise));
       }
     }
     return result;
@@ -96,4 +97,27 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
     }
   }
 
+  public class SimilarityInfo extends CompareModelsCountsGiven.SimilarityInfo {
+    public final ModelType collectionPWM;
+    public final boolean precise;
+
+    public SimilarityInfo(ModelType collectionPWM, PairAligned<ModelType> alignment,
+                          double recognizedByBoth, double recognizedByFirst, double recognizedBySecond,
+                          boolean precise) {
+      super(alignment, recognizedByBoth, recognizedByFirst, recognizedBySecond);
+      this.collectionPWM = collectionPWM;
+      this.precise = precise;
+    }
+    public SimilarityInfo(ModelType collectionPWM, CompareModelsCountsGiven.SimilarityInfo similarityInfo, boolean precise) {
+      super(similarityInfo.alignment,
+            similarityInfo.recognizedByBoth,
+            similarityInfo.recognizedByFirst,
+            similarityInfo.recognizedBySecond);
+      this.collectionPWM = collectionPWM;
+      this.precise = precise;
+    }
+    public String name() {
+      return collectionPWM.getName();
+    }
+  }
 }

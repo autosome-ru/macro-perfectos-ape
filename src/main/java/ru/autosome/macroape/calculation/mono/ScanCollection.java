@@ -1,7 +1,6 @@
 package ru.autosome.macroape.calculation.mono;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
-import ru.autosome.macroape.calculation.generalized.ThresholdEvaluator;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.motifModel.mono.PWM;
 
@@ -20,7 +19,7 @@ public class ScanCollection extends ru.autosome.macroape.calculation.generalized
                               discretization, max_hash_size);
   }
 
-  public ScanCollection(List<ThresholdEvaluator<PWM>> thresholdEvaluators, PWM queryPWM) {
+  public ScanCollection(List<ru.autosome.macroape.ScanCollection.ThresholdEvaluator> thresholdEvaluators, PWM queryPWM) {
     super(thresholdEvaluators, queryPWM);
   }
 }
