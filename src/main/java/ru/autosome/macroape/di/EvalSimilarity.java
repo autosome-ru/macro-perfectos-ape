@@ -59,6 +59,8 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     secondPWMFromMononucleotide = false;
     firstBackgroundMononucleotide = new WordwiseBackground();
     secondBackgroundMononucleotide = new WordwiseBackground();
+
+    alignment = null;
   }
 
   @Override

@@ -9,7 +9,13 @@ public class Position {
     this.position = position;
     this.directStrand = directStrand;
   }
-  Position(int position, String strand) {
+
+  public Position(int position, Orientation orientation) {
+    this.position = position;
+    this.directStrand = (orientation == Orientation.direct);
+  }
+
+  public Position(int position, String strand) {
     if (strand.equals("direct")) {
       this.directStrand = true;
     } else if (strand.equals("revcomp")) {

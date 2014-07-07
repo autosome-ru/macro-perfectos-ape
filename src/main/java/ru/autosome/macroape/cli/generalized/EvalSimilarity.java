@@ -2,6 +2,8 @@ package ru.autosome.macroape.cli.generalized;
 
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.model.Orientation;
+import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
@@ -35,6 +37,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     "  [-b <background probabilities] " + DOC_background_option() + "\n" +
     "  [--first-threshold <threshold for the first matrix>]\n" +
     "  [--second-threshold <threshold for the second matrix>]\n" +
+    "  [--position <shift>,<direct|revcomp>] - specify relative alignment to test. By default every alignment tested (example: --position -3,revcomp). Comma not allowed.\n" +
     DOC_additional_options() +
     "\n" +
     "Examples:\n" +
@@ -58,6 +61,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
 
   protected Double cacheFirstThreshold, cacheSecondThreshold;
 
+  protected Position alignment; // if null, all orientations are shifts and orientations are tested
 
   protected abstract BackgroundType extract_background(String str);
   protected abstract void extractFirstPWM();
@@ -130,6 +134,12 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
       predefinedFirstThreshold = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--second-threshold")) {
       predefinedSecondThreshold = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--position")) {
+      String pos_string = argv.remove(0);
+      String[] pos_tokens = pos_string.split(",");
+      Integer shift = Integer.valueOf(pos_tokens[0]);
+      String orientation = pos_tokens[1];
+      alignment = new Position(shift, orientation);
     } else {
       if (!recognize_additional_options(opt, argv)) {
         throw new IllegalArgumentException("Unknown option '" + opt + "'");
@@ -185,7 +195,11 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
   }
 
   protected CompareModelsCountsGiven.SimilarityInfo<ModelType> results() throws HashOverflowException {
-    return calculator().jaccard(thresholdFirst(), thresholdSecond());
+    if (alignment == null) {
+      return calculator().jaccard(thresholdFirst(), thresholdSecond());
+    } else {
+      return calculator().jaccardAtPosition(thresholdFirst(), thresholdSecond(), alignment);
+    }
   }
 
   protected OutputInformation report_table() throws Exception {

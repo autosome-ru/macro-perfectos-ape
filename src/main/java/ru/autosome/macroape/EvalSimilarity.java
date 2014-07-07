@@ -37,6 +37,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
     pvalueBoundary = BoundaryType.UPPER;
+    alignment = null;
   }
 
   @Override
