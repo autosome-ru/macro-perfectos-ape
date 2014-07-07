@@ -26,23 +26,27 @@ public class FindPvalue {
     FindPvalueAPE calculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretization, max_hash_size);
 
       // Single threshold
-    CanFindPvalue.PvalueInfo info = null;
-    try {
-      info = calculator.pvalueByThreshold(threshold);
-    } catch (HashOverflowException e) {
-      e.printStackTrace();
+    {
+      CanFindPvalue.PvalueInfo info = null;
+      try {
+        info = calculator.pvalueByThreshold(threshold);
+      } catch (HashOverflowException e) {
+        e.printStackTrace();
+      }
+      print_result(info, background, pwm.length());
     }
-    print_result(info, background, pwm.length());
 
       // Multiple thresholds
-    CanFindPvalue.PvalueInfo[] infos = new CanFindPvalue.PvalueInfo[0];
-    try {
-      infos = calculator.pvaluesByThresholds(thresholds);
-    } catch (HashOverflowException e) {
-      e.printStackTrace();
-    }
-    for (int i = 0; i < infos.length; ++i) {
-      print_result(infos[i], background, pwm.length());
+    {
+      CanFindPvalue.PvalueInfo[] infos = new CanFindPvalue.PvalueInfo[0];
+      try {
+        infos = calculator.pvaluesByThresholds(thresholds);
+      } catch (HashOverflowException e) {
+        e.printStackTrace();
+      }
+      for (CanFindPvalue.PvalueInfo info : infos) {
+        print_result(info, background, pwm.length());
+      }
     }
 
     // api integration
@@ -60,8 +64,8 @@ public class FindPvalue {
                                                               discretization, background, max_hash_size);
     ru.autosome.ape.api.FindPvalueAPE bioumlCalculator = new ru.autosome.ape.api.FindPvalueAPE(parameters);
     CanFindPvalue.PvalueInfo[] infosBiouml = bioumlCalculator.call();
-    for (int i = 0; i < infosBiouml.length; ++i) {
-      print_result(infosBiouml[i], background, pwm_manual_constructed.length());
+    for (CanFindPvalue.PvalueInfo bioumlInfo : infosBiouml) {
+      print_result(bioumlInfo, background, pwm_manual_constructed.length());
     }
   }
 }

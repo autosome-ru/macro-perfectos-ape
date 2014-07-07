@@ -20,7 +20,7 @@ public interface CanFindThreshold {
 
     public double numberOfRecognizedWords(GeneralizedBackgroundModel background, int length) {
       return real_pvalue * Math.pow(background.volume(), length);
-    };
+    }
 
 
     // generate infos for non-disreeted matrix from infos for discreeted matrix

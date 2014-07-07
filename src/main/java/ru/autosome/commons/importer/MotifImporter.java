@@ -30,8 +30,7 @@ public abstract class MotifImporter<ModelType extends Named & ScoringModel> {
   }
 
   public ModelType loadPWMFromParser(PMParser parser) {
-    ModelType pwm = transformToPWM(parser.matrix(), parser.name());
-    return pwm;
+    return transformToPWM(parser.matrix(), parser.name());
   }
 
   public List<ModelType> loadPWMsFromFolder(File pathToPWMs) {

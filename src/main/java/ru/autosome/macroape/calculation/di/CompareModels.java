@@ -18,7 +18,7 @@ public class CompareModels extends ru.autosome.macroape.calculation.generalized.
   }
 
   @Override
-  protected ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven calculatorWithCountsGiven() {
+  protected ru.autosome.macroape.calculation.di.CompareModelsCountsGiven calculatorWithCountsGiven() {
     return new CompareModelsCountsGiven(firstPWM, secondPWM,
                                      firstBackground, secondBackground,
                                      discretization, maxPairHashSize);

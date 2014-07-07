@@ -77,12 +77,11 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   }
 
   CompareModels calculator() {
-    CompareModels result = new CompareModels(firstPWM, secondPWM,
-                                       firstBackground, secondBackground,
-                                       new FindPvalueAPE<PWM, BackgroundModel>(firstPWM, firstBackground, discretization, maxHashSize),
-                                       new FindPvalueAPE<PWM, BackgroundModel>(secondPWM, secondBackground, discretization, maxHashSize),
-                                       discretization, maxPairHashSize);
-    return result;
+    return new CompareModels(firstPWM, secondPWM,
+                             firstBackground, secondBackground,
+                             new FindPvalueAPE<PWM, BackgroundModel>(firstPWM, firstBackground, discretization, maxHashSize),
+                             new FindPvalueAPE<PWM, BackgroundModel>(secondPWM, secondBackground, discretization, maxHashSize),
+                             discretization, maxPairHashSize);
   }
 
 

@@ -13,10 +13,7 @@ import ru.autosome.commons.importer.MotifCollectionImporter;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.motifModel.Discretable;
-import ru.autosome.commons.motifModel.Named;
-import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.io.File;
@@ -24,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ScanCollection<ModelType extends Named & ScoringModel & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
+public abstract class ScanCollection<ModelType extends Named & ScoringModel & Discretable<ModelType> & ScoreDistribution<BackgroundType> &Alignable<ModelType>,
                                      BackgroundType extends GeneralizedBackgroundModel> {
 
   public class ThresholdEvaluator {
@@ -200,7 +197,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
   }
 
   protected List<? extends ResultInfo> process() throws Exception {
-    List<ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo> infos;
+    List<ru.autosome.macroape.calculation.generalized.ScanCollection<ModelType, BackgroundType>.SimilarityInfo> infos;
     infos = calculator().similarityInfos();
     return infos;
   }
@@ -243,7 +240,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
   }
 
 
-  protected abstract ru.autosome.macroape.calculation.generalized.ScanCollection calculator();
+  protected abstract ru.autosome.macroape.calculation.generalized.ScanCollection<ModelType,BackgroundType> calculator();
   protected abstract MotifImporter<ModelType> motifImporter(BackgroundType background, DataModel dataModel, Double effectiveCount);
 
 }

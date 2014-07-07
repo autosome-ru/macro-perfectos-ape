@@ -59,7 +59,6 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
 
 
   protected abstract BackgroundType extract_background(String str);
-
   protected abstract void extractFirstPWM();
   protected abstract void extractSecondPWM();
 

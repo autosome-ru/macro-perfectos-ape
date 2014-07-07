@@ -29,25 +29,27 @@ public class FindThreshold {
     CanFindThreshold calculator = new FindThresholdAPE<PWM, BackgroundModel>(pwm, background, discretization, max_hash_size);
 
     // Single threshold
-    CanFindThreshold.ThresholdInfo info = null;
-    try {
-      info = calculator.thresholdByPvalue(pvalue, pvalue_boundary);
-    } catch (HashOverflowException e) {
-      e.printStackTrace();
+    {
+      CanFindThreshold.ThresholdInfo info = null;
+      try {
+        info = calculator.thresholdByPvalue(pvalue, pvalue_boundary);
+      } catch (HashOverflowException e) {
+        e.printStackTrace();
+      }
+      print_result(info, background, pwm.length());
     }
-    print_result(info, background, pwm.length());
-
     // Multiple thresholds
-    CanFindThreshold.ThresholdInfo[] infos = new CanFindThreshold.ThresholdInfo[0];
-    try {
-      infos = calculator.thresholdsByPvalues(pvalues, pvalue_boundary);
-    } catch (HashOverflowException e) {
-      e.printStackTrace();
+    {
+      CanFindThreshold.ThresholdInfo[] infos = new CanFindThreshold.ThresholdInfo[0];
+      try {
+        infos = calculator.thresholdsByPvalues(pvalues, pvalue_boundary);
+      } catch (HashOverflowException e) {
+        e.printStackTrace();
+      }
+      for (CanFindThreshold.ThresholdInfo info : infos) {
+        print_result(info, background, pwm.length());
+      }
     }
-    for (int i = 0; i < infos.length; ++i) {
-      print_result(infos[i], background, pwm.length());
-    }
-
     // api integration
     ru.autosome.ape.api.FindThresholdAPE.Parameters parameters =
      new ru.autosome.ape.api.FindThresholdAPE.Parameters(pwm,
@@ -56,8 +58,8 @@ public class FindThreshold {
                                                               discretization,pvalue_boundary, max_hash_size);
     ru.autosome.ape.api.FindThresholdAPE bioumlCalculator = new ru.autosome.ape.api.FindThresholdAPE(parameters);
     CanFindThreshold.ThresholdInfo[] infosBiouml = bioumlCalculator.call();
-    for (int i = 0; i < infosBiouml.length; ++i) {
-      print_result(infosBiouml[i], background, pwm.length());
+    for (CanFindThreshold.ThresholdInfo bioumlInfo : infosBiouml) {
+      print_result(bioumlInfo, background, pwm.length());
     }
   }
 }

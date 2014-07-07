@@ -21,7 +21,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
   @Override
   protected String DOC_run_string() {
-    return "java ru.autosome.macroape.CollectDistanceMatrix";
+    return "java ru.autosome.macroape.di.CollectDistanceMatrix";
   }
 
 

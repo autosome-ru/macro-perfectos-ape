@@ -38,7 +38,7 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     this.maxPairHashSize = maxPairHashSize;
   }
 
-  abstract protected CompareModelsCountsGiven calculatorWithCountsGiven();
+  abstract protected CompareModelsCountsGiven<ModelType,BackgroundType> calculatorWithCountsGiven();
 
   double firstCount(double threshold_first) throws HashOverflowException {
     return firstPvalueCalculator
@@ -52,14 +52,14 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
             .numberOfRecognizedWords(secondBackground, secondPWM.length());
   }
 
-  public CompareModelsCountsGiven.SimilarityInfo jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
+  public CompareModelsCountsGiven.SimilarityInfo<ModelType> jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
     return calculatorWithCountsGiven()
             .jaccard(threshold_first, threshold_second,
                      firstCount(threshold_first),
                      secondCount(threshold_second));
   }
 
-  public CompareModelsCountsGiven.SimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
+  public CompareModelsCountsGiven.SimilarityInfo<ModelType> jaccardAtPosition(double threshold_first, double threshold_second,
                                           Position position) throws HashOverflowException {
     return calculatorWithCountsGiven()
             .jaccardAtPosition(threshold_first, threshold_second,

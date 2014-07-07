@@ -50,9 +50,9 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
 
 
     for (ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
-      CompareModelsCountsGiven.SimilarityInfo info;
+      CompareModelsCountsGiven.SimilarityInfo<ModelType> info;
       boolean precise = false;
-      CompareModels roughCalculation = calculation(queryPWM, knownMotifEvaluator.pwm,
+      CompareModels<ModelType,BackgroundType> roughCalculation = calculation(queryPWM, knownMotifEvaluator.pwm,
                                                    queryBackground, collectionBackground,
                                                    roughQueryPvalueEvaluator,
                                                    knownMotifEvaluator.roughPvalueCalculator,
@@ -67,7 +67,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
       if (preciseRecalculationCutoff != null &&
            info.similarity() >= preciseRecalculationCutoff &&
            knownMotifEvaluator.preciseThresholdCalculator != null) {
-        CompareModels preciseCalculation = calculation(queryPWM, knownMotifEvaluator.pwm,
+        CompareModels<ModelType,BackgroundType> preciseCalculation = calculation(queryPWM, knownMotifEvaluator.pwm,
                                                        queryBackground, collectionBackground,
                                                        preciseQueryPvalueEvaluator,
                                                        knownMotifEvaluator.precisePvalueCalculator,
@@ -97,7 +97,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
     }
   }
 
-  public class SimilarityInfo extends CompareModelsCountsGiven.SimilarityInfo {
+  public class SimilarityInfo extends CompareModelsCountsGiven.SimilarityInfo<ModelType> {
     public final ModelType collectionPWM;
     public final boolean precise;
 
@@ -108,7 +108,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
       this.collectionPWM = collectionPWM;
       this.precise = precise;
     }
-    public SimilarityInfo(ModelType collectionPWM, CompareModelsCountsGiven.SimilarityInfo similarityInfo, boolean precise) {
+    public SimilarityInfo(ModelType collectionPWM, CompareModelsCountsGiven.SimilarityInfo<ModelType> similarityInfo, boolean precise) {
       super(similarityInfo.alignment,
             similarityInfo.recognizedByBoth,
             similarityInfo.recognizedByFirst,
