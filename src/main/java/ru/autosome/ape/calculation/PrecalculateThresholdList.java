@@ -1,6 +1,7 @@
 package ru.autosome.ape.calculation;
 
 import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.ape.model.PvalueBsearchList;
@@ -25,20 +26,20 @@ public class PrecalculateThresholdList<ModelType extends ScoringModel & Discreta
   final double[] pvalues;
   final BoundaryType pvalue_boundary;
 
-  final double discretization;
+  final Discretizer discretizer;
   final BackgroundType background;
   final Integer max_hash_size;
 
-  public PrecalculateThresholdList(double[] pvalues, double discretization, BackgroundType background, BoundaryType pvalue_boundary, Integer max_hash_size) {
+  public PrecalculateThresholdList(double[] pvalues, Discretizer discretizer, BackgroundType background, BoundaryType pvalue_boundary, Integer max_hash_size) {
     this.pvalues = pvalues;
-    this.discretization = discretization;
+    this.discretizer = discretizer;
     this.background = background;
     this.pvalue_boundary = pvalue_boundary;
     this.max_hash_size = max_hash_size;
   }
 
   protected CanFindThreshold find_threshold_calculator(ModelType motif) {
-    return new FindThresholdAPE<ModelType, BackgroundType>(motif, background, discretization, max_hash_size);
+    return new FindThresholdAPE<ModelType, BackgroundType>(motif, background, discretizer, max_hash_size);
   }
 
   public PvalueBsearchList bsearch_list_for_pwm(ModelType motif) throws HashOverflowException {

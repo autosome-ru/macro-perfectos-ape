@@ -3,6 +3,7 @@ package ru.autosome.macroape.calculation.generalized;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.ResultInfo;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
@@ -18,28 +19,20 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
   public final ModelType secondPWM;
   public final BackgroundType firstBackground;
   public final BackgroundType secondBackground;
-  public final Double discretization; // PWMs are already stored discreted, disretization needed in order to upscale thresholds
+// PWMs are already stored discreted, disretization needed in order to upscale thresholds
+  public final Discretizer discretizer;
   public final Integer maxPairHashSize;
 
   public CompareModelsCountsGiven(ModelType firstPWM, ModelType secondPWM,
                                BackgroundType firstBackground,
                                BackgroundType secondBackground,
-                               Double discretization, Integer maxPairHashSize) {
-    this.firstPWM = firstPWM.discrete(discretization);
-    this.secondPWM = secondPWM.discrete(discretization);
+                               Discretizer discretizer, Integer maxPairHashSize) {
+    this.firstPWM = firstPWM.discrete(discretizer);
+    this.secondPWM = secondPWM.discrete(discretizer);
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
-    this.discretization = discretization;
     this.maxPairHashSize = maxPairHashSize;
-  }
-
-
-  public double upscaleThreshold(double threshold) {
-    if (discretization == null) {
-      return threshold;
-    } else {
-      return threshold * discretization;
-    }
+    this.discretizer = discretizer;
   }
 
   private List<Position> relative_alignments() {
@@ -78,8 +71,8 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
                                           double firstCount, double secondCount,
                                           Position position) throws HashOverflowException {
     PairAligned<ModelType> alignment = new PairAligned<ModelType>(firstPWM, secondPWM, position);
-    double intersection = calculator(alignment).count_in_intersection(upscaleThreshold(thresholdFirst),
-                                                                      upscaleThreshold(thresholdSecond));
+    double intersection = calculator(alignment).count_in_intersection(discretizer.upscale(thresholdFirst),
+                                                                      discretizer.upscale(thresholdSecond));
 
     double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
     double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);

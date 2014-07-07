@@ -2,6 +2,7 @@ package ru.autosome.macroape.cli.generalized;
 
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.types.DataModel;
@@ -45,7 +46,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
   }
 
   protected BackgroundType firstBackground, secondBackground;
-  protected Double discretization;
+  protected Discretizer discretizer;
   protected double pvalue;
   protected BoundaryType pvalueBoundary;
   protected String firstPMFilename, secondPMFilename;
@@ -113,7 +114,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     } else if (opt.equals("--max-2d-hash-size")) {
       maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretization = Double.valueOf(argv.remove(0));
+      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--boundary")) {
       pvalueBoundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
@@ -150,7 +151,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
   OutputInformation report_table_layout() {
     OutputInformation infos = new OutputInformation();
 
-    infos.add_parameter("V", "discretization", discretization);
+    infos.add_parameter("V", "discretization", discretizer);
     if (predefinedFirstThreshold == null || predefinedSecondThreshold == null) {
       infos.add_parameter("P", "requested P-value", pvalue);
     }
@@ -211,7 +212,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
       if (predefinedFirstThreshold != null) {
         cacheFirstThreshold = predefinedFirstThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretization, maxHashSize);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer, maxHashSize);
         cacheFirstThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }
@@ -223,7 +224,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
       if (predefinedSecondThreshold != null) {
         cacheSecondThreshold = predefinedSecondThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretization, maxHashSize);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer, maxHashSize);
         cacheSecondThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }

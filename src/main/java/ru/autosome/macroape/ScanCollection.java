@@ -8,6 +8,7 @@ import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.BoundaryType;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.DataModel;
 
@@ -33,8 +34,8 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   private void initialize_defaults() {
     queryBackground = new WordwiseBackground();
     collectionBackground = new WordwiseBackground();
-    roughDiscretization = 1.0;
-    preciseDiscretization = 10.0;
+    roughDiscretizer = new Discretizer(1.0);
+    preciseDiscretizer = new Discretizer(10.0);
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
     dataModel = DataModel.PWM;
@@ -73,8 +74,8 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     calculator = new ru.autosome.macroape.calculation.mono.ScanCollection(pwmCollection, queryPWM);
     calculator.pvalue = pvalue;
     calculator.queryPredefinedThreshold = queryPredefinedThreshold;
-    calculator.roughDiscretization = roughDiscretization;
-    calculator.preciseDiscretization = preciseDiscretization;
+    calculator.roughDiscretizer = roughDiscretizer;
+    calculator.preciseDiscretizer = preciseDiscretizer;
     calculator.queryBackground = queryBackground;
     calculator.collectionBackground = collectionBackground;
     calculator.pvalueBoundaryType = pvalueBoundaryType;

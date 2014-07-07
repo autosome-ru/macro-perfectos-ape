@@ -7,6 +7,7 @@ import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.importer.MotifCollectionImporter;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.BoundaryType;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
@@ -57,7 +58,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
             "  " + DOC_run_string() + " ./motifs/ -d 10\n";
   }
 
-  protected Double roughDiscretization, preciseDiscretization;
+  protected Discretizer roughDiscretizer, preciseDiscretizer;
   protected File pathToCollectionOfPWMs;
   protected BackgroundType background;
   protected DataModel dataModel;
@@ -91,9 +92,9 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     } else if (opt.equals("--max-2d-hash-size")) {
       maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("--rough-discretization") || opt.equals("-d")) {
-      roughDiscretization = Double.valueOf(argv.remove(0));
+      roughDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--precise-discretization")) {
-      preciseDiscretization = Double.valueOf(argv.remove(0));
+      preciseDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--pcm")) {
       dataModel = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
@@ -123,12 +124,12 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   protected List<PWMWithThreshold> collectThreshold() throws HashOverflowException {
     List<PWMWithThreshold> result = new ArrayList<PWMWithThreshold>();
     for (ModelType pwm: pwmCollection) {
-      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm, background, roughDiscretization, maxHashSize);
+      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm, background, roughDiscretizer, maxHashSize);
       CanFindThreshold.ThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double roughThreshold = roughThresholdInfo.threshold;
       double roughCount = roughThresholdInfo.numberOfRecognizedWords(background, pwm.length());
 
-      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm, background, preciseDiscretization, maxHashSize);
+      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm, background, preciseDiscretizer, maxHashSize);
       CanFindThreshold.ThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double preciseThreshold = preciseThresholdInfo.threshold;
       double preciseCount = preciseThresholdInfo.numberOfRecognizedWords(background, pwm.length());

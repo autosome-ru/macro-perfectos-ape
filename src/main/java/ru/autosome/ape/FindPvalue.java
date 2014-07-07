@@ -27,7 +27,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, 
   protected CanFindPvalue calculator() {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
-        cache_calculator = new FindPvalueAPE<PWM, BackgroundModel>(motif, background, discretization, max_hash_size);
+        cache_calculator = new FindPvalueAPE<PWM, BackgroundModel>(motif, background, discretizer, max_hash_size);
       } else {
         cache_calculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
       }

@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.example;
 
 import ru.autosome.commons.model.BoundaryType;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.ape.api.PrecalculateThresholdLists;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
@@ -27,7 +28,7 @@ public class MultiSNPScan {
     // Higher discretization - better precision of score to Pvalue calculation and higher precalculation time
     // (given discretization is high enough, precalculation step though can take about a pair of minutes on large PWM collection)
     // But precalculation step should be done once
-    double discretization = 10000;
+    Discretizer discretizer = new Discretizer(10000.0);
     // Wordwise background means that we calculate number of words instead of probabilities, this is a default mode
     // If one need to work with certain nucleotide background probabilities he should use:
     // BackgroundModel background = new Background(new double[]{pA, pC, pG, pT}); where {pA,... pT} are probabilities of respective nucleotides
@@ -91,7 +92,7 @@ public class MultiSNPScan {
     // Threshold precalculation step (you can skip it, read commented block just below this one)
     PrecalculateThresholdLists.Parameters listCalculationParams = new PrecalculateThresholdLists.Parameters(pwmCollection,
                                                                                                             pvalues,
-                                                                                                            discretization,
+                                                                                                            discretizer,
                                                                                                             background,
                                                                                                             pvalue_boundary,
                                                                                                             max_hash_size);
@@ -117,7 +118,7 @@ public class MultiSNPScan {
 
     Map<PWM,CanFindPvalue> pwmCollectionWithPvalueCalculators = new HashMap<PWM, CanFindPvalue>();
     for (PWM pwm: pwmCollection) {
-      pwmCollectionWithPvalueCalculators.put(pwm, new FindPvalueAPE(pwm, discretization, background, max_hash_size));
+      pwmCollectionWithPvalueCalculators.put(pwm, new FindPvalueAPE(pwm, discretizer, background, max_hash_size));
     }
 */
 

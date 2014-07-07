@@ -1,6 +1,7 @@
 package ru.autosome.ape.calculation.findThreshold;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
@@ -12,8 +13,8 @@ public class FindThresholdAPE<ModelType extends Discretable<ModelType> & ScoreDi
   final BackgroundType background;
 
   public FindThresholdAPE(ModelType motif, BackgroundType background,
-                    Double discretization, Integer max_hash_size) {
-    super(discretization);
+                    Discretizer discretizer, Integer max_hash_size) {
+    super(discretizer);
     this.motif = motif;
     this.background = background;
     this.maxHashSize = max_hash_size;
@@ -21,6 +22,6 @@ public class FindThresholdAPE<ModelType extends Discretable<ModelType> & ScoreDi
 
   @Override
   ScoringModelDistibutions discretedScoringModel() {
-    return motif.discrete(discretization).scoringModelDistibutions(background, maxHashSize);
+    return motif.discrete(discretizer).scoringModelDistibutions(background, maxHashSize);
   }
 }

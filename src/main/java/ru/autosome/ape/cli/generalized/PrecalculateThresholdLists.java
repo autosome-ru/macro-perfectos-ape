@@ -6,6 +6,7 @@ import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.commons.importer.MotifImporter;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.DataModel;
 
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class PrecalculateThresholdLists<ModelType extends Named & ScoringModel & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
-  protected double discretization;
+  protected Discretizer discretizer;
   protected BackgroundType background;
   protected BoundaryType pvalue_boundary;
   protected Integer max_hash_size;
@@ -35,7 +36,7 @@ public abstract class PrecalculateThresholdLists<ModelType extends Named & Scori
 
   protected void initialize_defaults() {
     initialize_default_background();
-    discretization = 1000;
+    discretizer = new Discretizer(1000.0);
     pvalue_boundary = BoundaryType.LOWER;
     max_hash_size = 10000000;
     pvalues = PrecalculateThresholdList.PVALUE_LIST;
@@ -85,7 +86,7 @@ public abstract class PrecalculateThresholdLists<ModelType extends Named & Scori
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretization = Double.valueOf(argv.remove(0));
+      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--boundary")) {
       pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {

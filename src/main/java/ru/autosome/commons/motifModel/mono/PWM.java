@@ -1,5 +1,6 @@
 package ru.autosome.commons.motifModel.mono;
 
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
@@ -11,8 +12,6 @@ import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringMod
 import ru.autosome.commons.importer.PMParser;
 
 import java.util.ArrayList;
-
-import static java.lang.Math.ceil;
 
 public class PWM extends PM implements ScoringModel,Discretable<PWM>,
                                         ScoreStatistics<BackgroundModel>,
@@ -107,15 +106,17 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
 
   @Override
   public PWM discrete(Double rate) {
-    if (rate == null) {
-      return this;
-    }
+    return discrete(new Discretizer(rate));
+  }
+
+  @Override
+  public PWM discrete(Discretizer discretizer) {
     double[][] mat_result;
     mat_result = new double[matrix.length][];
     for (int i = 0; i < matrix.length; ++i) {
       mat_result[i] = new double[4];
       for (int j = 0; j < 4; ++j) {
-        mat_result[i][j] = ceil(matrix[i][j] * rate);
+        mat_result[i][j] = discretizer.discrete(matrix[i][j]);
       }
     }
     return new PWM(mat_result, name);

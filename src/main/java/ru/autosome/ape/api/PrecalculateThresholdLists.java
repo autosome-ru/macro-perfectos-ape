@@ -5,6 +5,7 @@ import ru.autosome.commons.api.Task;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
   public static class Parameters {
-    public double discretization;
+    public Discretizer discretizer;
     public BackgroundModel background;
     public BoundaryType pvalue_boundary;
     public Integer max_hash_size;
@@ -21,10 +22,10 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
     public List<PWM> pwmCollection;
 
     public Parameters() {}
-    public Parameters(List<PWM> pwmCollection, double[] pvalues, double discretization, BackgroundModel background, BoundaryType pvalue_boundary, Integer max_hash_size) {
+    public Parameters(List<PWM> pwmCollection, double[] pvalues, Discretizer discretizer, BackgroundModel background, BoundaryType pvalue_boundary, Integer max_hash_size) {
       this.pwmCollection = pwmCollection;
       this.pvalues = pvalues;
-      this.discretization = discretization;
+      this.discretizer = discretizer;
       this.background = background;
       this.pvalue_boundary = pvalue_boundary;
       this.max_hash_size = max_hash_size;
@@ -63,7 +64,7 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
 
   PrecalculateThresholdList<PWM, BackgroundModel> calculator() {
     return new PrecalculateThresholdList<PWM, BackgroundModel>(parameters.pvalues,
-                                                                          parameters.discretization,
+                                                                          parameters.discretizer,
                                                                           parameters.background,
                                                                           parameters.pvalue_boundary,
                                                                           parameters.max_hash_size);

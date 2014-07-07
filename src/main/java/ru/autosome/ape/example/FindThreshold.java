@@ -7,6 +7,7 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.importer.PMParser;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
 
 public class FindThreshold {
@@ -20,13 +21,13 @@ public class FindThreshold {
   public static void main(String[] args) {
     PWM pwm = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
     BackgroundModel background = new WordwiseBackground();
-    double discretization = 10000;
+    Discretizer discretizer = new Discretizer(10000.0);
     BoundaryType pvalue_boundary = BoundaryType.LOWER;
     Integer max_hash_size = null;
     double pvalue = 0.0005;
     double[] pvalues = {0.0001, 0.0005, 0.001};
 
-    CanFindThreshold calculator = new FindThresholdAPE<PWM, BackgroundModel>(pwm, background, discretization, max_hash_size);
+    CanFindThreshold calculator = new FindThresholdAPE<PWM, BackgroundModel>(pwm, background, discretizer, max_hash_size);
 
     // Single threshold
     {
@@ -55,7 +56,7 @@ public class FindThreshold {
      new ru.autosome.ape.api.FindThresholdAPE.Parameters(pwm,
                                                               pvalues,
                                                               background,
-                                                              discretization,pvalue_boundary, max_hash_size);
+                                                              discretizer,pvalue_boundary, max_hash_size);
     ru.autosome.ape.api.FindThresholdAPE bioumlCalculator = new ru.autosome.ape.api.FindThresholdAPE(parameters);
     CanFindThreshold.ThresholdInfo[] infosBiouml = bioumlCalculator.call();
     for (CanFindThreshold.ThresholdInfo bioumlInfo : infosBiouml) {

@@ -11,6 +11,7 @@ import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.macroape.calculation.di.CompareModels;
@@ -49,7 +50,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     effectiveCountFirst = 100.0;
     effectiveCountSecond = 100.0;
     pvalue = 0.0005;
-    discretization = 10.0;
+    discretizer = new Discretizer(10.0);
 
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
@@ -126,7 +127,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected CompareModels calculator() {
-    return new CompareModels(firstPWM, secondPWM, firstBackground, secondBackground, discretization, maxPairHashSize, maxHashSize);
+    return new CompareModels(firstPWM, secondPWM, firstBackground, secondBackground, discretizer, maxPairHashSize, maxHashSize);
   }
 
   public static void main(String[] args) {

@@ -48,7 +48,7 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
     for (PWM pwm: pwmList) {
       CanFindPvalue pvalueCalculator;
       if (thresholds_folder == null) {
-        pvalueCalculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretization, max_hash_size);
+        pvalueCalculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretizer, max_hash_size);
       } else {
         pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(pwm);
       }

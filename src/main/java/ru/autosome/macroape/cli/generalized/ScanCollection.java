@@ -13,6 +13,7 @@ import ru.autosome.commons.importer.MotifCollectionImporter;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.model.BoundaryType;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.DataModel;
 
@@ -45,7 +46,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
   protected DataModel dataModel;
   protected Double effectiveCount;
   protected BackgroundType queryBackground, collectionBackground;
-  protected Double roughDiscretization, preciseDiscretization;
+  protected Discretizer roughDiscretizer, preciseDiscretizer;
   protected Integer maxHashSize;
   protected Integer maxPairHashSize;
   protected double pvalue;
@@ -123,9 +124,9 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     } else if (opt.equals("--max-2d-hash-size")) {
       maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("--rough-discretization") || opt.equals("-d")) {
-      roughDiscretization = Double.valueOf(argv.remove(0));
+      roughDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--precise-discretization")) {
-      preciseDiscretization = Double.valueOf(argv.remove(0));
+      preciseDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--boundary")) {
       pvalueBoundaryType = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
@@ -159,11 +160,11 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     infos.add_parameter("P", "P-value", pvalue);
     infos.add_parameter("PB", "P-value boundary", pvalueBoundaryType);
     if (preciseRecalculationCutoff != null) {
-      infos.add_parameter("VR", "discretization value, rough", roughDiscretization);
-      infos.add_parameter("VP", "discretization value, precise", preciseDiscretization);
+      infos.add_parameter("VR", "discretization value, rough", roughDiscretizer);
+      infos.add_parameter("VP", "discretization value, precise", preciseDiscretizer);
       infos.add_parameter("MP", "minimal similarity for the 2nd pass in \'precise\' mode", preciseRecalculationCutoff);
     } else {
-      infos.add_parameter("V", "discretization value", roughDiscretization);
+      infos.add_parameter("V", "discretization value", roughDiscretizer);
     }
     infos.background_parameter("BQ", "background for query matrix", queryBackground);
     infos.background_parameter("BC", "background for collection", collectionBackground);
@@ -211,10 +212,10 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     for (ModelType pwm: pwmList) {
       if (thresholds_folder == null) {
         result.add(new ThresholdEvaluator( pwm,
-                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretization, maxHashSize),
-                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretization, maxHashSize),
-                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretization, maxHashSize),
-                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretization, maxHashSize)));
+                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
+                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize),
+                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
+                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize)));
       } else {
         result.add(new ThresholdEvaluator( pwm,
                                            new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(pwm),

@@ -1,5 +1,6 @@
 package ru.autosome.commons.motifModel.di;
 
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
@@ -164,15 +165,17 @@ public class DiPWM extends DiPM implements ScoringModel,
 
   @Override
   public DiPWM discrete(Double rate) {
-    if (rate == null) {
-      return this;
-    }
+    return discrete(new Discretizer(rate));
+  }
+
+  @Override
+  public DiPWM discrete(Discretizer discretizer) {
     double[][] mat_result;
     mat_result = new double[matrix.length][];
     for (int i = 0; i < matrix.length; ++i) {
       mat_result[i] = new double[ALPHABET_SIZE];
       for (int j = 0; j < ALPHABET_SIZE; ++j) {
-        mat_result[i][j] = ceil(matrix[i][j] * rate);
+        mat_result[i][j] = discretizer.discrete(matrix[i][j]);
       }
     }
     return new DiPWM(mat_result, name);

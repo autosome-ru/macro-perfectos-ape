@@ -5,6 +5,7 @@ import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.commons.backgroundModel.*;
 import ru.autosome.ape.model.exception.HashOverflowException;
@@ -21,16 +22,16 @@ public class FindPvalueDinucleotide {
                          "number of recognized words: " + info.numberOfRecognizedWords(background, pwmLength) + "\n------------\n");
   }
 
-  static void run_mono_and_di(PWM mono_pwm, BackgroundModel mono_background, Double discretization, Integer max_hash_size, double threshold) {
+  static void run_mono_and_di(PWM mono_pwm, BackgroundModel mono_background, Discretizer discretizer, Integer max_hash_size, double threshold) {
     DiPWM di_pwm = DiPWM.fromPWM(mono_pwm);
     DiBackgroundModel di_background = DiBackground.fromMonoBackground(mono_background);
 
     FindPvalueAPE calculator = new FindPvalueAPE<PWM, BackgroundModel>(mono_pwm,
                                                                        mono_background,
-                                                                       discretization, max_hash_size);
+                                                                       discretizer, max_hash_size);
     FindPvalueAPE dicalculator = new FindPvalueAPE<DiPWM, DiBackgroundModel>(di_pwm,
                                                                              di_background,
-                                                                             discretization, max_hash_size);
+                                                                             discretizer, max_hash_size);
 
     // Single threshold
     try {
@@ -49,7 +50,7 @@ public class FindPvalueDinucleotide {
   public static void main(String[] args) {
     PWM pwm = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
 
-    double discretization = 10000;
+    Discretizer discretizer = new Discretizer(10000.0);
     Integer max_hash_size = null;
     double threshold = 7;
 //    double[] thresholds = {3,5,7};
@@ -62,8 +63,8 @@ public class FindPvalueDinucleotide {
 
     //DiPWM dipwm_2 = DiPWM.fromParser(PMParser.from_file_or_stdin("test_data/dipwm/AP2A.di"));
 
-    run_mono_and_di(pwm, new WordwiseBackground(), discretization, max_hash_size, threshold);
-    run_mono_and_di(pwm, new Background(new double[] {0.1, 0.4, 0.4, 0.1}), discretization, max_hash_size, threshold);
-    run_mono_and_di(pwm, new Background(new double[] {0.25, 0.25, 0.25, 0.25}), discretization, max_hash_size, threshold);
+    run_mono_and_di(pwm, new WordwiseBackground(), discretizer, max_hash_size, threshold);
+    run_mono_and_di(pwm, new Background(new double[] {0.1, 0.4, 0.4, 0.1}), discretizer, max_hash_size, threshold);
+    run_mono_and_di(pwm, new Background(new double[] {0.25, 0.25, 0.25, 0.25}), discretizer, max_hash_size, threshold);
   }
 }

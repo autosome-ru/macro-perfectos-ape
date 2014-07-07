@@ -6,6 +6,7 @@ import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.model.BoundaryType;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.di.CompareModelsCountsGiven;
@@ -26,8 +27,8 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
 
 
   private void initialize_defaults() {
-    roughDiscretization = 1.0;
-    preciseDiscretization = 10.0;
+    roughDiscretizer = new Discretizer(1.0);
+    preciseDiscretizer = new Discretizer(10.0);
 
     background = new DiWordwiseBackground();
     maxHashSize = 10000000;
@@ -78,7 +79,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   protected CompareModelsCountsGiven calculator(DiPWM firstModel, DiPWM secondModel) {
     return new CompareModelsCountsGiven(firstModel, secondModel,
                                         background, background,
-                                        roughDiscretization, maxPairHashSize);
+                                        roughDiscretizer, maxPairHashSize);
   }
 
 

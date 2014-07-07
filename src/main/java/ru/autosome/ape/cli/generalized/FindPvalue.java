@@ -1,5 +1,6 @@
 package ru.autosome.ape.cli.generalized;
 
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
@@ -38,7 +39,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
   }
 
   protected String pm_filename; // file with PM (not File instance because it can be .stdin)
-  protected Double discretization;
+  protected Discretizer discretizer;
   protected double[] thresholds;
   protected Integer max_hash_size;
   protected DataModel data_model;
@@ -57,7 +58,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
 
   protected void initialize_defaults() {
     initialize_default_background();
-    discretization = 10000.0;
+    discretizer = new Discretizer(10000.0);
     thresholds = new double[0];
     max_hash_size = 10000000;
     data_model = DataModel.PWM;
@@ -94,7 +95,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretization = Double.valueOf(argv.remove(0));
+      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
     } else if (opt.equals("--pcm")) {
       data_model = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {

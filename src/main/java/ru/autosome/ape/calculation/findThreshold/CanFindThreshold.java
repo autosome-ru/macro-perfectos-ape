@@ -4,6 +4,7 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.cli.ResultInfo;
+import ru.autosome.commons.model.Discretizer;
 
 // TODO: Make use of strong/weak thresholds or thresholds depending on BoundaryType (it wasn't implemented for bsearch lists
 public interface CanFindThreshold {
@@ -24,12 +25,8 @@ public interface CanFindThreshold {
 
 
     // generate infos for non-disreeted matrix from infos for discreeted matrix
-    public ThresholdInfo downscale(Double discretization) {
-      if (discretization == null) {
-        return this;
-      } else {
-        return new ThresholdInfo(threshold / discretization, real_pvalue, expected_pvalue);
-      }
+    public ThresholdInfo downscale(Discretizer discretizer) {
+      return new ThresholdInfo(discretizer.downscale(threshold), real_pvalue, expected_pvalue);
     }
   }
 
