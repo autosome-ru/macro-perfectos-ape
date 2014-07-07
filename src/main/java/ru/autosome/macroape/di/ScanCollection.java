@@ -1,38 +1,38 @@
-package ru.autosome.macroape;
+package ru.autosome.macroape.di;
 
-import ru.autosome.commons.backgroundModel.mono.Background;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.backgroundModel.di.DiBackground;
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ResultInfo;
+import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
-import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCollection<PWM, BackgroundModel> {
+public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCollection<DiPWM, DiBackgroundModel> {
 
   @Override
   protected String DOC_background_option() {
-    return "ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25";
+    return "ACGT - 16 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.02,0.03,0.03,0.02,0.08,0.12,0.12,0.08,0.08,0.12,0.12,0.08,0.02,0.03,0.03,0.02";
   }
   @Override
   protected String DOC_run_string() {
-    return "java ru.autosome.macroape.ScanCollection";
+    return "java ru.autosome.macroape.di.ScanCollection";
   }
 
-  protected BackgroundModel extractBackground(String str) {
-    return Background.fromString(str);
+  protected DiBackgroundModel extractBackground(String str) {
+    return DiBackground.fromString(str);
   }
 
   private void initialize_defaults() {
-    queryBackground = new WordwiseBackground();
-    collectionBackground = new WordwiseBackground();
+    queryBackground = new DiWordwiseBackground();
+    collectionBackground = new DiWordwiseBackground();
     roughDiscretization = 1.0;
     preciseDiscretization = 10.0;
     maxHashSize = 10000000;
@@ -64,13 +64,13 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     return from_arglist(argv);
   }
 
-  protected MotifImporter<PWM> motifImporter(BackgroundModel background, DataModel dataModel, Double effectiveCount) {
-    return new PWMImporter(background, dataModel, effectiveCount);
+  protected MotifImporter<DiPWM> motifImporter(DiBackgroundModel background, DataModel dataModel, Double effectiveCount) {
+    return new DiPWMImporter(background, dataModel, effectiveCount);
   }
 
-  protected ru.autosome.macroape.calculation.mono.ScanCollection calculator() {
-    ru.autosome.macroape.calculation.mono.ScanCollection calculator;
-    calculator = new ru.autosome.macroape.calculation.mono.ScanCollection(pwmCollection, queryPWM);
+  protected ru.autosome.macroape.calculation.di.ScanCollection calculator() {
+    ru.autosome.macroape.calculation.di.ScanCollection calculator;
+    calculator = new ru.autosome.macroape.calculation.di.ScanCollection(pwmCollection, queryPWM);
     calculator.pvalue = pvalue;
     calculator.queryPredefinedThreshold = queryPredefinedThreshold;
     calculator.roughDiscretization = roughDiscretization;
@@ -83,7 +83,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     calculator.similarityCutoff = similarityCutoff;
     calculator.preciseRecalculationCutoff = preciseRecalculationCutoff;
     return calculator;
-   }
+  }
 
 
   public static void main(String[] args) {
