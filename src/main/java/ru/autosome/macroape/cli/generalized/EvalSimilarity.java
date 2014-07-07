@@ -92,8 +92,8 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     secondPMFilename = argv.remove(0);
   }
 
-  protected boolean recognize_additional_options(String opt, ArrayList<String> argv) {
-    return false;
+  protected boolean failed_to_recognize_additional_options(String opt, ArrayList<String> argv) {
+    return true;
   }
 
   protected void extract_option(ArrayList<String> argv) {
@@ -141,7 +141,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
       String orientation = pos_tokens[1];
       alignment = new Position(shift, orientation);
     } else {
-      if (!recognize_additional_options(opt, argv)) {
+      if (failed_to_recognize_additional_options(opt, argv)) {
         throw new IllegalArgumentException("Unknown option '" + opt + "'");
       }
     }

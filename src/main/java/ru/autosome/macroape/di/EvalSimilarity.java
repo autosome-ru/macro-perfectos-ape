@@ -68,21 +68,21 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     return DiBackground.fromString(str);
   }
 
-  protected boolean recognize_additional_options(String opt, ArrayList<String> argv) {
+  protected boolean failed_to_recognize_additional_options(String opt, ArrayList<String> argv) {
     if (opt.equals("--first-from-mono")) {
       firstPWMFromMononucleotide= true;
-      return true;
+      return false;
     } else if (opt.equals("--second-from-mono")) {
       secondPWMFromMononucleotide = true;
-      return true;
+      return false;
     } else if (opt.equals("--first-mono-background")) {
       firstBackgroundMononucleotide = Background.fromString(argv.remove(0));
-      return true;
+      return false;
     } else if (opt.equals("--second-mono-background")) {
       secondBackgroundMononucleotide = Background.fromString(argv.remove(0));
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   }
 
