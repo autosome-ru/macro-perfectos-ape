@@ -31,20 +31,14 @@ public class PMParser {
     }
   }
 
-  // Parameter is filename or special string ".stdin" which means to load data from stdin
-  public static PMParser from_file_or_stdin(String filename_or_stdin) {
+  public static PMParser from_file(String filename_or_stdin) {
     try {
-      InputStream reader;
-      if (filename_or_stdin.equals(".stdin")) {
-        reader = System.in;
+      if (new File(filename_or_stdin).exists()) {
+        InputStream reader = new FileInputStream(filename_or_stdin);
+        return new PMParser( InputExtensions.readLinesFromInputStream(reader) );
       } else {
-        if (new File(filename_or_stdin).exists()) {
-          reader = new FileInputStream(filename_or_stdin);
-        } else {
-          throw new FileNotFoundException("Error! File " + filename_or_stdin + " doesn't exist");
-        }
+        throw new FileNotFoundException("Error! File " + filename_or_stdin + " doesn't exist");
       }
-      return new PMParser( InputExtensions.readLinesFromInputStream(reader) );
     } catch (FileNotFoundException err) {
       System.err.println(err.getMessage());
       return null;

@@ -116,7 +116,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
       extract_option(argv);
     }
 
-    motif = motifImporter().loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename));
+    motif = motifImporter().loadPWMFromParser(PMParser.from_file(pm_filename));
   }
 
   OutputInformation report_table_layout() {

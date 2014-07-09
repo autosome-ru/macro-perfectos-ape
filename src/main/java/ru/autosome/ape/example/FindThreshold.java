@@ -19,7 +19,7 @@ public class FindThreshold {
   }
 
   public static void main(String[] args) {
-    PWM pwm = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
+    PWM pwm = PWM.fromParser(PMParser.from_file("test_data/pwm/KLF4_f2.pwm"));
     BackgroundModel background = new WordwiseBackground();
     Discretizer discretizer = new Discretizer(10000.0);
     BoundaryType pvalue_boundary = BoundaryType.LOWER;

@@ -14,8 +14,8 @@ import ru.autosome.macroape.calculation.mono.CompareModels;
 
 public class EvaluateSimilarity {
   public static void main(String[] args){
-    PWM firstPWM = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
-    PWM secondPWM = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/SP1_f1.pwm"));
+    PWM firstPWM = PWM.fromParser(PMParser.from_file("test_data/pwm/KLF4_f2.pwm"));
+    PWM secondPWM = PWM.fromParser(PMParser.from_file("test_data/pwm/SP1_f1.pwm"));
     try {
       Discretizer discretizer = new Discretizer(100.0);
 

@@ -49,8 +49,8 @@ public class MultiSNPScan {
     List<PWM> pwmCollection = new ArrayList<PWM>();
 
     // One way is to load PWMs from files
-    pwmCollection.add(PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm")));
-    pwmCollection.add(PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/SP1_f1.pwm")));
+    pwmCollection.add(PWM.fromParser(PMParser.from_file("test_data/pwm/KLF4_f2.pwm")));
+    pwmCollection.add(PWM.fromParser(PMParser.from_file("test_data/pwm/SP1_f1.pwm")));
 
     // Another way is to create PWM by specifying (Nx4)-matrix and PWM name
     double[][] matrix_cAVNCT = { {1.0, 2.0, 1.0, 1.0},

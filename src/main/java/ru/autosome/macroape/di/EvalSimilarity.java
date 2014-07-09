@@ -91,20 +91,20 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   protected void extractFirstPWM() {
     if (firstPWMFromMononucleotide) {
       PWMImporter firstMotifImporter = new PWMImporter(firstBackgroundMononucleotide, dataModelFirst, effectiveCountFirst);
-      firstPWM = DiPWM.fromPWM( firstMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(firstPMFilename)) );
+      firstPWM = DiPWM.fromPWM( firstMotifImporter.loadPWMFromParser(PMParser.from_file(firstPMFilename)) );
     } else {
       DiPWMImporter firstMotifImporter = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst);
-      firstPWM = firstMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(firstPMFilename));
+      firstPWM = firstMotifImporter.loadPWMFromParser(PMParser.from_file(firstPMFilename));
     }
   }
   @Override
   protected void extractSecondPWM() {
     if (secondPWMFromMononucleotide) {
       PWMImporter secondMotifImporter = new PWMImporter(secondBackgroundMononucleotide, dataModelSecond, effectiveCountSecond);
-      secondPWM = DiPWM.fromPWM( secondMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(secondPMFilename)) );
+      secondPWM = DiPWM.fromPWM( secondMotifImporter.loadPWMFromParser(PMParser.from_file(secondPMFilename)) );
     } else {
       DiPWMImporter secondMotifImporter = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond);
-      secondPWM = secondMotifImporter.loadPWMFromParser(PMParser.from_file_or_stdin(secondPMFilename));
+      secondPWM = secondMotifImporter.loadPWMFromParser(PMParser.from_file(secondPMFilename));
     }
   }
 

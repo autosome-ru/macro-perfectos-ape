@@ -48,7 +48,7 @@ public class FindPvalueDinucleotide {
   }
 
   public static void main(String[] args) {
-    PWM pwm = PWM.fromParser(PMParser.from_file_or_stdin("test_data/pwm/KLF4_f2.pwm"));
+    PWM pwm = PWM.fromParser(PMParser.from_file("test_data/pwm/KLF4_f2.pwm"));
 
     Discretizer discretizer = new Discretizer(10000.0);
     Integer max_hash_size = null;
@@ -61,7 +61,7 @@ public class FindPvalueDinucleotide {
     System.out.println(pwm.score(word));
     System.out.println(dipwm.score(word));
 
-    //DiPWM dipwm_2 = DiPWM.fromParser(PMParser.from_file_or_stdin("test_data/dipwm/AP2A.di"));
+    //DiPWM dipwm_2 = DiPWM.fromParser(PMParser.from_file("test_data/dipwm/AP2A.di"));
 
     run_mono_and_di(pwm, new WordwiseBackground(), discretizer, max_hash_size, threshold);
     run_mono_and_di(pwm, new Background(new double[] {0.1, 0.4, 0.4, 0.1}), discretizer, max_hash_size, threshold);

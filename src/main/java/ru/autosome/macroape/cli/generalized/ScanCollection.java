@@ -236,7 +236,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
 
     queryPWM = motifImporter(queryBackground,
                              dataModel,
-                             effectiveCount).loadPWMFromParser(PMParser.from_file_or_stdin(queryPMFilename));
+                             effectiveCount).loadPWMFromParser(PMParser.from_file(queryPMFilename));
     pwmCollection = load_collection_of_pwms();
   }
 

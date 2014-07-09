@@ -78,7 +78,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    motif = motifImporter().loadPWMFromParser(PMParser.from_file_or_stdin(pm_filename));
+    motif = motifImporter().loadPWMFromParser(PMParser.from_file(pm_filename));
   }
 
   protected void extract_option(ArrayList<String> argv) {
