@@ -104,7 +104,12 @@ public abstract class PrecalculateThresholdLists<ModelType extends Named & Scori
 
   protected void calculate_thresholds_for_collection() throws HashOverflowException, IOException {
     MotifImporter<ModelType> importer = motifImporter();
-    for (File file : collection_folder.listFiles()) {
+    File[] files = collection_folder.listFiles();
+    if (files == null) {
+      System.err.println("Warning! No files in collection folder `" + collection_folder + "`!");
+      return;
+    }
+    for (File file : files) {
       if (!silence) {
         System.err.println(file);
       }
