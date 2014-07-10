@@ -1,8 +1,5 @@
 package ru.autosome.perfectosape;
 
-import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
-import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
-import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
@@ -14,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.MultiSNPScan<BackgroundModel> {
+public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.MultiSNPScan<PWM, BackgroundModel> {
   @Override
   protected String DOC_run_string(){
     return "java ru.autosome.perfectosape.MultiSNPScan";
@@ -38,20 +35,9 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
   }
 
   @Override
-  protected void load_collection_of_pwms() {
+  protected List<PWM> load_collection_of_pwms() {
     PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose);
-    List<PWM> pwmList = importer.loadMotifCollection(path_to_collection_of_pwms);
-
-    pwmCollection = new ArrayList<ThresholdEvaluator>();
-    for (PWM pwm: pwmList) {
-      CanFindPvalue pvalueCalculator;
-      if (thresholds_folder == null) {
-        pvalueCalculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretizer, max_hash_size);
-      } else {
-        pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(pwm);
-      }
-      pwmCollection.add(new ThresholdEvaluator(pwm, pvalueCalculator, pwm.getName()));
-    }
+    return importer.loadMotifCollection(path_to_collection_of_pwms);
   }
 
   protected static ru.autosome.perfectosape.cli.generalized.MultiSNPScan from_arglist(ArrayList<String> argv) {

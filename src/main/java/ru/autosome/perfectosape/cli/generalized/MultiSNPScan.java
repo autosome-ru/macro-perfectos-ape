@@ -1,6 +1,11 @@
 package ru.autosome.perfectosape.cli.generalized;
 
+import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
+import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.Named;
+import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
@@ -16,7 +21,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundModel> {
+abstract public class MultiSNPScan<MotifType extends Named & ScoringModel & Discretable<MotifType> & ScoreDistribution<BackgroundType>,
+                                   BackgroundType extends GeneralizedBackgroundModel> {
   public static class ThresholdEvaluator {
     public final ScoringModel pwm;
     public final CanFindPvalue pvalueCalculator;
@@ -31,7 +37,22 @@ abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundM
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String s);
-  protected abstract void load_collection_of_pwms();
+  protected abstract List<MotifType> load_collection_of_pwms();
+
+  protected void load_collection_of_pwms_with_evaluators() {
+    List<MotifType> motifList = load_collection_of_pwms();
+
+    pwmCollection = new ArrayList<ThresholdEvaluator>();
+    for (MotifType motif: motifList) {
+      CanFindPvalue pvalueCalculator;
+      if (thresholds_folder == null) {
+        pvalueCalculator = new FindPvalueAPE<MotifType, BackgroundType>(motif, background, discretizer, max_hash_size);
+      } else {
+        pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
+      }
+      pwmCollection.add(new ThresholdEvaluator(motif, pvalueCalculator, motif.getName()));
+    }
+  }
 
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
@@ -140,7 +161,7 @@ abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundM
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    load_collection_of_pwms();
+    load_collection_of_pwms_with_evaluators();
     load_snp_list();
   }
 
