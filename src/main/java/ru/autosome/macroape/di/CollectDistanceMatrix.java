@@ -3,12 +3,17 @@ package ru.autosome.macroape.di;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
+import ru.autosome.commons.backgroundModel.mono.Background;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMImporter;
+import ru.autosome.commons.importer.MotifImporter;
+import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.di.DiPWM;
+import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.di.CompareModelsCountsGiven;
 
@@ -27,6 +32,51 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
 
   @Override
+  protected String DOC_additional_options() {
+    return "These options can be used for PWM vs DiPWM comparison:\n" +
+           "  [--from-mono]  - obtain DiPWMs from mononucleotide PWM/PCM/PPM.\n" +
+           "  [--mono-background <background>]  - ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
+           "                                      Mononucleotide background for PCM/PPM --> PWM conversion of mono models\n";
+  }
+
+  protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
+    if (opt.equals("--from-mono")) {
+      fromMononucleotide= true;
+      return false;
+    } else if (opt.equals("--mono-background")) {
+      backgroundMononucleotide = Background.fromString(argv.remove(0));
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  boolean fromMononucleotide;
+  BackgroundModel backgroundMononucleotide;
+
+  @Override
+  protected void extractMotifCollection() {
+    if (fromMononucleotide) {
+      PWMImporter importer = new PWMImporter(backgroundMononucleotide, dataModel, effectiveCount, transpose);
+      List<PWM> monoCollection = importer.loadMotifCollection(pathToCollectionOfPWMs);
+      pwmCollection = new ArrayList<DiPWM>(monoCollection.size());
+      for(PWM monoPWM: monoCollection) {
+        pwmCollection.add(DiPWM.fromPWM(monoPWM));
+      }
+    } else {
+      DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose);
+      pwmCollection = importer.loadMotifCollection(pathToCollectionOfPWMs);
+    }
+  }
+
+  @Override
+  protected void initialize_defaults() {
+    super.initialize_defaults();
+    fromMononucleotide = false;
+    backgroundMononucleotide = new WordwiseBackground();
+  }
+
+  @Override
   protected void initialize_default_background() {
     background = new DiWordwiseBackground();
   }
@@ -34,11 +84,6 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   @Override
   protected DiBackgroundModel extract_background(String str) {
     return DiBackground.fromString(str);
-  }
-
-  @Override
-  protected DiPWMImporter motifImporter() {
-    return new DiPWMImporter(background, dataModel, effectiveCount, transpose);
   }
 
   private CollectDistanceMatrix() {

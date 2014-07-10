@@ -4,6 +4,7 @@ import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
+import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -52,10 +53,10 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
     return from_arglist(argv);
   }
 
-
   @Override
-  protected PWMImporter motifImporter() {
-    return new PWMImporter(background, dataModel, effectiveCount, transpose);
+  protected void extractMotifCollection() {
+    PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose);
+    pwmCollection = importer.loadMotifCollection(pathToCollectionOfPWMs);
   }
 
   @Override

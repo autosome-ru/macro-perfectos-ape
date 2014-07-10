@@ -43,18 +43,18 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   BackgroundModel firstBackgroundMononucleotide, secondBackgroundMononucleotide;
 
   @Override
-  protected void initialize_default_background() {
-    firstBackground = new DiWordwiseBackground();
-    secondBackground = new DiWordwiseBackground();
-  }
-
-  @Override
   protected void initialize_defaults() {
     super.initialize_defaults();
     firstPWMFromMononucleotide = false;
     secondPWMFromMononucleotide = false;
     firstBackgroundMononucleotide = new WordwiseBackground();
     secondBackgroundMononucleotide = new WordwiseBackground();
+  }
+
+  @Override
+  protected void initialize_default_background() {
+    firstBackground = new DiWordwiseBackground();
+    secondBackground = new DiWordwiseBackground();
   }
 
   @Override
