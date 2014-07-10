@@ -2,6 +2,7 @@ package ru.autosome.commons.model;
 
 import java.util.ArrayList;
 
+// ToDo: make use of Orientation class
 public class Position {
   final public int position;
   final public boolean directStrand;
