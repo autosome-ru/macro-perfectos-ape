@@ -1,9 +1,8 @@
 package ru.autosome.commons.motifModel.mono;
 
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.converter.PCM2PPMConverter;
-import ru.autosome.commons.converter.PCM2PWMConverter;
-import ru.autosome.commons.importer.ParsingResult;
+import ru.autosome.commons.converter.generalized.PCM2PPM;
+import ru.autosome.commons.converter.generalized.PCM2PWM;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 
 public class PCM extends PM implements PositionCountModel {
@@ -21,12 +20,10 @@ public class PCM extends PM implements PositionCountModel {
   }
 
   public PWM to_pwm(BackgroundModel background) {
-    PCM2PWMConverter<PCM, PWM> converter = new PCM2PWMConverter<PCM, PWM>(this, PWM.class);
-    converter.background = background;
-    return converter.convert();
+    return new ru.autosome.commons.converter.mono.PCM2PWM(background).convert(this);
   }
   public PPM to_ppm(BackgroundModel background) {
-    return new PCM2PPMConverter<PCM, PPM>(this, PPM.class).convert();
+    return new ru.autosome.commons.converter.mono.PCM2PPM().convert(this);
   }
 
 }

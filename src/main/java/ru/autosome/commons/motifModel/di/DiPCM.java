@@ -1,9 +1,8 @@
 package ru.autosome.commons.motifModel.di;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.converter.PCM2PPMConverter;
-import ru.autosome.commons.converter.PCM2PWMConverter;
-import ru.autosome.commons.importer.ParsingResult;
+import ru.autosome.commons.converter.generalized.PCM2PPM;
+import ru.autosome.commons.converter.generalized.PCM2PWM;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 
 public class DiPCM extends DiPM implements PositionCountModel {
@@ -21,11 +20,14 @@ public class DiPCM extends DiPM implements PositionCountModel {
   }
 
   public DiPWM to_pwm(DiBackgroundModel background) {
-    PCM2PWMConverter<DiPCM,DiPWM> converter = new PCM2PWMConverter<DiPCM, DiPWM>(this, DiPWM.class); // ToDo: !!!!!
-    converter.background = background;
-    return converter.convert();
+    return new ru.autosome.commons.converter.di.PCM2PWM(background).convert(this);
   }
-  public DiPPM to_ppm(DiBackgroundModel background) {
-    return new PCM2PPMConverter<DiPCM, DiPPM>(this, DiPPM.class).convert();
+
+  public DiPWM to_pwm(DiBackgroundModel background, Double pseudocount) {
+    return new ru.autosome.commons.converter.di.PCM2PWM(background, pseudocount).convert(this);
+  }
+
+  public DiPPM to_ppm() {
+    return new ru.autosome.commons.converter.di.PCM2PPM().convert(this);
   }
 }

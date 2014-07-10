@@ -1,8 +1,11 @@
 package ru.autosome.commons.motifModel.mono;
 
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.converter.PPM2PCMConverter;
-import ru.autosome.commons.importer.ParsingResult;
+import ru.autosome.commons.converter.di.PCM2PWM;
+import ru.autosome.commons.converter.generalized.PPM2PCM;
+import ru.autosome.commons.motifModel.di.DiPCM;
+import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 
 public class PPM extends PM implements PositionFrequencyModel {
@@ -20,10 +23,14 @@ public class PPM extends PM implements PositionFrequencyModel {
   }
 
   public PCM to_pcm(double count) {
-    PPM2PCMConverter<PPM, PCM> converter = new PPM2PCMConverter<PPM,PCM>(this, count, PCM.class);
-    return converter.convert();
+    return new ru.autosome.commons.converter.mono.PPM2PCM(count).convert(this);
   }
   public PWM to_pwm(BackgroundModel background, double count) {
-    return to_pcm(count).to_pwm(background);
+    PCM pcm = new ru.autosome.commons.converter.mono.PPM2PCM(count).convert(this);
+    return new ru.autosome.commons.converter.mono.PCM2PWM(background).convert(pcm);
+  }
+  public PWM to_pwm(BackgroundModel background, double count, Double pseudocount) {
+    PCM pcm = new ru.autosome.commons.converter.mono.PPM2PCM(count).convert(this);
+    return new ru.autosome.commons.converter.mono.PCM2PWM(background, pseudocount).convert(pcm);
   }
 }
