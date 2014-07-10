@@ -5,13 +5,13 @@ import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.commons.backgroundModel.*;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
-import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.mono.PWM;
 
@@ -48,7 +48,7 @@ public class FindPvalueDinucleotide {
   }
 
   public static void main(String[] args) {
-    PWM pwm = PWM.fromParser(PMParser.from_file("test_data/pwm/KLF4_f2.pwm"));
+    PWM pwm = new PWMImporter().loadMotif("test_data/pwm/KLF4_f2.pwm");
 
     Discretizer discretizer = new Discretizer(10000.0);
     Integer max_hash_size = null;
@@ -61,7 +61,7 @@ public class FindPvalueDinucleotide {
     System.out.println(pwm.score(word));
     System.out.println(dipwm.score(word));
 
-    //DiPWM dipwm_2 = DiPWM.fromParser(PMParser.from_file("test_data/dipwm/AP2A.di"));
+    //DiPWM dipwm_2 = new DiPWMImporter().loadMotif("test_data/dipwm/AP2A.di"));
 
     run_mono_and_di(pwm, new WordwiseBackground(), discretizer, max_hash_size, threshold);
     run_mono_and_di(pwm, new Background(new double[] {0.1, 0.4, 0.4, 0.1}), discretizer, max_hash_size, threshold);

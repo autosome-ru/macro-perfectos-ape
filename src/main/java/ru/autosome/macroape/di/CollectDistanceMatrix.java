@@ -38,6 +38,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
     pvalue = 0.0005;
     pvalueBoundary = BoundaryType.UPPER;
     preciseRecalculationCutoff = null;
+    transpose = false;
 
     numOfThreads = 1;
     numThread = 0;
@@ -54,7 +55,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
 
   @Override
   protected DiPWMImporter motifImporter() {
-    return new DiPWMImporter(background, dataModel, effectiveCount);
+    return new DiPWMImporter(background, dataModel, effectiveCount, transpose);
   }
 
   private CollectDistanceMatrix() {

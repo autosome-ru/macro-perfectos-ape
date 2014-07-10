@@ -1,13 +1,12 @@
 package ru.autosome.perfectosape;
 
-import ru.autosome.commons.backgroundModel.mono.Background;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
+import ru.autosome.commons.backgroundModel.mono.Background;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.importer.MotifCollectionImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.mono.PWM;
 
@@ -40,9 +39,8 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
 
   @Override
   protected void load_collection_of_pwms() {
-    PWMImporter pwmImporter = new PWMImporter(background, dataModel, effectiveCount);
-    MotifCollectionImporter<PWM> importer = new MotifCollectionImporter<PWM>(pwmImporter);
-    List<PWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
+    PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose);
+    List<PWM> pwmList = importer.loadMotifCollection(path_to_collection_of_pwms);
 
     pwmCollection = new ArrayList<ThresholdEvaluator>();
     for (PWM pwm: pwmList) {

@@ -29,7 +29,7 @@ public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.
 
   @Override
   protected PWMImporter motifImporter() {
-    return new PWMImporter(background, data_model, effective_count);
+    return new PWMImporter(background, data_model, effective_count, transpose);
   }
 
   @Override

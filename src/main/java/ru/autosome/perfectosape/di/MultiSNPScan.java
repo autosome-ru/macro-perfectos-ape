@@ -1,15 +1,14 @@
 package ru.autosome.perfectosape.di;
 
-import ru.autosome.commons.backgroundModel.di.DiBackground;
-import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
-import ru.autosome.commons.importer.DiPWMImporter;
-import ru.autosome.commons.importer.MotifCollectionImporter;
-import ru.autosome.commons.motifModel.di.DiPWM;
+import ru.autosome.commons.backgroundModel.di.DiBackground;
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.cli.Helper;
+import ru.autosome.commons.importer.DiPWMImporter;
+import ru.autosome.commons.motifModel.di.DiPWM;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,9 +39,8 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
 
   @Override
   protected void load_collection_of_pwms() {
-    DiPWMImporter pwmImporter = new DiPWMImporter(background, dataModel, effectiveCount);
-    MotifCollectionImporter<DiPWM> importer = new MotifCollectionImporter<DiPWM>(pwmImporter);
-    List<DiPWM> pwmList = importer.loadPWMCollection(path_to_collection_of_pwms);
+    DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose);
+    List<DiPWM> pwmList = importer.loadMotifCollection(path_to_collection_of_pwms);
 
     pwmCollection = new ArrayList<ThresholdEvaluator>();
     for (DiPWM motif: pwmList) {

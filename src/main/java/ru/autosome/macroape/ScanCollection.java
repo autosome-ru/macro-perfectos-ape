@@ -46,6 +46,8 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     pvalue = 0.0005;
     similarityCutoff = 0.05;
     preciseRecalculationCutoff = null;
+    queryTranspose = false;
+    collectionTranspose = false;
   }
 
   private ScanCollection() {
@@ -65,8 +67,8 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     return from_arglist(argv);
   }
 
-  protected MotifImporter<PWM> motifImporter(BackgroundModel background, DataModel dataModel, Double effectiveCount) {
-    return new PWMImporter(background, dataModel, effectiveCount);
+  protected MotifImporter<PWM, BackgroundModel> motifImporter(BackgroundModel background, DataModel dataModel, Double effectiveCount, boolean transpose) {
+    return new PWMImporter(background, dataModel, effectiveCount, transpose);
   }
 
   protected ru.autosome.macroape.calculation.mono.ScanCollection calculator() {

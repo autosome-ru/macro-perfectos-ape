@@ -28,8 +28,8 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
     background = new DiWordwiseBackground();
   }
   @Override
-  protected MotifImporter<DiPWM> motifImporter() {
-    return new DiPWMImporter(background, data_model, effective_count);
+  protected MotifImporter<DiPWM, DiBackgroundModel> motifImporter() {
+    return new DiPWMImporter(background, data_model, effective_count, transpose);
   }
   @Override
   protected void extract_background(String str) {

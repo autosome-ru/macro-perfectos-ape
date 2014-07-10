@@ -9,7 +9,6 @@ import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.MotifImporter;
-import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoringModel;
@@ -33,6 +32,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
       "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
       "  [-b <background probabilities] " + DOC_background_option() + "\n" +
       "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
+      "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
       "\n" +
       "Examples:\n" +
       "  " + DOC_run_string() + " motifs/diKLF4_f2.pat\n" +
@@ -45,6 +45,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
   protected Integer max_hash_size; // not int because it can be null
 
   protected double[] pvalues;
+  protected boolean transpose;
 
   protected String pm_filename;
   protected DataModel data_model;
@@ -56,7 +57,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
-  protected abstract MotifImporter<ModelType> motifImporter();
+  protected abstract MotifImporter<ModelType, BackgroundType> motifImporter();
   protected abstract CanFindThreshold calculator();
 
   protected void initialize_defaults() {
@@ -67,6 +68,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
     data_model = DataModel.PWM;
     effective_count = 100;
     thresholds_folder = null;
+    transpose = false;
 
     pvalues = new double[1];
     pvalues[0] = 0.0005;
@@ -78,7 +80,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    motif = motifImporter().loadPWMFromParser(PMParser.from_file(pm_filename));
+    motif = motifImporter().loadMotif(pm_filename);
   }
 
   protected void extract_option(ArrayList<String> argv) {
@@ -99,6 +101,8 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
       effective_count = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
+    } else if (opt.equals("--transpose")) {
+      transpose = true;
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }

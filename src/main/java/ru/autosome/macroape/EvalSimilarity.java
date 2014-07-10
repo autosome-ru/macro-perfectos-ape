@@ -5,7 +5,6 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.types.DataModel;
@@ -34,6 +33,8 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     effectiveCountSecond = 100.0;
     pvalue = 0.0005;
     discretizer = new Discretizer(10.0);
+    transposeFirst = false;
+    transposeSecond = false;
 
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
@@ -48,13 +49,13 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected void extractFirstPWM() {
-    PWMImporter firstMotifImporter = new PWMImporter(firstBackground, dataModelFirst, effectiveCountFirst);
-    firstPWM = firstMotifImporter.loadPWMFromParser(PMParser.from_file(firstPMFilename));
+    PWMImporter firstMotifImporter = new PWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst);
+    firstPWM = firstMotifImporter.loadMotif(firstPMFilename);
   }
   @Override
   protected void extractSecondPWM() {
-    PWMImporter secondMotifImporter = new PWMImporter(secondBackground, dataModelSecond, effectiveCountSecond);
-    secondPWM = secondMotifImporter.loadPWMFromParser(PMParser.from_file(secondPMFilename));
+    PWMImporter secondMotifImporter = new PWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond);
+    secondPWM = secondMotifImporter.loadMotif(secondPMFilename);
   }
 
 

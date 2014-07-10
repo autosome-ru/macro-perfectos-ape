@@ -13,4 +13,8 @@ public class StringExtensions {
     }
     return result.toString();
   }
+
+  public static boolean startWith(String string, String stringStart) {
+    return (string.length() >= stringStart.length()) && string.subSequence(0, stringStart.length()).equals(stringStart);
+  }
 }

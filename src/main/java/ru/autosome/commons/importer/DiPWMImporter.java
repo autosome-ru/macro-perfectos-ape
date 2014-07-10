@@ -5,28 +5,43 @@ import ru.autosome.commons.motifModel.di.DiPCM;
 import ru.autosome.commons.motifModel.di.DiPPM;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.commons.support.StringExtensions;
 
-public class DiPWMImporter extends MotifImporter<DiPWM> {
-  final DiBackgroundModel dibackground;
-  final DataModel dataModel;
-  final Double effectiveCount;
+import java.util.List;
 
-  public DiPWMImporter(DiBackgroundModel dibackground, DataModel dataModel, Double effectiveCount) {
-    this.dibackground = dibackground;
-    this.dataModel = dataModel;
-    this.effectiveCount = effectiveCount;
+public class DiPWMImporter extends MotifImporter<DiPWM, DiBackgroundModel> {
+  final boolean transpose;
+
+  public DiPWMImporter() {
+    super(null, DataModel.PWM, null);
+    this.transpose = false;
+  }
+
+  public DiPWMImporter(boolean transpose) {
+    super(null, DataModel.PWM, null);
+    this.transpose = transpose;
+  }
+
+  public DiPWMImporter(DiBackgroundModel background, DataModel dataModel, Double effectiveCount) {
+    super(background, dataModel, effectiveCount);
+    this.transpose = false;
+  }
+
+  public DiPWMImporter(DiBackgroundModel background, DataModel dataModel, Double effectiveCount, boolean transpose) {
+    super(background, dataModel, effectiveCount);
+    this.transpose = transpose;
   }
 
   // constructs DiPWM from any source: pwm/pcm/ppm matrix
   @Override
-  public DiPWM transformToPWM(double matrix[][], String name) {
+  public DiPWM createMotif(double matrix[][], String name) {
     DiPWM dipwm;
     switch (dataModel) {
       case PCM:
-        dipwm = new DiPCM(matrix, name).to_pwm(dibackground);
+        dipwm = new DiPCM(matrix, name).to_pwm(background);
         break;
       case PPM:
-        dipwm = new DiPPM(matrix, name).to_pwm(dibackground, effectiveCount);
+        dipwm = new DiPPM(matrix, name).to_pwm(background, effectiveCount);
         break;
       case PWM:
         dipwm = new DiPWM(matrix, name);
@@ -36,5 +51,18 @@ public class DiPWMImporter extends MotifImporter<DiPWM> {
     }
     return dipwm;
   }
+
+  public ParsingResult parse(List<String> strings) {
+    if (StringExtensions.startWith(strings.get(0), "PROG|ru.autosome.di.ChIPMunk")) {
+      return new ChIPMunkParser(16, "ru.autosome.di.ChIPMunk", "PWAA").parse(strings);
+    } else { // load basic matrix
+      if (transpose) {
+        return new TransposedMatrixParser(16).parse(strings);
+      } else {
+        return new NormalMatrixParser(16).parse(strings);
+      }
+    }
+  }
+
 
 }

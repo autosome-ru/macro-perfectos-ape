@@ -2,7 +2,7 @@ package ru.autosome.commons.motifModel.mono;
 
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.converter.PPM2PCMConverter;
-import ru.autosome.commons.importer.PMParser;
+import ru.autosome.commons.importer.ParsingResult;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 
 public class PPM extends PM implements PositionFrequencyModel {
@@ -25,12 +25,5 @@ public class PPM extends PM implements PositionFrequencyModel {
   }
   public PWM to_pwm(BackgroundModel background, double count) {
     return to_pcm(count).to_pwm(background);
-  }
-
-  public static PPM fromParser(PMParser parser) {
-    if (parser == null)  return null;
-    double[][] matrix = parser.matrix();
-    String name = parser.name();
-    return new PPM(matrix, name);
   }
 }

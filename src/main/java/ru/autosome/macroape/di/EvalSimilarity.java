@@ -9,7 +9,6 @@ import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.DiPWMImporter;
-import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.types.DataModel;
@@ -55,6 +54,8 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
     pvalueBoundary = BoundaryType.UPPER;
+    transposeFirst = false;
+    transposeSecond = false;
 
     firstPWMFromMononucleotide = false;
     secondPWMFromMononucleotide = false;
@@ -90,21 +91,21 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   @Override
   protected void extractFirstPWM() {
     if (firstPWMFromMononucleotide) {
-      PWMImporter firstMotifImporter = new PWMImporter(firstBackgroundMononucleotide, dataModelFirst, effectiveCountFirst);
-      firstPWM = DiPWM.fromPWM( firstMotifImporter.loadPWMFromParser(PMParser.from_file(firstPMFilename)) );
+      PWMImporter firstMotifImporter = new PWMImporter(firstBackgroundMononucleotide, dataModelFirst, effectiveCountFirst, transposeFirst);
+      firstPWM = DiPWM.fromPWM( firstMotifImporter.loadMotif(firstPMFilename) );
     } else {
-      DiPWMImporter firstMotifImporter = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst);
-      firstPWM = firstMotifImporter.loadPWMFromParser(PMParser.from_file(firstPMFilename));
+      DiPWMImporter firstMotifImporter = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst);
+      firstPWM = firstMotifImporter.loadMotif(firstPMFilename);
     }
   }
   @Override
   protected void extractSecondPWM() {
     if (secondPWMFromMononucleotide) {
-      PWMImporter secondMotifImporter = new PWMImporter(secondBackgroundMononucleotide, dataModelSecond, effectiveCountSecond);
-      secondPWM = DiPWM.fromPWM( secondMotifImporter.loadPWMFromParser(PMParser.from_file(secondPMFilename)) );
+      PWMImporter secondMotifImporter = new PWMImporter(secondBackgroundMononucleotide, dataModelSecond, effectiveCountSecond, transposeSecond);
+      secondPWM = DiPWM.fromPWM( secondMotifImporter.loadMotif(secondPMFilename) );
     } else {
-      DiPWMImporter secondMotifImporter = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond);
-      secondPWM = secondMotifImporter.loadPWMFromParser(PMParser.from_file(secondPMFilename));
+      DiPWMImporter secondMotifImporter = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond);
+      secondPWM = secondMotifImporter.loadMotif(secondPMFilename);
     }
   }
 

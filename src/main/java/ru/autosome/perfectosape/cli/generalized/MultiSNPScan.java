@@ -51,6 +51,7 @@ abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundM
     "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
     "  [-b <background probabilities] " + DOC_background_option() + "\n" +
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
+    "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
     "\n" +
     "Examples:\n" +
     "  " + DOC_run_string() + " ./hocomoco/pwms/ snp.txt --precalc ./collection_thresholds\n" +
@@ -74,6 +75,7 @@ abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundM
   protected double min_fold_change_cutoff;
 
   protected BackgroundType background;
+  protected boolean transpose;
 
   // Split by spaces and return last part
   // Input: "rs9929218 [Homo sapiens] GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
@@ -119,6 +121,7 @@ abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundM
     thresholds_folder = null;
     max_pvalue_cutoff = 0.0005;
     min_fold_change_cutoff = 5.0;
+    transpose = false;
   }
 
   protected MultiSNPScan() {
@@ -159,6 +162,8 @@ abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundM
       if (min_fold_change_cutoff < 1.0) {
         min_fold_change_cutoff = 1.0 / min_fold_change_cutoff;
       }
+    } else if(opt.equals("--transpose")) {
+      transpose = true;
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }

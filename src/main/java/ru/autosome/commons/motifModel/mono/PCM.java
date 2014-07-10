@@ -3,7 +3,7 @@ package ru.autosome.commons.motifModel.mono;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.converter.PCM2PPMConverter;
 import ru.autosome.commons.converter.PCM2PWMConverter;
-import ru.autosome.commons.importer.PMParser;
+import ru.autosome.commons.importer.ParsingResult;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 
 public class PCM extends PM implements PositionCountModel {
@@ -29,10 +29,4 @@ public class PCM extends PM implements PositionCountModel {
     return new PCM2PPMConverter<PCM, PPM>(this, PPM.class).convert();
   }
 
-  public static PCM fromParser(PMParser parser) {
-    if (parser == null)  return null;
-    double[][] matrix = parser.matrix();
-    String name = parser.name();
-    return new PCM(matrix, name);
-  }
 }

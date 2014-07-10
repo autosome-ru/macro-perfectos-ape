@@ -5,7 +5,7 @@ import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
-import ru.autosome.commons.importer.PMParser;
+import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.mono.PWM;
@@ -14,8 +14,8 @@ import ru.autosome.macroape.calculation.mono.CompareModels;
 
 public class EvaluateSimilarity {
   public static void main(String[] args){
-    PWM firstPWM = PWM.fromParser(PMParser.from_file("test_data/pwm/KLF4_f2.pwm"));
-    PWM secondPWM = PWM.fromParser(PMParser.from_file("test_data/pwm/SP1_f1.pwm"));
+    PWM firstPWM = new PWMImporter().loadMotif("test_data/pwm/KLF4_f2.pwm");
+    PWM secondPWM = new PWMImporter().loadMotif("test_data/pwm/SP1_f1.pwm");
     try {
       Discretizer discretizer = new Discretizer(100.0);
 

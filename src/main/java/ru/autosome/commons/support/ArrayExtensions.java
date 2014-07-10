@@ -106,6 +106,14 @@ public class ArrayExtensions {
     return array;
   }
 
+  public static double[][] toPrimitiveArray(List<double[]> wrappedArray) {
+    double[][] matrix = new double[wrappedArray.size()][];
+    for (int i = 0; i < wrappedArray.size(); i++) {
+      matrix[i] = wrappedArray.get(i);
+    }
+    return matrix;
+  }
+
   // [ind_1, ind_2] such as value in [value_1, value_2]
   public static int[] indices_of_range(List<Double> list, double value) {
     int ind = java.util.Collections.binarySearch(list, value);

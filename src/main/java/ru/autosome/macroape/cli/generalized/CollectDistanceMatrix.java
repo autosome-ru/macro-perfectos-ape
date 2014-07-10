@@ -4,7 +4,6 @@ import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.importer.MotifCollectionImporter;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -52,6 +51,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
             "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
             "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
             "  [-b <background probabilities] " + DOC_background_option() + "\n" +
+            "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
             "  [--parallelize <num of threads> <thread number>] - run only one task per numOfThreads (those equal to thread number modulo numOfThreads)\n" +
             "\n" +
             "Examples:\n" +
@@ -67,6 +67,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   protected BoundaryType pvalueBoundary;
   protected double pvalue;
   protected Double preciseRecalculationCutoff; // null means that no recalculation will be performed
+  protected boolean transpose;
 
   protected int numOfThreads, numThread;
   protected List<ModelType> pwmCollection;
@@ -76,8 +77,8 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    MotifImporter<ModelType> importer = motifImporter();
-    pwmCollection = new MotifCollectionImporter<ModelType>(importer).loadPWMCollection(pathToCollectionOfPWMs);
+    MotifImporter<ModelType, BackgroundType> importer = motifImporter();
+    pwmCollection = importer.loadMotifCollection(pathToCollectionOfPWMs);
   }
 
 
@@ -108,6 +109,8 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     } else if (opt.equals("--parallelize")) {
       numOfThreads = Integer.valueOf(argv.remove(0));
       numThread = Integer.valueOf(argv.remove(0));
+    } else if (opt.equals("--transpose")) {
+      transpose = true;
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
@@ -199,5 +202,5 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
 
   abstract protected CompareModelsCountsGiven<ModelType, BackgroundType> calculator(ModelType firstModel, ModelType secondModel);
   abstract protected BackgroundType extract_background(String str);
-  abstract protected MotifImporter<ModelType> motifImporter();
+  abstract protected MotifImporter<ModelType, BackgroundType> motifImporter();
 }

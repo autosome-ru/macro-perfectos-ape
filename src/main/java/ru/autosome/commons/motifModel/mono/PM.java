@@ -30,7 +30,7 @@ public class PM implements Named, MatrixModel, BackgroundCompatible<BackgroundMo
 
   @Override
   public int alphabetSize() {
-    return ALPHABET_SIZE;  //To change body of implemented methods use File | Settings | File Templates.
+    return ALPHABET_SIZE;
   }
 
   protected static final TCharIntMap indexByLetter =

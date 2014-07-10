@@ -9,9 +9,6 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.CountingPWM;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
-import ru.autosome.commons.importer.PMParser;
-
-import java.util.ArrayList;
 
 public class PWM extends PM implements ScoringModel,Discretable<PWM>,
                                         ScoreStatistics<BackgroundModel>,
@@ -22,16 +19,6 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
 
   public PWM(double[][] matrix, String name) throws IllegalArgumentException {
     super(matrix, name);
-  }
-
-  public static PWM fromParser(PMParser parser) {
-    double[][] matrix = parser.matrix();
-    String name = parser.name();
-    return new PWM(matrix, name);
-  }
-
-  private static PWM new_from_text(ArrayList<String> input_lines) {
-    return fromParser(new PMParser(input_lines));
   }
 
   double score(String word, BackgroundModel background) throws IllegalArgumentException {

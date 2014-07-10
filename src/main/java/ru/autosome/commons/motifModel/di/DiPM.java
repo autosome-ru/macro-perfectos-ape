@@ -85,7 +85,7 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
 
   @Override
   public int alphabetSize() {
-    return ALPHABET_SIZE;  //To change body of implemented methods use File | Settings | File Templates.
+    return ALPHABET_SIZE;
   }
 
   @Override

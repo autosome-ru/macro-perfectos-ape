@@ -3,7 +3,7 @@ package ru.autosome.commons.motifModel.di;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.converter.PCM2PPMConverter;
 import ru.autosome.commons.converter.PCM2PWMConverter;
-import ru.autosome.commons.importer.PMParser;
+import ru.autosome.commons.importer.ParsingResult;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 
 public class DiPCM extends DiPM implements PositionCountModel {
@@ -27,12 +27,5 @@ public class DiPCM extends DiPM implements PositionCountModel {
   }
   public DiPPM to_ppm(DiBackgroundModel background) {
     return new PCM2PPMConverter<DiPCM, DiPPM>(this, DiPPM.class).convert();
-  }
-
-  public static DiPCM fromParser(PMParser parser) {
-    if (parser == null)  return null;
-    double[][] matrix = parser.matrix();
-    String name = parser.name();
-    return new DiPCM(matrix, name);
   }
 }

@@ -2,7 +2,7 @@ package ru.autosome.commons.motifModel.di;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.converter.PPM2PCMConverter;
-import ru.autosome.commons.importer.PMParser;
+import ru.autosome.commons.importer.ParsingResult;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 
@@ -26,12 +26,5 @@ public class DiPPM extends DiPM implements PositionFrequencyModel {
   }
   public DiPWM to_pwm(DiBackgroundModel background, double count) {
     return to_pcm(count).to_pwm(background);
-  }
-
-  public static DiPPM fromParser(PMParser parser) {
-    if (parser == null)  return null;
-    double[][] matrix = parser.matrix();
-    String name = parser.name();
-    return new DiPPM(matrix, name);
   }
 }

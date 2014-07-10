@@ -9,9 +9,7 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
-import ru.autosome.commons.importer.MotifCollectionImporter;
 import ru.autosome.commons.importer.MotifImporter;
-import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
@@ -60,6 +58,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
   protected File thresholds_folder;
   protected ModelType queryPWM;
   protected List<ThresholdEvaluator> pwmCollection;
+  protected boolean queryTranspose, collectionTranspose;
 
   abstract protected String DOC_background_option();
   abstract protected String DOC_run_string();
@@ -81,6 +80,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
      "  [-b <background probabilities] " + DOC_background_option() + "\n" +
      "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
      "                         Attention! Don't use threshold lists calculated for a different discretization (or background)!\n" +
+     "  [--[query-|collection-]transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
      "\n" +
      "Output format:\n" +
      "           <name> <jaccard index> <shift> <overlap> <orientation> ['*' in case that result was calculated on the second pass (in precise mode), '.' otherwise]\n" +
@@ -149,6 +149,13 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
       preciseRecalculationCutoff = Double.valueOf(argv.remove(0));
     } else if(opt.equals("--silent")) {
       silenceLog = true;
+    } else if(opt.equals("--transpose")) {
+      queryTranspose = true;
+      collectionTranspose = true;
+    } else if(opt.equals("--query-transpose")) {
+      queryTranspose = true;
+    } else if(opt.equals("--collection-transpose")) {
+      collectionTranspose = true;
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
@@ -204,9 +211,8 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
   }
 
   protected List<ThresholdEvaluator> load_collection_of_pwms() {
-    MotifImporter<ModelType> pwmImporter = motifImporter(collectionBackground, dataModel, effectiveCount);
-    MotifCollectionImporter<ModelType> collectionImporter = new MotifCollectionImporter<ModelType>(pwmImporter);
-    List<ModelType> pwmList = collectionImporter.loadPWMCollection(pathToCollectionOfPWMs);
+    MotifImporter<ModelType, BackgroundType> importer = motifImporter(collectionBackground, dataModel, effectiveCount, collectionTranspose);
+    List<ModelType> pwmList = importer.loadMotifCollection(pathToCollectionOfPWMs);
     List<ThresholdEvaluator> result;
     result = new ArrayList<ThresholdEvaluator>();
     for (ModelType pwm: pwmList) {
@@ -234,14 +240,12 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
       extract_option(argv);
     }
 
-    queryPWM = motifImporter(queryBackground,
-                             dataModel,
-                             effectiveCount).loadPWMFromParser(PMParser.from_file(queryPMFilename));
+    queryPWM = motifImporter(queryBackground, dataModel, effectiveCount, queryTranspose).loadMotif(queryPMFilename);
     pwmCollection = load_collection_of_pwms();
   }
 
 
   protected abstract ru.autosome.macroape.calculation.generalized.ScanCollection<ModelType,BackgroundType> calculator();
-  protected abstract MotifImporter<ModelType> motifImporter(BackgroundType background, DataModel dataModel, Double effectiveCount);
+  protected abstract MotifImporter<ModelType, BackgroundType> motifImporter(BackgroundType background, DataModel dataModel, Double effectiveCount, boolean transpose);
 
 }

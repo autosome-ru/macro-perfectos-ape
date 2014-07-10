@@ -8,7 +8,6 @@ import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.MotifImporter;
-import ru.autosome.commons.importer.PMParser;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoringModel;
@@ -32,6 +31,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
      "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
      "  [-b <background probabilities] " + DOC_background_option() + "\n" +
      "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
+     "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
      "\n" +
      "Examples:\n" +
      "  " + DOC_run_string() + " motifs/KLF4_f2.pat 7.32\n" +
@@ -44,6 +44,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
   protected Integer max_hash_size;
   protected DataModel data_model;
   protected double effective_count;
+  protected boolean transpose;
 
   protected ModelType motif;
   protected BackgroundType background;
@@ -54,7 +55,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
   abstract protected CanFindPvalue calculator();
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
-  protected abstract MotifImporter<ModelType> motifImporter();
+  protected abstract MotifImporter<ModelType, BackgroundType> motifImporter();
 
   protected void initialize_defaults() {
     initialize_default_background();
@@ -64,6 +65,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
     data_model = DataModel.PWM;
     thresholds_folder = null;
     effective_count = 100;
+    transpose = false;
   }
 
   protected void extract_pm_filename(ArrayList<String> argv) {
@@ -104,6 +106,8 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
       effective_count = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
+    } else if (opt.equals("--transpose")) {
+      transpose = true;
     } else {
       throw new IllegalArgumentException("Unknown option '" + opt + "'");
     }
@@ -116,7 +120,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
       extract_option(argv);
     }
 
-    motif = motifImporter().loadPWMFromParser(PMParser.from_file(pm_filename));
+    motif = motifImporter().loadMotif(pm_filename);
   }
 
   OutputInformation report_table_layout() {

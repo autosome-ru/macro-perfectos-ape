@@ -1,19 +1,17 @@
 package ru.autosome.commons.motifModel.di;
 
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
-import ru.autosome.perfectosape.model.Sequence;
-import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.CountingDiPWM;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
-import ru.autosome.commons.importer.PMParser;
+import ru.autosome.perfectosape.model.Sequence;
 
-import java.util.ArrayList;
-
-import static java.lang.Math.*;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class DiPWM extends DiPM implements ScoringModel,
                                             Discretable<DiPWM>,
@@ -40,16 +38,6 @@ public class DiPWM extends DiPM implements ScoringModel,
       matrix[matrix.length - 1][letter] += pwm.matrix[matrix.length][letter % 4];
     }
     return new DiPWM(matrix, pwm.name);
-  }
-
-  public static DiPWM fromParser(PMParser parser) {
-    double[][] matrix = parser.matrix();
-    String name = parser.name();
-    return new DiPWM(matrix, name);
-  }
-
-  private static DiPWM new_from_text(ArrayList<String> input_lines) {
-    return fromParser(new PMParser(input_lines));
   }
 
   double score(String word, DiBackgroundModel background) throws IllegalArgumentException {

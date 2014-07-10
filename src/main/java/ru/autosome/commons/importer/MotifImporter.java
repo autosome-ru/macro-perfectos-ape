@@ -1,56 +1,82 @@
 package ru.autosome.commons.importer;
 
+import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MotifImporter<ModelType extends Named & ScoringModel> {
-  abstract public ModelType transformToPWM(double matrix[][], String name);
+public abstract class MotifImporter<ModelType extends Named & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> {
+  final BackgroundType background;
+  final DataModel dataModel;
+  final Double effectiveCount;
 
-  public List<ModelType> loadPWMsFromFile(File pathToPWMs) throws FileNotFoundException {
-    List<ModelType> pwms = new ArrayList<ModelType>();
-    BufferedPushbackReader reader = new BufferedPushbackReader(new FileInputStream(pathToPWMs));
-    boolean canExtract = true;
-    while (canExtract) {
-      PMParser parser = PMParser.loadFromStream(reader);
-      canExtract = canExtract && (parser != null);
-      if (parser == null) {
-        canExtract = false;
-      } else {
-        ModelType pwm = transformToPWM(parser.matrix(), parser.name());
-        pwms.add(pwm);
-      }
+  public MotifImporter(BackgroundType background, DataModel dataModel, Double effectiveCount) {
+    this.background = background;
+    this.dataModel = dataModel;
+    this.effectiveCount = effectiveCount;
+  }
+
+  abstract public ModelType createMotif(double matrix[][], String name);
+  abstract public ParsingResult parse(List<String> strings);
+
+  public ModelType loadMotif(List<String> lines){
+    ParsingResult parsingInfo = parse(lines);
+    return createMotif(parsingInfo.getMatrix(), parsingInfo.getName());
+  }
+
+  public ModelType loadMotif(File file) {
+    List<String> lines;
+    try {
+      lines = InputExtensions.readLinesFromFile(file);
+    } catch (FileNotFoundException e) {
+      return null;
     }
-    return pwms;
+    ParsingResult parsingInfo = parse(lines);
+    String name;
+    if (parsingInfo.getName() == null || parsingInfo.getName().isEmpty()) {
+      name = file.getName().replaceAll("\\.[^.]+$", "");
+    } else {
+      name = parsingInfo.getName();
+    }
+    return createMotif(parsingInfo.getMatrix(), name);
   }
 
-  public ModelType loadPWMFromParser(PMParser parser) {
-    return transformToPWM(parser.matrix(), parser.name());
+  public ModelType loadMotif(String filename) {
+    return loadMotif(new File(filename));
   }
 
-  public List<ModelType> loadPWMsFromFolder(File pathToPWMs) {
+  public List<ModelType> loadMotifCollection(File pathToMotifs) {
+    if (pathToMotifs.isDirectory()) {
+      return loadMotifCollectionFromFolder(pathToMotifs);
+    } else {
+      return loadMotifCollectionFromFile(pathToMotifs);
+    }
+  }
+
+  public List<ModelType> loadMotifCollectionFromFolder(File pathToPWMs) {
     List<ModelType> result = new ArrayList<ModelType>();
     File[] files = pathToPWMs.listFiles();
     if (files == null) {
       return result;
     }
     for (File file : files) {
-      result.add(loadPWMFromFile(file));
+      ModelType motif = loadMotif(file);
+      if (motif != null) {
+        result.add(motif);
+      }
     }
     return result;
   }
 
-  public ModelType loadPWMFromFile(File file) {
-    PMParser parser = PMParser.from_file(file);
-    ModelType pwm = transformToPWM(parser.matrix(), parser.name());
-    if (pwm.getName() == null || pwm.getName().isEmpty()) {
-      pwm.setName(file.getName().replaceAll("\\.[^.]+$", ""));
-    }
-    return pwm;
+
+  public List<ModelType> loadMotifCollectionFromFile(File pathToPWMs) {
+    // TODO: fix!!!!!
+    // TODO: make use of MotifSplitter
+    return new ArrayList<ModelType>();
   }
 }

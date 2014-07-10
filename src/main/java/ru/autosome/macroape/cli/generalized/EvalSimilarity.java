@@ -39,6 +39,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     "  [--first-threshold <threshold for the first matrix>]\n" +
     "  [--second-threshold <threshold for the second matrix>]\n" +
     "  [--position <shift>,<direct|revcomp>] - specify relative alignment to test. By default every alignment tested (example: --position -3,revcomp). Comma not allowed.\n" +
+    "  [--[first-|second-]transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
     DOC_additional_options() +
     "\n" +
     "Examples:\n" +
@@ -63,6 +64,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
   protected Double cacheFirstThreshold, cacheSecondThreshold;
 
   protected Position alignment; // if null, all orientations are shifts and orientations are tested
+  protected boolean transposeFirst, transposeSecond;
 
   protected abstract BackgroundType extract_background(String str);
   protected abstract void extractFirstPWM();
@@ -118,6 +120,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     } else if (opt.equals("--boundary")) {
       pvalueBoundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
+      // TODO: --pcm-first, --pcm-second
       dataModelFirst = DataModel.PCM;
       dataModelSecond = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
@@ -141,6 +144,13 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
       Integer shift = Integer.valueOf(pos_tokens[0]);
       String orientation = pos_tokens[1];
       alignment = new Position(shift, orientation);
+    } else if (opt.equals("--transpose")) {
+      transposeFirst = true;
+      transposeSecond = true;
+    } else if (opt.equals("--first-transpose")) {
+      transposeFirst = true;
+    } else if (opt.equals("--second-transpose")) {
+      transposeSecond = true;
     } else {
       if (failed_to_recognize_additional_options(opt, argv)) {
         throw new IllegalArgumentException("Unknown option '" + opt + "'");
