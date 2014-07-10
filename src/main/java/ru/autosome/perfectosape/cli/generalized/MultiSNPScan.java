@@ -52,10 +52,15 @@ abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundM
     "  [-b <background probabilities] " + DOC_background_option() + "\n" +
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
     "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
+     DOC_additional_options() +
     "\n" +
     "Examples:\n" +
     "  " + DOC_run_string() + " ./hocomoco/pwms/ snp.txt --precalc ./collection_thresholds\n" +
     "  " + DOC_run_string() + " ./hocomoco/pcms/ snp.txt --pcm -d 10\n";
+  }
+
+  protected String DOC_additional_options() {
+    return "";
   }
 
   protected Discretizer discretizer;
@@ -165,8 +170,14 @@ abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundM
     } else if(opt.equals("--transpose")) {
       transpose = true;
     } else {
-      throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      if (failed_to_recognize_additional_options(opt, argv)) {
+        throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      }
     }
+  }
+
+  protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
+    return true;
   }
 
   protected void load_snp_list() {

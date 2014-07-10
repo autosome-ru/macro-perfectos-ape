@@ -54,9 +54,14 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
             "  [-b <background probabilities] " + DOC_background_option() + "\n" +
             "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
             "  [--parallelize <num of threads> <thread number>] - run only one task per numOfThreads (those equal to thread number modulo numOfThreads)\n" +
+            DOC_additional_options() +
             "\n" +
             "Examples:\n" +
             "  " + DOC_run_string() + " ./motifs/ -d 10\n";
+  }
+
+  protected String DOC_additional_options() {
+    return "";
   }
 
   protected Discretizer roughDiscretizer, preciseDiscretizer;
@@ -83,6 +88,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   }
 
   protected abstract void initialize_default_background();
+
   protected void initialize_defaults() {
     initialize_default_background();
     roughDiscretizer = new Discretizer(1.0);
@@ -133,8 +139,14 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     } else if (opt.equals("--transpose")) {
       transpose = true;
     } else {
-      throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      if (failed_to_recognize_additional_options(opt, argv)) {
+        throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      }
     }
+  }
+
+  protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
+    return true;
   }
 
   protected void extract_path_to_collection_of_pwms(List<String> argv) {

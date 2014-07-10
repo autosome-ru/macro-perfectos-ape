@@ -82,6 +82,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
      "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
      "                         Attention! Don't use threshold lists calculated for a different discretization (or background)!\n" +
      "  [--[query-|collection-]transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
+     DOC_additional_options() +
      "\n" +
      "Output format:\n" +
      "           <name> <jaccard index> <shift> <overlap> <orientation> ['*' in case that result was calculated on the second pass (in precise mode), '.' otherwise]\n" +
@@ -91,6 +92,10 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
      "Examples:\n" +
      "  " + DOC_run_string() + " ./query_motif.pwm ./hocomoco/ --precalc ./hocomoco_thresholds\n" +
      "  " + DOC_run_string() + " ./query_motif.pcm ./hocomoco/ --pcm -p 0.0005 --precise 0.03\n";
+  }
+
+  protected String DOC_additional_options() {
+    return "";
   }
 
   protected void extract_query_pm_filename(ArrayList<String> argv) {
@@ -176,8 +181,14 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     } else if(opt.equals("--collection-transpose")) {
       collectionTranspose = true;
     } else {
-      throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      if (failed_to_recognize_additional_options(opt, argv)) {
+        throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      }
     }
+  }
+
+  protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
+    return true;
   }
 
   public OutputInformation report_table_layout() {
