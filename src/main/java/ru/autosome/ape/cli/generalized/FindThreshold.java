@@ -90,7 +90,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
+      discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
       pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {

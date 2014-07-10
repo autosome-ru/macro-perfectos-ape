@@ -146,7 +146,7 @@ abstract public class MultiSNPScan<BackgroundType extends GeneralizedBackgroundM
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
+      discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--pcm")) {
       dataModel = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {

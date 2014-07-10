@@ -114,9 +114,9 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     } else if (opt.equals("--max-2d-hash-size")) {
       maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("--rough-discretization") || opt.equals("-d")) {
-      roughDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
+      roughDiscretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--precise-discretization")) {
-      preciseDiscretizer = new Discretizer(Double.valueOf(argv.remove(0)));
+      preciseDiscretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--pcm")) {
       dataModel = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {

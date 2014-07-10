@@ -137,7 +137,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     } else if (opt.equals("--max-2d-hash-size")) {
       maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
-      discretizer = new Discretizer(Double.valueOf(argv.remove(0)));
+      discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
       pvalueBoundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {

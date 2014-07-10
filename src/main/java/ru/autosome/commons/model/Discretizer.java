@@ -9,6 +9,10 @@ public class Discretizer {
     this.discretization = discretization;
   }
 
+  public static Discretizer fromString(String s){
+    return new Discretizer(Double.valueOf(s));
+  }
+
   public double upscale(double value) {
     if (discretization == null) {
       return value;
