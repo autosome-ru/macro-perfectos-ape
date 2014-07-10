@@ -16,6 +16,7 @@ import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 import ru.autosome.macroape.calculation.generalized.CompareModels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
                                                  BackgroundType extends GeneralizedBackgroundModel> {
@@ -96,7 +97,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     secondPMFilename = argv.remove(0);
   }
 
-  protected boolean failed_to_recognize_additional_options(String opt, ArrayList<String> argv) {
+  protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
     return true;
   }
 

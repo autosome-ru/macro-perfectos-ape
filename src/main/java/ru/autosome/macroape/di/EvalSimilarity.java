@@ -17,6 +17,7 @@ import ru.autosome.macroape.calculation.di.CompareModels;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSimilarity<DiPWM, DiBackgroundModel> {
   @Override
@@ -28,6 +29,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     return "java ru.autosome.macroape.di.EvalSimilarity";
   }
 
+  @Override
   protected String DOC_additional_options() {
     return "These options can be used for PWM vs DiPWM comparison:\n" +
            "  [--first-from-mono]  - obtain first DiPWM from mono PWM/PCM/PPM.\n" +
@@ -60,7 +62,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     return DiBackground.fromString(str);
   }
 
-  protected boolean failed_to_recognize_additional_options(String opt, ArrayList<String> argv) {
+  protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
     // TODO: --from-mono-background and --from-mono
     // TODO: Make a pair of options --from-mono-background to PCM-->PWM conversion and to set dinucleotide background.
     // TODO: or it may be the same option (for now it's only PCM-->PWM conversion, not diPWM background)

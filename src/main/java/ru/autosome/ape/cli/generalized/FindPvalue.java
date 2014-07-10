@@ -7,7 +7,6 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
-import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoringModel;
@@ -15,6 +14,7 @@ import ru.autosome.commons.motifModel.ScoringModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public abstract class FindPvalue<ModelType extends ScoringModel & Named, BackgroundType extends GeneralizedBackgroundModel> {
 
@@ -32,10 +32,15 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
      "  [-b <background probabilities] " + DOC_background_option() + "\n" +
      "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
      "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
+     DOC_additional_options() +
      "\n" +
      "Examples:\n" +
      "  " + DOC_run_string() + " motifs/KLF4_f2.pat 7.32\n" +
      "  " + DOC_run_string() + " motifs/KLF4_f2.pat 7.32 4.31 5.42 -d 1000 -b 0.2,0.3,0.3,0.2\n";
+  }
+
+  protected String DOC_additional_options() {
+    return "";
   }
 
   protected String pm_filename; // file with PM (not File instance because it can be .stdin)
@@ -55,7 +60,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
   abstract protected CanFindPvalue calculator();
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
-  protected abstract MotifImporter<ModelType, BackgroundType> motifImporter();
+  abstract protected void extractMotif();
 
   protected void initialize_defaults() {
     initialize_default_background();
@@ -90,6 +95,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
     thresholds = ArrayExtensions.toPrimitiveArray(thresholds_list);
   }
 
+
   protected void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b")) {
@@ -109,8 +115,15 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
     } else if (opt.equals("--transpose")) {
       transpose = true;
     } else {
-      throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      if (failed_to_recognize_additional_options(opt, argv)) {
+        throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      }
     }
+  }
+
+
+  protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
+    return true;
   }
 
   protected void setup_from_arglist(ArrayList<String> argv) {
@@ -119,8 +132,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
     while (argv.size() > 0) {
       extract_option(argv);
     }
-
-    motif = motifImporter().loadMotif(pm_filename);
+    extractMotif();
   }
 
   OutputInformation report_table_layout() {
