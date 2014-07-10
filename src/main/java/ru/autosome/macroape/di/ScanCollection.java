@@ -3,6 +3,7 @@ package ru.autosome.macroape.di;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
+import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.DiPWMImporter;
@@ -27,27 +28,15 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     return "java ru.autosome.macroape.di.ScanCollection";
   }
 
+  @Override
   protected DiBackgroundModel extractBackground(String str) {
     return DiBackground.fromString(str);
   }
 
-  private void initialize_defaults() {
+  @Override
+  protected void initialize_default_background() {
     queryBackground = new DiWordwiseBackground();
     collectionBackground = new DiWordwiseBackground();
-    roughDiscretizer = new Discretizer(1.0);
-    preciseDiscretizer = new Discretizer(10.0);
-    maxHashSize = 10000000;
-    maxPairHashSize = 10000;
-    dataModel = DataModel.PWM;
-    effectiveCount = 100.0;
-    thresholds_folder = null;
-    silenceLog = false;
-    pvalueBoundaryType = BoundaryType.UPPER;
-    pvalue = 0.0005;
-    similarityCutoff = 0.05;
-    preciseRecalculationCutoff = null;
-    queryTranspose = false;
-    collectionTranspose = false;
   }
 
   private ScanCollection() {

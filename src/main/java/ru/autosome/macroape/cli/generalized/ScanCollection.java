@@ -7,6 +7,7 @@ import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.MotifImporter;
@@ -108,6 +109,24 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
   }
 
   protected abstract BackgroundType extractBackground(String str);
+  protected abstract void initialize_default_background();
+  protected void initialize_defaults() {
+    initialize_default_background();
+    roughDiscretizer = new Discretizer(1.0);
+    preciseDiscretizer = new Discretizer(10.0);
+    maxHashSize = 10000000;
+    maxPairHashSize = 10000;
+    dataModel = DataModel.PWM;
+    effectiveCount = 100.0;
+    thresholds_folder = null;
+    silenceLog = false;
+    pvalueBoundaryType = BoundaryType.UPPER;
+    pvalue = 0.0005;
+    similarityCutoff = 0.05;
+    preciseRecalculationCutoff = null;
+    queryTranspose = false;
+    collectionTranspose = false;
+  }
 
   protected void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);

@@ -40,29 +40,19 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   boolean firstPWMFromMononucleotide, secondPWMFromMononucleotide;
   BackgroundModel firstBackgroundMononucleotide, secondBackgroundMononucleotide;
 
-  private void initialize_defaults() {
+  @Override
+  protected void initialize_default_background() {
     firstBackground = new DiWordwiseBackground();
     secondBackground = new DiWordwiseBackground();
+  }
 
-    dataModelFirst = DataModel.PWM;
-    dataModelSecond = DataModel.PWM;
-    effectiveCountFirst = 100.0;
-    effectiveCountSecond = 100.0;
-    pvalue = 0.0005;
-    discretizer = new Discretizer(10.0);
-
-    maxHashSize = 10000000;
-    maxPairHashSize = 10000;
-    pvalueBoundary = BoundaryType.UPPER;
-    transposeFirst = false;
-    transposeSecond = false;
-
+  @Override
+  protected void initialize_defaults() {
+    super.initialize_defaults();
     firstPWMFromMononucleotide = false;
     secondPWMFromMononucleotide = false;
     firstBackgroundMononucleotide = new WordwiseBackground();
     secondBackgroundMononucleotide = new WordwiseBackground();
-
-    alignment = null;
   }
 
   @Override

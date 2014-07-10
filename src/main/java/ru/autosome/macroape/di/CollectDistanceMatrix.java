@@ -3,6 +3,7 @@ package ru.autosome.macroape.di;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
+import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.model.BoundaryType;
@@ -25,28 +26,10 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
     return "java ru.autosome.macroape.di.CollectDistanceMatrix";
   }
 
-
-  private void initialize_defaults() {
-    roughDiscretizer = new Discretizer(1.0);
-    preciseDiscretizer = new Discretizer(10.0);
-
+  @Override
+  protected void initialize_default_background() {
     background = new DiWordwiseBackground();
-    maxHashSize = 10000000;
-    maxPairHashSize = 10000;
-    dataModel = DataModel.PWM;
-    effectiveCount = 100;
-    pvalue = 0.0005;
-    pvalueBoundary = BoundaryType.UPPER;
-    preciseRecalculationCutoff = null;
-    transpose = false;
-
-    numOfThreads = 1;
-    numThread = 0;
-
-    pathToCollectionOfPWMs = null;
-    pwmCollection = null;
   }
-
 
   @Override
   protected DiBackgroundModel extract_background(String str) {

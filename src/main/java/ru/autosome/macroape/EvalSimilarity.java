@@ -24,22 +24,10 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     return "java ru.autosome.macroape.EvalSimilarity";
   }
 
-  private void initialize_defaults() {
+  @Override
+  protected void initialize_default_background() {
     firstBackground = new WordwiseBackground();
     secondBackground = new WordwiseBackground();
-    dataModelFirst = DataModel.PWM;
-    dataModelSecond = DataModel.PWM;
-    effectiveCountFirst = 100.0;
-    effectiveCountSecond = 100.0;
-    pvalue = 0.0005;
-    discretizer = new Discretizer(10.0);
-    transposeFirst = false;
-    transposeSecond = false;
-
-    maxHashSize = 10000000;
-    maxPairHashSize = 10000;
-    pvalueBoundary = BoundaryType.UPPER;
-    alignment = null;
   }
 
   @Override

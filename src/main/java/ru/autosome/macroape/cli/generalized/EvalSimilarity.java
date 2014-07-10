@@ -1,5 +1,6 @@
 package ru.autosome.macroape.cli.generalized;
 
+import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Discretizer;
@@ -97,6 +98,26 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
 
   protected boolean failed_to_recognize_additional_options(String opt, ArrayList<String> argv) {
     return true;
+  }
+
+
+  protected abstract void initialize_default_background();
+
+  protected void initialize_defaults() {
+    initialize_default_background();
+    dataModelFirst = DataModel.PWM;
+    dataModelSecond = DataModel.PWM;
+    effectiveCountFirst = 100.0;
+    effectiveCountSecond = 100.0;
+    pvalue = 0.0005;
+    discretizer = new Discretizer(10.0);
+    transposeFirst = false;
+    transposeSecond = false;
+
+    maxHashSize = 10000000;
+    maxPairHashSize = 10000;
+    pvalueBoundary = BoundaryType.UPPER;
+    alignment = null;
   }
 
   protected void extract_option(ArrayList<String> argv) {

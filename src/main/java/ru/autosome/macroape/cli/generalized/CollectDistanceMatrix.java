@@ -4,6 +4,7 @@ import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -81,6 +82,26 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     pwmCollection = importer.loadMotifCollection(pathToCollectionOfPWMs);
   }
 
+  protected abstract void initialize_default_background();
+  protected void initialize_defaults() {
+    initialize_default_background();
+    roughDiscretizer = new Discretizer(1.0);
+    preciseDiscretizer = new Discretizer(10.0);
+    maxHashSize = 10000000;
+    maxPairHashSize = 10000;
+    dataModel = DataModel.PWM;
+    effectiveCount = 100;
+    pvalue = 0.0005;
+    pvalueBoundary = BoundaryType.UPPER;
+    preciseRecalculationCutoff = null;
+    transpose = false;
+
+    numOfThreads = 1;
+    numThread = 0;
+
+    pathToCollectionOfPWMs = null;
+    pwmCollection = null;
+  }
 
   protected void extract_option(List<String> argv) {
     String opt = argv.remove(0);
