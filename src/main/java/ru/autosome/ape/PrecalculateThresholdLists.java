@@ -4,10 +4,12 @@ import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
+import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.cli.Helper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -28,8 +30,9 @@ public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.
   }
 
   @Override
-  protected PWMImporter motifImporter() {
-    return new PWMImporter(background, data_model, effective_count, transpose);
+  protected PWM loadMotif(File file){
+    PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose);
+    return importer.loadMotif(file);
   }
 
   @Override

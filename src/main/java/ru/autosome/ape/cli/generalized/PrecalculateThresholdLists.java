@@ -13,6 +13,7 @@ import ru.autosome.commons.motifModel.types.DataModel;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class PrecalculateThresholdLists<ModelType extends Named & ScoringModel & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
   protected Discretizer discretizer;
@@ -31,9 +32,10 @@ public abstract class PrecalculateThresholdLists<ModelType extends Named & Scori
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String s);
   protected abstract PrecalculateThresholdList<ModelType, BackgroundType> calculator();
-  protected abstract MotifImporter<ModelType, BackgroundType> motifImporter();
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
+
+  abstract protected ModelType loadMotif(File file);
 
   protected void initialize_defaults() {
     initialize_default_background();
@@ -102,12 +104,17 @@ public abstract class PrecalculateThresholdLists<ModelType extends Named & Scori
     } else if (opt.equals("--transpose")) {
       transpose = true;
     } else {
-      throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      if (failed_to_recognize_additional_options(opt, argv)) {
+        throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      }
     }
   }
 
+  protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
+    return true;
+  }
+
   protected void calculate_thresholds_for_collection() throws HashOverflowException, IOException {
-    MotifImporter<ModelType, BackgroundType> importer = motifImporter();
     File[] files = collection_folder.listFiles();
     if (files == null) {
       System.err.println("Warning! No files in collection folder `" + collection_folder + "`!");
@@ -117,7 +124,7 @@ public abstract class PrecalculateThresholdLists<ModelType extends Named & Scori
       if (!silence) {
         System.err.println(file);
       }
-      ModelType motif = importer.loadMotif(file);
+      ModelType motif = loadMotif(file);
       File result_filename = new File(results_dir, motif.getName() + ".thr");
       PvalueBsearchList bsearchList = calculator().bsearch_list_for_pwm(motif);
       bsearchList.save_to_file(result_filename);
@@ -138,10 +145,15 @@ public abstract class PrecalculateThresholdLists<ModelType extends Named & Scori
       "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
       "  [--silence] - suppress logging\n" +
       "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
+     DOC_additional_options() +
       "\n" +
       "Examples:\n" +
       "  " + DOC_run_string() + " ./hocomoco/ ./hocomoco_thresholds/\n" +
       "  " + DOC_run_string() + " ./hocomoco/ ./hocomoco_thresholds/ -d 100 --pvalues 1e-6,0.1,1.5,mul\n";
+  }
+
+  protected String DOC_additional_options() {
+    return "";
   }
 
 }

@@ -80,6 +80,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
       return true;
     }
   }
+
   @Override
   protected CanFindThreshold calculator() {
     if (cache_calculator == null) {
