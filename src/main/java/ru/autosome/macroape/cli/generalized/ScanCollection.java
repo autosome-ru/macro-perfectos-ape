@@ -229,6 +229,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     return infos;
   }
 
+  // TODO: Refactor usage of one-stage and two-stage search
   protected List<ThresholdEvaluator> load_collection_of_pwms() {
     MotifImporter<ModelType, BackgroundType> importer = motifImporter(collectionBackground, dataModel, effectiveCount, collectionTranspose);
     List<ModelType> pwmList = importer.loadMotifCollection(pathToCollectionOfPWMs);

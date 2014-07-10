@@ -61,6 +61,9 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   }
 
   protected boolean failed_to_recognize_additional_options(String opt, ArrayList<String> argv) {
+    // TODO: --from-mono-background and --from-mono
+    // TODO: Make a pair of options --from-mono-background to PCM-->PWM conversion and to set dinucleotide background.
+    // TODO: or it may be the same option (for now it's only PCM-->PWM conversion, not diPWM background)
     if (opt.equals("--first-from-mono")) {
       firstPWMFromMononucleotide= true;
       return false;
