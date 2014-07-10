@@ -121,7 +121,6 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
     }
   }
 
-
   protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
     return true;
   }

@@ -27,14 +27,18 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
   protected void initialize_default_background() {
     background = new WordwiseBackground();
   }
+
   @Override
-  protected MotifImporter<PWM, BackgroundModel> motifImporter() {
-    return new PWMImporter(background, data_model, effective_count, transpose);
+  protected void extractMotif() {
+    PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose);
+    motif = importer.loadMotif(pm_filename);
   }
+
   @Override
   protected void extract_background(String str) {
     background = Background.fromString(str);
   }
+
   @Override
   protected CanFindThreshold calculator() {
     if (cache_calculator == null) {

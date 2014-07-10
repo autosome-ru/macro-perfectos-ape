@@ -16,6 +16,7 @@ import ru.autosome.commons.motifModel.ScoringModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public abstract class FindThreshold<ModelType extends ScoringModel & Named, BackgroundType extends GeneralizedBackgroundModel> {
   protected abstract String DOC_background_option();
@@ -33,10 +34,15 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
       "  [-b <background probabilities] " + DOC_background_option() + "\n" +
       "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
       "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
+     DOC_additional_options() +
       "\n" +
       "Examples:\n" +
       "  " + DOC_run_string() + " motifs/diKLF4_f2.pat\n" +
       "  " + DOC_run_string() + "  motifs/diKLF4_f2.pat 0.001 0.0001 0.0005 -d 1000 -b 0.4,0.3,0.2,0.1\n";
+  }
+
+  protected String DOC_additional_options() {
+    return "";
   }
 
   protected Discretizer discretizer;
@@ -57,7 +63,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
-  protected abstract MotifImporter<ModelType, BackgroundType> motifImporter();
+  protected abstract void extractMotif();
   protected abstract CanFindThreshold calculator();
 
   protected void initialize_defaults() {
@@ -80,7 +86,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    motif = motifImporter().loadMotif(pm_filename);
+    extractMotif();
   }
 
   protected void extract_option(ArrayList<String> argv) {
@@ -104,9 +110,16 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
     } else if (opt.equals("--transpose")) {
       transpose = true;
     } else {
-      throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      if (failed_to_recognize_additional_options(opt, argv)) {
+        throw new IllegalArgumentException("Unknown option '" + opt + "'");
+      }
     }
   }
+
+  protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
+    return true;
+  }
+
 
   protected void extract_pm_filename(ArrayList<String> argv) {
     if (argv.isEmpty()) {
