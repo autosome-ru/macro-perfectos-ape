@@ -53,13 +53,13 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
   }
 
   @Override
-  protected void extractMotif() {
+  protected DiPWM loadMotif(String filename) {
     if (fromMononucleotide) {
       PWMImporter importer = new PWMImporter(backgroundMononucleotide, data_model, effective_count, transpose);
-      motif = DiPWM.fromPWM( importer.loadMotif(pm_filename) );
+      return DiPWM.fromPWM( importer.loadMotif(filename) );
     } else {
       DiPWMImporter importer = new DiPWMImporter(background, data_model, effective_count, transpose);
-      motif = importer.loadMotif(pm_filename);
+      return importer.loadMotif(filename);
     }
   }
 

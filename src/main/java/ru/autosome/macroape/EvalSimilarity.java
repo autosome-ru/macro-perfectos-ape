@@ -36,14 +36,14 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   }
 
   @Override
-  protected void extractFirstPWM() {
+  protected PWM loadFirstPWM(String filename) {
     PWMImporter firstMotifImporter = new PWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst);
-    firstPWM = firstMotifImporter.loadMotif(firstPMFilename);
+    return firstMotifImporter.loadMotif(filename);
   }
   @Override
-  protected void extractSecondPWM() {
+  protected PWM loadSecondPWM(String filename) {
     PWMImporter secondMotifImporter = new PWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond);
-    secondPWM = secondMotifImporter.loadMotif(secondPMFilename);
+    return secondMotifImporter.loadMotif(filename);
   }
 
 

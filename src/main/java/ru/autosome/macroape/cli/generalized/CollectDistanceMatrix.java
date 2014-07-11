@@ -81,10 +81,10 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    extractMotifCollection();
+    pwmCollection = loadMotifCollection(pathToCollectionOfPWMs);
   }
 
-  protected abstract void extractMotifCollection();
+  protected abstract List<ModelType> loadMotifCollection(File path_to_collection);
 
   protected abstract void initialize_default_background();
 

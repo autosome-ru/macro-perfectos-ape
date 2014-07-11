@@ -63,7 +63,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
-  protected abstract void extractMotif();
+  protected abstract ModelType loadMotif(String filename);
   protected abstract CanFindThreshold calculator();
 
   protected void initialize_defaults() {
@@ -86,7 +86,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    extractMotif();
+    motif = loadMotif(pm_filename);
   }
 
   protected void extract_option(ArrayList<String> argv) {

@@ -69,8 +69,8 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
   protected boolean transposeFirst, transposeSecond;
 
   protected abstract BackgroundType extract_background(String str);
-  protected abstract void extractFirstPWM();
-  protected abstract void extractSecondPWM();
+  protected abstract ModelType loadFirstPWM(String filename);
+  protected abstract ModelType loadSecondPWM(String filename);
   protected abstract CompareModels<ModelType, BackgroundType> calculator();
 
   protected void setup_from_arglist(ArrayList<String> argv) {
@@ -79,8 +79,8 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    extractFirstPWM();
-    extractSecondPWM();
+    firstPWM = loadFirstPWM(firstPMFilename);
+    secondPWM = loadSecondPWM(secondPMFilename);
   }
 
   protected void extract_first_pm_filename(ArrayList<String> argv) {

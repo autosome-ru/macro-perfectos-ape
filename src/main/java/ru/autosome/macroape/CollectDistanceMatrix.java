@@ -12,6 +12,7 @@ import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,9 +55,9 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
 
   @Override
-  protected void extractMotifCollection() {
+  protected List<PWM> loadMotifCollection(File path_to_collection) {
     PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose);
-    pwmCollection = importer.loadMotifCollection(pathToCollectionOfPWMs);
+    return importer.loadMotifCollection(path_to_collection);
   }
 
   @Override

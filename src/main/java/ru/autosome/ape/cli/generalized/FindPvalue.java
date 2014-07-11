@@ -60,7 +60,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
   abstract protected CanFindPvalue calculator();
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
-  abstract protected void extractMotif();
+  abstract protected ModelType loadMotif(String filename);
 
   protected void initialize_defaults() {
     initialize_default_background();
@@ -131,7 +131,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
     while (argv.size() > 0) {
       extract_option(argv);
     }
-    extractMotif();
+    motif = loadMotif(pm_filename);
   }
 
   OutputInformation report_table_layout() {

@@ -85,23 +85,23 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   }
 
   @Override
-  protected void extractFirstPWM() {
+  protected DiPWM loadFirstPWM(String filename) {
     if (firstPWMFromMononucleotide) {
       PWMImporter firstMotifImporter = new PWMImporter(firstBackgroundMononucleotide, dataModelFirst, effectiveCountFirst, transposeFirst);
-      firstPWM = DiPWM.fromPWM( firstMotifImporter.loadMotif(firstPMFilename) );
+      return DiPWM.fromPWM( firstMotifImporter.loadMotif(filename) );
     } else {
       DiPWMImporter firstMotifImporter = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst);
-      firstPWM = firstMotifImporter.loadMotif(firstPMFilename);
+      return firstMotifImporter.loadMotif(filename);
     }
   }
   @Override
-  protected void extractSecondPWM() {
+  protected DiPWM loadSecondPWM(String filename) {
     if (secondPWMFromMononucleotide) {
       PWMImporter secondMotifImporter = new PWMImporter(secondBackgroundMononucleotide, dataModelSecond, effectiveCountSecond, transposeSecond);
-      secondPWM = DiPWM.fromPWM( secondMotifImporter.loadMotif(secondPMFilename) );
+      return DiPWM.fromPWM( secondMotifImporter.loadMotif(filename) );
     } else {
       DiPWMImporter secondMotifImporter = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond);
-      secondPWM = secondMotifImporter.loadMotif(secondPMFilename);
+      return secondMotifImporter.loadMotif(filename);
     }
   }
 
