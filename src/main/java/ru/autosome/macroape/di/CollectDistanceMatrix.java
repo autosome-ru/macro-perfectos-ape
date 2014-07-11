@@ -34,7 +34,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   @Override
   protected String DOC_additional_options() {
     return "These options can be used for PWM vs DiPWM comparison:\n" +
-           "  [--from-mono]  - obtain DiPWMs from mononucleotide PWM/PCM/PPM.\n" +
+           "  [--from-mono]  - obtain DiPWMs from mononucleotide PWM/PCM/PPMs.\n" +
            "  [--mono-background <background>]  - ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
            "                                      Mononucleotide background for PCM/PPM --> PWM conversion of mono models\n";
   }
