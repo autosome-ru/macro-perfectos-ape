@@ -7,10 +7,8 @@ import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
-import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
@@ -240,10 +238,11 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     return infos;
   }
 
+
+
   // TODO: Refactor usage of one-stage and two-stage search
   protected List<ThresholdEvaluator> load_collection_of_pwms() {
-    MotifImporter<ModelType, BackgroundType> importer = motifImporter(collectionBackground, dataModel, effectiveCount, collectionTranspose);
-    List<ModelType> pwmList = importer.loadMotifCollection(pathToCollectionOfPWMs);
+    List<ModelType> pwmList = loadMotifCollection();
     List<ThresholdEvaluator> result;
     result = new ArrayList<ThresholdEvaluator>();
     for (ModelType pwm: pwmList) {
@@ -271,12 +270,11 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
       extract_option(argv);
     }
 
-    queryPWM = motifImporter(queryBackground, dataModel, effectiveCount, queryTranspose).loadMotif(queryPMFilename);
+    queryPWM = loadQueryMotif();
     pwmCollection = load_collection_of_pwms();
   }
 
-
   protected abstract ru.autosome.macroape.calculation.generalized.ScanCollection<ModelType,BackgroundType> calculator();
-  protected abstract MotifImporter<ModelType, BackgroundType> motifImporter(BackgroundType background, DataModel dataModel, Double effectiveCount, boolean transpose);
-
+  protected abstract List<ModelType> loadMotifCollection();
+  protected abstract ModelType loadQueryMotif();
 }

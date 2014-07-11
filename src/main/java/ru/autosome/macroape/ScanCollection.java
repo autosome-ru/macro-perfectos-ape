@@ -5,12 +5,8 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ResultInfo;
-import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PWMImporter;
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,9 +51,16 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     return from_arglist(argv);
   }
 
-  protected MotifImporter<PWM, BackgroundModel> motifImporter(BackgroundModel background, DataModel dataModel, Double effectiveCount, boolean transpose) {
-    return new PWMImporter(background, dataModel, effectiveCount, transpose);
+  protected List<PWM> loadMotifCollection() {
+    PWMImporter importer = new PWMImporter(collectionBackground, dataModel, effectiveCount, collectionTranspose);
+    return importer.loadMotifCollection(pathToCollectionOfPWMs);
   }
+
+  protected PWM loadQueryMotif() {
+    PWMImporter importer = new PWMImporter(queryBackground, dataModel, effectiveCount, queryTranspose);
+    return importer.loadMotif(queryPMFilename);
+  }
+
 
   protected ru.autosome.macroape.calculation.mono.ScanCollection calculator() {
     ru.autosome.macroape.calculation.mono.ScanCollection calculator;
