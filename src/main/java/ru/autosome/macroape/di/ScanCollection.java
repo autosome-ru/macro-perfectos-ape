@@ -32,22 +32,16 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   protected String DOC_additional_options() {
     return "These options can be used for PWM vs DiPWM comparison:\n" +
      "  [--query-from-mono]      - obtain query DiPWM from mono PWM/PCM/PPM.\n" +
-     "  [--collection-from-mono] - obtain collection DiPWMs from mono PWM/PCM/PPMs.\n" +
-     "  [--query-mono-background <background>]      - ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
-     "  [--collection-mono-background <background>] - ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
-     "                                                Mononucleotide background for PCM/PPM --> PWM conversion of mono models\n";
+     "  [--collection-from-mono] - obtain collection DiPWMs from mono PWM/PCM/PPMs.\n";
   }
 
   boolean queryFromMononucleotide, collectionFromMononucleotide;
-  BackgroundModel queryBackgroundMononucleotide, collectionBackgroundMononucleotide;
 
   @Override
   protected void initialize_defaults() {
     super.initialize_defaults();
     queryFromMononucleotide = false;
     collectionFromMononucleotide = false;
-    queryBackgroundMononucleotide = new WordwiseBackground();
-    collectionBackgroundMononucleotide = new WordwiseBackground();
   }
 
   @Override
@@ -57,12 +51,6 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
       return false;
     } else if (opt.equals("--collection-from-mono")) {
       collectionFromMononucleotide = true;
-      return false;
-    } else if (opt.equals("--query-mono-background")) {
-      queryBackgroundMononucleotide = Background.fromString(argv.remove(0));
-      return false;
-    } else if (opt.equals("--collection-mono-background")) {
-      collectionBackgroundMononucleotide = Background.fromString(argv.remove(0));
       return false;
     } else {
       return true;
@@ -100,6 +88,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   @Override
   protected List<DiPWM> loadMotifCollection() {
     if (collectionFromMononucleotide) {
+      BackgroundModel collectionBackgroundMononucleotide = Background.fromDiBackground(collectionBackground);
       PWMImporter importer = new PWMImporter(collectionBackgroundMononucleotide, dataModel, effectiveCount, collectionTranspose);
       List<PWM> monoCollection = importer.loadMotifCollection(pathToCollectionOfPWMs);
       List<DiPWM> diCollection = new ArrayList<DiPWM>(monoCollection.size());
@@ -116,6 +105,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   @Override
   protected DiPWM loadQueryMotif() {
     if (queryFromMononucleotide) {
+      BackgroundModel queryBackgroundMononucleotide = Background.fromDiBackground(queryBackground);
       PWMImporter importer = new PWMImporter(queryBackgroundMononucleotide, dataModel, effectiveCount, queryTranspose);
       return DiPWM.fromPWM(importer.loadMotif(queryPMFilename));
     } else {

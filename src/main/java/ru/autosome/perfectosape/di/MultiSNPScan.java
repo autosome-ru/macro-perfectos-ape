@@ -29,28 +29,21 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
   @Override
   protected String DOC_additional_options() {
     return "These options can be used for work with PWMs on dinucleotide background models:\n" +
-     "  [--from-mono] - obtain collection DiPWMs from mono PWM/PCM/PPMs.\n" +
-     "  [--mono-background <background>] - ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
-     "                                     Mononucleotide background for PCM/PPM --> PWM conversion of mono models\n";
+     "  [--from-mono] - obtain collection DiPWMs from mono PWM/PCM/PPMs.\n";
   }
 
   boolean fromMononucleotide;
-  BackgroundModel backgroundMononucleotide;
 
   @Override
   protected void initialize_defaults() {
     super.initialize_defaults();
     fromMononucleotide = false;
-    backgroundMononucleotide = new WordwiseBackground();
   }
 
   @Override
   protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
     if (opt.equals("--from-mono")) {
       fromMononucleotide = true;
-      return false;
-    } else if (opt.equals("--mono-background")) {
-      backgroundMononucleotide = Background.fromString(argv.remove(0));
       return false;
     } else {
       return true;
@@ -73,6 +66,7 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
   @Override
   protected List<DiPWM> load_collection_of_pwms() {
     if (fromMononucleotide) {
+      BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
       PWMImporter importer = new PWMImporter(backgroundMononucleotide, dataModel, effectiveCount, transpose);
       List<PWM> monoCollection = importer.loadMotifCollection(path_to_collection_of_pwms);
       List<DiPWM> diCollection = new ArrayList<DiPWM>(monoCollection.size());

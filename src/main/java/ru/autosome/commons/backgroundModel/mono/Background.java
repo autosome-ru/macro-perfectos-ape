@@ -1,5 +1,7 @@
 package ru.autosome.commons.backgroundModel.mono;
 
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.support.ArrayExtensions;
 
 import java.util.StringTokenizer;
@@ -31,6 +33,26 @@ public class Background implements BackgroundModel {
       return new Background(background);
     }
   }
+
+  // Approximation of mononucleotide background
+  public static BackgroundModel fromDiBackground(DiBackgroundModel backgroundModel) {
+    if (backgroundModel.is_wordwise()) {
+      return new WordwiseBackground();
+    } else {
+      double[] background = new double[4];
+      for (int letter = 0; letter < 4; ++letter) {
+        double sum = 0;
+        // probability for A is an average of AA+AC+AT+AG and AA+CA+GA+TA
+        for (int anotherLetter = 0; anotherLetter < 4; ++anotherLetter) {
+          sum += backgroundModel.probability(4 * letter + anotherLetter) +
+                 backgroundModel.probability(4 * anotherLetter + letter);
+        }
+        background[letter] = sum / 2;
+      }
+      return new Background(background);
+    }
+  }
+
 
   @Override
   public double probability(int index) {

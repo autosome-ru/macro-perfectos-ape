@@ -33,22 +33,16 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   protected String DOC_additional_options() {
     return "These options can be used for PWM vs DiPWM comparison:\n" +
            "  [--first-from-mono]  - obtain first DiPWM from mono PWM/PCM/PPM.\n" +
-           "  [--second-from-mono] - obtain second DiPWM from mono PWM/PCM/PPM.\n" +
-           "  [--first-mono-background <background>]  - ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
-           "  [--second-mono-background <background>] - ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25\n" +
-           "                                            Mononucleotide background for PCM/PPM --> PWM conversion of mono models\n";
+           "  [--second-from-mono] - obtain second DiPWM from mono PWM/PCM/PPM.\n";
   }
 
   boolean firstPWMFromMononucleotide, secondPWMFromMononucleotide;
-  BackgroundModel firstBackgroundMononucleotide, secondBackgroundMononucleotide;
 
   @Override
   protected void initialize_defaults() {
     super.initialize_defaults();
     firstPWMFromMononucleotide = false;
     secondPWMFromMononucleotide = false;
-    firstBackgroundMononucleotide = new WordwiseBackground();
-    secondBackgroundMononucleotide = new WordwiseBackground();
   }
 
   @Override
@@ -73,12 +67,6 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     } else if (opt.equals("--second-from-mono")) {
       secondPWMFromMononucleotide = true;
       return false;
-    } else if (opt.equals("--first-mono-background")) {
-      firstBackgroundMononucleotide = Background.fromString(argv.remove(0));
-      return false;
-    } else if (opt.equals("--second-mono-background")) {
-      secondBackgroundMononucleotide = Background.fromString(argv.remove(0));
-      return false;
     } else {
       return true;
     }
@@ -87,6 +75,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   @Override
   protected DiPWM loadFirstPWM(String filename) {
     if (firstPWMFromMononucleotide) {
+      BackgroundModel firstBackgroundMononucleotide = Background.fromDiBackground(firstBackground);
       PWMImporter firstMotifImporter = new PWMImporter(firstBackgroundMononucleotide, dataModelFirst, effectiveCountFirst, transposeFirst);
       return DiPWM.fromPWM( firstMotifImporter.loadMotif(filename) );
     } else {
@@ -97,6 +86,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   @Override
   protected DiPWM loadSecondPWM(String filename) {
     if (secondPWMFromMononucleotide) {
+      BackgroundModel secondBackgroundMononucleotide = Background.fromDiBackground(secondBackground);
       PWMImporter secondMotifImporter = new PWMImporter(secondBackgroundMononucleotide, dataModelSecond, effectiveCountSecond, transposeSecond);
       return DiPWM.fromPWM( secondMotifImporter.loadMotif(filename) );
     } else {
