@@ -1,9 +1,11 @@
 package ru.autosome.commons.backgroundModel.di;
 
+import ru.autosome.commons.backgroundModel.mono.Background;
+import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 
-import java.util.StringTokenizer;
+import java.util.List;
 
 public class DiBackground implements DiBackgroundModel {
   private double[] background;
@@ -13,27 +15,24 @@ public class DiBackground implements DiBackgroundModel {
 
   // probabilities are absolute, not conditional. Indices are (4*firstLetter + secondLetter)
   public DiBackground(double[] background) {
+    if (background.length != 16) {
+      throw new IllegalArgumentException("Background constructor takes an array of 16 frequencies");
+    }
     if (Math.abs(ArrayExtensions.sum(background) - 1.0) > 0.0001) {
       throw new IllegalArgumentException("Background probabilities should be 1.0 being summarized");
     }
     this.background = background;
   }
 
-  public static DiBackgroundModel fromArray(double[] background) {
-    if (background.length != ALPHABET_SIZE) {
-      throw new IllegalArgumentException("Background constructor accepts double array of length " + ALPHABET_SIZE);
+  public DiBackground(List<Double> background) {
+    double[] background_array = ArrayExtensions.toPrimitiveArray(background);
+    if (background_array.length != 16) {
+      throw new IllegalArgumentException("Background constructor takes an array of 16 frequencies");
     }
-    boolean wordwise = true;
-    for (int i = 0; i < ALPHABET_SIZE; ++i) {
-      if (Math.abs(background[i] - 1) > 0.0001) {
-        wordwise = false;
-      }
+    if (Math.abs(ArrayExtensions.sum(background_array) - 1.0) > 0.0001) {
+      throw new IllegalArgumentException("Background probabilities should be 1.0 being summarized");
     }
-    if (wordwise) {
-      return new DiWordwiseBackground();
-    } else {
-      return new DiBackground(background);
-    }
+    this.background = background_array;
   }
 
   // letter should be independent from previous one (for score distribution recalculation it's ok)
@@ -50,6 +49,10 @@ public class DiBackground implements DiBackgroundModel {
       }
       return new DiBackground(background);
     }
+  }
+
+  public static DiBackgroundModel fromGCContent(double gc_content) {
+    return DiBackground.fromMonoBackground( Background.fromGCContent(gc_content) );
   }
 
   @Override
@@ -99,12 +102,24 @@ public class DiBackground implements DiBackgroundModel {
   }
 
   public static DiBackgroundModel fromString(String s) {
-    double[] background = new double[ALPHABET_SIZE];
-    StringTokenizer parser = new StringTokenizer(s);
-    for (int i = 0; i < ALPHABET_SIZE; ++i) {
-      background[i] = Double.valueOf(parser.nextToken(","));
+    if (s.toLowerCase().equals("wordwise")) {
+      return new DiWordwiseBackground();
     }
-    return DiBackground.fromArray(background);
+
+    List<Double> tokens = InputExtensions.listOfDoubleTokens(s);
+    if (tokens.size() == 16) {
+      return new DiBackground(ArrayExtensions.toPrimitiveArray(tokens));
+    } else if (tokens.size() == 4) {
+      BackgroundModel monoBackground = new Background(tokens);
+      return DiBackground.fromMonoBackground( monoBackground );
+    } else if (tokens.size() == 1) {
+      return DiBackground.fromGCContent(tokens.get(0));
+    } else {
+      throw new IllegalArgumentException("Background string `" + s + "` not recognized.\n" +
+       "It should be either string `wordwise` or dibackground (16 numbers) or monobackground(4 numbers) or GC-content(1 number).\n"+
+       "Numbers should be comma separated, spaces not allowed\n" +
+       "String you've passed has "+ tokens.size() + " numbers");
+    }
   }
 
   @Override

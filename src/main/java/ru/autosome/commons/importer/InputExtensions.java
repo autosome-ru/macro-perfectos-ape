@@ -3,6 +3,7 @@ package ru.autosome.commons.importer;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class InputExtensions {
 
@@ -69,5 +70,14 @@ public class InputExtensions {
       result.add(line.trim());
     }
     return result;
+  }
+
+  public static List<Double> listOfDoubleTokens(String s) {
+    StringTokenizer tokenizer = new StringTokenizer(s, ",");
+    List<Double> tokens = new ArrayList<Double>();
+    while (tokenizer.hasMoreTokens()) {
+      tokens.add(Double.valueOf(tokenizer.nextToken()));
+    }
+    return tokens;
   }
 }

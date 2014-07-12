@@ -2,8 +2,10 @@ package ru.autosome.commons.backgroundModel.mono;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
+import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.support.ArrayExtensions;
 
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class Background implements BackgroundModel {
@@ -11,27 +13,25 @@ public class Background implements BackgroundModel {
 
   // TODO: whether we should check symmetricity of background
   public Background(double[] background) {
+    if (background.length != 4) {
+      throw new IllegalArgumentException("Background constructor takes an array of 4 frequencies");
+    }
     if (Math.abs(ArrayExtensions.sum(background) - 1.0) > 0.0001) {
       throw new IllegalArgumentException("Background probabilities should be 1.0 being summarized");
     }
     this.background = background;
   }
 
-  public static BackgroundModel fromArray(double[] background) {
-    if (background.length != ALPHABET_SIZE) {
-      throw new IllegalArgumentException("Background constructor accepts double array of length " + ALPHABET_SIZE);
+  public Background(List<Double> background) {
+    double background_array[] = ArrayExtensions.toPrimitiveArray(background);
+
+    if (background_array.length != 4) {
+      throw new IllegalArgumentException("Background constructor takes an array of 4 frequencies");
     }
-    boolean wordwise = true;
-    for (int i = 0; i < ALPHABET_SIZE; ++i) {
-      if (Math.abs(background[i] - 1) > 0.0001) {
-        wordwise = false;
-      }
+    if (Math.abs(ArrayExtensions.sum(background_array) - 1.0) > 0.0001) {
+      throw new IllegalArgumentException("Background probabilities should be 1.0 being summarized");
     }
-    if (wordwise) {
-      return new WordwiseBackground();
-    } else {
-      return new Background(background);
-    }
+    this.background = background_array;
   }
 
   // Approximation of mononucleotide background
@@ -70,12 +70,21 @@ public class Background implements BackgroundModel {
   }
 
   public static BackgroundModel fromString(String s) {
-    double[] background = new double[4];
-    StringTokenizer parser = new StringTokenizer(s);
-    for (int i = 0; i < ALPHABET_SIZE; ++i) {
-      background[i] = Double.valueOf(parser.nextToken(","));
+    if (s.toLowerCase().equals("wordwise")) {
+      return new WordwiseBackground();
     }
-    return Background.fromArray(background);
+
+    List<Double> tokens = InputExtensions.listOfDoubleTokens(s);
+    if (tokens.size() == 4) {
+      return new Background(tokens);
+    } else if (tokens.size() == 1) {
+      return Background.fromGCContent(tokens.get(0));
+    } else {
+      throw new IllegalArgumentException("Background string `" + s + "` not recognized.\n" +
+       "It should be either string `wordwise` or monobackground(4 numbers) or GC-content(1 number).\n"+
+       "Numbers should be comma separated, spaces not allowed.\n" +
+       "String you've passed has "+ tokens.size() + " numbers");
+    }
   }
 
   @Override
