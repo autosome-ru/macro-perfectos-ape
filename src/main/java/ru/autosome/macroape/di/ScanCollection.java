@@ -30,9 +30,8 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
 
   @Override
   protected String DOC_additional_options() {
-    return "These options can be used for PWM vs DiPWM comparison:\n" +
-     "  [--query-from-mono]      - obtain query DiPWM from mono PWM/PCM/PPM.\n" +
-     "  [--collection-from-mono] - obtain collection DiPWMs from mono PWM/PCM/PPMs.\n";
+    return "  [--query-from-mono]      - obtain query DiPWM from mono PWM/PCM/PPM.\n" +
+           "  [--collection-from-mono] - obtain collection DiPWMs from mono PWM/PCM/PPMs.\n";
   }
 
   boolean queryFromMononucleotide, collectionFromMononucleotide;

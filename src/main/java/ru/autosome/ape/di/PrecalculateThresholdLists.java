@@ -66,8 +66,7 @@ public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.
 
   @Override
   protected String DOC_additional_options() {
-    return "These options can be used for work with PWMs on dinucleotide background models:\n" +
-            "  [--from-mono]  - obtain DiPWMs from mono PWM/PCM/PPMs.\n";
+    return "  [--from-mono]  - obtain DiPWMs from mono PWM/PCM/PPMs.\n";
   }
 
   protected PrecalculateThresholdLists() {

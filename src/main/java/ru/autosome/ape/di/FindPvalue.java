@@ -30,8 +30,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
 
   @Override
   protected String DOC_additional_options() {
-    return "These options can be used for work with PWMs on dinucleotide background models:\n" +
-           "  [--from-mono]  - obtain DiPWM from mono PWM/PCM/PPM.\n";
+    return "  [--from-mono]  - obtain DiPWM from mono PWM/PCM/PPM.\n";
   }
 
   boolean fromMononucleotide;

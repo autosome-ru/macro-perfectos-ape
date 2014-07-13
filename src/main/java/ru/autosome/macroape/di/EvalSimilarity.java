@@ -31,8 +31,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected String DOC_additional_options() {
-    return "These options can be used for PWM vs DiPWM comparison:\n" +
-           "  [--first-from-mono]  - obtain first DiPWM from mono PWM/PCM/PPM.\n" +
+    return "  [--first-from-mono]  - obtain first DiPWM from mono PWM/PCM/PPM.\n" +
            "  [--second-from-mono] - obtain second DiPWM from mono PWM/PCM/PPM.\n";
   }
 

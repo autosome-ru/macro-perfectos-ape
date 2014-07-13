@@ -28,8 +28,7 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
 
   @Override
   protected String DOC_additional_options() {
-    return "These options can be used for work with PWMs on dinucleotide background models:\n" +
-     "  [--from-mono] - obtain collection DiPWMs from mono PWM/PCM/PPMs.\n";
+    return "  [--from-mono] - obtain collection DiPWMs from mono PWM/PCM/PPMs.\n";
   }
 
   boolean fromMononucleotide;
