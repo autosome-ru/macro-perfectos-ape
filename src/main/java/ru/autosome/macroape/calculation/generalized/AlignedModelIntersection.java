@@ -15,6 +15,10 @@ abstract public class AlignedModelIntersection <ModelType extends Alignable<Mode
 
   public AlignedModelIntersection(PairAligned<ModelType> alignment,
                                   BackgroundType firstBackground, BackgroundType secondBackground) {
+    if (firstBackground.is_wordwise() && !secondBackground.is_wordwise() ||
+        !firstBackground.is_wordwise() && secondBackground.is_wordwise() ) {
+      throw new IllegalArgumentException("Both backgrounds should be either wordwise, or defined by frequencies. Use `uniform` background instead of `wordwise`.");
+    }
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
     this.alignment = alignment;
