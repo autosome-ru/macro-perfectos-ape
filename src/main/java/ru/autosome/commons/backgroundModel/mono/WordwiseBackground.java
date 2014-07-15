@@ -21,7 +21,7 @@ public class WordwiseBackground implements BackgroundModel {
 
   @Override
   public String toString() {
-    return "1,1,1,1";
+    return "wordwise";
   }
 
   @Override

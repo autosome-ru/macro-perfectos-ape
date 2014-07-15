@@ -72,6 +72,8 @@ public class Background implements BackgroundModel {
   public static BackgroundModel fromString(String s) {
     if (s.toLowerCase().equals("wordwise")) {
       return new WordwiseBackground();
+    } else if(s.toLowerCase().equals("uniform")) {
+      return Background.uniform();
     }
 
     List<Double> tokens = InputExtensions.listOfDoubleTokens(s);
@@ -85,6 +87,10 @@ public class Background implements BackgroundModel {
        "Numbers should be comma separated, spaces not allowed.\n" +
        "String you've passed has "+ tokens.size() + " numbers");
     }
+  }
+
+  public static BackgroundModel uniform() {
+    return new Background(new double[] {0.25, 0.25, 0.25, 0.25});
   }
 
   @Override

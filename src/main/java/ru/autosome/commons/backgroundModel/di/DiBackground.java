@@ -55,6 +55,13 @@ public class DiBackground implements DiBackgroundModel {
     return DiBackground.fromMonoBackground( Background.fromGCContent(gc_content) );
   }
 
+  public static DiBackgroundModel uniform() {
+    return new DiBackground(new double[] {0.0625, 0.0625, 0.0625, 0.0625,
+                                          0.0625, 0.0625, 0.0625, 0.0625,
+                                          0.0625, 0.0625, 0.0625, 0.0625,
+                                          0.0625, 0.0625, 0.0625, 0.0625});
+  }
+
   @Override
   public double probability(int index) {
     return background[index];
@@ -104,6 +111,8 @@ public class DiBackground implements DiBackgroundModel {
   public static DiBackgroundModel fromString(String s) {
     if (s.toLowerCase().equals("wordwise")) {
       return new DiWordwiseBackground();
+    } else if(s.toLowerCase().equals("uniform")) {
+      return DiBackground.uniform();
     }
 
     List<Double> tokens = InputExtensions.listOfDoubleTokens(s);

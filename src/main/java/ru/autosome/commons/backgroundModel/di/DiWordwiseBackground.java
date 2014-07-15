@@ -31,7 +31,7 @@ public class DiWordwiseBackground implements DiBackgroundModel {
 
   @Override
   public String toString() {
-    return "1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1";
+    return "wordwise";
   }
 
   @Override
