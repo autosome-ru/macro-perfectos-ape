@@ -55,11 +55,11 @@ public class InputExtensions {
 
   static public List<String> beforeEmptyLine(List<String> lines) {
     List<String> result = new ArrayList<String>();
-    for(int i = 0; i < lines.size(); ++i) {
-      if (lines.get(i).trim().isEmpty()) {
+    for (String line: lines) {
+      if (line.trim().isEmpty()) {
         return result;
       }
-      result.add(lines.get(i));
+      result.add(line);
     }
     return result;
   }
