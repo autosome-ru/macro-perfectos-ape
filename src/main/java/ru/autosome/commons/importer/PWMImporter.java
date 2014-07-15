@@ -1,7 +1,6 @@
 package ru.autosome.commons.importer;
 
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.motifModel.mono.PCM;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.mono.PWM;

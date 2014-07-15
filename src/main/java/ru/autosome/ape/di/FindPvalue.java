@@ -1,14 +1,13 @@
 package ru.autosome.ape.di;
 
-import ru.autosome.commons.backgroundModel.di.DiBackground;
-import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
+import ru.autosome.commons.backgroundModel.di.DiBackground;
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.PWMImporter;

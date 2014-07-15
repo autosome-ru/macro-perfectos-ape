@@ -1,13 +1,13 @@
 package ru.autosome.ape.calculation.findPvalue;
 
 import gnu.trove.map.TDoubleDoubleMap;
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
-import ru.autosome.commons.model.Discretizer;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
+import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
 
 public abstract class FindPvalueByDiscretization <ModelType extends Discretable<ModelType> & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> implements CanFindPvalue {
 

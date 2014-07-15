@@ -4,15 +4,11 @@ import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
-import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.macroape.model.PairAligned;
-import ru.autosome.commons.model.Position;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
-import ru.autosome.commons.cli.ResultInfo;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.macroape.model.PairAligned;
 
 public class AlignedModelIntersection extends ru.autosome.macroape.calculation.generalized.AlignedModelIntersection<PWM, BackgroundModel> {
 

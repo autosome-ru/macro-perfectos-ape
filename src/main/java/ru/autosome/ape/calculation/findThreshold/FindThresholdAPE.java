@@ -2,9 +2,9 @@ package ru.autosome.ape.calculation.findThreshold;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
+import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
 
 public class FindThresholdAPE<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType>,
                               BackgroundType extends GeneralizedBackgroundModel> extends FindThresholdByDiscretization {

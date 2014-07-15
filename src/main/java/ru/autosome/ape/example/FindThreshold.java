@@ -1,12 +1,12 @@
 package ru.autosome.ape.example;
 
-import ru.autosome.commons.importer.PWMImporter;
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
+import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
 

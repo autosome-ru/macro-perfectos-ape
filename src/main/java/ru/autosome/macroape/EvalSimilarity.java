@@ -1,13 +1,10 @@
 package ru.autosome.macroape;
 
-import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.PWMImporter;
-import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.calculation.mono.CompareModels;
 

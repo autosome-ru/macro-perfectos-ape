@@ -1,13 +1,12 @@
 package ru.autosome.ape;
 
+import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.ape.calculation.PrecalculateThresholdList;
-import ru.autosome.commons.importer.MotifImporter;
+import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.commons.cli.Helper;
 
 import java.io.File;
 import java.util.ArrayList;

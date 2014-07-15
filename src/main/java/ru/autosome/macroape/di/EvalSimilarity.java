@@ -1,17 +1,13 @@
 package ru.autosome.macroape.di;
 
-import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.PWMImporter;
-import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.macroape.calculation.di.CompareModels;
 

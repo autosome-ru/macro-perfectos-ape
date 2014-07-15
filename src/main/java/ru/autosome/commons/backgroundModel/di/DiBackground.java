@@ -1,9 +1,9 @@
 package ru.autosome.commons.backgroundModel.di;
 
 import ru.autosome.commons.backgroundModel.mono.Background;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.support.ArrayExtensions;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 
 import java.util.List;
 

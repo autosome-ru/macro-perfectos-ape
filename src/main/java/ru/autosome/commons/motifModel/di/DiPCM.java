@@ -1,8 +1,6 @@
 package ru.autosome.commons.motifModel.di;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.converter.generalized.PCM2PPM;
-import ru.autosome.commons.converter.generalized.PCM2PWM;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 
 public class DiPCM extends DiPM implements PositionCountModel {

@@ -1,7 +1,6 @@
 package ru.autosome.commons.api;
 
 import ru.autosome.ape.model.exception.HashOverflowException;
-import ru.autosome.commons.api.Task;
 
 abstract public class SingleTask<ResultType> extends Task<ResultType> {
   @Override

@@ -1,11 +1,6 @@
 package ru.autosome.commons.motifModel.mono;
 
-import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.converter.di.PCM2PWM;
-import ru.autosome.commons.converter.generalized.PPM2PCM;
-import ru.autosome.commons.motifModel.di.DiPCM;
-import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 
 public class PPM extends PM implements PositionFrequencyModel {

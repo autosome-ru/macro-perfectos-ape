@@ -1,11 +1,11 @@
 package ru.autosome.ape.api;
 
 
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.api.SingleTask;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.commons.api.SingleTask;
 
 import static ru.autosome.ape.calculation.findPvalue.FindPvalueAPE.PvalueInfo;
 

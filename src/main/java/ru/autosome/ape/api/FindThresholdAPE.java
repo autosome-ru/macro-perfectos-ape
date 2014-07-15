@@ -1,12 +1,12 @@
 package ru.autosome.ape.api;
 
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
+import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.api.SingleTask;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.commons.api.SingleTask;
 
 public class FindThresholdAPE extends SingleTask<CanFindThreshold.ThresholdInfo[]> {
   public static class Parameters {

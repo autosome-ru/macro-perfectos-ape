@@ -1,8 +1,6 @@
 package ru.autosome.commons.motifModel.di;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.converter.di.PCM2PWM;
-import ru.autosome.commons.converter.generalized.PPM2PCM;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 

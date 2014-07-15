@@ -1,10 +1,10 @@
 package ru.autosome.macroape.example;
 
+import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.di.DiPWM;

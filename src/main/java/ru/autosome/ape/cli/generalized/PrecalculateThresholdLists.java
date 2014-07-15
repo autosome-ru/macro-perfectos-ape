@@ -1,13 +1,15 @@
 package ru.autosome.ape.cli.generalized;
 
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.ape.model.PvalueBsearchList;
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
-import ru.autosome.commons.importer.MotifImporter;
+import ru.autosome.ape.model.PvalueBsearchList;
+import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.motifModel.*;
+import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.Named;
+import ru.autosome.commons.motifModel.ScoreDistribution;
+import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.io.File;

@@ -1,19 +1,19 @@
 package ru.autosome.perfectosape.cli.generalized;
 
+import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
+import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.ape.model.exception.HashOverflowException;
-import ru.autosome.perfectosape.calculation.SNPScan;
-import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
-import ru.autosome.commons.importer.InputExtensions;
-import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.perfectosape.calculation.SNPScan;
+import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,7 +1,7 @@
 package ru.autosome.commons.cli;
 
-import ru.autosome.commons.support.StringExtensions;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.support.StringExtensions;
 
 import java.util.ArrayList;
 import java.util.HashMap;

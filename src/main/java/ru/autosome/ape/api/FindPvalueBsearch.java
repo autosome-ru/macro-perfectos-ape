@@ -1,9 +1,9 @@
 package ru.autosome.ape.api;
 
-import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
-import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.commons.api.SingleTask;
+import ru.autosome.commons.motifModel.mono.PWM;
 
 public class FindPvalueBsearch extends SingleTask<CanFindPvalue.PvalueInfo[]> {
   public static class Parameters {

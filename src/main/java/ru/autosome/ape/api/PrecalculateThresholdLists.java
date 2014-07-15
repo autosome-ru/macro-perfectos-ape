@@ -1,10 +1,10 @@
 package ru.autosome.ape.api;
 
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.api.Task;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.commons.api.Task;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
 

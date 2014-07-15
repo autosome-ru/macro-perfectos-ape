@@ -1,17 +1,17 @@
 package ru.autosome.perfectosape.example;
 
+import ru.autosome.ape.api.PrecalculateThresholdLists;
+import ru.autosome.ape.calculation.PrecalculateThresholdList;
+import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
-import ru.autosome.ape.api.PrecalculateThresholdLists;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.ape.calculation.PrecalculateThresholdList;
-import ru.autosome.perfectosape.calculation.SNPScan;
-import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.perfectosape.calculation.SNPScan;
+import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,16 +1,16 @@
 package ru.autosome.ape.calculation;
 
-import ru.autosome.ape.model.exception.HashOverflowException;
-import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.support.ArrayExtensions;
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.ape.model.PvalueBsearchList;
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
+import ru.autosome.ape.model.PvalueBsearchList;
+import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.model.BoundaryType;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.support.ArrayExtensions;
 
 import java.util.ArrayList;
 import java.util.List;

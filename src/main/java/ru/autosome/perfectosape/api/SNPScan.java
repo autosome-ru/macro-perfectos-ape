@@ -1,12 +1,12 @@
 package ru.autosome.perfectosape.api;
 
 
-import ru.autosome.commons.api.SingleTask;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
-import ru.autosome.ape.model.exception.HashOverflowException;
-import ru.autosome.perfectosape.calculation.SNPScan.RegionAffinityInfos;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.api.SingleTask;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.perfectosape.calculation.SNPScan.RegionAffinityInfos;
+import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 public class SNPScan extends SingleTask<RegionAffinityInfos> {
   static public class Parameters {

@@ -1,10 +1,10 @@
 package ru.autosome.perfectosape.calculation;
 
+import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.model.Position;
-import ru.autosome.perfectosape.model.Sequence;
-import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.perfectosape.model.Sequence;
 
 import java.util.ArrayList;
 

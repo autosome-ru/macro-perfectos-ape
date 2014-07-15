@@ -1,14 +1,14 @@
 package ru.autosome.commons.motifModel.mono;
 
-import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.support.ArrayExtensions;
-import ru.autosome.commons.motifModel.*;
-import ru.autosome.commons.motifModel.types.PositionWeightModel;
-import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.motifModel.*;
+import ru.autosome.commons.motifModel.types.PositionWeightModel;
+import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.CountingPWM;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
+import ru.autosome.perfectosape.model.Sequence;
 
 public class PWM extends PM implements ScoringModel,Discretable<PWM>,
                                         ScoreStatistics<BackgroundModel>,

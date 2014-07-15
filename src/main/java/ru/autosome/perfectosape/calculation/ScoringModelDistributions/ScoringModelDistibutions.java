@@ -2,12 +2,12 @@ package ru.autosome.perfectosape.calculation.ScoringModelDistributions;
 
 import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.TDoubleObjectMap;
-import ru.autosome.commons.support.ArrayExtensions;
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.ape.model.ScoreDistributionTop;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.CanFindThresholdApproximation;
+import ru.autosome.ape.model.ScoreDistributionTop;
+import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.model.BoundaryType;
+import ru.autosome.commons.support.ArrayExtensions;
 
 abstract public class ScoringModelDistibutions {
   abstract CanFindThresholdApproximation gaussianThresholdEstimator();

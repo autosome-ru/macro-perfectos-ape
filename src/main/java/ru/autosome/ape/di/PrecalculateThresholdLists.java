@@ -1,17 +1,15 @@
 package ru.autosome.ape.di;
 
+import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
-import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.io.File;
 import java.util.ArrayList;

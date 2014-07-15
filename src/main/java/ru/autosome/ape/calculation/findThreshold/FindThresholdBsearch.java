@@ -1,8 +1,8 @@
 package ru.autosome.ape.calculation.findThreshold;
 
-import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.model.BoundaryType;
 
 public class FindThresholdBsearch implements CanFindThreshold  {
   final PvalueBsearchList bsearchList;

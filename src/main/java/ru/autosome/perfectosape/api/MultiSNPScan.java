@@ -1,10 +1,10 @@
 package ru.autosome.perfectosape.api;
 
-import ru.autosome.commons.api.Task;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
-import ru.autosome.perfectosape.calculation.SNPScan;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.commons.api.Task;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.perfectosape.calculation.SNPScan;
+import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 import java.util.HashMap;
 import java.util.List;

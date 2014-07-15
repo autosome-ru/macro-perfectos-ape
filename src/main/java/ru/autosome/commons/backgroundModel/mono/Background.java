@@ -1,12 +1,10 @@
 package ru.autosome.commons.backgroundModel.mono;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.support.ArrayExtensions;
 
 import java.util.List;
-import java.util.StringTokenizer;
 
 public class Background implements BackgroundModel {
   private double[] background;

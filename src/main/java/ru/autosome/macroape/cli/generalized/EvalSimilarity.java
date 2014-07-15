@@ -1,19 +1,17 @@
 package ru.autosome.macroape.cli.generalized;
 
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.model.Orientation;
-import ru.autosome.commons.model.Position;
-import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
+import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
+import ru.autosome.commons.model.BoundaryType;
+import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.*;
-import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
+import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.CompareModels;
+import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 
 import java.util.ArrayList;
 import java.util.List;

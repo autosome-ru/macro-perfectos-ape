@@ -7,8 +7,8 @@ import gnu.trove.map.TDoubleObjectMap;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
-import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.commons.model.BoundaryType;
+import ru.autosome.commons.support.ArrayExtensions;
 
 import java.util.ArrayList;
 import java.util.List;

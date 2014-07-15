@@ -1,7 +1,7 @@
 package ru.autosome.ape.calculation.findThreshold;
 
-import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
 

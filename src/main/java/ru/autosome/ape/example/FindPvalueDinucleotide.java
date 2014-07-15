@@ -1,5 +1,9 @@
 package ru.autosome.ape.example;
 
+import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
+import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.Background;
@@ -7,13 +11,9 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.perfectosape.model.Sequence;
-import ru.autosome.commons.backgroundModel.*;
-import ru.autosome.ape.model.exception.HashOverflowException;
-import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
-import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.perfectosape.model.Sequence;
 
 public class FindPvalueDinucleotide {
   static void print_result(CanFindPvalue.PvalueInfo info, GeneralizedBackgroundModel background, int pwmLength) {

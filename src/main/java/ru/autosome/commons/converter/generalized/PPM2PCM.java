@@ -1,6 +1,6 @@
 package ru.autosome.commons.converter.generalized;
 
-import ru.autosome.commons.motifModel.*;
+import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 

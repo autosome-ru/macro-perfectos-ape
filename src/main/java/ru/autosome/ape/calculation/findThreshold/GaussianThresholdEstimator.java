@@ -1,8 +1,8 @@
 package ru.autosome.ape.calculation.findThreshold;
 
-import ru.autosome.commons.support.MathExtensions;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.motifModel.ScoreStatistics;
+import ru.autosome.commons.support.MathExtensions;
 
 public class GaussianThresholdEstimator<ModelType extends ScoreStatistics<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> implements CanFindThresholdApproximation {
   final ModelType motif;
