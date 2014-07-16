@@ -3,18 +3,26 @@ package ru.autosome.perfectosape.model;
 import gnu.trove.impl.unmodifiable.TUnmodifiableCharCharMap;
 import gnu.trove.map.TCharCharMap;
 import gnu.trove.map.hash.TCharCharHashMap;
+import gnu.trove.set.TCharSet;
+import gnu.trove.set.hash.TCharHashSet;
 import ru.autosome.commons.model.Position;
 
 import java.util.ArrayList;
 
 public class Sequence {
+  private static final TCharSet allowedLetters = new TCharHashSet(new char[]{'A','C','G','T','a','c','g','t', 'n', 'N'});
   private static final TCharCharMap complements =
-   new TUnmodifiableCharCharMap( new TCharCharHashMap(new char[]{'A','C','G','T','a','c','g','t'},
-                                                      new char[]{'T','G','C','A','t','g','c','a'}) );
+   new TUnmodifiableCharCharMap( new TCharCharHashMap(new char[]{'A','C','G','T','a','c','g','t', 'n', 'N'},
+                                                      new char[]{'T','G','C','A','t','g','c','a', 'n', 'N'}) );
 
   final public String sequence;
 
   public Sequence(String sequence) {
+    for(int i = 0; i < sequence.length(); ++i) {
+      if ( !allowedLetters.containsAll(sequence.toCharArray()) ) {
+        throw new IllegalArgumentException("Sequence '" + sequence + "' contains unallowed character (only A,C,G,T,N letters are allowed).");
+      }
+    }
     this.sequence = sequence;
   }
 

@@ -1,10 +1,14 @@
 package ru.autosome.perfectosape.model;
 
+import gnu.trove.set.TCharSet;
+import gnu.trove.set.hash.TCharHashSet;
 import ru.autosome.commons.model.Position;
 
 import java.util.ArrayList;
 
 public class SequenceWithSNP {
+  // Duplicated in class Sequence
+  private static final TCharSet allowedLetters = new TCharHashSet(new char[]{'A','C','G','T','a','c','g','t', 'n', 'N'});
 
   final public String left;
   final public String right;
@@ -15,6 +19,17 @@ public class SequenceWithSNP {
   // input:  "GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
   // possible SNP formats: [a/g]; [ag]; a/g; a/g/c; [agc]; [a/g/c] and so on
   public SequenceWithSNP(String left, char[] mid, String right) {
+    if ( !allowedLetters.containsAll(left.toCharArray()) ) {
+      throw new IllegalArgumentException("Sequence '" + left + "' (left part of SNP) contains unallowed character (only A,C,G,T,N letters are allowed).");
+    }
+    if ( !allowedLetters.containsAll(right.toCharArray()) ) {
+      throw new IllegalArgumentException("Sequence '" + right + "' (right part of SNP) contains unallowed character (only A,C,G,T,N letters are allowed).");
+    }
+
+    if ( !allowedLetters.containsAll(mid) ) {
+      throw new IllegalArgumentException("SNP variants: '" + new String(mid) + "' contain unallowed character (only A,C,G,T,N letters are allowed).");
+    }
+
     this.left = left.toLowerCase();
     char[] mid_upcased = new char[mid.length];
     for (int i = 0; i < mid.length; ++i) {
