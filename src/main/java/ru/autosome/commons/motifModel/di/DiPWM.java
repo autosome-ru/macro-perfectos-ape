@@ -43,7 +43,7 @@ public class DiPWM extends DiPM implements ScoringModel,
   double score(String word, DiBackgroundModel background) throws IllegalArgumentException {
     word = word.toUpperCase();
     if (word.length() != length()) {
-      throw new IllegalArgumentException("word in PWM#score(word) should have the same length as matrix");
+      throw new IllegalArgumentException("word '" + word + "' in PWM#score(word) should have the same length(" + word.length() + ") as matrix has (" + length() + ")");
     }
     double sum = 0.0;
     for (int pos_index = 0; pos_index < matrix.length; ++pos_index) {
@@ -54,7 +54,7 @@ public class DiPWM extends DiPM implements ScoringModel,
       } /*else if (letter == 'N') {    //  alphabet should include letters such AN, CN, GN, TN, NA, NC, NG, NT, NN
         sum += background.mean_value(matrix[pos_index]);
       } */ else {
-        throw new IllegalArgumentException("word in PWM#score(#{word}) should have only {ACGT}^2 dinucleotides , but has '" + dinucleotide + "' di");
+        throw new IllegalArgumentException("word in PWM#score(" + word + ") should have only {ACGT}^2 dinucleotides , but has '" + dinucleotide + "' dinucleotide at position " + (pos_index + 1));
       }
     }
     return sum;

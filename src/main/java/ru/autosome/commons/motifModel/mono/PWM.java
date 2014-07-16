@@ -24,7 +24,7 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
   double score(String word, BackgroundModel background) throws IllegalArgumentException {
     word = word.toUpperCase();
     if (word.length() != length()) {
-      throw new IllegalArgumentException("word in PWM#score(word) should have the same length as matrix");
+      throw new IllegalArgumentException("word '" + word + "' in PWM#score(word) should have the same length(" + word.length() + ") as matrix has (" + length() + ")");
     }
     double sum = 0.0;
     for (int pos_index = 0; pos_index < length(); ++pos_index) {
@@ -35,7 +35,7 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
       } else if (letter == 'N') {
         sum += background.mean_value(matrix[pos_index]);
       } else {
-        throw new IllegalArgumentException("word in PWM#score(#{word}) should have only ACGT or N letters, but have '" + letter + "' letter");
+        throw new IllegalArgumentException("word in PWM#score(" + word + ") should have only ACGT or N letters, but have '" + letter + "' letter at position " + (pos_index + 1));
       }
     }
     return sum;
