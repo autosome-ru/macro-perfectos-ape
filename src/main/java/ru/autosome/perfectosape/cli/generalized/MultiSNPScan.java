@@ -210,14 +210,19 @@ abstract public class MultiSNPScan<MotifType extends Named & ScoringModel & Disc
     SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
 
     for (ThresholdEvaluator motifEvaluator: pwmCollection) {
-      SNPScan.RegionAffinityInfos result;
-      result = new SNPScan(motifEvaluator.pwm, seq_w_snp, motifEvaluator.pvalueCalculator).affinityInfos();
-      boolean pvalueSignificant = (result.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
-                                    result.getInfo_2().getPvalue() <= max_pvalue_cutoff);
-      boolean foldChangeSignificant = (result.foldChange() >= min_fold_change_cutoff ||
-                                        result.foldChange() <= 1.0/min_fold_change_cutoff);
-      if (pvalueSignificant && foldChangeSignificant) {
-        System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + result.toString());
+      ScoringModel pwm = motifEvaluator.pwm;
+      if (seq_w_snp.length() >= pwm.length()) {
+        SNPScan.RegionAffinityInfos result;
+        result = new SNPScan(pwm, seq_w_snp, motifEvaluator.pvalueCalculator).affinityInfos();
+        boolean pvalueSignificant = (result.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
+                                      result.getInfo_2().getPvalue() <= max_pvalue_cutoff);
+        boolean foldChangeSignificant = (result.foldChange() >= min_fold_change_cutoff ||
+                                          result.foldChange() <= 1.0/min_fold_change_cutoff);
+        if (pvalueSignificant && foldChangeSignificant) {
+          System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + result.toString());
+        }
+      } else {
+        System.err.println("Can't scan sequence '" + seq_w_snp + "' (length " + seq_w_snp.length() + ") with motif of length " + pwm.length());
       }
     }
   }

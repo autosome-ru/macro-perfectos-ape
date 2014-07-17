@@ -15,6 +15,9 @@ public class SNPScan {
   final CanFindPvalue pvalueCalculator;
 
   public SNPScan(ScoringModel pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
+    if (sequenceWithSNP.length() < pwm.length()) {
+      throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
+    }
     this.pwm = pwm;
     this.sequenceWithSNP = sequenceWithSNP;
     this.pvalueCalculator = pvalueCalculator;

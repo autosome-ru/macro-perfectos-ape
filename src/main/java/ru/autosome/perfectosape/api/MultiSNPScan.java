@@ -48,8 +48,13 @@ public class MultiSNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SNPScan.Re
             return result; // Return partial results
           }
 
-          result_part.put(sequenceWithSNP,
-                             calculator(pwm, sequenceWithSNP, pvalueCalculator).affinityInfos());
+          if (sequenceWithSNP.length() >= pwm.length()) {
+            result_part.put(sequenceWithSNP,
+                            calculator(pwm, sequenceWithSNP, pvalueCalculator).affinityInfos());
+          } else {
+            message("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
+          }
+
           tick();
         }
 

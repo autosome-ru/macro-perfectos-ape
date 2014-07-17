@@ -15,6 +15,10 @@ public class SNPScan extends SingleTask<RegionAffinityInfos> {
     public CanFindPvalue pvalueCalculator;
     public Parameters() { }
     public Parameters(SequenceWithSNP sequenceWithSNP, PWM pwm, CanFindPvalue pvalueCalculator) {
+      if (sequenceWithSNP.length() < pwm.length()) {
+        throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
+      }
+
       this.sequenceWithSNP = sequenceWithSNP;
       this.pwm = pwm;
       this.pvalueCalculator = pvalueCalculator;

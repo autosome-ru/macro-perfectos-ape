@@ -15,6 +15,9 @@ public class ScanSequence {
   private Map<Position, Double> cache_score_by_position;
 
   public ScanSequence(Sequence sequence, ScoringModel pwm, ArrayList<Position> positions_to_check) {
+    if (sequence.length() < pwm.length()) {
+      throw new IllegalArgumentException("Can't scan sequence '" + sequence + "' (length " + sequence.length() + ") with motif of length " + pwm.length());
+    }
     this.sequence = sequence;
     this.pwm = pwm;
     this.positions_to_check = positions_to_check;
