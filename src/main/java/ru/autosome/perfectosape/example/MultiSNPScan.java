@@ -1,8 +1,10 @@
 package ru.autosome.perfectosape.example;
 
-import ru.autosome.ape.api.PrecalculateThresholds;
+
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearch;
+import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
@@ -10,16 +12,16 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.perfectosape.api.SNPScan;
 import ru.autosome.perfectosape.calculation.SingleSNPScan;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MultiSNPScan {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws HashOverflowException {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -91,15 +93,20 @@ public class MultiSNPScan {
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Threshold precalculation step (you can skip it, read commented block just below this one)
-    PrecalculateThresholds.Parameters listCalculationParams = new PrecalculateThresholds.Parameters(pwmCollection,
-                                                                                                            pvalues,
-                                                                                                            discretizer,
-                                                                                                            background,
-                                                                                                            pvalue_boundary,
-                                                                                                            max_hash_size);
-    PrecalculateThresholds listCalculator = new PrecalculateThresholds(listCalculationParams);
 
-    Map<PWM, CanFindPvalue> pwmCollectionWithPvalueCalculators = listCalculator.call();
+    Map<PWM, CanFindPvalue> pwmCollectionWithPvalueCalculators = new HashMap<PWM, CanFindPvalue>();
+    PrecalculateThresholdList<PWM, BackgroundModel> listCalculator;
+    listCalculator = new PrecalculateThresholdList<PWM, BackgroundModel>(pvalues,
+                                                                         discretizer,
+                                                                         background,
+                                                                         pvalue_boundary,
+                                                                         max_hash_size);
+
+    for (PWM motif: pwmCollection) {
+      CanFindPvalue findPvalue = new FindPvalueBsearch(listCalculator.bsearch_list_for_pwm(motif));
+      pwmCollectionWithPvalueCalculators.put(motif, findPvalue);
+    }
+
     // Result of this step (pwmCollectionWithPvalueCalculators) should be cached. You need to do it once for a collection of PWMs
     // It carries PWMs of collection with their lists of precalculated values so latter calculation can perform binary search by threshold
 
@@ -126,11 +133,25 @@ public class MultiSNPScan {
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Scanning the pack of SNPs for changes of affinity on each PWM in collection using precalculated threshold - P-value lists
-    SNPScan.Parameters scan_parameters = new SNPScan.Parameters(snpCollection,
-                                                                                                                                    pwmCollectionWithPvalueCalculators);
-    SNPScan scan_calculator = new SNPScan(scan_parameters);
 
-    Map<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos> > results = scan_calculator.call();
+    Map<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos> > results;
+    results = new HashMap<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>>();
+    for (PWM pwm: pwmCollectionWithPvalueCalculators.keySet()) {
+      CanFindPvalue pvalueCalculator = pwmCollectionWithPvalueCalculators.get(pwm);
+
+      Map<SequenceWithSNP,SingleSNPScan.RegionAffinityInfos> result_part;
+      result_part = new HashMap<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>();
+      for (SequenceWithSNP sequenceWithSNP: snpCollection) {
+        if (sequenceWithSNP.length() >= pwm.length()) {
+          result_part.put(sequenceWithSNP,
+                          new SingleSNPScan(pwm, sequenceWithSNP, pvalueCalculator).affinityInfos());
+        } else {
+          System.err.println("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
+        }
+      }
+
+      results.put(pwm, result_part);
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
