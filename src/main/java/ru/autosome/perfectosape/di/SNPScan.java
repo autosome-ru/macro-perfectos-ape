@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.MultiSNPScan<DiPWM, DiBackgroundModel> {
+public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<DiPWM, DiBackgroundModel> {
   @Override
   protected String DOC_run_string(){
-    return "java ru.autosome.perfectosape.di.MultiSNPScan";
+    return "java ru.autosome.perfectosape.di.SNPScan";
   }
   @Override
   protected String DOC_background_option() {
@@ -48,7 +48,7 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
     }
   }
 
-  private MultiSNPScan() {
+  private SNPScan() {
     super();
   }
 
@@ -78,14 +78,14 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
     }
   }
 
-  protected static ru.autosome.perfectosape.cli.generalized.MultiSNPScan from_arglist(ArrayList<String> argv) {
-    MultiSNPScan result = new MultiSNPScan();
+  protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(ArrayList<String> argv) {
+    ru.autosome.perfectosape.di.SNPScan result = new ru.autosome.perfectosape.di.SNPScan();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);
     return result;
   }
 
-  protected static ru.autosome.perfectosape.cli.generalized.MultiSNPScan from_arglist(String[] args) {
+  protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
@@ -93,12 +93,12 @@ public class MultiSNPScan extends ru.autosome.perfectosape.cli.generalized.Multi
 
   public static void main(String[] args) {
     try {
-      ru.autosome.perfectosape.cli.generalized.MultiSNPScan calculation = ru.autosome.perfectosape.di.MultiSNPScan.from_arglist(args);
+      ru.autosome.perfectosape.cli.generalized.SNPScan calculation = ru.autosome.perfectosape.di.SNPScan.from_arglist(args);
       calculation.process();
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new MultiSNPScan().documentString());
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new ru.autosome.perfectosape.di.SNPScan().documentString());
       System.exit(1);
 
     }

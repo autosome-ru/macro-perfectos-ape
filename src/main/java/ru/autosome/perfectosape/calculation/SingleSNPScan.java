@@ -9,12 +9,12 @@ import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 import java.util.ArrayList;
 
-public class SNPScan {
+public class SingleSNPScan {
   final ScoringModel pwm;
   final SequenceWithSNP sequenceWithSNP;
   final CanFindPvalue pvalueCalculator;
 
-  public SNPScan(ScoringModel pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
+  public SingleSNPScan(ScoringModel pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
     if (sequenceWithSNP.length() < pwm.length()) {
       throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
     }

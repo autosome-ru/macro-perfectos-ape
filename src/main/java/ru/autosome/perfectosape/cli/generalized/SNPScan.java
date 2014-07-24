@@ -12,7 +12,7 @@ import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.perfectosape.calculation.SNPScan;
+import ru.autosome.perfectosape.calculation.SingleSNPScan;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 import java.io.File;
@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class MultiSNPScan<MotifType extends Named & ScoringModel & Discretable<MotifType> & ScoreDistribution<BackgroundType>,
+abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretable<MotifType> & ScoreDistribution<BackgroundType>,
                                    BackgroundType extends GeneralizedBackgroundModel> {
   public static class ThresholdEvaluator {
     public final ScoringModel pwm;
@@ -145,7 +145,7 @@ abstract public class MultiSNPScan<MotifType extends Named & ScoringModel & Disc
     transpose = false;
   }
 
-  protected MultiSNPScan() {
+  protected SNPScan() {
     initialize_defaults();
   }
 
@@ -212,8 +212,8 @@ abstract public class MultiSNPScan<MotifType extends Named & ScoringModel & Disc
     for (ThresholdEvaluator motifEvaluator: pwmCollection) {
       ScoringModel pwm = motifEvaluator.pwm;
       if (seq_w_snp.length() >= pwm.length()) {
-        SNPScan.RegionAffinityInfos result;
-        result = new SNPScan(pwm, seq_w_snp, motifEvaluator.pvalueCalculator).affinityInfos();
+        SingleSNPScan.RegionAffinityInfos result;
+        result = new SingleSNPScan(pwm, seq_w_snp, motifEvaluator.pvalueCalculator).affinityInfos();
         boolean pvalueSignificant = (result.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
                                       result.getInfo_2().getPvalue() <= max_pvalue_cutoff);
         boolean foldChangeSignificant = (result.foldChange() >= min_fold_change_cutoff ||

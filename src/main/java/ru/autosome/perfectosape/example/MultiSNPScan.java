@@ -10,7 +10,8 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.perfectosape.calculation.SNPScan;
+import ru.autosome.perfectosape.api.SNPScan;
+import ru.autosome.perfectosape.calculation.SingleSNPScan;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 import java.util.ArrayList;
@@ -125,11 +126,11 @@ public class MultiSNPScan {
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Scanning the pack of SNPs for changes of affinity on each PWM in collection using precalculated threshold - P-value lists
-    ru.autosome.perfectosape.api.MultiSNPScan.Parameters scan_parameters = new ru.autosome.perfectosape.api.MultiSNPScan.Parameters(snpCollection,
+    SNPScan.Parameters scan_parameters = new SNPScan.Parameters(snpCollection,
                                                                                                                                     pwmCollectionWithPvalueCalculators);
-    ru.autosome.perfectosape.api.MultiSNPScan scan_calculator = new ru.autosome.perfectosape.api.MultiSNPScan(scan_parameters);
+    SNPScan scan_calculator = new SNPScan(scan_parameters);
 
-    Map<PWM, Map<SequenceWithSNP, SNPScan.RegionAffinityInfos> > results = scan_calculator.call();
+    Map<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos> > results = scan_calculator.call();
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -138,8 +139,8 @@ public class MultiSNPScan {
       for (SequenceWithSNP seq: results.get(pwm).keySet()) {
         // RegionAffinityInfos is a special object carrying information about each allele form (in public variables RegionAffinityVariantInfo: info_1, info_2)
         // RegionAffinityVariantInfo carries type of allele, binding position and word under PWM, and Pvalue of binding of PWM to this site
-        // (take a look at calculation.SNPScan.RegionAffinityInfos, calculation.SNPScan.RegionAffinityVariantInfo)
-        SNPScan.RegionAffinityInfos affinityInfos = results.get(pwm).get(seq);
+        // (take a look at calculation.SingleSNPScan.RegionAffinityInfos, calculation.SingleSNPScan.RegionAffinityVariantInfo)
+        SingleSNPScan.RegionAffinityInfos affinityInfos = results.get(pwm).get(seq);
         System.out.println(pwm.name + " " + seq.toString() + " " + affinityInfos.toString());
       }
     }

@@ -1,26 +1,22 @@
 package ru.autosome.perfectosape.api;
 
-
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
-import ru.autosome.ape.model.exception.HashOverflowException;
-import ru.autosome.commons.api.SingleTask;
+import ru.autosome.commons.api.Task;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.perfectosape.calculation.SNPScan.RegionAffinityInfos;
+import ru.autosome.perfectosape.calculation.SingleSNPScan;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 
-public class SNPScan extends SingleTask<RegionAffinityInfos> {
-  static public class Parameters {
-    public SequenceWithSNP sequenceWithSNP;
-    public PWM pwm;
-    public CanFindPvalue pvalueCalculator;
-    public Parameters() { }
-    public Parameters(SequenceWithSNP sequenceWithSNP, PWM pwm, CanFindPvalue pvalueCalculator) {
-      if (sequenceWithSNP.length() < pwm.length()) {
-        throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
-      }
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-      this.sequenceWithSNP = sequenceWithSNP;
-      this.pwm = pwm;
+public class SNPScan extends Task< Map<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>> > {
+  static public class Parameters {
+    public List<SequenceWithSNP> sequencesWithSNP;
+    Map<PWM, CanFindPvalue> pvalueCalculator;
+    public Parameters() { }
+    public Parameters(List<SequenceWithSNP> sequencesWithSNP, Map<PWM, CanFindPvalue> pvalueCalculator) {
+      this.sequencesWithSNP = sequencesWithSNP;
       this.pvalueCalculator = pvalueCalculator;
     }
   }
@@ -31,13 +27,51 @@ public class SNPScan extends SingleTask<RegionAffinityInfos> {
     this.parameters = parameters;
   }
 
-  ru.autosome.perfectosape.calculation.SNPScan calculator() {
-    return new ru.autosome.perfectosape.calculation.SNPScan(parameters.pwm,
-                                                         parameters.sequenceWithSNP,
-                                                         parameters.pvalueCalculator);
+  SingleSNPScan calculator(PWM pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
+    return new SingleSNPScan(pwm,
+                                                      sequenceWithSNP,
+                                                      pvalueCalculator);
   }
+  public Map<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>> call() {
+    Map<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>> result;
+    setStatus(Status.RUNNING);
+    try {
+      result = new HashMap<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>>();
+      for (PWM pwm: parameters.pvalueCalculator.keySet()) {
+        CanFindPvalue pvalueCalculator = parameters.pvalueCalculator.get(pwm);
+
+        Map<SequenceWithSNP,SingleSNPScan.RegionAffinityInfos> result_part = new HashMap<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>();
+
+        for (SequenceWithSNP sequenceWithSNP: parameters.sequencesWithSNP) {
+          if (interrupted()) {
+            result.put(pwm, result_part);
+            return result; // Return partial results
+          }
+
+          if (sequenceWithSNP.length() >= pwm.length()) {
+            result_part.put(sequenceWithSNP,
+                            calculator(pwm, sequenceWithSNP, pvalueCalculator).affinityInfos());
+          } else {
+            message("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
+          }
+
+          tick();
+        }
+
+        result.put(pwm, result_part);
+      }
+    } catch (Exception err) {
+      setStatus(Status.FAIL);
+      return null;
+    }
+    setStatus(Status.SUCCESS);
+    return result;
+  }
+
+
   @Override
-  public RegionAffinityInfos launchSingleTask() throws HashOverflowException {
-    return calculator().affinityInfos();
+  public Integer getTotalTicks() {
+    return parameters.sequencesWithSNP.size() * parameters.pvalueCalculator.size();
   }
+
 }
