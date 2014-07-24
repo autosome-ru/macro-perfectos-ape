@@ -27,10 +27,11 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
   protected double effective_count; // used for converting PPM --> PWM
   protected boolean silence;
 
-  protected java.io.File collection_folder;
   protected java.io.File results_dir;
   protected double[] pvalues;
   protected boolean transpose;
+
+  protected List<ModelType> motifList;
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String s);
@@ -53,18 +54,26 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
   }
 
   protected void setup_from_arglist(ArrayList<String> argv) {
-    extract_collection_folder_name(argv);
+    File[] collection_folder = extract_collection_files(argv);
+    motifList = loadMotifs(collection_folder);
     extract_output_folder_name(argv);
 
     while (argv.size() > 0) {
       extract_option(argv);
     }
+
     create_results_folder();
   }
 
-  protected void extract_collection_folder_name(ArrayList<String> argv) {
+  protected File[] extract_collection_files(ArrayList<String> argv) {
     try {
-      collection_folder = new File(argv.remove(0));
+      File collection_folder = new File(argv.remove(0));
+      File[] files = collection_folder.listFiles();
+      if (files == null) {
+        System.err.println("Warning! No files in collection folder `" + collection_folder + "`!");
+        return new File[0];
+      }
+      return files;
     } catch (IndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Specify PWM-collection folder", e);
     }
@@ -117,17 +126,20 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
     return true;
   }
 
-  protected void calculate_thresholds_for_collection() throws HashOverflowException, IOException {
-    File[] files = collection_folder.listFiles();
-    if (files == null) {
-      System.err.println("Warning! No files in collection folder `" + collection_folder + "`!");
-      return;
-    }
+  List<ModelType> loadMotifs(File[] files) {
+    List<ModelType> results = new ArrayList<ModelType>();
+
     for (File file : files) {
+      results.add(loadMotif(file));
+    }
+    return results;
+  }
+
+  protected void calculate_thresholds_for_collection() throws HashOverflowException, IOException {
+    for (ModelType motif: motifList) {
       if (!silence) {
-        System.err.println(file);
+        System.err.println(motif.getName());
       }
-      ModelType motif = loadMotif(file);
       File result_filename = new File(results_dir, motif.getName() + ".thr");
       PvalueBsearchList bsearchList = calculator().bsearch_list_for_pwm(motif);
       bsearchList.save_to_file(result_filename);
