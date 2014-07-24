@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
+public class PrecalculateThresholds extends Task<Map<PWM, CanFindPvalue>> {
   public static class Parameters {
     public Discretizer discretizer;
     public BackgroundModel background;
@@ -32,7 +32,7 @@ public class PrecalculateThresholdLists extends Task<Map<PWM, CanFindPvalue>> {
     }
   }
   Parameters parameters;
-  public PrecalculateThresholdLists(Parameters parameters) {
+  public PrecalculateThresholds(Parameters parameters) {
     super();
     this.parameters = parameters;
   }

@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PrecalculateThresholdLists<ModelType extends Named & ScoringModel & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class PrecalculateThresholds<ModelType extends Named & ScoringModel & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
   protected Discretizer discretizer;
   protected BackgroundType background;
   protected BoundaryType pvalue_boundary;

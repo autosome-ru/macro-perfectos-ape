@@ -1,6 +1,6 @@
 package ru.autosome.perfectosape.example;
 
-import ru.autosome.ape.api.PrecalculateThresholdLists;
+import ru.autosome.ape.api.PrecalculateThresholds;
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
@@ -91,13 +91,13 @@ public class MultiSNPScan {
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Threshold precalculation step (you can skip it, read commented block just below this one)
-    PrecalculateThresholdLists.Parameters listCalculationParams = new PrecalculateThresholdLists.Parameters(pwmCollection,
+    PrecalculateThresholds.Parameters listCalculationParams = new PrecalculateThresholds.Parameters(pwmCollection,
                                                                                                             pvalues,
                                                                                                             discretizer,
                                                                                                             background,
                                                                                                             pvalue_boundary,
                                                                                                             max_hash_size);
-    PrecalculateThresholdLists listCalculator = new PrecalculateThresholdLists(listCalculationParams);
+    PrecalculateThresholds listCalculator = new PrecalculateThresholds(listCalculationParams);
 
     Map<PWM, CanFindPvalue> pwmCollectionWithPvalueCalculators = listCalculator.call();
     // Result of this step (pwmCollectionWithPvalueCalculators) should be cached. You need to do it once for a collection of PWMs

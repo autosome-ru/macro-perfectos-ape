@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.PrecalculateThresholdLists<PWM, BackgroundModel> {
+public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.PrecalculateThresholds<PWM, BackgroundModel> {
 
   @Override
   protected void initialize_default_background() {
@@ -41,21 +41,21 @@ public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.
 
   @Override
   protected String DOC_run_string() {
-    return "java ru.autosome.ape.PrecalculateThresholdLists";
+    return "java ru.autosome.ape.PrecalculateThresholds";
   }
 
-  public PrecalculateThresholdLists() {
+  public PrecalculateThresholds() {
     initialize_defaults();
   }
 
-  protected static PrecalculateThresholdLists from_arglist(ArrayList<String> argv) {
-    PrecalculateThresholdLists result = new PrecalculateThresholdLists();
+  protected static ru.autosome.ape.PrecalculateThresholds from_arglist(ArrayList<String> argv) {
+    ru.autosome.ape.PrecalculateThresholds result = new ru.autosome.ape.PrecalculateThresholds();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);
     return result;
   }
 
-  protected static PrecalculateThresholdLists from_arglist(String[] args) {
+  protected static ru.autosome.ape.PrecalculateThresholds from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
@@ -63,12 +63,12 @@ public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.
 
   public static void main(String[] args) {
     try {
-      PrecalculateThresholdLists calculation = PrecalculateThresholdLists.from_arglist(args);
+      ru.autosome.ape.PrecalculateThresholds calculation = ru.autosome.ape.PrecalculateThresholds.from_arglist(args);
       calculation.calculate_thresholds_for_collection();
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new PrecalculateThresholdLists().documentString());
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new ru.autosome.ape.PrecalculateThresholds().documentString());
       System.exit(1);
     }
   }

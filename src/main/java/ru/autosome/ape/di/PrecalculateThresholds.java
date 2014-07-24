@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.PrecalculateThresholdLists<DiPWM,DiBackgroundModel> {
+public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.PrecalculateThresholds<DiPWM,DiBackgroundModel> {
 
   boolean fromMononucleotide;
 
@@ -59,7 +59,7 @@ public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.
 
   @Override
   protected String DOC_run_string() {
-    return "java ru.autosome.ape.di.PrecalculateThresholdLists";
+    return "java ru.autosome.ape.di.PrecalculateThresholds";
   }
 
   @Override
@@ -67,7 +67,7 @@ public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.
     return "  [--from-mono]  - obtain DiPWMs from mono PWM/PCM/PPMs.\n";
   }
 
-  protected PrecalculateThresholdLists() {
+  protected PrecalculateThresholds() {
     initialize_defaults();
   }
 
@@ -81,14 +81,14 @@ public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.
     }
   }
 
-  protected static PrecalculateThresholdLists from_arglist(ArrayList<String> argv) {
-    PrecalculateThresholdLists result = new PrecalculateThresholdLists();
+  protected static ru.autosome.ape.di.PrecalculateThresholds from_arglist(ArrayList<String> argv) {
+    ru.autosome.ape.di.PrecalculateThresholds result = new ru.autosome.ape.di.PrecalculateThresholds();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);
     return result;
   }
 
-  protected static PrecalculateThresholdLists from_arglist(String[] args) {
+  protected static ru.autosome.ape.di.PrecalculateThresholds from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
@@ -96,12 +96,12 @@ public class PrecalculateThresholdLists extends ru.autosome.ape.cli.generalized.
 
   public static void main(String[] args) {
     try {
-      PrecalculateThresholdLists calculation = ru.autosome.ape.di.PrecalculateThresholdLists.from_arglist(args);
+      ru.autosome.ape.di.PrecalculateThresholds calculation = ru.autosome.ape.di.PrecalculateThresholds.from_arglist(args);
       calculation.calculate_thresholds_for_collection();
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new ru.autosome.ape.PrecalculateThresholdLists().documentString());
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new ru.autosome.ape.PrecalculateThresholds().documentString());
       System.exit(1);
     }
   }

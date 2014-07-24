@@ -181,7 +181,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>ru.autosome.ape.PrecalculateThresholdLists</mainClass>
+                                    <mainClass>ru.autosome.ape.PrecalculateThresholds</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -197,7 +197,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>ru.autosome.ape.di.PrecalculateThresholdLists</mainClass>
+                                    <mainClass>ru.autosome.ape.di.PrecalculateThresholds</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
