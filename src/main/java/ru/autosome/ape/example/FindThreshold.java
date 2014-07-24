@@ -51,16 +51,5 @@ public class FindThreshold {
         print_result(info, background, pwm.length());
       }
     }
-    // api integration
-    ru.autosome.ape.api.FindThresholdAPE.Parameters parameters =
-     new ru.autosome.ape.api.FindThresholdAPE.Parameters(pwm,
-                                                              pvalues,
-                                                              background,
-                                                              discretizer,pvalue_boundary, max_hash_size);
-    ru.autosome.ape.api.FindThresholdAPE bioumlCalculator = new ru.autosome.ape.api.FindThresholdAPE(parameters);
-    CanFindThreshold.ThresholdInfo[] infosBiouml = bioumlCalculator.call();
-    for (CanFindThreshold.ThresholdInfo bioumlInfo : infosBiouml) {
-      print_result(bioumlInfo, background, pwm.length());
-    }
   }
 }

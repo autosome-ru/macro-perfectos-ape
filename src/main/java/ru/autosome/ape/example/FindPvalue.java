@@ -49,24 +49,5 @@ public class FindPvalue {
         print_result(info, background, pwm.length());
       }
     }
-
-    // api integration
-    double[][] matrix_cAVNCT = { {1.0, 2.0, 1.0, 1.0},
-                          {10.5, -3.0, 0.0, 0.0},
-                          {5.0, 5.0, 5.0, -10.0},
-                          {0.0, 0.0, 0.0, 0.0},
-                          {-1.0, 10.5, -1.0, 0.0},
-                          {0.0, 0.0, 0.0, 2.0}};
-    PWM pwm_manual_constructed = new PWM(matrix_cAVNCT, "PWM for cAVNCt consensus sequence");
-    double[] thresholds_2 = {15,16,17};
-    ru.autosome.ape.api.FindPvalueAPE.Parameters parameters =
-     new ru.autosome.ape.api.FindPvalueAPE.Parameters(pwm_manual_constructed,
-                                                      thresholds_2,
-                                                      discretizer, background, max_hash_size);
-    ru.autosome.ape.api.FindPvalueAPE bioumlCalculator = new ru.autosome.ape.api.FindPvalueAPE(parameters);
-    CanFindPvalue.PvalueInfo[] infosBiouml = bioumlCalculator.call();
-    for (CanFindPvalue.PvalueInfo bioumlInfo : infosBiouml) {
-      print_result(bioumlInfo, background, pwm_manual_constructed.length());
-    }
   }
 }
