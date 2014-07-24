@@ -3,6 +3,7 @@ package ru.autosome.ape.cli.generalized;
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.ape.model.exception.HashOverflowException;
+import ru.autosome.ape.model.progression.Progression;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -88,7 +89,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
     if (opt.equals("-b")) {
       extract_background(argv.remove(0));
     } else if (opt.equals("--pvalues")) {
-      pvalues = PrecalculateThresholdList.Progression.fromString(argv.remove(0)).values();
+      pvalues = Progression.fromString(argv.remove(0)).values();
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d")) {
