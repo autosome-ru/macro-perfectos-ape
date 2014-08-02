@@ -118,7 +118,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
       maxHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("--max-2d-hash-size")) {
       maxPairHashSize = Integer.valueOf(argv.remove(0));
-    } else if (opt.equals("--rough-discretization") || opt.equals("-d")) {
+    } else if (opt.equals("--rough-discretization") || opt.equals("-d") || opt.equals("--discretization")) {
       roughDiscretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--precise-discretization")) {
       preciseDiscretizer = Discretizer.fromString(argv.remove(0));

@@ -102,7 +102,7 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
       extract_background(argv.remove(0));
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
-    } else if (opt.equals("-d")) {
+    } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--pcm")) {
       data_model = DataModel.PCM;

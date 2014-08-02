@@ -101,7 +101,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
       pvalues = Progression.fromString(argv.remove(0)).values();
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));
-    } else if (opt.equals("-d")) {
+    } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
       pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
