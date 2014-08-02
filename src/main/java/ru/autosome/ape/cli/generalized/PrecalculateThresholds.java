@@ -25,7 +25,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
   protected Integer max_hash_size;
   protected DataModel data_model;
   protected double effective_count; // used for converting PPM --> PWM
-  protected boolean silence;
+  protected boolean silenceLog;
 
   protected java.io.File results_dir;
   protected double[] pvalues;
@@ -49,7 +49,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
     pvalues = PrecalculateThresholdList.PVALUE_LIST;
     data_model = DataModel.PWM;
     effective_count = 100;
-    silence = false;
+    silenceLog = false;
     transpose = false;
   }
 
@@ -111,8 +111,8 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
       data_model = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
       effective_count = Double.valueOf(argv.remove(0));
-    } else if (opt.equals("--silence")) {
-      silence = true;
+    } else if (opt.equals("--silent")) {
+      silenceLog = true;
     } else if (opt.equals("--transpose")) {
       transpose = true;
     } else {
@@ -137,7 +137,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
 
   protected void calculate_thresholds_for_collection() throws HashOverflowException, IOException {
     for (ModelType motif: motifList) {
-      if (!silence) {
+      if (!silenceLog) {
         System.err.println(motif.getName());
       }
       File result_filename = new File(results_dir, motif.getName() + ".thr");
@@ -158,7 +158,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
       "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
       "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
       "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
-      "  [--silence] - suppress logging\n" +
+      "  [--silent] - suppress logging\n" +
       "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
      DOC_additional_options() +
       "\n" +
