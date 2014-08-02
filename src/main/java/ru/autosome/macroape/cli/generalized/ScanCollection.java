@@ -159,7 +159,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
       effectiveCount = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
-    } else if(opt.equals("-p")) {
+    } else if(opt.equals("-p") || opt.equals("--pvalue")) {
       pvalue = Double.valueOf(argv.remove(0));
     } else if(opt.equals("--predefined-threshold")) {
       queryPredefinedThreshold = Double.valueOf(argv.remove(0));

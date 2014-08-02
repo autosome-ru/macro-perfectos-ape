@@ -125,7 +125,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
       BackgroundType background = extract_background(argv.remove(0));
       firstBackground = background;
       secondBackground = background;
-    } else if (opt.equals("-p")) {
+    } else if (opt.equals("-p") || opt.equals("--pvalue")) {
       pvalue = Double.valueOf(argv.remove(0));
     } else if (opt.equals("-b1") || opt.equals("--first-background")) {
       firstBackground = extract_background(argv.remove(0));

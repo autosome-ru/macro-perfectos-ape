@@ -10,7 +10,7 @@ abstract public class Progression {
     double from = Double.valueOf(parser.nextToken(","));
     double to = Double.valueOf(parser.nextToken(","));
     double step = Double.valueOf(parser.nextToken(","));
-    String progression_method = parser.nextToken();
+    String progression_method = parser.nextToken().toLowerCase();
 
     if (progression_method.equals("mul")) {
       return new GeometricProgression(from, to, step);

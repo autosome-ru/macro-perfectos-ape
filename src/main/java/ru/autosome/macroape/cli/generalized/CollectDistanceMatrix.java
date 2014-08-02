@@ -112,7 +112,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       background = extract_background(argv.remove(0));
-    } else if(opt.equals("-p")) {
+    } else if(opt.equals("-p") || opt.equals("--pvalue")) {
       pvalue = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--max-hash-size")) {
       maxHashSize = Integer.valueOf(argv.remove(0));
