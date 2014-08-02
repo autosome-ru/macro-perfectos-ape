@@ -9,6 +9,7 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
+import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
@@ -186,7 +187,11 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     } else if(opt.equals("--all")) {
       similarityCutoff = 0.0;
     } else if(opt.equals("--precise")) {
-      preciseRecalculationCutoff = Double.valueOf(argv.remove(0));
+      if (!argv.isEmpty() && InputExtensions.isDouble(argv.get(0))) {
+        preciseRecalculationCutoff = Double.valueOf(argv.remove(0));
+      } else {
+        preciseRecalculationCutoff = 0.01;
+      }
     } else if(opt.equals("--transpose")) {
       queryTranspose = true;
       collectionTranspose = true;
