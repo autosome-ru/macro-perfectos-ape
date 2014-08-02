@@ -55,7 +55,6 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
   protected Double similarityCutoff;
   protected Double preciseRecalculationCutoff; // null means that no recalculation will be performed
   protected BoundaryType pvalueBoundaryType;
-  protected boolean silenceLog;
   protected String queryPMFilename;
   protected File pathToCollectionOfPWMs;
   protected File thresholds_folder;
@@ -75,7 +74,6 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
      "  [--precise [<level>]] minimal similarity to check on the second pass in precise mode, off by default, '--precise 0.01' if level is not set\n" +
      "  [--rough-discretization <discretization level>] or [-d]\n" +
      "  [--precise-discretization <discretization level>]\n" +
-     "  [--silent] - hide current progress information during scan (printed to stderr by default)\n" +
      "  [--[query-|collection-]pcm] - treat the query input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
      "  [--[query-|collection-]ppm] or [--pfm] - treat the query input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
      "  [--[query-|collection-]effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
@@ -128,7 +126,6 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     queryEffectiveCount = 100.0;
     collectionEffectiveCount = 100.0;
     thresholds_folder = null;
-    silenceLog = false;
     pvalueBoundaryType = BoundaryType.UPPER;
     pvalue = 0.0005;
     similarityCutoff = 0.05;
@@ -190,8 +187,6 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
       similarityCutoff = 0.0;
     } else if(opt.equals("--precise")) {
       preciseRecalculationCutoff = Double.valueOf(argv.remove(0));
-    } else if(opt.equals("--silent")) {
-      silenceLog = true;
     } else if(opt.equals("--transpose")) {
       queryTranspose = true;
       collectionTranspose = true;
