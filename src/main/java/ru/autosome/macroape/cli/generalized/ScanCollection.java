@@ -40,8 +40,12 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
       this.precisePvalueCalculator = precisePvalueCalculator;
     }
   }
-  protected DataModel dataModel;
-  protected Double effectiveCount;
+
+  protected DataModel collectionDataModel;
+  protected Double collectionEffectiveCount;
+  protected DataModel queryDataModel;
+  protected Double queryEffectiveCount;
+
   protected BackgroundType queryBackground, collectionBackground;
   protected Discretizer roughDiscretizer, preciseDiscretizer;
   protected Integer maxHashSize;
@@ -72,9 +76,9 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
      "  [--rough-discretization <discretization level>] or [-d]\n" +
      "  [--precise-discretization <discretization level>]\n" +
      "  [--silent] - hide current progress information during scan (printed to stderr by default)\n" +
-     "  [--pcm] - treat the query input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
-     "  [--ppm] or [--pfm] - treat the query input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
-     "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
+     "  [--[query-|collection-]pcm] - treat the query input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+     "  [--[query-|collection-]ppm] or [--pfm] - treat the query input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
+     "  [--[query-|collection-]effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
      "  [--boundary lower|upper] Upper boundary (default) means that the obtained P-value is greater than or equal to the requested P-value\n" +
      "  [-b <background probabilities] " + DOC_background_option() + "\n" +
      "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
@@ -119,8 +123,10 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     preciseDiscretizer = new Discretizer(10.0);
     maxHashSize = 10000000;
     maxPairHashSize = 10000;
-    dataModel = DataModel.PWM;
-    effectiveCount = 100.0;
+    queryDataModel = DataModel.PWM;
+    collectionDataModel = DataModel.PWM;
+    queryEffectiveCount = 100.0;
+    collectionEffectiveCount = 100.0;
     thresholds_folder = null;
     silenceLog = false;
     pvalueBoundaryType = BoundaryType.UPPER;
@@ -152,11 +158,26 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     } else if (opt.equals("--boundary")) {
       pvalueBoundaryType = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
-      dataModel = DataModel.PCM;
+      queryDataModel = DataModel.PCM;
+      collectionDataModel = DataModel.PCM;
+    } else if (opt.equals("--query-pcm")) {
+      queryDataModel = DataModel.PCM;
+    } else if (opt.equals("--collection-pcm")) {
+      collectionDataModel = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
-      dataModel = DataModel.PPM;
+      queryDataModel = DataModel.PPM;
+      collectionDataModel = DataModel.PPM;
+    } else if (opt.equals("--query-ppm") || opt.equals("--query-pfm")) {
+      queryDataModel = DataModel.PPM;
+    } else if (opt.equals("--collection-ppm") || opt.equals("--collection-pfm")) {
+      collectionDataModel = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
-      effectiveCount = Double.valueOf(argv.remove(0));
+      queryEffectiveCount = Double.valueOf(argv.remove(0));
+      collectionEffectiveCount = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--query-effective-count")) {
+      queryEffectiveCount = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--collection-effective-count")) {
+      collectionEffectiveCount = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
     } else if(opt.equals("-p") || opt.equals("--pvalue")) {

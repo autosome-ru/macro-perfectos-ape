@@ -52,12 +52,12 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   }
 
   protected List<PWM> loadMotifCollection() {
-    PWMImporter importer = new PWMImporter(collectionBackground, dataModel, effectiveCount, collectionTranspose);
+    PWMImporter importer = new PWMImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose);
     return importer.loadMotifCollection(pathToCollectionOfPWMs);
   }
 
   protected PWM loadQueryMotif() {
-    PWMImporter importer = new PWMImporter(queryBackground, dataModel, effectiveCount, queryTranspose);
+    PWMImporter importer = new PWMImporter(queryBackground, queryDataModel, queryEffectiveCount, queryTranspose);
     return importer.loadMotif(queryPMFilename);
   }
 

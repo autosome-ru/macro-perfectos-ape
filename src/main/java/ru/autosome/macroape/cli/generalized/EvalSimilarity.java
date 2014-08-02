@@ -31,8 +31,8 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     "Options:\n" +
     "  [-p <P-value>]\n" +
     "  [-d <discretization level>]\n" +
-    "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
-    "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
+    "  [--[first-|second-]pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
+    "  [--[first-|second-]ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
     "  [--[first-|second-]effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
     "  [--boundary lower|upper] Upper boundary (default) means that the obtained P-value is greater than or equal to the requested P-value\n" +
     "  [-b <background probabilities] " + DOC_background_option() + "\n" +
