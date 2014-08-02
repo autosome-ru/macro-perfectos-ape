@@ -69,8 +69,8 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
      DOC_run_string() + " <query PWM file> <folder with PWMs> [options]\n" +
      "\n" +
      "Options:\n" +
-     "  [-p <P-value>]\n" +
-     "  [-c <similarity cutoff>] minimal similarity to be included in output, '-c 0.05' by default, [--all] to print all results\n" +
+     "  [--pvalue <P-value>] or [-p]\n" +
+     "  [--similarity-cutoff <similarity cutoff>] or [-c] minimal similarity to be included in output, '--similarity-cutoff 0.05' by default, [--all] to print all results\n" +
      "  [--precise [<level>]] minimal similarity to check on the second pass in precise mode, off by default, '--precise 0.01' if level is not set\n" +
      "  [--rough-discretization <discretization level>] or [-d]\n" +
      "  [--precise-discretization <discretization level>]\n" +
@@ -78,7 +78,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
      "  [--[query-|collection-]ppm] or [--pfm] - treat the query input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
      "  [--[query-|collection-]effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
      "  [--boundary lower|upper] Upper boundary (default) means that the obtained P-value is greater than or equal to the requested P-value\n" +
-     "  [-b <background probabilities] " + DOC_background_option() + "\n" +
+     "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
      "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
      "                         Attention! Don't use threshold lists calculated for a different discretization (or background)!\n" +
      "  [--[query-|collection-]transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
@@ -181,7 +181,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
       pvalue = Double.valueOf(argv.remove(0));
     } else if(opt.equals("--predefined-threshold")) {
       queryPredefinedThreshold = Double.valueOf(argv.remove(0));
-    } else if(opt.equals("-c")) {
+    } else if(opt.equals("-c") || opt.equals("--similarity-cutoff")) {
       similarityCutoff = Double.valueOf(argv.remove(0));
     } else if(opt.equals("--all")) {
       similarityCutoff = 0.0;

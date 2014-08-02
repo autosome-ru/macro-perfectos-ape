@@ -44,12 +44,12 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
             "  [--rough-discretization <discretization level>] or [-d]\n" +
             "  [--precise-discretization <discretization level>]\n" +
             "  [--precise [<level>]] minimal similarity to check on the second pass in precise mode, off by default, '--precise 0.01' if level is not set\n" +
-            "  [-p <P-value>]\n" +
+            "  [--pvalue <P-value>] or [-p]\n" +
             "  [--boundary lower|upper] Upper boundary (default) means that the obtained P-value is greater than or equal to the requested P-value\n" +
             "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
             "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
             "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
-            "  [-b <background probabilities] " + DOC_background_option() + "\n" +
+            "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
             "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
             "  [--parallelize <num of threads> <thread number>] - run only one task per numOfThreads (those equal to thread number modulo numOfThreads)\n" +
             DOC_additional_options() +

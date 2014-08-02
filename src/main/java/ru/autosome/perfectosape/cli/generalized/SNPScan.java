@@ -66,11 +66,11 @@ abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretab
     "  [--fold-change-cutoff <minmal fold change to be considered>] or [-F] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
     "                                                                 less than given (default: 5)\n" +
     "        In order to get all fold changes - set both pvalue-cutoff and fold-change-cutoff to 1.0.\n" +
-    "  [-d <discretization level>]\n" +
+    "  [--discretization <discretization level>] or [-d]\n" +
     "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
     "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
     "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
-    "  [-b <background probabilities] " + DOC_background_option() + "\n" +
+    "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
     "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
      DOC_additional_options() +

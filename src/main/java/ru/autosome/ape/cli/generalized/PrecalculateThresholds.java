@@ -151,12 +151,12 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
       DOC_run_string() + " <collection folder> <output folder> [options]\n" +
       "\n" +
       "Options:\n" +
-      "  [-d <discretization level>]\n" +
+      "  [--discretization <discretization level>] or [-d]\n" +
       "  [--pcm] - treat the input files as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
       "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
       "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
       "  [--boundary lower|upper] Lower boundary (default) means that the obtained P-value is less than or equal to the requested P-value\n" +
-      "  [-b <background probabilities] " + DOC_background_option() + "\n" +
+      "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
       "  [--pvalues <min pvalue>,<max pvalue>,<step>,<mul|add>] pvalue list parameters: boundaries, step, arithmetic(add)/geometric(mul) progression\n" +
       "  [--silence] - suppress logging\n" +
       "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +

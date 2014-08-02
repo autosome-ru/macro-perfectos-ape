@@ -29,13 +29,13 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     DOC_run_string() + " <1st matrix pat-file> <2nd matrix pat-file> [options]\n" +
     "\n" +
     "Options:\n" +
-    "  [-p <P-value>]\n" +
-    "  [-d <discretization level>]\n" +
+    "  [--pvalue <P-value>] or [-p]\n" +
+    "  [--discretization <discretization level>] or [-d]\n" +
     "  [--[first-|second-]pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
     "  [--[first-|second-]ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
     "  [--[first-|second-]effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
     "  [--boundary lower|upper] Upper boundary (default) means that the obtained P-value is greater than or equal to the requested P-value\n" +
-    "  [-b <background probabilities] " + DOC_background_option() + "\n" +
+    "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
     "  [--first-threshold <threshold for the first matrix>]\n" +
     "  [--second-threshold <threshold for the second matrix>]\n" +
     "  [--position <shift>,<direct|revcomp>] - specify relative alignment to test. By default every alignment tested (example: --position -3,revcomp). Comma not allowed.\n" +
@@ -127,9 +127,9 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
       secondBackground = background;
     } else if (opt.equals("-p") || opt.equals("--pvalue")) {
       pvalue = Double.valueOf(argv.remove(0));
-    } else if (opt.equals("-b1") || opt.equals("--first-background")) {
+    } else if (opt.equals("--first-background")) {
       firstBackground = extract_background(argv.remove(0));
-    } else if (opt.equals("-b2") || opt.equals("--second-background")) {
+    } else if (opt.equals("--second-background")) {
       secondBackground = extract_background(argv.remove(0));
     } else if (opt.equals("--max-hash-size")) {
       maxHashSize = Integer.valueOf(argv.remove(0));

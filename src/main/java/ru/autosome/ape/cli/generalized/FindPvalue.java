@@ -25,11 +25,11 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
      DOC_run_string() + " <pat-file> <threshold list>... [options]\n" +
      "\n" +
      "Options:\n" +
-     "  [-d <discretization level>]\n" +
+     "  [--discretization <discretization level>] or [-d]\n" +
      "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
      "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
      "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
-     "  [-b <background probabilities] " + DOC_background_option() + "\n" +
+     "  [--background <background probabilities>] or [-b]" + DOC_background_option() + "\n" +
      "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
      "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
      DOC_additional_options() +
