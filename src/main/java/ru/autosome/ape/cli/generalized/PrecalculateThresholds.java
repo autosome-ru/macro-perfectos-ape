@@ -55,13 +55,13 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
 
   protected void setup_from_arglist(ArrayList<String> argv) {
     File[] collection_folder = extract_collection_files(argv);
-    motifList = loadMotifs(collection_folder);
     extract_output_folder_name(argv);
 
     while (argv.size() > 0) {
       extract_option(argv);
     }
 
+    motifList = loadMotifs(collection_folder);
     create_results_folder();
   }
 
