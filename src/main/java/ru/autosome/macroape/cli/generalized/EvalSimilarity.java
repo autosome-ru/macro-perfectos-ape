@@ -33,7 +33,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     "  [-d <discretization level>]\n" +
     "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
     "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
-    "  [--effective-count[-first|-second] <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
+    "  [--[first-|second-]effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
     "  [--boundary lower|upper] Upper boundary (default) means that the obtained P-value is greater than or equal to the requested P-value\n" +
     "  [-b <background probabilities] " + DOC_background_option() + "\n" +
     "  [--first-threshold <threshold for the first matrix>]\n" +
@@ -140,19 +140,26 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     } else if (opt.equals("--boundary")) {
       pvalueBoundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--pcm")) {
-      // TODO: --pcm-first, --pcm-second
       dataModelFirst = DataModel.PCM;
+      dataModelSecond = DataModel.PCM;
+    } else if (opt.equals("--first-pcm")) {
+      dataModelFirst = DataModel.PCM;
+    } else if (opt.equals("--second-pcm")) {
       dataModelSecond = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {
       dataModelFirst = DataModel.PPM;
+      dataModelSecond = DataModel.PPM;
+    } else if (opt.equals("--first-ppm") || opt.equals("--first-pfm")) {
+      dataModelFirst = DataModel.PPM;
+    } else if (opt.equals("--second-ppm") || opt.equals("--second-pfm")) {
       dataModelSecond = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
       Double effectiveCount = Double.valueOf(argv.remove(0));
       effectiveCountFirst = effectiveCount;
       effectiveCountSecond = effectiveCount;
-    } else if (opt.equals("--effective-count-first")) {
+    } else if (opt.equals("--first-effective-count")) {
       effectiveCountFirst = Double.valueOf(argv.remove(0));
-    } else if (opt.equals("--effective-count-second")) {
+    } else if (opt.equals("--second-effective-count")) {
       effectiveCountSecond = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--first-threshold")) {
       predefinedFirstThreshold = Double.valueOf(argv.remove(0));
