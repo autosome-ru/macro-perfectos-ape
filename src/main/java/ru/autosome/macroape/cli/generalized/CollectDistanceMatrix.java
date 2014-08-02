@@ -110,7 +110,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
 
   protected void extract_option(List<String> argv) {
     String opt = argv.remove(0);
-    if (opt.equals("-b")) {
+    if (opt.equals("-b") || opt.equals("--background")) {
       background = extract_background(argv.remove(0));
     } else if(opt.equals("-p")) {
       pvalue = Double.valueOf(argv.remove(0));

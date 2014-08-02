@@ -90,7 +90,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
 
   protected void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
-    if (opt.equals("-b")) {
+    if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));
     } else if (opt.equals("--max-hash-size")) {
       max_hash_size = Integer.valueOf(argv.remove(0));

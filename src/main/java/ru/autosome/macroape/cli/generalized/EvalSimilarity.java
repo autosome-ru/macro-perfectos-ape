@@ -121,15 +121,15 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
 
   protected void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
-    if (opt.equals("-b")) {
+    if (opt.equals("-b") || opt.equals("--background")) {
       BackgroundType background = extract_background(argv.remove(0));
       firstBackground = background;
       secondBackground = background;
     } else if (opt.equals("-p")) {
       pvalue = Double.valueOf(argv.remove(0));
-    } else if (opt.equals("-b1")) {
+    } else if (opt.equals("-b1") || opt.equals("--first-background")) {
       firstBackground = extract_background(argv.remove(0));
-    } else if (opt.equals("-b2")) {
+    } else if (opt.equals("-b2") || opt.equals("--second-background")) {
       secondBackground = extract_background(argv.remove(0));
     } else if (opt.equals("--max-hash-size")) {
       maxHashSize = Integer.valueOf(argv.remove(0));

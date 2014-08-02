@@ -133,7 +133,7 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
 
   protected void extract_option(ArrayList<String> argv) {
     String opt = argv.remove(0);
-    if (opt.equals("-b")) {
+    if (opt.equals("-b") || opt.equals("--background")) {
       BackgroundType background = extractBackground(argv.remove(0));
       queryBackground = background;
       collectionBackground = background;
