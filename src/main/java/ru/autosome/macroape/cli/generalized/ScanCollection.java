@@ -18,6 +18,7 @@ import ru.autosome.commons.motifModel.types.DataModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class ScanCollection<ModelType extends Named & ScoringModel & Discretable<ModelType> & ScoreDistribution<BackgroundType> &Alignable<ModelType>,
@@ -243,6 +244,21 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
 
   protected OutputInformation report_table(List<? extends ResultInfo> data) {
     OutputInformation result = report_table_layout();
+    Collections.sort(data, new Comparator<Object>() {
+      @Override
+      public int compare(Object o1, Object o2) {
+        ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo s1, s2;
+        s1 = (ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo)o1;
+        s2 = (ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo)o2;
+        if (s1.similarity() < s2.similarity()) {
+          return 1;
+        } else if (s1.similarity() > s2.similarity()) {
+          return -1;
+        } else {
+          return 0;
+        }
+      }
+    });
     result.data = data;
     return result;
   }
