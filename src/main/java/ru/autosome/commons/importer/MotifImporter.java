@@ -1,6 +1,7 @@
 package ru.autosome.commons.importer;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.types.DataModel;
@@ -14,11 +15,13 @@ public abstract class MotifImporter<ModelType extends Named & ScoringModel, Back
   final BackgroundType background;
   final DataModel dataModel;
   final Double effectiveCount;
+  final PseudocountCalculator pseudocountCalculator;
 
-  public MotifImporter(BackgroundType background, DataModel dataModel, Double effectiveCount) {
+  public MotifImporter(BackgroundType background, DataModel dataModel, Double effectiveCount, PseudocountCalculator pseudocountCalculator) {
     this.background = background;
     this.dataModel = dataModel;
     this.effectiveCount = effectiveCount;
+    this.pseudocountCalculator = pseudocountCalculator;
   }
 
   abstract public ModelType createMotif(double matrix[][], String name);

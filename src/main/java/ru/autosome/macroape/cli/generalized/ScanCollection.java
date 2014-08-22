@@ -12,6 +12,7 @@ import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.DataModel;
 
@@ -45,8 +46,10 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
 
   protected DataModel collectionDataModel;
   protected Double collectionEffectiveCount;
+  protected PseudocountCalculator collectionPseudocount;
   protected DataModel queryDataModel;
   protected Double queryEffectiveCount;
+  protected PseudocountCalculator queryPseudocount;
 
   protected BackgroundType queryBackground, collectionBackground;
   protected Discretizer roughDiscretizer, preciseDiscretizer;
@@ -126,7 +129,9 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     queryDataModel = DataModel.PWM;
     collectionDataModel = DataModel.PWM;
     queryEffectiveCount = 100.0;
+    queryPseudocount = PseudocountCalculator.logPseudocount;
     collectionEffectiveCount = 100.0;
+    collectionPseudocount = PseudocountCalculator.logPseudocount;
     thresholds_folder = null;
     pvalueBoundaryType = BoundaryType.UPPER;
     pvalue = 0.0005;
@@ -171,12 +176,21 @@ public abstract class ScanCollection<ModelType extends Named & ScoringModel & Di
     } else if (opt.equals("--collection-ppm") || opt.equals("--collection-pfm")) {
       collectionDataModel = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
-      queryEffectiveCount = Double.valueOf(argv.remove(0));
-      collectionEffectiveCount = Double.valueOf(argv.remove(0));
+      Double effectiveCount = Double.valueOf(argv.remove(0));
+      queryEffectiveCount = effectiveCount;
+      collectionEffectiveCount = effectiveCount;
     } else if (opt.equals("--query-effective-count")) {
       queryEffectiveCount = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--collection-effective-count")) {
       collectionEffectiveCount = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--pseudocount")) {
+      PseudocountCalculator pseudocount = PseudocountCalculator.fromString(argv.remove(0));
+      queryPseudocount = pseudocount;
+      collectionPseudocount = pseudocount;
+    } else if (opt.equals("--query-pseudocount")) {
+      queryPseudocount = PseudocountCalculator.fromString(argv.remove(0));
+    } else if (opt.equals("--collection-pseudocount")) {
+      collectionPseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
     } else if(opt.equals("-p") || opt.equals("--pvalue")) {

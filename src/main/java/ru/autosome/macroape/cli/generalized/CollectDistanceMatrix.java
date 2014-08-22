@@ -6,6 +6,7 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
@@ -68,6 +69,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   protected DataModel dataModel;
   protected Integer maxHashSize, maxPairHashSize;
   protected double effectiveCount;
+  protected PseudocountCalculator pseudocount;
   protected BoundaryType pvalueBoundary;
   protected double pvalue;
   protected Double preciseRecalculationCutoff; // null means that no recalculation will be performed
@@ -96,6 +98,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     maxPairHashSize = 10000;
     dataModel = DataModel.PWM;
     effectiveCount = 100;
+    pseudocount = PseudocountCalculator.logPseudocount;
     pvalue = 0.0005;
     pvalueBoundary = BoundaryType.UPPER;
     preciseRecalculationCutoff = null;
@@ -128,6 +131,8 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
       dataModel = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
       effectiveCount = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--pseudocount")) {
+      pseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
       pvalueBoundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
     } else if (opt.equals("--precise")) {

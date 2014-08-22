@@ -1,6 +1,7 @@
 package ru.autosome.commons.motifModel.di;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 
 public class DiPCM extends DiPM implements PositionCountModel {
@@ -17,11 +18,7 @@ public class DiPCM extends DiPM implements PositionCountModel {
     return sum;
   }
 
-  public DiPWM to_pwm(DiBackgroundModel background) {
-    return new ru.autosome.commons.converter.di.PCM2PWM(background).convert(this);
-  }
-
-  public DiPWM to_pwm(DiBackgroundModel background, Double pseudocount) {
+  public DiPWM to_pwm(DiBackgroundModel background, PseudocountCalculator pseudocount) {
     return new ru.autosome.commons.converter.di.PCM2PWM(background, pseudocount).convert(this);
   }
 

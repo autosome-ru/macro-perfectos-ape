@@ -44,10 +44,10 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
   protected DiPWM loadMotif(File file){
     if (fromMononucleotide) {
       BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
-      PWMImporter importer = new PWMImporter(backgroundMononucleotide, data_model, effective_count, transpose);
+      PWMImporter importer = new PWMImporter(backgroundMononucleotide, data_model, effective_count, transpose, pseudocount);
       return DiPWM.fromPWM( importer.loadMotif(file) );
     } else {
-      DiPWMImporter importer = new DiPWMImporter(background, data_model, effective_count, transpose);
+      DiPWMImporter importer = new DiPWMImporter(background, data_model, effective_count, transpose, pseudocount);
       return importer.loadMotif(file);
     }
   }

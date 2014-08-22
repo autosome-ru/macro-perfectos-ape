@@ -36,7 +36,7 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<PW
 
   @Override
   protected List<PWM> load_collection_of_pwms() {
-    PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose);
+    PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
     return importer.loadMotifCollection(path_to_collection_of_pwms);
   }
 

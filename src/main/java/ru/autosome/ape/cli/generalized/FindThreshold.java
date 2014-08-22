@@ -7,6 +7,7 @@ import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.types.DataModel;
@@ -55,6 +56,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
   protected String pm_filename;
   protected DataModel data_model;
   protected double effective_count;
+  protected PseudocountCalculator pseudocount;
   protected BackgroundType background;
   protected ModelType motif;
   protected File thresholds_folder;
@@ -72,6 +74,7 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
     max_hash_size = 10000000;
     data_model = DataModel.PWM;
     effective_count = 100;
+    pseudocount = PseudocountCalculator.logPseudocount;
     thresholds_folder = null;
     transpose = false;
 
@@ -104,6 +107,8 @@ public abstract class FindThreshold<ModelType extends ScoringModel & Named, Back
       data_model = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
       effective_count = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--pseudocount")) {
+      pseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
     } else if (opt.equals("--transpose")) {

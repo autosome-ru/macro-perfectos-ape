@@ -29,7 +29,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
 
   @Override
   protected PWM loadMotif(String filename) {
-    PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose);
+    PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose, pseudocount);
     return importer.loadMotif(filename);
   }
 

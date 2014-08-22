@@ -7,6 +7,7 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoreDistribution;
@@ -92,6 +93,7 @@ abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretab
 
   protected DataModel dataModel;
   protected double effectiveCount;
+  protected PseudocountCalculator pseudocount;
   protected File thresholds_folder;
 
   protected List<String> snp_list;
@@ -139,6 +141,7 @@ abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretab
 
     dataModel = DataModel.PWM;
     effectiveCount = 100;
+    pseudocount = PseudocountCalculator.logPseudocount;
     thresholds_folder = null;
     max_pvalue_cutoff = 0.0005;
     min_fold_change_cutoff = 5.0;
@@ -174,6 +177,8 @@ abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretab
       dataModel = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
       effectiveCount = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--pseudocount")) {
+      pseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
     } else if(opt.equals("--pvalue-cutoff") || opt.equals("-P")) {

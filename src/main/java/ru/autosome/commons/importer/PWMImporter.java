@@ -1,6 +1,7 @@
 package ru.autosome.commons.importer;
 
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.mono.PCM;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.mono.PWM;
@@ -13,35 +14,25 @@ public class PWMImporter extends MotifImporter<PWM, BackgroundModel> {
   final boolean transpose;
 
   public PWMImporter() {
-    super(null, DataModel.PWM, null);
+    super(null, DataModel.PWM, null, PseudocountCalculator.logPseudocount);
     this.transpose = false;
   }
 
-  public PWMImporter(boolean transpose) {
-    super(null, DataModel.PWM, null);
+  public PWMImporter(BackgroundModel background, DataModel dataModel, Double effectiveCount, boolean transpose, PseudocountCalculator pseudocount) {
+    super(background, dataModel, effectiveCount, pseudocount);
     this.transpose = transpose;
   }
 
-  public PWMImporter(BackgroundModel background, DataModel dataModel, Double effectiveCount) {
-    super(background, dataModel, effectiveCount);
-    this.transpose = false;
-  }
-
-  public PWMImporter(BackgroundModel background, DataModel dataModel, Double effectiveCount, boolean transpose) {
-    super(background, dataModel, effectiveCount);
-    this.transpose = transpose;
-  }
-  
   // constructs PWM from any source: pwm/pcm/ppm matrix
   @Override
   public PWM createMotif(double matrix[][], String name) {
     PWM pwm;
     switch (dataModel) {
       case PCM:
-        pwm = new PCM(matrix, name).to_pwm(background);
+        pwm = new PCM(matrix, name).to_pwm(background, pseudocountCalculator);
         break;
       case PPM:
-        pwm = new PPM(matrix, name).to_pwm(background, effectiveCount);
+        pwm = new PPM(matrix, name).to_pwm(background, effectiveCount, pseudocountCalculator);
         break;
       case PWM:
         pwm = new PWM(matrix, name);

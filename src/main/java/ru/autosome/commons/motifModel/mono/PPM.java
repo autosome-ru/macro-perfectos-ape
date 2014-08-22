@@ -1,6 +1,7 @@
 package ru.autosome.commons.motifModel.mono;
 
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 
 public class PPM extends PM implements PositionFrequencyModel {
@@ -20,11 +21,8 @@ public class PPM extends PM implements PositionFrequencyModel {
   public PCM to_pcm(double count) {
     return new ru.autosome.commons.converter.mono.PPM2PCM(count).convert(this);
   }
-  public PWM to_pwm(BackgroundModel background, double count) {
-    PCM pcm = new ru.autosome.commons.converter.mono.PPM2PCM(count).convert(this);
-    return new ru.autosome.commons.converter.mono.PCM2PWM(background).convert(pcm);
-  }
-  public PWM to_pwm(BackgroundModel background, double count, Double pseudocount) {
+
+  public PWM to_pwm(BackgroundModel background, double count, PseudocountCalculator pseudocount) {
     PCM pcm = new ru.autosome.commons.converter.mono.PPM2PCM(count).convert(this);
     return new ru.autosome.commons.converter.mono.PCM2PWM(background, pseudocount).convert(pcm);
   }

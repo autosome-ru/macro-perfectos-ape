@@ -8,6 +8,7 @@ import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Position;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.CompareModels;
@@ -56,6 +57,7 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
   protected Integer maxHashSize;
   protected Integer maxPairHashSize;
 
+  protected PseudocountCalculator pseudocountFirst, pseudocountSecond;
   protected Double effectiveCountFirst, effectiveCountSecond;
 
   protected Double predefinedFirstThreshold, predefinedSecondThreshold;
@@ -108,6 +110,8 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
     dataModelSecond = DataModel.PWM;
     effectiveCountFirst = 100.0;
     effectiveCountSecond = 100.0;
+    pseudocountFirst = PseudocountCalculator.logPseudocount;
+    pseudocountSecond = PseudocountCalculator.logPseudocount;
     pvalue = 0.0005;
     discretizer = new Discretizer(10.0);
     transposeFirst = false;
@@ -161,6 +165,14 @@ public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Di
       effectiveCountFirst = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--second-effective-count")) {
       effectiveCountSecond = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--pseudocount")) {
+      PseudocountCalculator pseudocount = PseudocountCalculator.fromString(argv.remove(0));
+      pseudocountFirst = pseudocount;
+      pseudocountSecond = pseudocount;
+    } else if (opt.equals("--first-pseudocount")) {
+      pseudocountFirst = PseudocountCalculator.fromString(argv.remove(0));
+    } else if (opt.equals("--second-pseudocount")) {
+      pseudocountSecond = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--first-threshold")) {
       predefinedFirstThreshold = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--second-threshold")) {

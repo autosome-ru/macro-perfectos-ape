@@ -47,7 +47,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   protected List<DiPWM> loadMotifCollection(File path_to_collection) {
     if (fromMononucleotide) {
       BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
-      PWMImporter importer = new PWMImporter(backgroundMononucleotide, dataModel, effectiveCount, transpose);
+      PWMImporter importer = new PWMImporter(backgroundMononucleotide, dataModel, effectiveCount, transpose, pseudocount);
       List<PWM> monoCollection = importer.loadMotifCollection(path_to_collection);
       pwmCollection = new ArrayList<DiPWM>(monoCollection.size());
       for(PWM monoPWM: monoCollection) {
@@ -55,7 +55,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
       }
       return pwmCollection;
     } else {
-      DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose);
+      DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
       return importer.loadMotifCollection(path_to_collection);
     }
   }

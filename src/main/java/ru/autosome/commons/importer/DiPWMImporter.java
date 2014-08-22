@@ -1,6 +1,7 @@
 package ru.autosome.commons.importer;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.di.DiPCM;
 import ru.autosome.commons.motifModel.di.DiPPM;
 import ru.autosome.commons.motifModel.di.DiPWM;
@@ -13,22 +14,12 @@ public class DiPWMImporter extends MotifImporter<DiPWM, DiBackgroundModel> {
   final boolean transpose;
 
   public DiPWMImporter() {
-    super(null, DataModel.PWM, null);
+    super(null, DataModel.PWM, null, PseudocountCalculator.logPseudocount);
     this.transpose = false;
   }
 
-  public DiPWMImporter(boolean transpose) {
-    super(null, DataModel.PWM, null);
-    this.transpose = transpose;
-  }
-
-  public DiPWMImporter(DiBackgroundModel background, DataModel dataModel, Double effectiveCount) {
-    super(background, dataModel, effectiveCount);
-    this.transpose = false;
-  }
-
-  public DiPWMImporter(DiBackgroundModel background, DataModel dataModel, Double effectiveCount, boolean transpose) {
-    super(background, dataModel, effectiveCount);
+  public DiPWMImporter(DiBackgroundModel background, DataModel dataModel, Double effectiveCount, boolean transpose, PseudocountCalculator pseudocount) {
+    super(background, dataModel, effectiveCount, pseudocount);
     this.transpose = transpose;
   }
 
@@ -38,10 +29,10 @@ public class DiPWMImporter extends MotifImporter<DiPWM, DiBackgroundModel> {
     DiPWM dipwm;
     switch (dataModel) {
       case PCM:
-        dipwm = new DiPCM(matrix, name).to_pwm(background);
+        dipwm = new DiPCM(matrix, name).to_pwm(background, pseudocountCalculator);
         break;
       case PPM:
-        dipwm = new DiPPM(matrix, name).to_pwm(background, effectiveCount);
+        dipwm = new DiPPM(matrix, name).to_pwm(background, effectiveCount, pseudocountCalculator);
         break;
       case PWM:
         dipwm = new DiPWM(matrix, name);

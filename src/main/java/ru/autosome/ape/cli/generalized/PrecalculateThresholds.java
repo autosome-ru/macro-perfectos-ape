@@ -7,6 +7,7 @@ import ru.autosome.ape.model.progression.Progression;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoreDistribution;
@@ -25,6 +26,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
   protected Integer max_hash_size;
   protected DataModel data_model;
   protected double effective_count; // used for converting PPM --> PWM
+  protected PseudocountCalculator pseudocount;
   protected boolean silenceLog;
 
   protected java.io.File results_dir;
@@ -49,6 +51,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
     pvalues = PrecalculateThresholdList.PVALUE_LIST;
     data_model = DataModel.PWM;
     effective_count = 100;
+    pseudocount = PseudocountCalculator.logPseudocount;
     silenceLog = false;
     transpose = false;
   }
@@ -111,6 +114,8 @@ public abstract class PrecalculateThresholds<ModelType extends Named & ScoringMo
       data_model = DataModel.PPM;
     } else if (opt.equals("--effective-count")) {
       effective_count = Double.valueOf(argv.remove(0));
+    } else if (opt.equals("--pseudocount")) {
+      pseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--silent")) {
       silenceLog = true;
     } else if (opt.equals("--transpose")) {

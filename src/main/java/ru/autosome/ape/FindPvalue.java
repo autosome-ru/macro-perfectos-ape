@@ -47,7 +47,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, 
 
   @Override
   protected PWM loadMotif(String filename) {
-    PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose);
+    PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose, pseudocount);
     return importer.loadMotif(filename);
   }
 

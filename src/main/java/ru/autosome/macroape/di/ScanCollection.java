@@ -87,7 +87,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   protected List<DiPWM> loadMotifCollection() {
     if (collectionFromMononucleotide) {
       BackgroundModel collectionBackgroundMononucleotide = Background.fromDiBackground(collectionBackground);
-      PWMImporter importer = new PWMImporter(collectionBackgroundMononucleotide, collectionDataModel, collectionEffectiveCount, collectionTranspose);
+      PWMImporter importer = new PWMImporter(collectionBackgroundMononucleotide, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
       List<PWM> monoCollection = importer.loadMotifCollection(pathToCollectionOfPWMs);
       List<DiPWM> diCollection = new ArrayList<DiPWM>(monoCollection.size());
       for(PWM monoPWM: monoCollection) {
@@ -95,7 +95,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
       }
       return diCollection;
     } else {
-      DiPWMImporter importer = new DiPWMImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose);
+      DiPWMImporter importer = new DiPWMImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
       return importer.loadMotifCollection(pathToCollectionOfPWMs);
     }
   }
@@ -104,10 +104,10 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   protected DiPWM loadQueryMotif() {
     if (queryFromMononucleotide) {
       BackgroundModel queryBackgroundMononucleotide = Background.fromDiBackground(queryBackground);
-      PWMImporter importer = new PWMImporter(queryBackgroundMononucleotide, queryDataModel, queryEffectiveCount, queryTranspose);
+      PWMImporter importer = new PWMImporter(queryBackgroundMononucleotide, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
       return DiPWM.fromPWM(importer.loadMotif(queryPMFilename));
     } else {
-      DiPWMImporter importer = new DiPWMImporter(queryBackground, queryDataModel, queryEffectiveCount, queryTranspose);
+      DiPWMImporter importer = new DiPWMImporter(queryBackground, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
       return importer.loadMotif(queryPMFilename);
     }
   }

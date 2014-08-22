@@ -52,7 +52,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
 
   @Override
   protected List<PWM> loadMotifCollection(File path_to_collection) {
-    PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose);
+    PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
     return importer.loadMotifCollection(path_to_collection);
   }
 

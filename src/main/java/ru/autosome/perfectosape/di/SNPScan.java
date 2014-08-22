@@ -65,7 +65,7 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Di
   protected List<DiPWM> load_collection_of_pwms() {
     if (fromMononucleotide) {
       BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
-      PWMImporter importer = new PWMImporter(backgroundMononucleotide, dataModel, effectiveCount, transpose);
+      PWMImporter importer = new PWMImporter(backgroundMononucleotide, dataModel, effectiveCount, transpose, pseudocount);
       List<PWM> monoCollection = importer.loadMotifCollection(path_to_collection_of_pwms);
       List<DiPWM> diCollection = new ArrayList<DiPWM>(monoCollection.size());
       for(PWM monoPWM: monoCollection) {
@@ -73,7 +73,7 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Di
       }
       return diCollection;
     } else {
-      DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose);
+      DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
       return importer.loadMotifCollection(path_to_collection_of_pwms);
     }
   }

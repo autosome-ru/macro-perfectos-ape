@@ -75,10 +75,10 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
   protected DiPWM loadMotif(String filename) {
     if (fromMononucleotide) {
       BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
-      PWMImporter importer = new PWMImporter(backgroundMononucleotide, data_model, effective_count, transpose);
+      PWMImporter importer = new PWMImporter(backgroundMononucleotide, data_model, effective_count, transpose, pseudocount);
       return DiPWM.fromPWM( importer.loadMotif(filename) );
     } else {
-      DiPWMImporter importer = new DiPWMImporter(background, data_model, effective_count, transpose);
+      DiPWMImporter importer = new DiPWMImporter(background, data_model, effective_count, transpose, pseudocount);
       return importer.loadMotif(filename);
     }
   }

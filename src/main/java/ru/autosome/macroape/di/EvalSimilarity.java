@@ -71,10 +71,10 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   protected DiPWM loadFirstPWM(String filename) {
     if (firstPWMFromMononucleotide) {
       BackgroundModel firstBackgroundMononucleotide = Background.fromDiBackground(firstBackground);
-      PWMImporter firstMotifImporter = new PWMImporter(firstBackgroundMononucleotide, dataModelFirst, effectiveCountFirst, transposeFirst);
+      PWMImporter firstMotifImporter = new PWMImporter(firstBackgroundMononucleotide, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
       return DiPWM.fromPWM( firstMotifImporter.loadMotif(filename) );
     } else {
-      DiPWMImporter firstMotifImporter = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst);
+      DiPWMImporter firstMotifImporter = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
       return firstMotifImporter.loadMotif(filename);
     }
   }
@@ -82,10 +82,10 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   protected DiPWM loadSecondPWM(String filename) {
     if (secondPWMFromMononucleotide) {
       BackgroundModel secondBackgroundMononucleotide = Background.fromDiBackground(secondBackground);
-      PWMImporter secondMotifImporter = new PWMImporter(secondBackgroundMononucleotide, dataModelSecond, effectiveCountSecond, transposeSecond);
+      PWMImporter secondMotifImporter = new PWMImporter(secondBackgroundMononucleotide, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
       return DiPWM.fromPWM( secondMotifImporter.loadMotif(filename) );
     } else {
-      DiPWMImporter secondMotifImporter = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond);
+      DiPWMImporter secondMotifImporter = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
       return secondMotifImporter.loadMotif(filename);
     }
   }

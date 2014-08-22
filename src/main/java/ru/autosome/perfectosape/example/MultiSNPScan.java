@@ -10,6 +10,7 @@ import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.perfectosape.calculation.SingleSNPScan;
@@ -74,7 +75,7 @@ public class MultiSNPScan {
                              {0, 0.9, 0, 0.1},
                              {0.2, 0.2, 0.2, 0.4} };
     PPM ppm = new PPM(ppm_matrix, "cAVNCt PPM (slightly different from another cAVNCt matrix)");
-    PWM pwm_from_ppm = ppm.to_pwm(background, ppm_effective_count);
+    PWM pwm_from_ppm = ppm.to_pwm(background, ppm_effective_count, PseudocountCalculator.logPseudocount);
     pwmCollection.add(pwm_from_ppm);
 
     //////////////////////////////////////////////////////////////////////////////////////////////////

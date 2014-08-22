@@ -30,7 +30,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
 
   @Override
   protected PWM loadMotif(File file){
-    PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose);
+    PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose, pseudocount);
     return importer.loadMotif(file);
   }
 
