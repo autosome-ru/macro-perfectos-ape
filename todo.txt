@@ -1,0 +1,134 @@
+ConvertMotif pcm pwm KLF4_f2.pcm
+ls *.pcm | ConvertMotif pcm pwm
+ls *.pcm | ConvertMotif pcm pcm --discretize 1000  # No guarantees for count conservation
+ls *.pcm | ConvertMotif mono-pcm di-pwm --pseudocount sqrt
+ls *.pcm | ConvertMotif pcm pwm --algorithm mara --mara-background 0.6
+ls *.pcm | ConvertMotif pwm pwm --format-from jaspar --format-to plain
+ls *.pcm | ConvertMotif pwm pwm --format-from plain,transpose --format-to plain
+ls *.pcm | ConvertMotif dipcm dipwm --background 0.7
+ls *.pcm | ConvertMotif dipcm dipwm --background 0.0625,0.0625,...,0.0625
+
+
+
+
+почему-то театральный перфектос ломается на сиквенсе с двумя пробелами между именем и сиквенсом, если нет доп.данных (rs1314913  CTTTCAAATCTCTCCAAGTTGATTAATCATTTTCTTGTTCTGACT[C/T]ATTCAGGCCTCTAGAAAAATAGCTGTAGGT)
+перфектос ломается на пустых строках
+
+мануал:
+  - проставить ссылки на разделы
+  - строки вызова лучше сделать копируемыми: на одной строке, без переносов
+  - надо приложить все коллекции ну и отдельные сэмплы и логи мотивов, в т.ч. выровненные. Отдельно надлежит проверить, что примеры запускаются
+
+сделать бы вспомогательный тул для выкачивания сиквенсов по dbSNP
+
+хорошо бы чтобы опции в хелпах шли наборами, а не дублировали текст десять тысяч раз
+описать в хелпах опцию --pseudocount
+
+
+почему PrecalculateThresholds зависит от параметра --boundary? Так быть не должно (хоть это и не криминал, но только запутывает)
+Когда мы считаем порог для слишком короткой матрицы в precalc режиме - получаем NullPointerException
+
+
+? удалить --precalc из хелпов отовсюду, кроме, perfectosape
+
+в SNPScan снипы в следующем нелогичном формате: <имя> [доп инфа] <сиквенс>
+Гораздо правильней было бы так: <имя> <сиквенс> [доп инфа]
+В мануале формат указан просто как: < имя> <сиквенс> чтобы потом был простор для изменения поведения - так что надо менять
+
+
+в EvalSimilarity можно задать два фона. Во-первых, что  это значит? Во-вторых, если один фон wordwise, а другой - нет, случится конфуз, кажется
+
+--precalc можно было бы делать без аргумента - типа посчитай, но не сохраняй и не загружай из файлов, а просто используй во всех вычислениях
+
+надо бы добавить --markov опцию для указания фона в другом формате (от Вани: надо бы потом добавить -markov ключ - чтобы то же самое задавалось явно условными вероятностями. Правда придется еще совать a-c-g-t фон куда-то)
+
+примеры для моно/ди-нуклеотидных тулов должны различаться
+
+
+хорошо бы дискретизованные вычисления вынести отдельно, типа того как сделано в `ape.calculation.findPvalue.FindPvalueByDiscretization`
+посчитать стат.значимость меры Джаккара.
+(?) NamedModel как в ruby-версии
+
+
+Сделать парсинг аргументов командной строки библиотечным: http://pholser.github.io/jopt-simple/examples.html
+
+Есть ли возможность делать сиквенсы с N-ками?
+довольно тупо генерить короткий сиквенс для каждого сдвига, это слишком дорого. Хорошо бы ф-циям типа score давать длинный сиквенс и сдвиг
+
+GGGAAGGTGGCTGGAGGGTGGTGCTCTCTC[C/T]TCTTCTCTAAATTGTCTGTCCCGGGAGAAG
+rs12355688  REST_f1
+
+rs12355688  TGGTGCTCTCTC[C/T]TCTTCTCTAAAT
+
+rs12355688  REST_500_di.local -10 direct  gtgctctctcCtcttctctaaat -12 direct  tggtgctctctcTtcttctctaa C/T 1.43255163612103E-4 0.0010588584229250918 0.13529208486282918
+rs12355688  REST_f1 -12 direct  tggtgctctctcCtcttctcta  -12 direct  tggtgctctctcTtcttctcta  C/T 0.0020967286847412264 0.0011117493797576817 1.8859724349009594
+
+
+на матрицах от Матвея /home/ilya/iogen/matvey_lacl_clustering/pcms/ CollectDistanceMatrix  --pcm --precise 0.01 почему-то падает
+CollectDistanceMatrix не умеет --precise без аргумента
+
+
+постер:
+Comparison and classification of transcription factor binding sites models with application to functional annotation of regulatory sequence variants
+
+Positional weight matrix (PWM) remains most popular for quantification
+of transcription factor (TF) binding. PWM supplied with a score
+threshold defines a set of putative transcription factor binding sites
+(TFBS), thus providing a TFBS model. TFBS identified by different
+experimental methods produce similar but not identical PWMs. Nowadays,
+even for human TFs, there are many different collections of PWMs often
+containing similar-but-not-the-same models for a single TF. Several
+models also exist for similar TFs from the same structural family.
+Such redundancy complicates downstream computational analysis, such as
+functional annotation of single nucleotide variants lying in gene
+regulatory regions.
+
+Thus, it is an important task to measure properly the similarity
+between PWM-defined TFBS models. Common approaches to PWM comparison
+are based on comparison of matrix elements and do not take respective
+score thresholds into account. However, difference between two TFBS
+sets recognized by a given pair of PWMs can heavily depend on the
+score thresholds.
+
+We propose a variant of the Jaccard index as a practical approach to
+compare two TFBS models, each consisting of a PWM and the respective
+scoring threshold. We show how to effectively compute the proposed
+measure using dynamic programming approach and present the efficient
+software implementation: MACRO-APE (MAtrix CompaRisOn by Approximate
+P-value Estimation). Using several up-to-date collections of known
+binding motifs for human transcription factors we show how MACRO-APE
+can be utilized to classify existing TFBS models of different
+collections and reduce redundancy of the joint PWM set. Finally,
+basing on this methodology, we present a sister tool, PERFECTOS-APE
+(predicting regulatory functional effect by approximate P-value
+estimation), aimed at functional annotation of disease-associated
+single-nucleotide variants, located in cis-regulatory regions of genes
+and possibly affecting transcriptional regulation via TF binding. As a
+case study we applied PERFECTOS-APE to analyze several polymorphisms,
+associated with an increased risk of breast cancer.
+
+=================================
+
+rs1314913 CTTGTTCTGACT[C/T]ATTCAGGCCTCT
+
+C:
+-8.767892892328291  -7.772699867237179  -6.428889734501898  -4.529989643254433  -16.814839473534594 5.413254476395979 -15.28494082905916  -14.52251939257357  -10.989939595263518 4.309883792042354 -13.784268720504025 -13.57359329500317  -11.298325264753691 -1.9779562800903943 -10.862229580735983 -12.676029239300135
+0.4646873474121094  0.3754434585571289  0.27060890197753906 0.14990615844726562 0.9812755584716797  0.0005960464477539062 0.9431467056274414  0.9143180847167969  0.6695919036865234  0.0014925003051757812 0.8777055740356445  0.8657913208007812  0.6961174011230469  0.05636024475097656 0.6580524444580078  0.8048524856567383
+0.3328391524058114  0.4254554580887694  0.5676579209086358  0.8241805250921792  0.008209018390731685  3.2247198959355488  0.025420747889479338  0.03890269003737967 0.1741898062177898  2.8260855713971567  0.056651143565209984  0.06258677212325597 0.15731750987193377 1.249027129583835 0.18173949326887404 0.094283710359891
+
+T:
+-8.767892892328291  -7.772699867237179  -6.428889734501898  -3.8891171412087537 -16.814839473534594 2.0382996980474983  -11.264399343557383 -12.193680246283629 -10.075994736664073 5.823179066998912 -10.435646388836348 -14.488877078210917 -10.583753767239147 -1.9779562800903943 -10.862229580735983 -12.676029239300135
+0.4646873474121094  0.3754434585571289  0.27060890197753906 0.12049484252929688 0.9812755584716797  0.006839752197265625  0.6932134628295898  0.7681608200073242  0.5877828598022461  0.00041675567626953125  0.6214332580566406  0.9129238128662109  0.6342849731445312  0.05636024475097656 0.6580524444580078  0.8048524856567383
+0.3328391524058114  0.4254554580887694  0.5676579209086358  0.9190315415455609  0.008209018390731685  2.1649596323894786  0.15913301148635786 0.11454784776776258 0.23078308243801837 3.3801184763092023  0.2066055077531278  0.03956546456034122 0.19771557735819537 1.249027129583835 0.18173949326887404 0.094283710359891
+
+
+reverse:
+C:
+-4.616633989375466  -10.655534743671826 -5.563808907148988  -8.88405901969287 -8.739878701325479  -16.674986032104865 9.288888646662869 -14.429701945060376 -11.934943429151968 -11.429267919504433 0.5999686671081326  -14.984863999756172 -9.041980133836818  -8.023729304492207  -6.527706536367408  -14.371782489210986
+0.15454387664794922 0.6404638290405273  0.2107257843017578  0.4754505157470703  0.4620981216430664  0.978571891784668 1.049041748046875e-05 0.9103622436523438  0.7480916976928711  0.7065906524658203  0.015992164611816406  0.9325990676879883  0.48962974548339844 0.3974294662475586  0.27753353118896484 0.907745361328125
+0.8109481979166904  0.19350539252613916 0.6762823210845643  0.3228946771625574  0.3352657968171731  0.009407262945722729  4.979207228121399 0.04078576249719321 0.12604516502162583 0.1508321121734147  1.7960927485525466  0.030305023042114868  0.3101322062487413  0.4007399365359515  0.5566845385571635  0.04203596169873401
+
+T:
+-4.616633989375466  -10.655534743671826 -5.563808907148988  -9.227308399101585  -8.4870414225558  -15.987668221676659 5.385827065329857 -11.15480817121057  -15.833006175954079 -11.79039249099669  2.0379583302794417  -10.914592653427796 -10.462467528442767 -8.023729304492207  -6.527706536367408  -14.371782489210986
+0.15454387664794922 0.6404638290405273  0.2107257843017578  0.5069169998168945  0.4376554489135742  0.9636058807373047  0.0006170272827148438 0.6839361190795898  0.9592151641845703  0.735661506652832 0.0068454742431640625 0.6627626419067383  0.6238298416137695  0.3974294662475586  0.27753353118896484 0.907745361328125
+0.8109481979166904  0.19350539252613916 0.6762823210845643  0.2950631441625255  0.35886766009408866 0.016100558233711162  3.2096956326109236  0.1649844603074028  0.018083964115187198  0.13332196773842528 2.1645964592824027  0.1786419795390799  0.20493385410884155 0.4007399365359515  0.5566845385571635  0.04203596169873401
