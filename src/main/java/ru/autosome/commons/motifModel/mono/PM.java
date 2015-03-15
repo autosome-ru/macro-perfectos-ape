@@ -1,8 +1,5 @@
 package ru.autosome.commons.motifModel.mono;
 
-import gnu.trove.impl.unmodifiable.TUnmodifiableCharIntMap;
-import gnu.trove.map.TCharIntMap;
-import gnu.trove.map.hash.TCharIntHashMap;
 import ru.autosome.commons.backgroundModel.mono.BackgroundFactory;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.motifModel.BackgroundCompatible;
@@ -32,10 +29,6 @@ public class PM implements Named, MatrixModel, BackgroundCompatible<BackgroundMo
   public int alphabetSize() {
     return ALPHABET_SIZE;
   }
-
-  protected static final TCharIntMap indexByLetter =
-   new TUnmodifiableCharIntMap( new TCharIntHashMap(new char[]{'A','C','G','T'},
-                                                    new int[] {0, 1, 2, 3}) );
 
   public PM(double[][] matrix, String name) throws IllegalArgumentException {
     for (double[] pos : matrix) {

@@ -78,8 +78,8 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
     List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> scores = initialScoreHash(background);
 
     for (int pos = 0; pos < alignment.length() - 1; ++pos) {
-      double[] firstColumn = alignment.firstModelAligned.matrix[pos];
-      double[] secondColumn = alignment.secondModelAligned.matrix[pos];
+      double[] firstColumn = alignment.firstModelAligned.getMatrix()[pos];
+      double[] secondColumn = alignment.secondModelAligned.getMatrix()[pos];
 
       double[] leastSufficientScoresFirst = leastSufficientScoresFirst(threshold_first, pos);
       double[] leastSufficientScoresSecond = leastSufficientScoresSecond(threshold_second, pos);

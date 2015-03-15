@@ -1,9 +1,7 @@
 package ru.autosome.commons.motifModel.mono;
 
-import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.model.PseudocountCalculator;
-import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 
 public class PCM extends PM implements PositionCountModel {

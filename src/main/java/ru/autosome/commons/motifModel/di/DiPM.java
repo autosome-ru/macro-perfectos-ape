@@ -6,11 +6,9 @@ import ru.autosome.commons.motifModel.BackgroundCompatible;
 import ru.autosome.commons.motifModel.MatrixModel;
 import ru.autosome.commons.motifModel.Named;
 
-import java.util.HashMap;
-
 public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgroundModel> {
   public static final int ALPHABET_SIZE = 16;
-  public final double[][] matrix;
+  protected final double[][] matrix;
   public String name;
 
   @Override
@@ -21,31 +19,6 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
   public void setName(String name) {
     this.name = name;
   }
-
-  static final HashMap<String, Integer> indexByLetter;
-  static {
-    indexByLetter = new HashMap<String, Integer>();
-    indexByLetter.put("AA", 0);
-    indexByLetter.put("AC", 1);
-    indexByLetter.put("AG", 2);
-    indexByLetter.put("AT", 3);
-
-    indexByLetter.put("CA", 4);
-    indexByLetter.put("CC", 5);
-    indexByLetter.put("CG", 6);
-    indexByLetter.put("CT", 7);
-
-    indexByLetter.put("GA", 8);
-    indexByLetter.put("GC", 9);
-    indexByLetter.put("GG", 10);
-    indexByLetter.put("GT", 11);
-
-    indexByLetter.put("TA", 12);
-    indexByLetter.put("TC", 13);
-    indexByLetter.put("TG", 14);
-    indexByLetter.put("TT", 15);
-  }
-
 
   public DiPM(double[][] matrix, String name) throws IllegalArgumentException {
     for (double[] pos : matrix) {

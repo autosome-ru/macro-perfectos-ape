@@ -41,12 +41,12 @@ public class CountingDiPWM extends ScoringModelDistibutions {
   protected ScoreDistributionTop score_distribution_above_threshold(double threshold) throws HashOverflowException {
     // scores[index_of_letter 'A'] are scores of words of specific (current) length ending with A
     TDoubleDoubleMap[] scores = initialCountDistribution();
-    for (int column = 0; column < dipwm.matrix.length; ++column) {
+    for (int column = 0; column < dipwm.getMatrix().length; ++column) {
       double[] least_sufficient = new double[4];
       for (int letter = 0; letter < 4; ++letter) {
         least_sufficient[letter] = threshold - dipwm.best_suffix(column + 1, letter);
       }
-      scores = recalc_score_hash(scores, dipwm.matrix[column], least_sufficient);
+      scores = recalc_score_hash(scores, dipwm.getMatrix()[column], least_sufficient);
       if (exceedHashSizeLimit(scores)) {
         throw new HashOverflowException("Hash overflow in DiPWM::ThresholdByPvalue#score_distribution_above_threshold");
       }

@@ -6,6 +6,7 @@ import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
+import ru.autosome.commons.scoringModel.DiPWMOnBackground;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.CountingDiPWM;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
 import ru.autosome.perfectosape.model.Sequence;
@@ -40,28 +41,8 @@ public class DiPWM extends DiPM implements ScoringModel,
     return new DiPWM(matrix, pwm.name);
   }
 
-  double score(String word, DiBackgroundModel background) throws IllegalArgumentException {
-    word = word.toUpperCase();
-    if (word.length() != length()) {
-      throw new IllegalArgumentException("word '" + word + "' in PWM#score(word) should have the same length(" + word.length() + ") as matrix has (" + length() + ")");
-    }
-    double sum = 0.0;
-    for (int pos_index = 0; pos_index < matrix.length; ++pos_index) {
-      String dinucleotide = word.substring(pos_index, pos_index + 2);
-      Integer superletter_index = indexByLetter.get(dinucleotide);
-      if (superletter_index != null) {
-        sum += matrix[pos_index][superletter_index];
-      } /*else if (letter == 'N') {    //  alphabet should include letters such AN, CN, GN, TN, NA, NC, NG, NT, NN
-        sum += background.mean_value(matrix[pos_index]);
-      } */ else {
-        throw new IllegalArgumentException("word in PWM#score(" + word + ") should have only {ACGT}^2 dinucleotides , but has '" + dinucleotide + "' dinucleotide at position " + (pos_index + 1));
-      }
-    }
-    return sum;
-  }
-
   public double score(Sequence word, DiBackgroundModel background) throws IllegalArgumentException {
-    return score(word.sequence, background);
+    return new DiPWMOnBackground(this, background).score(word);
   }
 
   @Override

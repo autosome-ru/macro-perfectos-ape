@@ -5,6 +5,7 @@ import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
+import ru.autosome.commons.scoringModel.PWMOnBackground;
 import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.CountingPWM;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
@@ -21,28 +22,8 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     super(matrix, name);
   }
 
-  double score(String word, BackgroundModel background) throws IllegalArgumentException {
-    word = word.toUpperCase();
-    if (word.length() != length()) {
-      throw new IllegalArgumentException("word '" + word + "' in PWM#score(word) should have the same length(" + word.length() + ") as matrix has (" + length() + ")");
-    }
-    double sum = 0.0;
-    for (int pos_index = 0; pos_index < length(); ++pos_index) {
-      char letter = word.charAt(pos_index);
-      if (indexByLetter.containsKey(letter)) {
-        int letter_index = indexByLetter.get(letter);
-        sum += matrix[pos_index][letter_index];
-      } else if (letter == 'N') {
-        sum += background.mean_value(matrix[pos_index]);
-      } else {
-        throw new IllegalArgumentException("word in PWM#score(" + word + ") should have only ACGT or N letters, but have '" + letter + "' letter at position " + (pos_index + 1));
-      }
-    }
-    return sum;
-  }
-
   public double score(Sequence word, BackgroundModel background) throws IllegalArgumentException {
-    return score(word.sequence, background);
+    return new PWMOnBackground(this, background).score(word);
   }
 
   @Override
