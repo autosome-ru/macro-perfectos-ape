@@ -11,7 +11,7 @@ import ru.autosome.commons.motifModel.Named;
 
 public class PM implements Named, MatrixModel, BackgroundCompatible<BackgroundModel> {
   public static final int ALPHABET_SIZE = 4;
-  public final double[][] matrix;
+  protected final double[][] matrix;
   public String name;
 
   @Override

@@ -27,15 +27,15 @@ public class DiPWM extends DiPM implements ScoringModel,
   }
 
   public static DiPWM fromPWM(PWM pwm) {
-    double[][] matrix = new double[pwm.matrix.length - 1][];
+    double[][] matrix = new double[pwm.getMatrix().length - 1][];
     for (int i = 0; i < matrix.length; ++i) {
       matrix[i] = new double[16];
       for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
-        matrix[i][letter] = pwm.matrix[i][letter/4];
+        matrix[i][letter] = pwm.getMatrix()[i][letter/4];
       }
     }
     for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
-      matrix[matrix.length - 1][letter] += pwm.matrix[matrix.length][letter % 4];
+      matrix[matrix.length - 1][letter] += pwm.getMatrix()[matrix.length][letter % 4];
     }
     return new DiPWM(matrix, pwm.name);
   }

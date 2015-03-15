@@ -41,6 +41,7 @@ public class PvalueBsearchList {
 
        @Override
        public int compare(Object o1, Object o2) {
+//         System.err.println(o1.toString() + o2.toString() + val(o1).toString() + val(o2).toString());
          if (val(o1) < val(o2)) {
            return -1;
          } else if (val(o1) > val(o2)) {

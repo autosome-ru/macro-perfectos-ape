@@ -64,7 +64,7 @@ abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretab
     "Options:\n" +
     "  [--pvalue-cutoff <maximal pvalue to be considered>] or [-P] - drop results having both allele-variant pvalues greater than given\n" +
     "                                                       (default: 0.0005)\n" +
-    "  [--fold-change-cutoff <minmal fold change to be considered>] or [-F] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
+    "  [--fold-change-cutoff <minimal fold change to be considered>] or [-F] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
     "                                                                 less than given (default: 5)\n" +
     "        In order to get all fold changes - set both pvalue-cutoff and fold-change-cutoff to 1.0.\n" +
     "  [--discretization <discretization level>] or [-d]\n" +

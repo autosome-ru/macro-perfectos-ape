@@ -51,7 +51,7 @@ public class Sequence {
   public Sequence substring(Position left_boundary, int substring_length) {
     Sequence unorientedWord = substring(left_boundary.position, Math.min(left_boundary.position + substring_length, length()));
     if (left_boundary.directStrand) {
-      return unorientedWord ;
+      return unorientedWord;
     } else {
       return unorientedWord.reverse().complement();
     }

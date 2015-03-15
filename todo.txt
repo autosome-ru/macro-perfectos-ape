@@ -1,3 +1,25 @@
+понять с какого фига снип-сканер на seqs_rand_genome.txt (120Mb) отжирает почти полтора гига оперативки. Тупо на сиквенсы?
+
+!!! PrecalculateThresholds рушится на MA0173.1 CG11617 (сортировка встречает NaN):
+http://habrahabr.ru/post/247015/
+>MA0173.1 CG11617
+1 0 0 16
+0 0 0 17
+10  0 3 4
+17  0 0 0
+0 17  0 0
+17  0 0 0
+0 0 0 1
+
+А также выдает NaN на MA0298.1  FZF1
+>MA0298.1 FZF1
+0.000 1.000 0.000 0.000
+0.000 0.000 0.000 1.000
+1.000 0.000 0.000 0.000
+0.000 0.000 0.000 1.000
+0.000 1.000 0.000 0.000
+1.000 0.000 0.000 0.000
+
 ConvertMotif pcm pwm KLF4_f2.pcm
 ls *.pcm | ConvertMotif pcm pwm
 ls *.pcm | ConvertMotif pcm pcm --discretize 1000  # No guarantees for count conservation

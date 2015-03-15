@@ -38,7 +38,7 @@ public class CountingPWM extends ScoringModelDistibutions {
   protected ScoreDistributionTop score_distribution_above_threshold(double threshold) throws HashOverflowException {
     TDoubleDoubleMap scores = initialCountDistribution();
     for (int pos = 0; pos < pwm.length(); ++pos) {
-      scores = recalc_score_hash(scores, pwm.matrix[pos], threshold - pwm.best_suffix(pos + 1));
+      scores = recalc_score_hash(scores, pwm.getMatrix()[pos], threshold - pwm.best_suffix(pos + 1));
       if (exceedHashSizeLimit(scores)) {
         throw new HashOverflowException("Hash overflow in PWM::ThresholdByPvalue#score_distribution_above_threshold");
       }
