@@ -1,8 +1,7 @@
 package ru.autosome.commons.motifModel;
 
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 
-public interface ScoreDistribution<BackgroundType extends GeneralizedBackgroundModel> {
-  ScoringModelDistibutions scoringModelDistibutions(BackgroundType background, Integer maxHashSize);
+public interface ScoreDistribution<BackgroundType> {
+  ScoringModelDistributions scoringModelDistibutions(BackgroundType background, Integer maxHashSize);
 }

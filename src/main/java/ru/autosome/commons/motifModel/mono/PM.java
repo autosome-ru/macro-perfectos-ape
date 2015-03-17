@@ -1,12 +1,11 @@
 package ru.autosome.commons.motifModel.mono;
 
-import ru.autosome.commons.backgroundModel.mono.BackgroundFactory;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.motifModel.BackgroundCompatible;
+import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.MatrixModel;
 import ru.autosome.commons.motifModel.Named;
 
-public class PM implements Named, MatrixModel, BackgroundCompatible<BackgroundModel> {
+public class PM implements Named, MatrixModel, HasLength {
   public static final int ALPHABET_SIZE = 4;
   protected final double[][] matrix;
   public String name;
@@ -40,8 +39,21 @@ public class PM implements Named, MatrixModel, BackgroundCompatible<BackgroundMo
     this.name = name;
   }
 
+  @Override
   public int length() {
     return matrix.length;
+  }
+
+  double[][] discretedMatrix(Discretizer discretizer) {
+    double[][] result;
+    result = new double[matrix.length][];
+    for (int i = 0; i < matrix.length; ++i) {
+      result[i] = new double[ALPHABET_SIZE];
+      for (int j = 0; j < ALPHABET_SIZE; ++j) {
+        result[i][j] = discretizer.discrete(matrix[i][j]);
+      }
+    }
+    return result;
   }
 
   @Override
@@ -49,7 +61,7 @@ public class PM implements Named, MatrixModel, BackgroundCompatible<BackgroundMo
     StringBuilder result = new StringBuilder();
     result.append(name).append("\n");
     for (double[] pos : matrix) {
-      for (int letter_index = 0; letter_index < ALPHABET_SIZE; ++ letter_index) {
+      for (int letter_index = 0; letter_index < alphabetSize(); ++ letter_index) {
         if (letter_index != 0) {
           result.append("\t");
         }
@@ -58,10 +70,5 @@ public class PM implements Named, MatrixModel, BackgroundCompatible<BackgroundMo
       result.append("\n");
     }
     return result.toString();
-  }
-
-  @Override
-  public BackgroundFactory compatibleBackground() {
-    return new BackgroundFactory();
   }
 }

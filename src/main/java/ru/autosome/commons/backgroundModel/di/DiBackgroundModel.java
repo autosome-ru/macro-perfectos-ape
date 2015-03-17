@@ -9,4 +9,7 @@ public interface DiBackgroundModel extends GeneralizedBackgroundModel {
   public double conditionalCount(int previous_letter, int letter);
   double countAnyFirstLetter(int secondLetter);
   double countAnySecondLetter(int firstLetter);
+
+  public double average_by_first_letter(double[] values, int secondLetterIndex);
+  public double average_by_second_letter(double[] values, int firstLetterIndex);
 }

@@ -7,7 +7,10 @@ import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.PseudocountCalculator;
-import ru.autosome.commons.motifModel.*;
+import ru.autosome.commons.motifModel.Alignable;
+import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.Named;
+import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 
@@ -17,7 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType> & Named & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType> & Named, BackgroundType extends GeneralizedBackgroundModel> {
   class PWMWithThreshold {
     final ModelType pwm;
     final double roughThreshold;

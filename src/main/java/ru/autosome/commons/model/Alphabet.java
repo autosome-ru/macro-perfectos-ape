@@ -5,17 +5,25 @@ import java.util.Map;
 
 public class Alphabet {
   protected final int codeLength;
+  protected final int alphabetSize;
+  protected final String[] letters; // AA, AC,... NN codes indexed
   protected final Map<String, Byte> letterIndices;
   protected final Map<Byte, Byte> reverseComplements;
 
   // Private constructor for safety reasons (to easy to create invalid alphabet). Use Alphabet.byLetters instead
-  private Alphabet(int codeLength, Map<String, Byte> letterIndices, Map<Byte, Byte> reverseComplements) {
-    if (letterIndices.size() != reverseComplements.size()) {
+  private Alphabet(int codeLength, int alphabetSize, String[] letters, Map<String, Byte> letterIndices, Map<Byte, Byte> reverseComplements) {
+    if (Math.pow(alphabetSize, codeLength) != letters.length) {
+      throw new IllegalArgumentException("letters array size should be equal to alphabetSize ** codeLength");
+    }
+    if (letterIndices.size() != letters.length || letterIndices.size() != reverseComplements.size()) {
       throw new IllegalArgumentException("letters and complements sizes are not compatible");
     }
     for (String k: letterIndices.keySet()) {
       if (k.length() != codeLength) {
         throw new IllegalArgumentException("Key size should be equal to code size");
+      }
+      if (k != letters[letterIndices.get(k)]) {
+        throw new IllegalArgumentException("Letters should be compatible with letter indices");
       }
     }
     for (Map.Entry<Byte,Byte> entry: reverseComplements.entrySet()) {
@@ -24,12 +32,10 @@ public class Alphabet {
       }
     }
     this.codeLength = codeLength;
+    this.alphabetSize = alphabetSize;
+    this.letters = letters;
     this.letterIndices = letterIndices;
     this.reverseComplements = reverseComplements;
-  }
-
-  public int size() {
-    return letterIndices.size();
   }
 
   // Converts string, using overlapping (if codeLength>1) positions, uses shift of 1 nt each time.
@@ -72,12 +78,14 @@ public class Alphabet {
 
     Map<String, Byte> letterIndices = new HashMap<String, Byte>();
     Map<Byte, Byte> complements = new HashMap<Byte, Byte>();
+    String[] separateLetters = new String[(int)Math.pow(letters.length(), codeLength)];
 
     letters = letters.toUpperCase();
     complementLetters = complementLetters.toUpperCase();
     for (byte ind = 0; ind < Math.pow(letters.length(), codeLength); ++ind) {
       String directSeq = stringByIndex(ind, letters, codeLength);
       letterIndices.put(directSeq, ind);
+      separateLetters[ind] = directSeq;
     }
 
     for (byte ind = 0; ind < Math.pow(letters.length(), codeLength); ++ind) {
@@ -86,11 +94,34 @@ public class Alphabet {
       complements.put(ind, letterIndices.get(revcompSeq));
     }
 
-    return new Alphabet(codeLength, letterIndices, complements);
+    return new Alphabet(codeLength, letters.length(), separateLetters, letterIndices, complements);
   }
 
-  public static Alphabet monoACGT = byLetters(1, "ACGT", "TGCA");
-  public static Alphabet monoACGTN = byLetters(1, "ACGTN", "TGCAN");
-  public static Alphabet diACGT = byLetters(2, "ACGT", "TGCA");
-  public static Alphabet diACGTN = byLetters(2, "ACGTN", "TGCAN");
+  public int getCodeLength() {
+    return codeLength;
+  }
+
+  public String decodeString(byte[] seq) {
+    StringBuilder str = new StringBuilder();
+    for (int i = 0; i < seq.length - 1; ++i) {
+      str.append(letters[seq[i]].charAt(0)); // all except last byte add up the only letter
+    }
+    str.append(letters[seq[seq.length - 1]]); // the last byte adds up whole the string
+    return str.toString();
+  }
+
+  // checks whether byte stream represents valid Sequence
+  // (for codeLength > 1 they must overlap by coinciding parts)
+  public boolean isConsistent(byte[] seq) {
+    for (int i = 1; i < seq.length; ++i) {
+      if (seq[i - 1] % (int)Math.pow(alphabetSize, codeLength - 1) != seq[i] / codeLength)
+        return false;
+    }
+    return true;
+  }
+
+//  public static Alphabet monoACGT = byLetters(1, "ACGT", "TGCA");
+  public static final Alphabet monoACGTN = byLetters(1, "ACGTN", "TGCAN");
+//  public static Alphabet diACGT = byLetters(2, "ACGT", "TGCA");
+  public static final Alphabet diACGTN = byLetters(2, "ACGTN", "TGCAN");
 }

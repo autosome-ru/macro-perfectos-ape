@@ -12,6 +12,11 @@ public abstract class PCM2PPM<ModelTypeFrom extends PositionCountModel & Named,
 
   public PCM2PPM() { }
 
+  public ru.autosome.commons.model.Named<ModelTypeTo> convert(ru.autosome.commons.model.Named<ModelTypeFrom> namedModel) {
+    return new ru.autosome.commons.model.Named<>(convert(namedModel.getObject()),
+                                                 namedModel.getName());
+  }
+
   public ModelTypeTo convert(ModelTypeFrom pcm) {
     double new_matrix[][] = new double[pcm.getMatrix().length][];
     for (int pos = 0; pos < pcm.getMatrix().length; ++pos) {

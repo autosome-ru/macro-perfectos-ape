@@ -3,8 +3,14 @@ package ru.autosome.perfectosape.model;
 import gnu.trove.set.TCharSet;
 import gnu.trove.set.hash.TCharHashSet;
 import ru.autosome.commons.model.Position;
+import ru.autosome.commons.model.PositionInterval;
+import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
+import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNPDiEncoded;
+import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
+import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SequenceWithSNP {
   // Duplicated in class Sequence
@@ -13,6 +19,7 @@ public class SequenceWithSNP {
   final public String left;
   final public String right;
   final public char[] mid;
+  private Sequence[] cache_sequence_variants;
 
   // line should finish with sequence (which doesn't have spaces).
   // Example:
@@ -73,23 +80,24 @@ public class SequenceWithSNP {
   // output: ["GATTCAAAGGTTCTGAATTCCACAACaGCTTTCCTGTGTTTTTGCAGCCAGA",
   //          "GATTCAAAGGTTCTGAATTCCACAACgGCTTTCCTGTGTTTTTGCAGCCAGA"]
   public Sequence[] sequence_variants() {
-    Sequence[] result = new Sequence[num_cases()];
-    for (int i = 0; i < num_cases(); ++i) {
-      result[i] = new Sequence(left + mid[i] + right);
+    if (cache_sequence_variants == null) {
+      cache_sequence_variants = new Sequence[num_cases()];
+      for (int i = 0; i < num_cases(); ++i) {
+        cache_sequence_variants[i] = new Sequence(left + mid[i] + right, true);
+      }
     }
-    return result;
+    return cache_sequence_variants;
   }
 
   public int length() {
     return left.length() + 1 + right.length();
   }
 
-  public int left_shift(int motif_length) {
-    return Math.max(0, pos_of_snp() - motif_length + 1);
-  }
+//  public int left_shift(int motif_length) {
+//    return Math.max(0, pos_of_snp() - motif_length + 1);
+//  }
 
-  // position
-  public ArrayList<Position> positions_subsequence_overlaps_snp(int subsequence_length) {
+  public PositionInterval positionsOverlappingSNV(int subsequence_length) {
     int left_pos = Math.max(0, left.length() - subsequence_length + 1);
     int right_pos = Math.min(length(), left.length() + subsequence_length);
     return Position.positions_between(left_pos, right_pos, subsequence_length);
@@ -104,4 +112,19 @@ public class SequenceWithSNP {
     return left + "[" + mid_variants + "]" + right;
   }
 
+  public SequenceWithSNPMonoEncoded monoEncode() {
+    List<SequenceMonoEncoded> encodedVariants = new ArrayList<>(num_cases());
+    for (Sequence seq: sequence_variants()) {
+      encodedVariants.add(seq.monoEncode());
+    }
+    return new SequenceWithSNPMonoEncoded(encodedVariants);
+  }
+
+  public SequenceWithSNPDiEncoded diEncode() {
+    List<SequenceDiEncoded> encodedVariants = new ArrayList<>(num_cases());
+    for (Sequence seq: sequence_variants()) {
+      encodedVariants.add(seq.diEncode());
+    }
+    return new SequenceWithSNPDiEncoded(encodedVariants);
+  }
 }

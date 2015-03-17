@@ -3,16 +3,19 @@ package ru.autosome.commons.motifModel.mono;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.motifModel.*;
+import ru.autosome.commons.motifModel.Alignable;
+import ru.autosome.commons.motifModel.BackgroundAppliable;
+import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
 import ru.autosome.commons.scoringModel.PWMOnBackground;
 import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.CountingPWM;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.perfectosape.model.Sequence;
 
-public class PWM extends PM implements ScoringModel,Discretable<PWM>,
-                                        ScoreStatistics<BackgroundModel>,
+public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWMOnBackground>,
+                                        Discretable<PWM>,
                                         ScoreDistribution<BackgroundModel>,
                                         PositionWeightModel, Alignable<PWM> {
   private double[] cache_best_suffices;
@@ -22,13 +25,8 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
     super(matrix, name);
   }
 
-  public double score(Sequence word, BackgroundModel background) throws IllegalArgumentException {
-    return new PWMOnBackground(this, background).score(word);
-  }
-
-  @Override
-  public double score(Sequence word) throws IllegalArgumentException {
-    return score(word, new WordwiseBackground());
+  public double score(Sequence word) {
+    return new PWMOnBackground(this, new WordwiseBackground()).score(word.monoEncode());
   }
 
   public double best_score() {
@@ -73,21 +71,8 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
   }
 
   @Override
-  public PWM discrete(Double rate) {
-    return discrete(new Discretizer(rate));
-  }
-
-  @Override
   public PWM discrete(Discretizer discretizer) {
-    double[][] mat_result;
-    mat_result = new double[matrix.length][];
-    for (int i = 0; i < matrix.length; ++i) {
-      mat_result[i] = new double[4];
-      for (int j = 0; j < 4; ++j) {
-        mat_result[i][j] = discretizer.discrete(matrix[i][j]);
-      }
-    }
-    return new PWM(mat_result, name);
+    return new PWM(discretedMatrix(discretizer), name);
   }
 
   @Override
@@ -121,28 +106,12 @@ public class PWM extends PM implements ScoringModel,Discretable<PWM>,
   }
 
   @Override
-  public double score_mean(BackgroundModel background) {
-    double result = 0.0;
-    for (double[] pos : matrix) {
-      result += background.mean_value(pos);
-    }
-    return result;
-  }
-
-  @Override
-  public double score_variance(BackgroundModel background) {
-    double variance = 0.0;
-    for (double[] pos : matrix) {
-      double mean_square = background.mean_square_value(pos);
-      double mean = background.mean_value(pos);
-      double squared_mean = mean * mean;
-      variance += mean_square - squared_mean;
-    }
-    return variance;
-  }
-
-  @Override
-  public ScoringModelDistibutions scoringModelDistibutions(BackgroundModel background, Integer maxHashSize) {
+  public ScoringModelDistributions scoringModelDistibutions(BackgroundModel background, Integer maxHashSize) {
     return new CountingPWM(this, background, maxHashSize);
+  }
+
+  @Override
+  public PWMOnBackground onBackground(BackgroundModel background) {
+    return new PWMOnBackground(this, background);
   }
 }

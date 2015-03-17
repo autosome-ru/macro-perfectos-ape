@@ -25,7 +25,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
 
   @Override
   protected PrecalculateThresholdList<PWM, BackgroundModel> calculator() {
-    return new PrecalculateThresholdList<PWM,BackgroundModel>(pvalues, discretizer, background, pvalue_boundary, max_hash_size);
+    return new PrecalculateThresholdList<>(pvalues, discretizer, background, pvalue_boundary, max_hash_size);
   }
 
   @Override

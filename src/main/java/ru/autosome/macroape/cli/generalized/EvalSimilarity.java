@@ -9,7 +9,10 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PseudocountCalculator;
-import ru.autosome.commons.motifModel.*;
+import ru.autosome.commons.motifModel.Alignable;
+import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.Named;
+import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.CompareModels;
 import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
@@ -17,8 +20,8 @@ import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EvalSimilarity<ModelType extends ScoringModel & Named & Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
-                                                 BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class EvalSimilarity<ModelType extends Named & Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
+                                     BackgroundType extends GeneralizedBackgroundModel> {
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
   protected String DOC_additional_options() {

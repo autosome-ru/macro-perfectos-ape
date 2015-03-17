@@ -6,16 +6,17 @@ import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
-import ru.autosome.commons.motifModel.ScoringModel;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
+import ru.autosome.commons.motifModel.HasLength;
+import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 
-public abstract class FindPvalueByDiscretization <ModelType extends Discretable<ModelType> & ScoringModel, BackgroundType extends GeneralizedBackgroundModel> implements CanFindPvalue {
+public abstract class FindPvalueByDiscretization <ModelType extends Discretable<ModelType> & HasLength,
+                                                  BackgroundType extends GeneralizedBackgroundModel> implements CanFindPvalue {
 
   final Discretizer discretizer;
   final ModelType motif;
   final BackgroundType background;
 
-  abstract ScoringModelDistibutions discretedScoringModel();
+  abstract ScoringModelDistributions discretedScoringModel();
 
   FindPvalueByDiscretization(ModelType motif, BackgroundType background, Discretizer discretizer) {
     this.motif = motif;

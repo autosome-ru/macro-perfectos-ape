@@ -1,7 +1,5 @@
 package ru.autosome.commons.model;
 
-import java.util.ArrayList;
-
 // ToDo: make use of Orientation class
 public class Position {
   final public int position;
@@ -31,17 +29,13 @@ public class Position {
   }
 
   // all positions where subsequence of given length can start on the semiinterval [pos_left; pos_right)
-  static public ArrayList<Position> positions_between(int pos_left, int pos_right, int subseq_length) {
-    ArrayList<Position> positions = new ArrayList<Position>();
-    for (int pos = pos_left; pos <= pos_right - subseq_length; ++pos) {
-      positions.add(new Position(pos, true));
-      positions.add(new Position(pos, false));
-    }
-    return positions;
+  static public PositionInterval positions_between(int pos_left, int pos_right, int subseq_length) {
+    return new PositionInterval(pos_left, pos_right - subseq_length);
   }
 
   @Override
   public String toString() {
     return String.valueOf(position) + "\t" + strand();
   }
+
 }

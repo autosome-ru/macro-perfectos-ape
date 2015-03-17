@@ -165,4 +165,30 @@ public class DiBackground implements DiBackgroundModel {
     }
     return mean_square;
   }
+
+  @Override
+  public double variance(double[] values) {
+    double mean = mean_value(values);
+    return mean_square_value(values) - mean * mean;
+  }
+
+  @Override
+  public double average_by_second_letter(double[] values, int firstLetterIndex) {
+    double result = 0;
+    for (int secondLetterIndex = 0; secondLetterIndex < 4; ++secondLetterIndex) {
+      int letter = 4 * firstLetterIndex + secondLetterIndex;
+      result += values[letter] * probability(letter);
+    }
+    return result;
+  }
+
+  @Override
+  public double average_by_first_letter(double[] values, int secondLetterIndex) {
+    double result = 0;
+    for (int firstLetterIndex = 0; firstLetterIndex < 4; ++firstLetterIndex) {
+      int letter = 4 * firstLetterIndex + secondLetterIndex;
+      result += values[letter] * probability(letter);
+    }
+    return result;
+  }
 }

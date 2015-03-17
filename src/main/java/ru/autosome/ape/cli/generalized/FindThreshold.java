@@ -8,8 +8,7 @@ import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.PseudocountCalculator;
-import ru.autosome.commons.motifModel.Named;
-import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.support.ArrayExtensions;
 
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class FindThreshold<ModelType extends ScoringModel & Named, BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class FindThreshold<ModelType extends HasLength, BackgroundType extends GeneralizedBackgroundModel> {
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
   protected String documentString() {

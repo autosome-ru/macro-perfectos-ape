@@ -8,13 +8,16 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.motifModel.*;
+import ru.autosome.commons.motifModel.Alignable;
+import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.Named;
+import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.macroape.model.PairAligned;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ScanCollection <ModelType extends Alignable<ModelType> & Named & ScoringModel & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class ScanCollection <ModelType extends Alignable<ModelType> & Named & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
 
   protected final List<ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator> thresholdEvaluators;
 

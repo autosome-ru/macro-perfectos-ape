@@ -13,7 +13,10 @@ import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.PseudocountCalculator;
-import ru.autosome.commons.motifModel.*;
+import ru.autosome.commons.motifModel.Alignable;
+import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.Named;
+import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.io.File;
@@ -22,7 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class ScanCollection<ModelType extends Named & ScoringModel & Discretable<ModelType> & ScoreDistribution<BackgroundType> &Alignable<ModelType>,
+public abstract class ScanCollection<ModelType extends Named & Discretable<ModelType> & ScoreDistribution<BackgroundType> &Alignable<ModelType>,
                                      BackgroundType extends GeneralizedBackgroundModel> {
 
   public class ThresholdEvaluator {

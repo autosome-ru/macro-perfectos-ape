@@ -10,7 +10,7 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.motifModel.mono.PWM;
 
-public class CountingPWM extends ScoringModelDistibutions {
+public class CountingPWM extends ScoringModelDistributions {
 
   private final Integer maxHashSize;
 
@@ -25,7 +25,7 @@ public class CountingPWM extends ScoringModelDistibutions {
 
   @Override
   CanFindThresholdApproximation gaussianThresholdEstimator() {
-    return new GaussianThresholdEstimator<PWM, BackgroundModel>(pwm, background);
+    return new GaussianThresholdEstimator<>(pwm.onBackground(background));
   }
 
   protected TDoubleDoubleMap initialCountDistribution() {

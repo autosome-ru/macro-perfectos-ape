@@ -3,20 +3,22 @@ package ru.autosome.commons.motifModel.di;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.motifModel.*;
+import ru.autosome.commons.motifModel.Alignable;
+import ru.autosome.commons.motifModel.BackgroundAppliable;
+import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
 import ru.autosome.commons.scoringModel.DiPWMOnBackground;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.CountingDiPWM;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.perfectosape.model.Sequence;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class DiPWM extends DiPM implements ScoringModel,
+public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundModel, DiPWMOnBackground>,
                                             Discretable<DiPWM>,
-                                            ScoreStatistics<DiBackgroundModel>,
                                             ScoreDistribution<DiBackgroundModel>,
                                             PositionWeightModel, Alignable<DiPWM> {
 
@@ -41,13 +43,8 @@ public class DiPWM extends DiPM implements ScoringModel,
     return new DiPWM(matrix, pwm.name);
   }
 
-  public double score(Sequence word, DiBackgroundModel background) throws IllegalArgumentException {
-    return new DiPWMOnBackground(this, background).score(word);
-  }
-
-  @Override
-  public double score(Sequence word) throws IllegalArgumentException {
-    return score(word, new DiWordwiseBackground());
+  public double score(Sequence word) {
+    return new DiPWMOnBackground(this, new DiWordwiseBackground()).score(word.diEncode());
   }
 
   public double best_score() {
@@ -133,46 +130,12 @@ public class DiPWM extends DiPM implements ScoringModel,
   }
 
   @Override
-  public DiPWM discrete(Double rate) {
-    return discrete(new Discretizer(rate));
-  }
-
-  @Override
   public DiPWM discrete(Discretizer discretizer) {
-    double[][] mat_result;
-    mat_result = new double[matrix.length][];
-    for (int i = 0; i < matrix.length; ++i) {
-      mat_result[i] = new double[ALPHABET_SIZE];
-      for (int j = 0; j < ALPHABET_SIZE; ++j) {
-        mat_result[i][j] = discretizer.discrete(matrix[i][j]);
-      }
-    }
-    return new DiPWM(mat_result, name);
+    return new DiPWM(discretizedMatrix(discretizer), name);
   }
 
   @Override
-  public double score_mean(DiBackgroundModel background) {
-    double result = 0.0;
-    for (double[] pos : matrix) {
-      result += background.mean_value(pos);
-    }
-    return result;
-  }
-
-  @Override
-  public double score_variance(DiBackgroundModel background) {
-    double variance = 0.0;
-    for (double[] pos : matrix) {
-      double mean_square = background.mean_square_value(pos);
-      double mean = background.mean_value(pos);
-      double squared_mean = mean * mean;
-      variance += mean_square - squared_mean;
-    }
-    return variance;
-  }
-
-  @Override
-  public ScoringModelDistibutions scoringModelDistibutions(DiBackgroundModel background, Integer maxHashSize) {
+  public ScoringModelDistributions scoringModelDistibutions(DiBackgroundModel background, Integer maxHashSize) {
     return new CountingDiPWM(this, background, maxHashSize);
   }
 
@@ -215,5 +178,10 @@ public class DiPWM extends DiPM implements ScoringModel,
                                                   0,0,0,0};
     }
     return new DiPWM(aligned_matrix, name);
+  }
+
+  @Override
+  public DiPWMOnBackground onBackground(DiBackgroundModel background) {
+    return new DiPWMOnBackground(this, background);
   }
 }

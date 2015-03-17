@@ -6,14 +6,13 @@ import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.importer.InputExtensions;
-import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.model.PseudocountCalculator;
-import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.model.*;
+import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.Named;
-import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.perfectosape.calculation.SingleSNPScan;
+import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
+import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 import java.io.File;
@@ -22,14 +21,19 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretable<MotifType> & ScoreDistribution<BackgroundType>,
-                                   BackgroundType extends GeneralizedBackgroundModel> {
-  public static class ThresholdEvaluator {
-    public final ScoringModel pwm;
+abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLength,
+                              SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
+                              MotifType extends Named & HasLength & Discretable<MotifType> & ScoreDistribution<BackgroundType> & BackgroundAppliable<BackgroundType, ModelType>,
+                              ModelType extends ScoringModel<SequenceType> & Encodable<SequenceType, SequenceWithSNVType>,
+                              BackgroundType extends GeneralizedBackgroundModel> {
+  public static class ThresholdEvaluator<SequenceType,
+                                         SequenceWithSNVType,
+                                         ModelType extends ScoringModel<SequenceType> & Encodable<SequenceType, SequenceWithSNVType>> {
+    public final ModelType pwm;
     public final CanFindPvalue pvalueCalculator;
     public final String name;
 
-    public ThresholdEvaluator(ScoringModel pwm, CanFindPvalue pvalueCalculator, String name) {
+    public ThresholdEvaluator(ModelType pwm, CanFindPvalue pvalueCalculator, String name) {
       this.pwm = pwm;
       this.pvalueCalculator = pvalueCalculator;
       this.name = name;
@@ -43,15 +47,15 @@ abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretab
   protected void load_collection_of_pwms_with_evaluators() {
     List<MotifType> motifList = load_collection_of_pwms();
 
-    pwmCollection = new ArrayList<ThresholdEvaluator>();
+    pwmCollection = new ArrayList<>();
     for (MotifType motif: motifList) {
       CanFindPvalue pvalueCalculator;
       if (thresholds_folder == null) {
-        pvalueCalculator = new FindPvalueAPE<MotifType, BackgroundType>(motif, background, discretizer, max_hash_size);
+        pvalueCalculator = new FindPvalueAPE<>(motif, background, discretizer, max_hash_size);
       } else {
         pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
       }
-      pwmCollection.add(new ThresholdEvaluator(motif, pvalueCalculator, motif.getName()));
+      pwmCollection.add(new ThresholdEvaluator<>(motif.onBackground(background), pvalueCalculator, motif.getName()));
     }
   }
 
@@ -96,8 +100,8 @@ abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretab
   protected PseudocountCalculator pseudocount;
   protected File thresholds_folder;
 
-  protected List<String> snp_list;
-  protected List<ThresholdEvaluator> pwmCollection;
+  List<ru.autosome.commons.model.Named<SequenceWithSNP>> snp_list;
+  protected List<ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType>> pwmCollection;
 
   protected double max_pvalue_cutoff;
   protected double min_fold_change_cutoff;
@@ -204,27 +208,46 @@ abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretab
   protected void load_snp_list() {
     try {
       InputStream reader = new FileInputStream(path_to_file_w_snps);
-      snp_list = InputExtensions.filter_empty_strings(InputExtensions.readLinesFromInputStream(reader));
+      List<String> snps = InputExtensions.filter_empty_strings(InputExtensions.readLinesFromInputStream(reader));
+
+      snp_list = new ArrayList<>(snps.size());
+      for (String snp_input : snps) {
+        String snp_name = first_part_of_string(snp_input);
+        SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
+        snp_list.add( new ru.autosome.commons.model.Named<>(seq_w_snp, snp_name) );
+      }
+
     } catch (Exception e) {
       throw new IllegalArgumentException("Failed to load pack of SNPs", e);
     }
   }
 
-  protected void process_snp(String snp_input) throws HashOverflowException {
-    String snp_name = first_part_of_string(snp_input);
-    SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
+  protected abstract SequenceWithSNVType encodeSequenceWithSNV(SequenceWithSNP sequenceWithSNV);
 
-    for (ThresholdEvaluator motifEvaluator: pwmCollection) {
-      ScoringModel pwm = motifEvaluator.pwm;
+  boolean pvalueSignificant(SingleSNPScan.RegionAffinityInfos affinityInfos) {
+    return affinityInfos.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
+            affinityInfos.getInfo_2().getPvalue() <= max_pvalue_cutoff;
+  }
+
+  boolean foldChangeSignificant(SingleSNPScan.RegionAffinityInfos affinityInfos) {
+    double foldChange = affinityInfos.foldChange();
+    return foldChange >= min_fold_change_cutoff ||
+            foldChange <= 1.0/min_fold_change_cutoff;
+  }
+
+  boolean affinityChangeSignificant(SingleSNPScan.RegionAffinityInfos affinityInfos) {
+    return pvalueSignificant(affinityInfos) && foldChangeSignificant(affinityInfos);
+  }
+
+  protected void process_snp(String snp_name, SequenceWithSNP seq_w_snp, SequenceWithSNVType encodedSequenceWithSNP) throws HashOverflowException {
+    for (ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType> motifEvaluator: pwmCollection) {
+      ModelType pwm = motifEvaluator.pwm;
+
       if (seq_w_snp.length() >= pwm.length()) {
-        SingleSNPScan.RegionAffinityInfos result;
-        result = new SingleSNPScan(pwm, seq_w_snp, motifEvaluator.pvalueCalculator).affinityInfos();
-        boolean pvalueSignificant = (result.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
-                                      result.getInfo_2().getPvalue() <= max_pvalue_cutoff);
-        boolean foldChangeSignificant = (result.foldChange() >= min_fold_change_cutoff ||
-                                          result.foldChange() <= 1.0/min_fold_change_cutoff);
-        if (pvalueSignificant && foldChangeSignificant) {
-          System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + result.toString());
+        SingleSNPScan.RegionAffinityInfos affinityInfos;
+        affinityInfos = new SingleSNPScan<>(pwm, seq_w_snp, encodedSequenceWithSNP, motifEvaluator.pvalueCalculator).affinityInfos();
+        if (affinityChangeSignificant(affinityInfos)) {
+          System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + affinityInfos.toString());
         }
       } else {
         System.err.println("Can't scan sequence '" + seq_w_snp + "' (length " + seq_w_snp.length() + ") with motif of length " + pwm.length());
@@ -234,8 +257,10 @@ abstract public class SNPScan<MotifType extends Named & ScoringModel & Discretab
 
   public void process() throws HashOverflowException {
     System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
-    for (String snp_input : snp_list) {
-      process_snp(snp_input);
+    for (ru.autosome.commons.model.Named<SequenceWithSNP> sequenceWithSNV: snp_list) {
+      process_snp(sequenceWithSNV.getName(),
+                  sequenceWithSNV.getObject(),
+                  encodeSequenceWithSNV(sequenceWithSNV.getObject()) );
     }
   }
 

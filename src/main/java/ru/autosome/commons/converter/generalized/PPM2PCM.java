@@ -14,6 +14,11 @@ public abstract class PPM2PCM<ModelTypeFrom extends PositionFrequencyModel & Nam
     this.count = count;
   }
 
+  public ru.autosome.commons.model.Named<ModelTypeTo> convert(ru.autosome.commons.model.Named<ModelTypeFrom> namedModel) {
+    return new ru.autosome.commons.model.Named<>(convert(namedModel.getObject()),
+                                                 namedModel.getName());
+  }
+
   public ModelTypeTo convert(ModelTypeFrom ppm) {
     double new_matrix[][] = new double[ppm.getMatrix().length][];
     for (int pos = 0; pos < ppm.getMatrix().length; ++pos) {

@@ -29,6 +29,10 @@ public abstract class PCM2PWM<ModelTypeFrom extends PositionCountModel & Named,
     this.pseudocountCalculator = PseudocountCalculator.logPseudocount; // to be calculated automatically as logarithm of count
   }
 
+  public ru.autosome.commons.model.Named<ModelTypeTo> convert(ru.autosome.commons.model.Named<ModelTypeFrom> namedModel) {
+    return new ru.autosome.commons.model.Named<>(convert(namedModel.getObject()),
+                                                 namedModel.getName());
+  }
   public ModelTypeTo convert(ModelTypeFrom pcm) {
     double new_matrix[][] = new double[pcm.getMatrix().length][];
     for (int pos = 0; pos < pcm.getMatrix().length; ++pos) {

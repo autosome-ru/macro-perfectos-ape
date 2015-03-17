@@ -5,18 +5,16 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.model.progression.GeometricProgression;
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.commons.motifModel.ScoringModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrecalculateThresholdList<ModelType extends ScoringModel & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
-                                                  BackgroundType extends GeneralizedBackgroundModel> {
+public class PrecalculateThresholdList<ModelType extends  Discretable<ModelType> & ScoreDistribution<BackgroundType>,
+                                       BackgroundType> {
   // We expect not to have P-values less than 1e-15 in common case.
   // It's possible only for motifs of length 25 or more.
   // For SNPScan differences in such low P-values actually doesn't matter

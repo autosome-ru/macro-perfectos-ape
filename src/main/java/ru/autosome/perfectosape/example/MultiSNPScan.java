@@ -13,6 +13,7 @@ import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.commons.scoringModel.PWMOnBackground;
 import ru.autosome.perfectosape.calculation.SingleSNPScan;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 
@@ -136,16 +137,17 @@ public class MultiSNPScan {
     // Scanning the pack of SNPs for changes of affinity on each PWM in collection using precalculated threshold - P-value lists
 
     Map<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos> > results;
-    results = new HashMap<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>>();
+    results = new HashMap<>();
     for (PWM pwm: pwmCollectionWithPvalueCalculators.keySet()) {
       CanFindPvalue pvalueCalculator = pwmCollectionWithPvalueCalculators.get(pwm);
 
       Map<SequenceWithSNP,SingleSNPScan.RegionAffinityInfos> result_part;
-      result_part = new HashMap<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>();
+      result_part = new HashMap<>();
       for (SequenceWithSNP sequenceWithSNP: snpCollection) {
         if (sequenceWithSNP.length() >= pwm.length()) {
+          PWMOnBackground scoringModel = pwm.onBackground(new WordwiseBackground());
           result_part.put(sequenceWithSNP,
-                          new SingleSNPScan(pwm, sequenceWithSNP, pvalueCalculator).affinityInfos());
+                          new SingleSNPScan<>(scoringModel, sequenceWithSNP, pvalueCalculator).affinityInfos());
         } else {
           System.err.println("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
         }

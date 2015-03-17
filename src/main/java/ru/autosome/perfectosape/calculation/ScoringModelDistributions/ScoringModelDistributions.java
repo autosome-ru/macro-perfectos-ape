@@ -9,7 +9,7 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.support.ArrayExtensions;
 
-abstract public class ScoringModelDistibutions {
+abstract public class ScoringModelDistributions {
   abstract CanFindThresholdApproximation gaussianThresholdEstimator();
   protected abstract ScoreDistributionTop score_distribution_above_threshold(double threshold) throws HashOverflowException;
 

@@ -2,13 +2,13 @@ package ru.autosome.commons.model;
 
 public abstract class PseudocountCalculator {
   abstract public Double calculatePseudocount(double count);
-  static public PseudocountCalculator logPseudocount = new PseudocountCalculator() {
+  static public final PseudocountCalculator logPseudocount = new PseudocountCalculator() {
     @Override
     public Double calculatePseudocount(double count) {
       return Math.log(count);
     }
   };
-  static public PseudocountCalculator sqrtPseudocount = new PseudocountCalculator() {
+  static public final PseudocountCalculator sqrtPseudocount = new PseudocountCalculator() {
     @Override
     public Double calculatePseudocount(double count) {
       return Math.sqrt(count);

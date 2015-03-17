@@ -3,7 +3,7 @@ package ru.autosome.ape.calculation.findThreshold;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 
 public abstract class FindThresholdByDiscretization implements CanFindThreshold {
   final Discretizer discretizer;
@@ -12,7 +12,7 @@ public abstract class FindThresholdByDiscretization implements CanFindThreshold 
     this.discretizer = discretizer;
   }
 
-  abstract ScoringModelDistibutions discretedScoringModel();
+  abstract ScoringModelDistributions discretedScoringModel();
 
   @Override
   public CanFindThreshold.ThresholdInfo weakThresholdByPvalue(double pvalue) throws HashOverflowException {

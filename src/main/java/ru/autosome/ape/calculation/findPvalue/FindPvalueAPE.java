@@ -3,11 +3,11 @@ package ru.autosome.ape.calculation.findPvalue;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.commons.motifModel.ScoringModel;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistibutions;
+import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 
-public class FindPvalueAPE<ModelType extends ScoringModel & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
+public class FindPvalueAPE<ModelType extends HasLength & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
                            BackgroundType extends GeneralizedBackgroundModel> extends FindPvalueByDiscretization<ModelType, BackgroundType> {
   final Integer maxHashSize;
 
@@ -17,7 +17,7 @@ public class FindPvalueAPE<ModelType extends ScoringModel & Discretable<ModelTyp
   }
 
   @Override
-  ScoringModelDistibutions discretedScoringModel() {
+  ScoringModelDistributions discretedScoringModel() {
     return motif.discrete(discretizer).scoringModelDistibutions(background, maxHashSize);
   }
 }

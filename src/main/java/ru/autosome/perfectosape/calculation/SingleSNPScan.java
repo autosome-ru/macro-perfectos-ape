@@ -3,23 +3,43 @@ package ru.autosome.perfectosape.calculation;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.model.Position;
+import ru.autosome.commons.model.PositionInterval;
+import ru.autosome.commons.motifModel.Encodable;
 import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
+import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 
-import java.util.ArrayList;
-
-public class SingleSNPScan {
-  final ScoringModel pwm;
+public class SingleSNPScan<SequenceType extends EncodedSequenceType,
+                           SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
+                           ModelType extends ScoringModel<SequenceType> & Encodable<SequenceType, SequenceWithSNVType>> {
+  final ModelType pwm;
   final SequenceWithSNP sequenceWithSNP;
+  final SequenceWithSNVType encodedSequenceWithSNP;
   final CanFindPvalue pvalueCalculator;
 
-  public SingleSNPScan(ScoringModel pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
+  public SingleSNPScan(ModelType pwm, SequenceWithSNP sequenceWithSNP, SequenceWithSNVType encodedSequenceWithSNP, CanFindPvalue pvalueCalculator) {
     if (sequenceWithSNP.length() < pwm.length()) {
       throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
     }
     this.pwm = pwm;
     this.sequenceWithSNP = sequenceWithSNP;
+    this.encodedSequenceWithSNP = encodedSequenceWithSNP; // Another representation of the same sequence with SNP (not checked they are in accordance due to performance reasons
+    this.pvalueCalculator = pvalueCalculator;
+    if (sequenceWithSNP.num_cases() != 2) {
+      throw new IllegalArgumentException("Unable to process more than two variants of nucleotide for SNP " + sequenceWithSNP);
+    }
+  }
+
+  // More slow constructor than the full one: it encodes sequence in a constructor
+  public SingleSNPScan(ModelType pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
+    if (sequenceWithSNP.length() < pwm.length()) {
+      throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
+    }
+    this.pwm = pwm;
+    this.sequenceWithSNP = sequenceWithSNP;
+    this.encodedSequenceWithSNP = pwm.encodeSequenceWithSNP(sequenceWithSNP); // Another representation of the same sequence with SNP (not checked they are in accordance due to performance reasons
     this.pvalueCalculator = pvalueCalculator;
     if (sequenceWithSNP.num_cases() != 2) {
       throw new IllegalArgumentException("Unable to process more than two variants of nucleotide for SNP " + sequenceWithSNP);
@@ -87,23 +107,24 @@ public class SingleSNPScan {
     }
   }
 
-  ArrayList<Position> positionsToCheck() {
-    return sequenceWithSNP.positions_subsequence_overlaps_snp(pwm.length());
+  PositionInterval positionsToCheck() {
+    return sequenceWithSNP.positionsOverlappingSNV(pwm.length());
   }
 
   public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) throws HashOverflowException {
-      Sequence sequence = sequenceWithSNP.sequence_variants()[allele_number];
-      Character allele = sequenceWithSNP.mid[allele_number];
-      EstimateAffinityMinPvalue affinity_calculator =  new EstimateAffinityMinPvalue(pwm,
-                                                                                     sequence,
-                                                                                     pvalueCalculator,
-                                                                                     positionsToCheck());
-      Position pos = affinity_calculator.bestPosition();
-      double pvalue = affinity_calculator.affinity();
-      Sequence word = sequence.substring(pos, pwm.length());
+    Sequence sequence = sequenceWithSNP.sequence_variants()[allele_number];
+    Character allele = sequenceWithSNP.mid[allele_number];
+    EstimateAffinityMinPvalue affinity_calculator;
+    affinity_calculator = new EstimateAffinityMinPvalue<>(pwm,
+                                                          encodedSequenceWithSNP.sequenceVariant(allele_number),
+                                                          pvalueCalculator,
+                                                          positionsToCheck());
+    Position pos = affinity_calculator.bestPosition();
+    double pvalue = affinity_calculator.affinity();
+    Sequence word = sequence.substring(pos, pwm.length());
 
-      Position pos_centered = new Position(pos.position - sequenceWithSNP.left.length(), pos.directStrand);
-      return new RegionAffinityVariantInfo(pos_centered, allele, pvalue, word);
+    Position pos_centered = new Position(pos.position - sequenceWithSNP.left.length(), pos.directStrand);
+    return new RegionAffinityVariantInfo(pos_centered, allele, pvalue, word);
   }
 
   public RegionAffinityInfos affinityInfos() throws HashOverflowException {

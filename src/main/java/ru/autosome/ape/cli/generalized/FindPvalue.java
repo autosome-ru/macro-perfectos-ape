@@ -2,13 +2,10 @@ package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.model.exception.HashOverflowException;
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.PseudocountCalculator;
-import ru.autosome.commons.motifModel.Named;
-import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.support.ArrayExtensions;
 
@@ -17,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class FindPvalue<ModelType extends ScoringModel & Named, BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class FindPvalue<ModelType, BackgroundType> {
 
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
@@ -159,7 +156,5 @@ public abstract class FindPvalue<ModelType extends ScoringModel & Named, Backgro
     CanFindPvalue.PvalueInfo[] results = calculator().pvaluesByThresholds(thresholds);
     return report_table(results);
   }
-
-
 
 }

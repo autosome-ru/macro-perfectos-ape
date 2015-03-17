@@ -1,12 +1,11 @@
 package ru.autosome.commons.motifModel.di;
 
-import ru.autosome.commons.backgroundModel.di.DiBackgroundFactory;
-import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.motifModel.BackgroundCompatible;
+import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.MatrixModel;
 import ru.autosome.commons.motifModel.Named;
 
-public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgroundModel> {
+public class DiPM implements Named, MatrixModel, HasLength {
   public static final int ALPHABET_SIZE = 16;
   protected final double[][] matrix;
   public String name;
@@ -31,6 +30,7 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
   }
 
   // length of TFBS, not of a matrix representation
+  @Override
   public int length() {
     return matrix.length + 1;
   }
@@ -40,7 +40,7 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
     StringBuilder result = new StringBuilder();
     result.append(name).append("\n");
     for (double[] pos : matrix) {
-      for (int letter_index = 0; letter_index < ALPHABET_SIZE; ++ letter_index) {
+      for (int letter_index = 0; letter_index < alphabetSize(); ++ letter_index) {
         if (letter_index != 0) {
           result.append("\t");
         }
@@ -61,8 +61,15 @@ public class DiPM implements Named, MatrixModel, BackgroundCompatible<DiBackgrou
     return ALPHABET_SIZE;
   }
 
-  @Override
-  public DiBackgroundFactory compatibleBackground() {
-    return new DiBackgroundFactory();
+  double[][] discretizedMatrix(Discretizer discretizer) {
+    double[][] result;
+    result = new double[matrix.length][];
+    for (int i = 0; i < matrix.length; ++i) {
+      result[i] = new double[ALPHABET_SIZE];
+      for (int j = 0; j < ALPHABET_SIZE; ++j) {
+        result[i][j] = discretizer.discrete(matrix[i][j]);
+      }
+    }
+    return result;
   }
 }

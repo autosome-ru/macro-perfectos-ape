@@ -10,12 +10,16 @@ import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.commons.scoringModel.DiPWMOnBackground;
+import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
+import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNPDiEncoded;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<DiPWM, DiBackgroundModel> {
+public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<SequenceDiEncoded, SequenceWithSNPDiEncoded, DiPWM, DiPWMOnBackground, DiBackgroundModel> {
   @Override
   protected String DOC_run_string(){
     return "java ru.autosome.perfectosape.di.SNPScan";
@@ -76,6 +80,10 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Di
       DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
       return importer.loadMotifCollection(path_to_collection_of_pwms);
     }
+  }
+
+  protected SequenceWithSNPDiEncoded encodeSequenceWithSNV(SequenceWithSNP sequenceWithSNV){
+    return sequenceWithSNV.diEncode();
   }
 
   protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(ArrayList<String> argv) {

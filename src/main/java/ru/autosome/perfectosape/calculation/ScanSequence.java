@@ -1,20 +1,20 @@
 package ru.autosome.perfectosape.calculation;
 
+import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
+import ru.autosome.commons.model.PositionInterval;
+import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.ScoringModel;
-import ru.autosome.perfectosape.model.Sequence;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+public class ScanSequence<SequenceType extends HasLength> {
+  private final SequenceType sequence;
+  private final ScoringModel<SequenceType> pwm;
+  final PositionInterval positions_to_check;
+  Boolean cacheBest;
+  Position cache_bestPosition;
+  double cache_bestScore;
 
-public class ScanSequence {
-  private final Sequence sequence;
-  private final ScoringModel pwm;
-  final ArrayList<Position> positions_to_check;
-  private Map<Position, Double> cache_score_by_position;
-
-  public ScanSequence(Sequence sequence, ScoringModel pwm, ArrayList<Position> positions_to_check) {
+  public ScanSequence(SequenceType sequence, ScoringModel<SequenceType> pwm, PositionInterval positions_to_check) {
     if (sequence.length() < pwm.length()) {
       throw new IllegalArgumentException("Can't scan sequence '" + sequence + "' (length " + sequence.length() + ") with motif of length " + pwm.length());
     }
@@ -23,37 +23,45 @@ public class ScanSequence {
     this.positions_to_check = positions_to_check;
   }
 
-  public ScanSequence(Sequence sequence, ScoringModel pwm) {
-    this(sequence, pwm, sequence.subsequence_positions(pwm.length()));
-  }
-
-  // TODO: here we create lots of temporary objects(substrings), may be we should define a method which uses parent object and shift?
-  // TODO: reverse-complement matrix, not the sequence
-  Map<Position, Double> scores_by_position() {
-    if (cache_score_by_position == null) {
-      cache_score_by_position = new HashMap<Position,Double>();
-      for (Position position: positions_to_check) {
-        Sequence subsequence = sequence.substring(position, pwm.length());
-        cache_score_by_position.put(position, pwm.score(subsequence));
-      }
+  public void findBest() {
+    if (cacheBest == null) {
+      BestPositionWithScore bestPos = positions_to_check.findBestPosition(sequence, pwm);
+      cache_bestScore = bestPos.getScore();
+      cache_bestPosition = bestPos.getPosition();
+      cacheBest = true;
     }
-    return cache_score_by_position;
   }
 
   public Position best_position() {
-    Double max_score = Double.NEGATIVE_INFINITY;
-    Position best_position = null;
-    for (Position position : scores_by_position().keySet()) {
-      if (scores_by_position().get(position) > max_score) {
-        best_position = position;
-        max_score = scores_by_position().get(position);
-      }
-    }
-    return best_position;
+    findBest();
+    return cache_bestPosition;
   }
 
   public double best_score() {
-    return scores_by_position().get(best_position());
+    findBest();
+    return cache_bestScore;
   }
 
+  public static class BestPositionWithScore {
+    private int position;
+    private Orientation orientation;
+    private double score;
+
+    public BestPositionWithScore() {
+      score = Double.NEGATIVE_INFINITY;
+    }
+    public void updateBestScore(int newPosition, Orientation newOrientation, double newScore) {
+      if (newScore > score) {
+        score = newScore;
+        position = newPosition;
+        orientation = newOrientation;
+      }
+    }
+    public double getScore() {
+      return score;
+    }
+    public Position getPosition() {
+      return new Position(position, orientation);
+    }
+  }
 }
