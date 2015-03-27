@@ -10,16 +10,26 @@ import ru.autosome.commons.support.StringExtensions;
 
 import java.util.List;
 
-public class PWMImporter extends MotifImporter<PWM, BackgroundModel> {
+public class PWMImporter extends MotifImporter<PWM> {
+  final DataModel dataModel;
+  final Double effectiveCount;
+  final PseudocountCalculator pseudocountCalculator;
+  final BackgroundModel background;
   final boolean transpose;
 
   public PWMImporter() {
-    super(null, DataModel.PWM, null, PseudocountCalculator.logPseudocount);
+    this.dataModel = DataModel.PWM;
+    this.effectiveCount = null;
+    this.pseudocountCalculator = PseudocountCalculator.logPseudocount;
+    this.background = null;
     this.transpose = false;
   }
 
   public PWMImporter(BackgroundModel background, DataModel dataModel, Double effectiveCount, boolean transpose, PseudocountCalculator pseudocount) {
-    super(background, dataModel, effectiveCount, pseudocount);
+    this.dataModel = dataModel;
+    this.effectiveCount = effectiveCount;
+    this.pseudocountCalculator = pseudocount;
+    this.background = background;
     this.transpose = transpose;
   }
 

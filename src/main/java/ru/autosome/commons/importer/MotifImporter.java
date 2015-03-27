@@ -1,27 +1,13 @@
 package ru.autosome.commons.importer;
 
 import ru.autosome.commons.model.Named;
-import ru.autosome.commons.model.PseudocountCalculator;
-import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MotifImporter<ModelType, BackgroundType> {
-  final BackgroundType background;
-  final DataModel dataModel;
-  final Double effectiveCount;
-  final PseudocountCalculator pseudocountCalculator;
-
-  public MotifImporter(BackgroundType background, DataModel dataModel, Double effectiveCount, PseudocountCalculator pseudocountCalculator) {
-    this.background = background;
-    this.dataModel = dataModel;
-    this.effectiveCount = effectiveCount;
-    this.pseudocountCalculator = pseudocountCalculator;
-  }
-
+public abstract class MotifImporter<ModelType> {
   abstract public ModelType createMotif(double matrix[][]);
   abstract public ParsingResult parse(List<String> strings);
 

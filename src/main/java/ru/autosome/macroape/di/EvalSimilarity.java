@@ -6,7 +6,9 @@ import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.Helper;
+import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
+import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.macroape.calculation.di.CompareModels;
@@ -69,25 +71,24 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected DiPWM loadFirstPWM(String filename) {
+    MotifImporter<DiPWM> importer;
     if (firstPWMFromMononucleotide) {
-      BackgroundModel firstBackgroundMononucleotide = Background.fromDiBackground(firstBackground);
-      PWMImporter firstMotifImporter = new PWMImporter(firstBackgroundMononucleotide, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
-      return DiPWM.fromPWM( firstMotifImporter.loadMotif(filename) );
+      importer = new DiPWMFromMonoImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
     } else {
-      DiPWMImporter firstMotifImporter = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
-      return firstMotifImporter.loadMotif(filename);
+      importer = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
     }
+    return importer.loadMotif(filename);
+
   }
   @Override
   protected DiPWM loadSecondPWM(String filename) {
+    MotifImporter<DiPWM> importer;
     if (secondPWMFromMononucleotide) {
-      BackgroundModel secondBackgroundMononucleotide = Background.fromDiBackground(secondBackground);
-      PWMImporter secondMotifImporter = new PWMImporter(secondBackgroundMononucleotide, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
-      return DiPWM.fromPWM( secondMotifImporter.loadMotif(filename) );
+      importer = new DiPWMFromMonoImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
     } else {
-      DiPWMImporter secondMotifImporter = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
-      return secondMotifImporter.loadMotif(filename);
+      importer = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
     }
+    return importer.loadMotif(filename);
   }
 
   private EvalSimilarity() {

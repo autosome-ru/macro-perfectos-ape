@@ -6,7 +6,9 @@ import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.Helper;
+import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
+import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
@@ -68,20 +70,13 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
 
   @Override
   protected List<Named<DiPWM>> load_collection_of_pwms() {
+    MotifImporter<DiPWM> importer;
     if (fromMononucleotide) {
-      BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
-      PWMImporter importer = new PWMImporter(backgroundMononucleotide, dataModel, effectiveCount, transpose, pseudocount);
-      List<Named<PWM>> monoCollection = importer.loadMotifCollectionWithNames(path_to_collection_of_pwms);
-      List<Named<DiPWM>> diCollection = new ArrayList<>(monoCollection.size());
-      for(Named<PWM> namedMonoPWM: monoCollection) {
-        diCollection.add(new Named<>(DiPWM.fromPWM(namedMonoPWM.getObject()),
-                                     namedMonoPWM.getName()) );
-      }
-      return diCollection;
+      importer = new DiPWMFromMonoImporter(background, dataModel, effectiveCount, transpose, pseudocount);
     } else {
-      DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
-      return importer.loadMotifCollectionWithNames(path_to_collection_of_pwms);
+      importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
     }
+    return importer.loadMotifCollectionWithNames(path_to_collection_of_pwms);
   }
 
   protected SequenceWithSNPDiEncoded encodeSequenceWithSNV(SequenceWithSNP sequenceWithSNV){

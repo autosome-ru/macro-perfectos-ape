@@ -7,7 +7,9 @@ import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.Helper;
+import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
+import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
@@ -44,16 +46,13 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
 
   @Override
   protected Named<DiPWM> loadMotif(File file){
+    MotifImporter<DiPWM> importer;
     if (fromMononucleotide) {
-      BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
-      PWMImporter importer = new PWMImporter(backgroundMononucleotide, data_model, effective_count, transpose, pseudocount);
-      Named<PWM> namedMonoPWM = importer.loadMotifWithName(file);
-      return new Named<>(DiPWM.fromPWM(namedMonoPWM.getObject()),
-                         namedMonoPWM.getName());
+      importer = new DiPWMFromMonoImporter(background, data_model, effective_count, transpose, pseudocount);
     } else {
-      DiPWMImporter importer = new DiPWMImporter(background, data_model, effective_count, transpose, pseudocount);
-      return importer.loadMotifWithName(file);
+      importer = new DiPWMImporter(background, data_model, effective_count, transpose, pseudocount);
     }
+    return importer.loadMotifWithName(file);
   }
 
   @Override

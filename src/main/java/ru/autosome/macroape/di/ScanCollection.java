@@ -7,7 +7,9 @@ import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ResultInfo;
+import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
+import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
@@ -86,32 +88,24 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
 
   @Override
   protected List<Named<DiPWM>> loadMotifCollection() {
+    MotifImporter<DiPWM> importer;
     if (collectionFromMononucleotide) {
-      BackgroundModel collectionBackgroundMononucleotide = Background.fromDiBackground(collectionBackground);
-      PWMImporter importer = new PWMImporter(collectionBackgroundMononucleotide, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
-      List<Named<PWM>> monoCollection = importer.loadMotifCollectionWithNames(pathToCollectionOfPWMs);
-      List<Named<DiPWM>> diCollection = new ArrayList<>(monoCollection.size());
-      for(Named<PWM> namedMonoPWM: monoCollection) {
-        diCollection.add(new Named<>(DiPWM.fromPWM(namedMonoPWM.getObject()),
-                                    namedMonoPWM.getName()) );
-      }
-      return diCollection;
+      importer = new DiPWMFromMonoImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
     } else {
-      DiPWMImporter importer = new DiPWMImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
-      return importer.loadMotifCollectionWithNames(pathToCollectionOfPWMs);
+      importer = new DiPWMImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
     }
+    return importer.loadMotifCollectionWithNames(pathToCollectionOfPWMs);
   }
 
   @Override
   protected DiPWM loadQueryMotif() {
+    MotifImporter<DiPWM> importer;
     if (queryFromMononucleotide) {
-      BackgroundModel queryBackgroundMononucleotide = Background.fromDiBackground(queryBackground);
-      PWMImporter importer = new PWMImporter(queryBackgroundMononucleotide, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
-      return DiPWM.fromPWM(importer.loadMotif(queryPMFilename));
+      importer = new DiPWMFromMonoImporter(queryBackground, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
     } else {
-      DiPWMImporter importer = new DiPWMImporter(queryBackground, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
-      return importer.loadMotif(queryPMFilename);
+      importer = new DiPWMImporter(queryBackground, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
     }
+    return importer.loadMotif(queryPMFilename);
   }
 
   protected ru.autosome.macroape.calculation.di.ScanCollection calculator() {

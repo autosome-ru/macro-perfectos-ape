@@ -6,7 +6,9 @@ import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.Helper;
+import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
+import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
@@ -46,20 +48,13 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
 
   @Override
   protected List<Named<DiPWM>> loadMotifCollection(File path_to_collection) {
+    MotifImporter<DiPWM> importer;
     if (fromMononucleotide) {
-      BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
-      PWMImporter importer = new PWMImporter(backgroundMononucleotide, dataModel, effectiveCount, transpose, pseudocount);
-      List<Named<PWM>> monoCollection = importer.loadMotifCollectionWithNames(path_to_collection);
-      pwmCollection = new ArrayList<>(monoCollection.size());
-      for(Named<PWM> monoPWM: monoCollection) {
-        pwmCollection.add(new Named<>(DiPWM.fromPWM(monoPWM.getObject()),
-                                      monoPWM.getName()) );
-      }
-      return pwmCollection;
+      importer = new DiPWMFromMonoImporter(background, dataModel, effectiveCount, transpose, pseudocount);
     } else {
-      DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
-      return importer.loadMotifCollectionWithNames(path_to_collection);
+      importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
     }
+    return importer.loadMotifCollectionWithNames(path_to_collection);
   }
 
   @Override
