@@ -21,7 +21,7 @@ public class PCM2PWM extends ru.autosome.commons.converter.generalized.PCM2PWM<P
   }
 
   @Override
-  protected PWM createMotif(double[][] matrix, String name) {
-    return new PWM(matrix, name);
+  protected PWM createMotif(double[][] matrix) {
+    return new PWM(matrix);
   }
 }

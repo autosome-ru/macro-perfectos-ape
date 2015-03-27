@@ -5,6 +5,7 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.scoringModel.PWMOnBackground;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
@@ -39,9 +40,9 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
   }
 
   @Override
-  protected List<PWM> load_collection_of_pwms() {
+  protected List<Named<PWM>> load_collection_of_pwms() {
     PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
-    return importer.loadMotifCollection(path_to_collection_of_pwms);
+    return importer.loadMotifCollectionWithNames(path_to_collection_of_pwms);
   }
 
   protected SequenceWithSNPMonoEncoded encodeSequenceWithSNV(SequenceWithSNP sequenceWithSNV){

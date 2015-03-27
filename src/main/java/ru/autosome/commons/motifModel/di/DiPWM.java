@@ -25,8 +25,8 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
   private double[][] cache_best_suffices;
   private double[][] cache_worst_suffices;
 
-  public DiPWM(double[][] matrix, String name) {
-    super(matrix, name);
+  public DiPWM(double[][] matrix) {
+    super(matrix);
   }
 
   public static DiPWM fromPWM(PWM pwm) {
@@ -40,7 +40,7 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
     for (int letter = 0; letter < ALPHABET_SIZE; ++letter) {
       matrix[matrix.length - 1][letter] += pwm.getMatrix()[matrix.length][letter % 4];
     }
-    return new DiPWM(matrix, pwm.name);
+    return new DiPWM(matrix);
   }
 
   public double score(Sequence word) {
@@ -131,7 +131,7 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
 
   @Override
   public DiPWM discrete(Discretizer discretizer) {
-    return new DiPWM(discretizedMatrix(discretizer), name);
+    return new DiPWM(discretizedMatrix(discretizer));
   }
 
   @Override
@@ -151,7 +151,7 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
       }
     }
 
-    return new DiPWM(matrix_revcomp, name);
+    return new DiPWM(matrix_revcomp);
   }
 
   @Override
@@ -164,7 +164,7 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
                                        0,0,0,0};
     }
     System.arraycopy(matrix, 0, aligned_matrix, n, matrix.length);
-    return new DiPWM(aligned_matrix, name);
+    return new DiPWM(aligned_matrix);
   }
 
   @Override
@@ -177,7 +177,7 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
                                                   0,0,0,0,
                                                   0,0,0,0};
     }
-    return new DiPWM(aligned_matrix, name);
+    return new DiPWM(aligned_matrix);
   }
 
   @Override

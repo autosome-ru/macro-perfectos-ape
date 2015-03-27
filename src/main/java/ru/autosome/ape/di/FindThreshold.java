@@ -11,7 +11,9 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
+import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,14 +48,16 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
   }
 
   @Override
-  protected DiPWM loadMotif(String filename) {
+  protected Named<DiPWM> loadMotif(String filename) {
     if (fromMononucleotide) {
       BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
       PWMImporter importer = new PWMImporter(backgroundMononucleotide, data_model, effective_count, transpose, pseudocount);
-      return DiPWM.fromPWM( importer.loadMotif(filename) );
+      Named<PWM> namedMonoPWM = importer.loadMotifWithName(filename);
+      return new Named<>(DiPWM.fromPWM(namedMonoPWM.getObject()),
+                          namedMonoPWM.getName());
     } else {
       DiPWMImporter importer = new DiPWMImporter(background, data_model, effective_count, transpose, pseudocount);
-      return importer.loadMotif(filename);
+      return importer.loadMotifWithName(filename);
     }
   }
 
@@ -76,9 +80,9 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
   protected CanFindThreshold calculator() {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
-        cache_calculator = new FindThresholdAPE<DiPWM, DiBackgroundModel>(motif, background, discretizer, max_hash_size);
+        cache_calculator = new FindThresholdAPE<>(motif.getObject(), background, discretizer, max_hash_size);
       } else {
-        cache_calculator = new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(motif);
+        cache_calculator = new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(motif.getName());
       }
     }
     return cache_calculator;
@@ -96,7 +100,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
   }
 
   protected static FindThreshold from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }

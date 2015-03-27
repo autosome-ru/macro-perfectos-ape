@@ -9,7 +9,7 @@ public class PPM2PCM extends ru.autosome.commons.converter.generalized.PPM2PCM<D
   }
 
   @Override
-  protected DiPCM createMotif(double[][] matrix, String name) {
-    return new DiPCM(matrix, name);
+  protected DiPCM createMotif(double[][] matrix) {
+    return new DiPCM(matrix);
   }
 }

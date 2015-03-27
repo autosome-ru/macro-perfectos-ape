@@ -6,6 +6,7 @@ import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.util.ArrayList;
@@ -51,9 +52,9 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     return from_arglist(argv);
   }
 
-  protected List<PWM> loadMotifCollection() {
+  protected List<Named<PWM>> loadMotifCollection() {
     PWMImporter importer = new PWMImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
-    return importer.loadMotifCollection(pathToCollectionOfPWMs);
+    return importer.loadMotifCollectionWithNames(pathToCollectionOfPWMs);
   }
 
   protected PWM loadQueryMotif() {

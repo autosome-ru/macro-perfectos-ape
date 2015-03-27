@@ -5,6 +5,7 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.support.ArrayExtensions;
@@ -50,7 +51,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   protected PseudocountCalculator pseudocount;
   protected boolean transpose;
 
-  protected ModelType motif;
+  protected Named<ModelType> motif;
   protected BackgroundType background;
 
   protected File thresholds_folder;
@@ -59,7 +60,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   abstract protected CanFindPvalue calculator();
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
-  abstract protected ModelType loadMotif(String filename);
+  abstract protected Named<ModelType> loadMotif(String filename);
 
   protected void initialize_defaults() {
     initialize_default_background();

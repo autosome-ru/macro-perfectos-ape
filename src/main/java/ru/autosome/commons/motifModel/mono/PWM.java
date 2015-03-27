@@ -21,8 +21,8 @@ public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWM
   private double[] cache_best_suffices;
   private double[] cache_worst_suffices;
 
-  public PWM(double[][] matrix, String name) throws IllegalArgumentException {
-    super(matrix, name);
+  public PWM(double[][] matrix) throws IllegalArgumentException {
+    super(matrix);
   }
 
   public double score(Sequence word) {
@@ -72,7 +72,7 @@ public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWM
 
   @Override
   public PWM discrete(Discretizer discretizer) {
-    return new PWM(discretedMatrix(discretizer), name);
+    return new PWM(discretedMatrix(discretizer));
   }
 
   @Override
@@ -82,7 +82,7 @@ public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWM
     for (int i = 0; i < matrix_revcomp.length; ++i) {
       matrix_revcomp[i] = ArrayExtensions.reverse(matrix_revcomp[i]);
     }
-    return new PWM(matrix_revcomp, name);
+    return new PWM(matrix_revcomp);
   }
 
   @Override
@@ -92,7 +92,7 @@ public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWM
       aligned_matrix[i] = new double[]{0,0,0,0};
     }
     System.arraycopy(matrix, 0, aligned_matrix, n, length());
-    return new PWM(aligned_matrix, name);
+    return new PWM(aligned_matrix);
   }
 
   @Override
@@ -102,7 +102,7 @@ public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWM
     for(int i = 0; i < n; ++i) {
       aligned_matrix[length() + i] = new double[]{0,0,0,0};
     }
-    return new PWM(aligned_matrix, name);
+    return new PWM(aligned_matrix);
   }
 
   @Override

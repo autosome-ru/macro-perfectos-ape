@@ -3,21 +3,10 @@ package ru.autosome.commons.motifModel.mono;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.MatrixModel;
-import ru.autosome.commons.motifModel.Named;
 
-public class PM implements Named, MatrixModel, HasLength {
+public class PM implements MatrixModel, HasLength {
   public static final int ALPHABET_SIZE = 4;
   protected final double[][] matrix;
-  public String name;
-
-  @Override
-  public String getName() {
-    return name;
-  }
-  @Override
-  public void setName(String name) {
-    this.name = name;
-  }
 
   @Override
   public double[][] getMatrix() {
@@ -29,14 +18,13 @@ public class PM implements Named, MatrixModel, HasLength {
     return ALPHABET_SIZE;
   }
 
-  public PM(double[][] matrix, String name) throws IllegalArgumentException {
+  public PM(double[][] matrix) throws IllegalArgumentException {
     for (double[] pos : matrix) {
       if (pos.length != ALPHABET_SIZE) {
         throw new IllegalArgumentException("Matrix must have " + ALPHABET_SIZE + " elements in each position");
       }
     }
     this.matrix = matrix;
-    this.name = name;
   }
 
   @Override
@@ -59,7 +47,7 @@ public class PM implements Named, MatrixModel, HasLength {
   @Override
   public String toString() {
     StringBuilder result = new StringBuilder();
-    result.append(name).append("\n");
+//    result.append(name).append("\n");
     for (double[] pos : matrix) {
       for (int letter_index = 0; letter_index < alphabetSize(); ++ letter_index) {
         if (letter_index != 0) {

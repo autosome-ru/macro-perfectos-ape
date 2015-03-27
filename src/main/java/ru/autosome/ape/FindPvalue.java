@@ -8,6 +8,7 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.util.ArrayList;
@@ -27,9 +28,9 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, 
   protected CanFindPvalue calculator() {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
-        cache_calculator = new FindPvalueAPE<PWM, BackgroundModel>(motif, background, discretizer, max_hash_size);
+        cache_calculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer, max_hash_size);
       } else {
-        cache_calculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
+        cache_calculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif.getName());
       }
     }
     return cache_calculator;
@@ -46,9 +47,9 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, 
   }
 
   @Override
-  protected PWM loadMotif(String filename) {
+  protected Named<PWM> loadMotif(String filename) {
     PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose, pseudocount);
-    return importer.loadMotif(filename);
+    return importer.loadMotifWithName(filename);
   }
 
   protected FindPvalue() {
@@ -63,7 +64,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, 
   }
 
   protected static FindPvalue from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }

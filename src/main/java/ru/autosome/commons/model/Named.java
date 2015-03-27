@@ -1,6 +1,6 @@
 package ru.autosome.commons.model;
 
-public class Named<Type> implements ru.autosome.commons.motifModel.Named {
+public class Named<Type> {
   private final Type object;
   private String name;
 
@@ -13,12 +13,10 @@ public class Named<Type> implements ru.autosome.commons.motifModel.Named {
     this.name = name;
   }
 
-  @Override
   public String getName() {
     return name;
   }
 
-  @Override
   public void setName(String name) {
     this.name = name;
   }

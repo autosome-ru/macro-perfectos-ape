@@ -25,17 +25,17 @@ public class DiPWMImporter extends MotifImporter<DiPWM, DiBackgroundModel> {
 
   // constructs DiPWM from any source: pwm/pcm/ppm matrix
   @Override
-  public DiPWM createMotif(double matrix[][], String name) {
+  public DiPWM createMotif(double matrix[][]) {
     DiPWM dipwm;
     switch (dataModel) {
       case PCM:
-        dipwm = new DiPCM(matrix, name).to_pwm(background, pseudocountCalculator);
+        dipwm = new DiPCM(matrix).to_pwm(background, pseudocountCalculator);
         break;
       case PPM:
-        dipwm = new DiPPM(matrix, name).to_pwm(background, effectiveCount, pseudocountCalculator);
+        dipwm = new DiPPM(matrix).to_pwm(background, effectiveCount, pseudocountCalculator);
         break;
       case PWM:
-        dipwm = new DiPWM(matrix, name);
+        dipwm = new DiPWM(matrix);
         break;
       default:
         throw new Error("This code never reached");

@@ -7,9 +7,9 @@ import ru.autosome.ape.model.progression.Progression;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Discretable;
-import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PrecalculateThresholds<ModelType extends Named & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class PrecalculateThresholds<ModelType extends Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
   protected Discretizer discretizer;
   protected BackgroundType background;
   protected BoundaryType pvalue_boundary;
@@ -32,7 +32,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & Discretab
   protected double[] pvalues;
   protected boolean transpose;
 
-  protected List<ModelType> motifList;
+  protected List<Named<ModelType>> motifList;
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String s);
@@ -40,7 +40,7 @@ public abstract class PrecalculateThresholds<ModelType extends Named & Discretab
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
 
-  abstract protected ModelType loadMotif(File file);
+  abstract protected Named<ModelType> loadMotif(File file);
 
   protected void initialize_defaults() {
     initialize_default_background();
@@ -130,8 +130,8 @@ public abstract class PrecalculateThresholds<ModelType extends Named & Discretab
     return true;
   }
 
-  List<ModelType> loadMotifs(File[] files) {
-    List<ModelType> results = new ArrayList<ModelType>();
+  List<Named<ModelType>> loadMotifs(File[] files) {
+    List<Named<ModelType>> results = new ArrayList<>();
 
     for (File file : files) {
       results.add(loadMotif(file));
@@ -140,12 +140,12 @@ public abstract class PrecalculateThresholds<ModelType extends Named & Discretab
   }
 
   protected void calculate_thresholds_for_collection() throws HashOverflowException, IOException {
-    for (ModelType motif: motifList) {
+    for (Named<ModelType> motif: motifList) {
       if (!silenceLog) {
         System.err.println(motif.getName());
       }
       File result_filename = new File(results_dir, motif.getName() + ".thr");
-      PvalueBsearchList bsearchList = calculator().bsearch_list_for_pwm(motif);
+      PvalueBsearchList bsearchList = calculator().bsearch_list_for_pwm(motif.getObject());
       bsearchList.save_to_file(result_filename);
     }
   }

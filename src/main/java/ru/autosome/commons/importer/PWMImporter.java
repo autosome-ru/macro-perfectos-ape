@@ -25,17 +25,17 @@ public class PWMImporter extends MotifImporter<PWM, BackgroundModel> {
 
   // constructs PWM from any source: pwm/pcm/ppm matrix
   @Override
-  public PWM createMotif(double matrix[][], String name) {
+  public PWM createMotif(double matrix[][]) {
     PWM pwm;
     switch (dataModel) {
       case PCM:
-        pwm = new PCM(matrix, name).to_pwm(background, pseudocountCalculator);
+        pwm = new PCM(matrix).to_pwm(background, pseudocountCalculator);
         break;
       case PPM:
-        pwm = new PPM(matrix, name).to_pwm(background, effectiveCount, pseudocountCalculator);
+        pwm = new PPM(matrix).to_pwm(background, effectiveCount, pseudocountCalculator);
         break;
       case PWM:
-        pwm = new PWM(matrix, name);
+        pwm = new PWM(matrix);
         break;
       default:
         throw new Error("This code never reached");

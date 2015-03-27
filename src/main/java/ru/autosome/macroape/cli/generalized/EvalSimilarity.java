@@ -11,7 +11,6 @@ import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
-import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.CompareModels;
@@ -20,7 +19,7 @@ import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EvalSimilarity<ModelType extends Named & Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
+public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
                                      BackgroundType extends GeneralizedBackgroundModel> {
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
@@ -276,7 +275,7 @@ public abstract class EvalSimilarity<ModelType extends Named & Discretable<Model
       if (predefinedSecondThreshold != null) {
         cacheSecondThreshold = predefinedSecondThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer, maxHashSize);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer, maxHashSize);
         cacheSecondThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }

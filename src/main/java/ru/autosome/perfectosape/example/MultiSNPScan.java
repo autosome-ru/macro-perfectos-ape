@@ -10,6 +10,7 @@ import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.mono.PWM;
@@ -51,11 +52,11 @@ public class MultiSNPScan {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Collection of PWMs to test on sequences
-    List<PWM> pwmCollection = new ArrayList<PWM>();
+    List<Named<PWM>> pwmCollection = new ArrayList<>();
 
     // One way is to load PWMs from files
-    pwmCollection.add(new PWMImporter().loadMotif("test_data/pwm/KLF4_f2.pwm"));
-    pwmCollection.add(new PWMImporter().loadMotif("test_data/pwm/SP1_f1.pwm"));
+    pwmCollection.add(new PWMImporter().loadMotifWithName("test_data/pwm/KLF4_f2.pwm"));
+    pwmCollection.add(new PWMImporter().loadMotifWithName("test_data/pwm/SP1_f1.pwm"));
 
     // Another way is to create PWM by specifying (Nx4)-matrix and PWM name
     double[][] matrix_cAVNCT = { {1.0, 2.0, 1.0, 1.0},
@@ -64,7 +65,8 @@ public class MultiSNPScan {
                                 {0.0, 0.0, 0.0, 0.0},
                                 {-1.0, 10.5, -1.0, 0.0},
                                 {0.0, 0.0, 0.0, 2.0} };
-    PWM pwm_manual_constructed = new PWM(matrix_cAVNCT, "PWM for cAVNCt consensus sequence (name of PWM)");
+    Named<PWM> pwm_manual_constructed = new Named<>(new PWM(matrix_cAVNCT),
+                                                    "PWM for cAVNCt consensus sequence (name of PWM)");
 
     pwmCollection.add(pwm_manual_constructed);
 
@@ -75,8 +77,10 @@ public class MultiSNPScan {
                              {0.25, 0.25, 0.25, 0.25},
                              {0, 0.9, 0, 0.1},
                              {0.2, 0.2, 0.2, 0.4} };
-    PPM ppm = new PPM(ppm_matrix, "cAVNCt PPM (slightly different from another cAVNCt matrix)");
-    PWM pwm_from_ppm = ppm.to_pwm(background, ppm_effective_count, PseudocountCalculator.logPseudocount);
+    Named<PPM> ppm = new Named<>(new PPM(ppm_matrix),
+                                 "cAVNCt PPM (slightly different from another cAVNCt matrix)");
+    Named<PWM> pwm_from_ppm = new Named<>(ppm.getObject().to_pwm(background, ppm_effective_count, PseudocountCalculator.logPseudocount),
+                                          ppm.getName());
     pwmCollection.add(pwm_from_ppm);
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +90,7 @@ public class MultiSNPScan {
     // left and right part should be long enough to embed PWM (30 characters is enough for this implementation,
     // but may be in latter implementations we'll use more information so it's better to keep, say 50 nucleotides from each side where possible).
     // Another way is to construct object from string in this way:
-    List<SequenceWithSNP> snpCollection = new ArrayList<SequenceWithSNP>();
+    List<SequenceWithSNP> snpCollection = new ArrayList<>();
     snpCollection.add(SequenceWithSNP.fromString("AAGGTCAATACTCAACATCATAAAAACAGACAAAAGTATAAAACTTACAG[C/G]GTCTTACAAAAAGGATGATCCAGTAATATGCTGCTTACAAGAAACCCACC"));
     snpCollection.add(new SequenceWithSNP("AGGGAAACAAAAATTGTTCGGAAAGGAGAACTAAGATGTATGAATGTTTC",
                                           new char[]{'G','T'},
@@ -96,17 +100,19 @@ public class MultiSNPScan {
 
     // Threshold precalculation step (you can skip it, read commented block just below this one)
 
-    Map<PWM, CanFindPvalue> pwmCollectionWithPvalueCalculators = new HashMap<PWM, CanFindPvalue>();
+    Map<String, CanFindPvalue> pwmCollectionWithPvalueCalculators = new HashMap<>();
+    Map<String, PWM> pwmCollectionByName = new HashMap<>();
     PrecalculateThresholdList<PWM, BackgroundModel> listCalculator;
-    listCalculator = new PrecalculateThresholdList<PWM, BackgroundModel>(pvalues,
-                                                                         discretizer,
-                                                                         background,
-                                                                         pvalue_boundary,
-                                                                         max_hash_size);
+    listCalculator = new PrecalculateThresholdList<>(pvalues,
+                                                     discretizer,
+                                                     background,
+                                                     pvalue_boundary,
+                                                     max_hash_size);
 
-    for (PWM motif: pwmCollection) {
-      CanFindPvalue findPvalue = new FindPvalueBsearch(listCalculator.bsearch_list_for_pwm(motif));
-      pwmCollectionWithPvalueCalculators.put(motif, findPvalue);
+    for (Named<PWM> motif: pwmCollection) {
+      CanFindPvalue findPvalue = new FindPvalueBsearch(listCalculator.bsearch_list_for_pwm(motif.getObject()));
+      pwmCollectionWithPvalueCalculators.put(motif.getName(), findPvalue);
+      pwmCollectionByName.put(motif.getName(), motif.getObject());
     }
 
     // Result of this step (pwmCollectionWithPvalueCalculators) should be cached. You need to do it once for a collection of PWMs
@@ -136,9 +142,10 @@ public class MultiSNPScan {
 
     // Scanning the pack of SNPs for changes of affinity on each PWM in collection using precalculated threshold - P-value lists
 
-    Map<PWM, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos> > results;
+    Map<String, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos> > results;
     results = new HashMap<>();
-    for (PWM pwm: pwmCollectionWithPvalueCalculators.keySet()) {
+    for (String pwmName: pwmCollectionWithPvalueCalculators.keySet()) {
+      PWM pwm = pwmCollectionByName.get(pwmName);
       CanFindPvalue pvalueCalculator = pwmCollectionWithPvalueCalculators.get(pwm);
 
       Map<SequenceWithSNP,SingleSNPScan.RegionAffinityInfos> result_part;
@@ -153,19 +160,19 @@ public class MultiSNPScan {
         }
       }
 
-      results.put(pwm, result_part);
+      results.put(pwmName, result_part);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     // output results
-    for (PWM pwm: results.keySet()) {
-      for (SequenceWithSNP seq: results.get(pwm).keySet()) {
+    for (String pwmName: results.keySet()) {
+      for (SequenceWithSNP seq: results.get(pwmName).keySet()) {
         // RegionAffinityInfos is a special object carrying information about each allele form (in public variables RegionAffinityVariantInfo: info_1, info_2)
         // RegionAffinityVariantInfo carries type of allele, binding position and word under PWM, and Pvalue of binding of PWM to this site
         // (take a look at calculation.SingleSNPScan.RegionAffinityInfos, calculation.SingleSNPScan.RegionAffinityVariantInfo)
-        SingleSNPScan.RegionAffinityInfos affinityInfos = results.get(pwm).get(seq);
-        System.out.println(pwm.name + " " + seq.toString() + " " + affinityInfos.toString());
+        SingleSNPScan.RegionAffinityInfos affinityInfos = results.get(pwmName).get(seq);
+        System.out.println(pwmName + " " + seq.toString() + " " + affinityInfos.toString());
       }
     }
 

@@ -5,8 +5,8 @@ import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 
 public class DiPCM extends DiPM implements PositionCountModel {
-  public DiPCM(double[][] matrix, String name) throws IllegalArgumentException {
-    super(matrix, name);
+  public DiPCM(double[][] matrix) throws IllegalArgumentException {
+    super(matrix);
   }
 
   public double count() {

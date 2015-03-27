@@ -9,6 +9,7 @@ import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.mono.PWM;
 
@@ -84,19 +85,20 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   }
 
   @Override
-  protected List<DiPWM> loadMotifCollection() {
+  protected List<Named<DiPWM>> loadMotifCollection() {
     if (collectionFromMononucleotide) {
       BackgroundModel collectionBackgroundMononucleotide = Background.fromDiBackground(collectionBackground);
       PWMImporter importer = new PWMImporter(collectionBackgroundMononucleotide, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
-      List<PWM> monoCollection = importer.loadMotifCollection(pathToCollectionOfPWMs);
-      List<DiPWM> diCollection = new ArrayList<DiPWM>(monoCollection.size());
-      for(PWM monoPWM: monoCollection) {
-        diCollection.add(DiPWM.fromPWM(monoPWM));
+      List<Named<PWM>> monoCollection = importer.loadMotifCollectionWithNames(pathToCollectionOfPWMs);
+      List<Named<DiPWM>> diCollection = new ArrayList<>(monoCollection.size());
+      for(Named<PWM> namedMonoPWM: monoCollection) {
+        diCollection.add(new Named<>(DiPWM.fromPWM(namedMonoPWM.getObject()),
+                                    namedMonoPWM.getName()) );
       }
       return diCollection;
     } else {
       DiPWMImporter importer = new DiPWMImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
-      return importer.loadMotifCollection(pathToCollectionOfPWMs);
+      return importer.loadMotifCollectionWithNames(pathToCollectionOfPWMs);
     }
   }
 

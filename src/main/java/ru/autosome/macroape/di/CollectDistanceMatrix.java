@@ -8,6 +8,7 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.calculation.di.CompareModelsCountsGiven;
@@ -44,19 +45,20 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   boolean fromMononucleotide;
 
   @Override
-  protected List<DiPWM> loadMotifCollection(File path_to_collection) {
+  protected List<Named<DiPWM>> loadMotifCollection(File path_to_collection) {
     if (fromMononucleotide) {
       BackgroundModel backgroundMononucleotide = Background.fromDiBackground(background);
       PWMImporter importer = new PWMImporter(backgroundMononucleotide, dataModel, effectiveCount, transpose, pseudocount);
-      List<PWM> monoCollection = importer.loadMotifCollection(path_to_collection);
-      pwmCollection = new ArrayList<DiPWM>(monoCollection.size());
-      for(PWM monoPWM: monoCollection) {
-        pwmCollection.add(DiPWM.fromPWM(monoPWM));
+      List<Named<PWM>> monoCollection = importer.loadMotifCollectionWithNames(path_to_collection);
+      pwmCollection = new ArrayList<>(monoCollection.size());
+      for(Named<PWM> monoPWM: monoCollection) {
+        pwmCollection.add(new Named<>(DiPWM.fromPWM(monoPWM.getObject()),
+                                      monoPWM.getName()) );
       }
       return pwmCollection;
     } else {
       DiPWMImporter importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
-      return importer.loadMotifCollection(path_to_collection);
+      return importer.loadMotifCollectionWithNames(path_to_collection);
     }
   }
 
@@ -88,7 +90,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
 
   private static CollectDistanceMatrix from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }

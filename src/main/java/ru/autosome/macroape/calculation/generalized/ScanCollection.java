@@ -10,14 +10,13 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
-import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.macroape.model.PairAligned;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ScanCollection <ModelType extends Alignable<ModelType> & Named & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class ScanCollection <ModelType extends Alignable<ModelType> & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
 
   protected final List<ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator> thresholdEvaluators;
 
@@ -44,10 +43,10 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
 
   public List<SimilarityInfo> similarityInfos() throws HashOverflowException {
     List<SimilarityInfo> result;
-    result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
+    result = new ArrayList<>(thresholdEvaluators.size());
 
-    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, roughDiscretizer, maxHashSize);
-    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, preciseDiscretizer, maxHashSize);
+    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<>(queryPWM, queryBackground, roughDiscretizer, maxHashSize);
+    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<>(queryPWM, queryBackground, preciseDiscretizer, maxHashSize);
 
     double roughQueryThreshold = queryThreshold(roughDiscretizer);
     double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
@@ -96,7 +95,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
     if (queryPredefinedThreshold != null) {
       return queryPredefinedThreshold;
     } else {
-      CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(queryPWM, queryBackground, discretizer, maxHashSize);
+      CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(queryPWM, queryBackground, discretizer, maxHashSize);
       return pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
     }
   }
@@ -119,9 +118,6 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & N
             similarityInfo.recognizedBySecond);
       this.collectionPWM = collectionPWM;
       this.precise = precise;
-    }
-    public String name() {
-      return collectionPWM.getName();
     }
   }
 }

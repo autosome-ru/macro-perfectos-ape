@@ -7,6 +7,7 @@ import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.types.DataModel;
@@ -57,13 +58,13 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   protected double effective_count;
   protected PseudocountCalculator pseudocount;
   protected BackgroundType background;
-  protected ModelType motif;
+  protected Named<ModelType> motif;
   protected File thresholds_folder;
   protected CanFindThreshold cache_calculator;
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
-  protected abstract ModelType loadMotif(String filename);
+  protected abstract Named<ModelType> loadMotif(String filename);
   protected abstract CanFindThreshold calculator();
 
   protected void initialize_defaults() {
@@ -161,7 +162,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
       infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords", new OutputInformation.Callback<CanFindThreshold.ThresholdInfo>() {
         @Override
         public Object run(CanFindThreshold.ThresholdInfo cell) {
-          double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.length());
+          double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.getObject().length());
           return (long)numberOfRecognizedWords;
         }
       });

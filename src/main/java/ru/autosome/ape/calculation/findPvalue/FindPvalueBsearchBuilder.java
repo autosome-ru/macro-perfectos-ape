@@ -1,7 +1,6 @@
 package ru.autosome.ape.calculation.findPvalue;
 
 import ru.autosome.ape.model.PvalueBsearchList;
-import ru.autosome.commons.motifModel.Named;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,9 +12,9 @@ public class FindPvalueBsearchBuilder {
     this.pathToThresholds = pathToThresholds;
   }
 
-  public CanFindPvalue pvalueCalculator(Named motif) {
+  public CanFindPvalue pvalueCalculator(String motifName) {
     try {
-      File thresholds_file = new File(pathToThresholds, motif.getName() + ".thr");
+      File thresholds_file = new File(pathToThresholds, motifName + ".thr");
       PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
       return new FindPvalueBsearch(pvalueBsearchList);
     } catch (FileNotFoundException e) {

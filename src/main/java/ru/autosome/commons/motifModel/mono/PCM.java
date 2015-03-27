@@ -5,8 +5,8 @@ import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 
 public class PCM extends PM implements PositionCountModel {
-  public PCM(double[][] matrix, String name) throws IllegalArgumentException {
-    super(matrix, name);
+  public PCM(double[][] matrix) throws IllegalArgumentException {
+    super(matrix);
   }
 
   public double count() {

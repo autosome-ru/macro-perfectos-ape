@@ -6,6 +6,7 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.io.File;
@@ -29,9 +30,9 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
   }
 
   @Override
-  protected PWM loadMotif(File file){
+  protected Named<PWM> loadMotif(File file){
     PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose, pseudocount);
-    return importer.loadMotif(file);
+    return importer.loadMotifWithName(file);
   }
 
   @Override
@@ -56,7 +57,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
   }
 
   protected static ru.autosome.ape.PrecalculateThresholds from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }

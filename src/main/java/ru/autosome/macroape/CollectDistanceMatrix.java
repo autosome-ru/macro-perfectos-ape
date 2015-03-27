@@ -5,6 +5,7 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven;
 
@@ -45,15 +46,15 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
 
   private static CollectDistanceMatrix from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }
 
   @Override
-  protected List<PWM> loadMotifCollection(File path_to_collection) {
+  protected List<Named<PWM>> loadMotifCollection(File path_to_collection) {
     PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
-    return importer.loadMotifCollection(path_to_collection);
+    return importer.loadMotifCollectionWithNames(path_to_collection);
   }
 
   @Override

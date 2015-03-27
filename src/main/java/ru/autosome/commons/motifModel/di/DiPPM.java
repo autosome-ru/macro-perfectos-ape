@@ -6,8 +6,8 @@ import ru.autosome.commons.motifModel.mono.PPM;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 
 public class DiPPM extends DiPM implements PositionFrequencyModel {
-  public DiPPM(double[][] matrix, String name) throws IllegalArgumentException {
-    super(matrix, name);
+  public DiPPM(double[][] matrix) throws IllegalArgumentException {
+    super(matrix);
     for (double[] pos : matrix) {
       double sum = 0;
       for (int letter = 0; letter < PPM.ALPHABET_SIZE; ++letter) {

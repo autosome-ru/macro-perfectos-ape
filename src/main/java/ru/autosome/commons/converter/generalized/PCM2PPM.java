@@ -1,20 +1,20 @@
 package ru.autosome.commons.converter.generalized;
 
-import ru.autosome.commons.motifModel.Named;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 
-public abstract class PCM2PPM<ModelTypeFrom extends PositionCountModel & Named,
-                              ModelTypeTo extends PositionFrequencyModel & Named>
+public abstract class PCM2PPM<ModelTypeFrom extends PositionCountModel,
+                              ModelTypeTo extends PositionFrequencyModel>
                               implements MotifConverter<ModelTypeFrom, ModelTypeTo> {
 
-  protected abstract ModelTypeTo createMotif(double[][] matrix, String name);
+  protected abstract ModelTypeTo createMotif(double[][] matrix);
 
   public PCM2PPM() { }
 
-  public ru.autosome.commons.model.Named<ModelTypeTo> convert(ru.autosome.commons.model.Named<ModelTypeFrom> namedModel) {
-    return new ru.autosome.commons.model.Named<>(convert(namedModel.getObject()),
-                                                 namedModel.getName());
+  public Named<ModelTypeTo> convert(Named<ModelTypeFrom> namedModel) {
+    return new Named<>(convert(namedModel.getObject()),
+                       namedModel.getName());
   }
 
   public ModelTypeTo convert(ModelTypeFrom pcm) {
@@ -22,7 +22,7 @@ public abstract class PCM2PPM<ModelTypeFrom extends PositionCountModel & Named,
     for (int pos = 0; pos < pcm.getMatrix().length; ++pos) {
       new_matrix[pos] = convert_position(pcm.getMatrix()[pos]);
     }
-    return createMotif(new_matrix, pcm.getName());
+    return createMotif(new_matrix);
   }
 
   // columns can have different counts for some PCMs

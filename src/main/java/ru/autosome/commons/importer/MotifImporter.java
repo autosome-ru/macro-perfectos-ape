@@ -1,5 +1,6 @@
 package ru.autosome.commons.importer;
 
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.types.DataModel;
 
@@ -21,15 +22,26 @@ public abstract class MotifImporter<ModelType, BackgroundType> {
     this.pseudocountCalculator = pseudocountCalculator;
   }
 
-  abstract public ModelType createMotif(double matrix[][], String name);
+  abstract public ModelType createMotif(double matrix[][]);
   abstract public ParsingResult parse(List<String> strings);
 
   public ModelType loadMotif(List<String> lines){
+    return loadMotifWithName(lines).getObject();
+  }
+  public ModelType loadMotif(File file) {
+    return loadMotifWithName(file).getObject();
+  }
+  public Named<ModelType> loadMotifWithName(List<String> lines){
     ParsingResult parsingInfo = parse(lines);
-    return createMotif(parsingInfo.getMatrix(), parsingInfo.getName());
+    return new Named<>(createMotif(parsingInfo.getMatrix()),
+                       parsingInfo.getName());
+  }
+  public ModelType loadMotif(String filename) {
+    return loadMotifWithName(filename).getObject();
   }
 
-  public ModelType loadMotif(File file) {
+
+  public Named<ModelType> loadMotifWithName(File file) {
     List<String> lines;
     try {
       lines = InputExtensions.readLinesFromFile(file);
@@ -43,29 +55,37 @@ public abstract class MotifImporter<ModelType, BackgroundType> {
     } else {
       name = parsingInfo.getName();
     }
-    return createMotif(parsingInfo.getMatrix(), name);
+    return new Named<>(createMotif(parsingInfo.getMatrix()), name);
   }
-
-  public ModelType loadMotif(String filename) {
-    return loadMotif(new File(filename));
+  public Named<ModelType> loadMotifWithName(String filename) {
+    return loadMotifWithName(new File(filename));
   }
 
   public List<ModelType> loadMotifCollection(File pathToMotifs) {
+    List<Named<ModelType>> namedMotifs = loadMotifCollectionWithNames(pathToMotifs);
+    List<ModelType> result = new ArrayList<>(namedMotifs.size());
+    for (Named<ModelType> namedModel: namedMotifs) {
+      result.add(namedModel.getObject());
+    }
+    return result;
+  }
+
+  public List<Named<ModelType>> loadMotifCollectionWithNames(File pathToMotifs) {
     if (pathToMotifs.isDirectory()) {
-      return loadMotifCollectionFromFolder(pathToMotifs);
+      return loadMotifCollectionWithNamesFromFolder(pathToMotifs);
     } else {
-      return loadMotifCollectionFromFile(pathToMotifs);
+      return loadMotifCollectionWithNamesFromFile(pathToMotifs);
     }
   }
 
-  public List<ModelType> loadMotifCollectionFromFolder(File pathToPWMs) {
-    List<ModelType> result = new ArrayList<ModelType>();
+  public List<Named<ModelType>> loadMotifCollectionWithNamesFromFolder(File pathToPWMs) {
+    List<Named<ModelType>> result = new ArrayList<>();
     File[] files = pathToPWMs.listFiles();
     if (files == null) {
       return result;
     }
     for (File file : files) {
-      ModelType motif = loadMotif(file);
+      Named<ModelType> motif = loadMotifWithName(file);
       if (motif != null) {
         result.add(motif);
       }
@@ -74,9 +94,9 @@ public abstract class MotifImporter<ModelType, BackgroundType> {
   }
 
 
-  public List<ModelType> loadMotifCollectionFromFile(File pathToPWMs) {
+  public List<Named<ModelType>> loadMotifCollectionWithNamesFromFile(File pathToPWMs) {
     // TODO: fix!!!!!
     // TODO: make use of MotifSplitter
-    return new ArrayList<ModelType>();
+    return new ArrayList<>();
   }
 }

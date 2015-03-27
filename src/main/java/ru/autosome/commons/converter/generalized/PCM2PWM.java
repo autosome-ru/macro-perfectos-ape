@@ -1,14 +1,14 @@
 package ru.autosome.commons.converter.generalized;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
-import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.types.PositionCountModel;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
 
 // TODO: extract interface for converter
-public abstract class PCM2PWM<ModelTypeFrom extends PositionCountModel & Named,
-                              ModelTypeTo extends PositionWeightModel & Named,
+public abstract class PCM2PWM<ModelTypeFrom extends PositionCountModel,
+                              ModelTypeTo extends PositionWeightModel,
                               BackgroundType extends GeneralizedBackgroundModel>
                               implements MotifConverter<ModelTypeFrom, ModelTypeTo> {
 
@@ -17,7 +17,7 @@ public abstract class PCM2PWM<ModelTypeFrom extends PositionCountModel & Named,
   public final GeneralizedBackgroundModel background;
 
   protected abstract BackgroundType defaultBackground();
-  protected abstract ModelTypeTo createMotif(double[][] matrix, String name);
+  protected abstract ModelTypeTo createMotif(double[][] matrix);
 
   public PCM2PWM(BackgroundType background, PseudocountCalculator pseudocountCalculator) {
     this.background = background;
@@ -29,16 +29,16 @@ public abstract class PCM2PWM<ModelTypeFrom extends PositionCountModel & Named,
     this.pseudocountCalculator = PseudocountCalculator.logPseudocount; // to be calculated automatically as logarithm of count
   }
 
-  public ru.autosome.commons.model.Named<ModelTypeTo> convert(ru.autosome.commons.model.Named<ModelTypeFrom> namedModel) {
-    return new ru.autosome.commons.model.Named<>(convert(namedModel.getObject()),
-                                                 namedModel.getName());
+  public Named<ModelTypeTo> convert(Named<ModelTypeFrom> namedModel) {
+    return new Named<>(convert(namedModel.getObject()),
+                       namedModel.getName());
   }
   public ModelTypeTo convert(ModelTypeFrom pcm) {
     double new_matrix[][] = new double[pcm.getMatrix().length][];
     for (int pos = 0; pos < pcm.getMatrix().length; ++pos) {
       new_matrix[pos] = convert_position(pcm.getMatrix()[pos]);
     }
-    return createMotif(new_matrix, pcm.getName());
+    return createMotif(new_matrix);
   }
 
   // columns can have different counts for some PCMs

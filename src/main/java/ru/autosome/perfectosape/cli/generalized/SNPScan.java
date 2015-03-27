@@ -7,13 +7,13 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.*;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.*;
-import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.perfectosape.calculation.SingleSNPScan;
+import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +23,7 @@ import java.util.List;
 
 abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLength,
                               SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
-                              MotifType extends Named & HasLength & Discretable<MotifType> & ScoreDistribution<BackgroundType> & BackgroundAppliable<BackgroundType, ModelType>,
+                              MotifType extends HasLength & Discretable<MotifType> & ScoreDistribution<BackgroundType> & BackgroundAppliable<BackgroundType, ModelType>,
                               ModelType extends ScoringModel<SequenceType> & Encodable<SequenceType, SequenceWithSNVType>,
                               BackgroundType extends GeneralizedBackgroundModel> {
   public static class ThresholdEvaluator<SequenceType,
@@ -42,20 +42,20 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String s);
-  protected abstract List<MotifType> load_collection_of_pwms();
+  protected abstract List<Named<MotifType>> load_collection_of_pwms();
 
   protected void load_collection_of_pwms_with_evaluators() {
-    List<MotifType> motifList = load_collection_of_pwms();
+    List<Named<MotifType>> motifList = load_collection_of_pwms();
 
     pwmCollection = new ArrayList<>();
-    for (MotifType motif: motifList) {
+    for (Named<MotifType> motif: motifList) {
       CanFindPvalue pvalueCalculator;
       if (thresholds_folder == null) {
-        pvalueCalculator = new FindPvalueAPE<>(motif, background, discretizer, max_hash_size);
+        pvalueCalculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer, max_hash_size);
       } else {
-        pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif);
+        pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif.getName());
       }
-      pwmCollection.add(new ThresholdEvaluator<>(motif.onBackground(background), pvalueCalculator, motif.getName()));
+      pwmCollection.add(new ThresholdEvaluator<>(motif.getObject().onBackground(background), pvalueCalculator, motif.getName()));
     }
   }
 
@@ -100,7 +100,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected PseudocountCalculator pseudocount;
   protected File thresholds_folder;
 
-  List<ru.autosome.commons.model.Named<SequenceWithSNP>> snp_list;
+  List<Named<SequenceWithSNP>> snp_list;
   protected List<ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType>> pwmCollection;
 
   protected double max_pvalue_cutoff;
@@ -214,7 +214,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       for (String snp_input : snps) {
         String snp_name = first_part_of_string(snp_input);
         SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
-        snp_list.add( new ru.autosome.commons.model.Named<>(seq_w_snp, snp_name) );
+        snp_list.add( new Named<>(seq_w_snp, snp_name) );
       }
 
     } catch (Exception e) {
@@ -257,7 +257,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
   public void process() throws HashOverflowException {
     System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
-    for (ru.autosome.commons.model.Named<SequenceWithSNP> sequenceWithSNV: snp_list) {
+    for (Named<SequenceWithSNP> sequenceWithSNV: snp_list) {
       process_snp(sequenceWithSNV.getName(),
                   sequenceWithSNV.getObject(),
                   encodeSequenceWithSNV(sequenceWithSNV.getObject()) );

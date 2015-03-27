@@ -5,8 +5,8 @@ import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.types.PositionFrequencyModel;
 
 public class PPM extends PM implements PositionFrequencyModel {
-  public PPM(double[][] matrix, String name) throws IllegalArgumentException {
-    super(matrix, name);
+  public PPM(double[][] matrix) throws IllegalArgumentException {
+    super(matrix);
     for (double[] pos : matrix) {
       double sum = 0;
       for (int letter = 0; letter < PPM.ALPHABET_SIZE; ++letter) {

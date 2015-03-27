@@ -12,10 +12,10 @@ import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
-import ru.autosome.commons.motifModel.Named;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 
@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class ScanCollection<ModelType extends Named & Discretable<ModelType> & ScoreDistribution<BackgroundType> &Alignable<ModelType>,
+public abstract class ScanCollection<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> &Alignable<ModelType>,
                                      BackgroundType extends GeneralizedBackgroundModel> {
 
   public class ThresholdEvaluator {
@@ -296,21 +296,22 @@ public abstract class ScanCollection<ModelType extends Named & Discretable<Model
 
   // TODO: Refactor usage of one-stage and two-stage search
   protected List<ThresholdEvaluator> load_collection_of_pwms() {
-    List<ModelType> pwmList = loadMotifCollection();
+    List<Named<ModelType>> pwmList = loadMotifCollection();
     List<ThresholdEvaluator> result;
-    result = new ArrayList<ThresholdEvaluator>();
-    for (ModelType pwm: pwmList) {
+    result = new ArrayList<>();
+    for (Named<ModelType> namedModel: pwmList) {
+      ModelType pwm = namedModel.getObject();
       if (thresholds_folder == null) {
         result.add(new ThresholdEvaluator( pwm,
-                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
-                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize),
-                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
-                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize)));
+                                           new FindThresholdAPE<>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
+                                           new FindThresholdAPE<>(pwm, collectionBackground, preciseDiscretizer, maxHashSize),
+                                           new FindPvalueAPE<>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
+                                           new FindPvalueAPE<>(pwm, collectionBackground, preciseDiscretizer, maxHashSize)));
       } else {
         result.add(new ThresholdEvaluator( pwm,
-                                           new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(pwm),
+                                           new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(namedModel.getName()),
                                            null,
-                                           new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(pwm),
+                                           new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(namedModel.getName()),
                                            null));
       }
     }
@@ -329,6 +330,6 @@ public abstract class ScanCollection<ModelType extends Named & Discretable<Model
   }
 
   protected abstract ru.autosome.macroape.calculation.generalized.ScanCollection<ModelType,BackgroundType> calculator();
-  protected abstract List<ModelType> loadMotifCollection();
+  protected abstract List<Named<ModelType>> loadMotifCollection();
   protected abstract ModelType loadQueryMotif();
 }
