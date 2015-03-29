@@ -154,7 +154,7 @@ public class MultiSNPScan {
         if (sequenceWithSNP.length() >= pwm.length()) {
           PWMOnBackground scoringModel = pwm.onBackground(new WordwiseBackground());
           result_part.put(sequenceWithSNP,
-                          new SingleSNPScan<>(scoringModel, sequenceWithSNP, pvalueCalculator).affinityInfos());
+                          new SingleSNPScan<>(scoringModel, sequenceWithSNP, pvalueCalculator, 0).affinityInfos());
         } else {
           System.err.println("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
         }

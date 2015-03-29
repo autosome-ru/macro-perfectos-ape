@@ -78,6 +78,8 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
     "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
+    "  [--expand-region <length>] - expand region used to find sites by length positions at each side,\n" +
+    "                               so that site needn't overlap substitution.\n" +
      DOC_additional_options() +
     "\n" +
     "Examples:\n" +
@@ -91,6 +93,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
   protected Discretizer discretizer;
   protected Integer max_hash_size;
+  protected int expand_region_length;
 
   protected File path_to_collection_of_pwms;
   protected File path_to_file_w_snps;
@@ -142,6 +145,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     initialize_default_background();
     discretizer = new Discretizer(100.0);
     max_hash_size = 10000000;
+    expand_region_length = 0;
 
     dataModel = DataModel.PWM;
     effectiveCount = 100;
@@ -194,6 +198,8 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       }
     } else if(opt.equals("--transpose")) {
       transpose = true;
+    } else if (opt.equals("--expand-region")) {
+      expand_region_length = Integer.valueOf(argv.remove(0));
     } else {
       if (failed_to_recognize_additional_options(opt, argv)) {
         throw new IllegalArgumentException("Unknown option '" + opt + "'");
@@ -245,7 +251,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
       if (seq_w_snp.length() >= pwm.length()) {
         SingleSNPScan.RegionAffinityInfos affinityInfos;
-        affinityInfos = new SingleSNPScan<>(pwm, seq_w_snp, encodedSequenceWithSNP, motifEvaluator.pvalueCalculator).affinityInfos();
+        affinityInfos = new SingleSNPScan<>(pwm, seq_w_snp, encodedSequenceWithSNP, motifEvaluator.pvalueCalculator, expand_region_length).affinityInfos();
         if (affinityChangeSignificant(affinityInfos)) {
           System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + affinityInfos.toString());
         }

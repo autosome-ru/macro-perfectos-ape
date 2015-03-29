@@ -54,7 +54,7 @@ public class DiPWMOnBackground implements ScoringModel<SequenceDiEncoded>, Encod
 
   @Override
   public int length() {
-    return dipwm.length();
+    return dipwm.length(); // It is model length, not matrix length
   }
 
   public double score(SequenceDiEncoded word) {

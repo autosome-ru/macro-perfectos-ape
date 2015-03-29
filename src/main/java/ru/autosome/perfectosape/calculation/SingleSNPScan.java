@@ -18,8 +18,9 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
   final SequenceWithSNP sequenceWithSNP;
   final SequenceWithSNVType encodedSequenceWithSNP;
   final CanFindPvalue pvalueCalculator;
+  final int expandRegionLength;
 
-  public SingleSNPScan(ModelType pwm, SequenceWithSNP sequenceWithSNP, SequenceWithSNVType encodedSequenceWithSNP, CanFindPvalue pvalueCalculator) {
+  public SingleSNPScan(ModelType pwm, SequenceWithSNP sequenceWithSNP, SequenceWithSNVType encodedSequenceWithSNP, CanFindPvalue pvalueCalculator, int expandRegionLength) {
     if (sequenceWithSNP.length() < pwm.length()) {
       throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
     }
@@ -27,13 +28,14 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
     this.sequenceWithSNP = sequenceWithSNP;
     this.encodedSequenceWithSNP = encodedSequenceWithSNP; // Another representation of the same sequence with SNP (not checked they are in accordance due to performance reasons
     this.pvalueCalculator = pvalueCalculator;
+    this.expandRegionLength = expandRegionLength;
     if (sequenceWithSNP.num_cases() != 2) {
       throw new IllegalArgumentException("Unable to process more than two variants of nucleotide for SNP " + sequenceWithSNP);
     }
   }
 
   // More slow constructor than the full one: it encodes sequence in a constructor
-  public SingleSNPScan(ModelType pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator) {
+  public SingleSNPScan(ModelType pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator, int expandRegionLength) {
     if (sequenceWithSNP.length() < pwm.length()) {
       throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
     }
@@ -41,6 +43,7 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
     this.sequenceWithSNP = sequenceWithSNP;
     this.encodedSequenceWithSNP = pwm.encodeSequenceWithSNP(sequenceWithSNP); // Another representation of the same sequence with SNP (not checked they are in accordance due to performance reasons
     this.pvalueCalculator = pvalueCalculator;
+    this.expandRegionLength = expandRegionLength;
     if (sequenceWithSNP.num_cases() != 2) {
       throw new IllegalArgumentException("Unable to process more than two variants of nucleotide for SNP " + sequenceWithSNP);
     }
@@ -108,7 +111,7 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
   }
 
   PositionInterval positionsToCheck() {
-    return sequenceWithSNP.positionsOverlappingSNV(pwm.length());
+    return sequenceWithSNP.positionsOverlappingSNV(pwm.length()).expand(expandRegionLength);
   }
 
   public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) throws HashOverflowException {

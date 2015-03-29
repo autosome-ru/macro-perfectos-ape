@@ -19,7 +19,7 @@ public class PositionInterval {
   public <SequenceType extends HasLength> ScanSequence.BestPositionWithScore findBestPosition(SequenceType sequence, ScoringModel<SequenceType> scoringModel) {
     ScanSequence.BestPositionWithScore bestPos = new ScanSequence.BestPositionWithScore();
 
-    for (int pos = left; pos <= right; ++pos) {
+    for (int pos = Math.max(left, 0); pos <= Math.min(right, sequence.length() - scoringModel.length()); ++pos) {
       bestPos.updateBestScore(pos, Orientation.direct, scoringModel.score(sequence, Orientation.direct, pos));
       bestPos.updateBestScore(pos, Orientation.revcomp, scoringModel.score(sequence, Orientation.revcomp, pos));
     }
@@ -28,7 +28,11 @@ public class PositionInterval {
 
   @Override
   public String toString() {
-    return new StringBuilder("[").append(left).append(";").append(right).append("]").toString();
+    return "[" + left + ";" + right + "]";
+  }
+
+  public PositionInterval expand(int expandRegionLength) {
+    return new PositionInterval(left - expandRegionLength, right + expandRegionLength);
   }
 
 }
