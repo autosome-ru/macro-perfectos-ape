@@ -115,18 +115,18 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
   }
 
   public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) throws HashOverflowException {
-    Sequence sequence = sequenceWithSNP.sequence_variants()[allele_number];
-    Character allele = sequenceWithSNP.mid[allele_number];
     EstimateAffinityMinPvalue affinity_calculator;
     affinity_calculator = new EstimateAffinityMinPvalue<>(pwm,
                                                           encodedSequenceWithSNP.sequenceVariant(allele_number),
                                                           pvalueCalculator,
                                                           positionsToCheck());
     Position pos = affinity_calculator.bestPosition();
-    double pvalue = affinity_calculator.affinity();
-    Sequence word = sequence.substring(pos, pwm.length());
+    Position pos_centered = new Position(pos.position() - sequenceWithSNP.left.length(), pos.orientation());
 
-    Position pos_centered = new Position(pos.position - sequenceWithSNP.left.length(), pos.directStrand);
+    double pvalue = affinity_calculator.affinity();
+    Character allele = sequenceWithSNP.mid[allele_number];
+    Sequence sequence = sequenceWithSNP.sequence_variants()[allele_number];
+    Sequence word = sequence.substring(pos, pwm.length());
     return new RegionAffinityVariantInfo(pos_centered, allele, pvalue, word);
   }
 

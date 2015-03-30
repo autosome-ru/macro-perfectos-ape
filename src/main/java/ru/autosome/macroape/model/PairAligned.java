@@ -1,12 +1,13 @@
 package ru.autosome.macroape.model;
 
+import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 
 public class PairAligned<ModelType extends Alignable<ModelType>> {
   public final ModelType firstModelAligned;
   public final ModelType secondModelAligned;
-  public final Position relative_position;
+  protected final Position relative_position;
 
   private final int first_length;
   private final int second_length;
@@ -33,11 +34,13 @@ public class PairAligned<ModelType extends Alignable<ModelType>> {
   }
 
   public int shift() {
-    return relative_position.position;
+    return relative_position.position();
   }
-  public String orientation() {
-    return relative_position.strand();
+
+  public Orientation orientation() {
+    return relative_position.orientation();
   }
+
   public int length() {
     if (shift() > 0) {
       return Math.max(first_length, second_length + shift());
@@ -47,11 +50,11 @@ public class PairAligned<ModelType extends Alignable<ModelType>> {
   }
 
   public boolean isDirect() {
-    return relative_position.directStrand;
+    return relative_position.isDirect();
   }
 
   public boolean isReverseComplement() {
-    return !relative_position.directStrand;
+    return relative_position.isReverseComplement();
   }
 
   private boolean isFirstOverlapsPosition(int position) {

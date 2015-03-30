@@ -4,6 +4,7 @@ import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
@@ -38,8 +39,8 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
   private List<Position> relative_alignments() {
     List<Position> result = new ArrayList<Position>();
     for(int shift = -secondPWM.length(); shift <= firstPWM.length(); ++shift) {
-      result.add(new Position(shift, true));
-      result.add(new Position(shift, false));
+      result.add(new Position(shift, Orientation.direct));
+      result.add(new Position(shift, Orientation.revcomp));
     }
     return result;
   }
@@ -110,7 +111,7 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
       return alignment.shift();
     }
 
-    public String orientation() {
+    public Orientation orientation() {
       return alignment.orientation();
     }
 

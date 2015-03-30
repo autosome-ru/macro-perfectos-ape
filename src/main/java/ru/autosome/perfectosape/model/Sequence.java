@@ -76,8 +76,8 @@ public class Sequence {
 
   // returns subsequence of given length on according strand, starting from given left boundary (on positive strand)
   public Sequence substring(Position left_boundary, int substring_length) {
-    Sequence unorientedWord = substring(left_boundary.position, Math.min(left_boundary.position + substring_length, length()));
-    if (left_boundary.directStrand) {
+    Sequence unorientedWord = substring(left_boundary.position(), Math.min(left_boundary.position() + substring_length, length()));
+    if (left_boundary.isDirect()) {
       return unorientedWord;
     } else {
       return unorientedWord.reverseComplement();
