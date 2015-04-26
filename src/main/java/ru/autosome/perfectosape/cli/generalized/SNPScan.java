@@ -69,7 +69,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     "  [--pvalue-cutoff <maximal pvalue to be considered>] or [-P] - drop results having both allele-variant pvalues greater than given\n" +
     "                                                       (default: 0.0005)\n" +
     "  [--fold-change-cutoff <minimal fold change to be considered>] or [-F] - drop results having fold change (both 1st pvalue to 2nd, 2nd to 1st)\n" +
-    "                                                                 less than given (default: 5)\n" +
+    "                                                                 less than given (default: 4 in linear scale or 2 in log-scale)\n" +
     "        In order to get all fold changes - set both pvalue-cutoff and fold-change-cutoff to 1.0.\n" +
     "  [--discretization <discretization level>] or [-d]\n" +
     "  [--pcm] - treat the input file as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
@@ -80,6 +80,8 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
     "  [--expand-region <length>] - expand region used to find sites by length positions at each side,\n" +
     "                               so that site needn't overlap substitution.\n" +
+    "  [--short-format] - use more compact output format.\n" +
+    "  [--log-fold-change] - use logarithmic (log 2) fold changes (both in output and in cutoff setup).\n" +
      DOC_additional_options() +
     "\n" +
     "Examples:\n" +
@@ -107,23 +109,13 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected List<ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType>> pwmCollection;
 
   protected double max_pvalue_cutoff;
-  protected double min_fold_change_cutoff;
+  protected Double min_fold_change_cutoff; // It can be either linear of logarithmic cutoff (to be refactored later)
 
   protected BackgroundType background;
   protected boolean transpose;
 
-  // Split by spaces and return last part
-  // Input: "rs9929218 [Homo sapiens] GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
-  // Output: "GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
-  protected static String last_part_of_string(String s) {
-    String[] string_parts = s.trim().replaceAll("\\s+", " ").split(" ");
-    return string_parts[string_parts.length - 1];
-  }
-
-  // Output: "rs9929218"
-  protected static String first_part_of_string(String s) {
-    return s.replaceAll("\\s+", " ").split(" ")[0];
-  }
+  protected boolean shortFormat;
+  protected boolean useLogFoldChange;
 
   void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
     try {
@@ -152,8 +144,10 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     pseudocount = PseudocountCalculator.logPseudocount;
     thresholds_folder = null;
     max_pvalue_cutoff = 0.0005;
-    min_fold_change_cutoff = 5.0;
+    min_fold_change_cutoff = null;
     transpose = false;
+    shortFormat = false;
+    useLogFoldChange = false;
   }
 
   protected SNPScan() {
@@ -167,6 +161,23 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     while (argv.size() > 0) {
       extract_option(argv);
     }
+
+    if (useLogFoldChange) {
+      if (min_fold_change_cutoff == null) {
+        min_fold_change_cutoff = 2.0; // Default
+      } else {
+        min_fold_change_cutoff = Math.abs(min_fold_change_cutoff);
+      }
+    } else {
+      if (min_fold_change_cutoff == null) {
+        min_fold_change_cutoff = 4.0; // Default
+      } else {
+        if (min_fold_change_cutoff < 1.0) {
+          min_fold_change_cutoff = 1.0 / min_fold_change_cutoff;
+        }
+      }
+    }
+
     load_collection_of_pwms_with_evaluators();
     load_snp_list();
   }
@@ -193,13 +204,14 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       max_pvalue_cutoff = Double.valueOf(argv.remove(0));
     } else if(opt.equals("--fold-change-cutoff") || opt.equals("-F")) {
       min_fold_change_cutoff = Double.valueOf(argv.remove(0));
-      if (min_fold_change_cutoff < 1.0) {
-        min_fold_change_cutoff = 1.0 / min_fold_change_cutoff;
-      }
     } else if(opt.equals("--transpose")) {
       transpose = true;
     } else if (opt.equals("--expand-region")) {
       expand_region_length = Integer.valueOf(argv.remove(0));
+    } else if(opt.equals("--short-format")) {
+      shortFormat = true;
+    }  else if(opt.equals("--log-fold-change")) {
+      useLogFoldChange = true;
     } else {
       if (failed_to_recognize_additional_options(opt, argv)) {
         throw new IllegalArgumentException("Unknown option '" + opt + "'");
@@ -212,14 +224,18 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   }
 
   protected void load_snp_list() {
+    // Input format: "rs9929218 GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA [Any] [other] [data]"
     try {
       InputStream reader = new FileInputStream(path_to_file_w_snps);
-      List<String> snps = InputExtensions.filter_empty_strings(InputExtensions.readLinesFromInputStream(reader));
+      List<String> input_lines = InputExtensions.readLinesFromInputStream(reader);
+      input_lines = InputExtensions.filter_empty_strings(input_lines);
+      input_lines = InputExtensions.filter_comment_strings(input_lines);
 
-      snp_list = new ArrayList<>(snps.size());
-      for (String snp_input : snps) {
-        String snp_name = first_part_of_string(snp_input);
-        SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(last_part_of_string(snp_input));
+      snp_list = new ArrayList<>(input_lines.size());
+      for (String snp_input : input_lines) {
+        String[] input_parts = snp_input.replaceAll("\\s+", " ").split(" ", 3);
+        String snp_name = input_parts[0];
+        SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(input_parts[1]);
         snp_list.add( new Named<>(seq_w_snp, snp_name) );
       }
 
@@ -236,9 +252,13 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   }
 
   boolean foldChangeSignificant(SingleSNPScan.RegionAffinityInfos affinityInfos) {
-    double foldChange = affinityInfos.foldChange();
-    return foldChange >= min_fold_change_cutoff ||
-            foldChange <= 1.0/min_fold_change_cutoff;
+    if (useLogFoldChange) {
+      double logFoldChange = affinityInfos.logFoldChange();
+      return (logFoldChange >= min_fold_change_cutoff) || (logFoldChange <= - min_fold_change_cutoff);
+    } else {
+      double foldChange = affinityInfos.foldChange();
+      return (foldChange >= min_fold_change_cutoff) || (foldChange <= 1.0 / min_fold_change_cutoff);
+    }
   }
 
   boolean affinityChangeSignificant(SingleSNPScan.RegionAffinityInfos affinityInfos) {
@@ -253,7 +273,11 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
         SingleSNPScan.RegionAffinityInfos affinityInfos;
         affinityInfos = new SingleSNPScan<>(pwm, seq_w_snp, encodedSequenceWithSNP, motifEvaluator.pvalueCalculator, expand_region_length).affinityInfos();
         if (affinityChangeSignificant(affinityInfos)) {
-          System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + affinityInfos.toString());
+          if (shortFormat) {
+            System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + affinityInfos.toStringShort());
+          } else {
+            System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + affinityInfos.toString(useLogFoldChange));
+          }
         }
       } else {
         System.err.println("Can't scan sequence '" + seq_w_snp + "' (length " + seq_w_snp.length() + ") with motif of length " + pwm.length());
@@ -262,7 +286,15 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   }
 
   public void process() throws HashOverflowException {
-    System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
+    if (shortFormat) {
+      System.out.println("# SNP name\tmotif\tP-value 1\tP-value 2\tposition 1\torientation 1\tposition 2\torientation 2");
+    } else {
+      if (useLogFoldChange) {
+        System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change (log2 scale");
+      } else {
+        System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
+      }
+    }
     for (Named<SequenceWithSNP> sequenceWithSNV: snp_list) {
       process_snp(sequenceWithSNV.getName(),
                   sequenceWithSNV.getObject(),

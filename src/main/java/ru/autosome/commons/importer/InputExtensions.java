@@ -31,9 +31,19 @@ public class InputExtensions {
   }
 
   public static List<String> filter_empty_strings(List<String> list) {
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
     for (String str : list) {
       if (!str.trim().isEmpty()) {
+        result.add(str);
+      }
+    }
+    return result;
+  }
+
+  public static List<String> filter_comment_strings(List<String> list) {
+    List<String> result = new ArrayList<>();
+    for (String str : list) {
+      if (str.charAt(0) != '#') {
         result.add(str);
       }
     }

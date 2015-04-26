@@ -39,4 +39,8 @@ public class Position {
     return String.valueOf(position) + "\t" + orientation;
   }
 
+  public String toStringShort() {
+    return String.valueOf(position) + "\t" + orientation.toStringShort();
+  }
+
 }

@@ -96,8 +96,16 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
       return info_1.pvalue / info_2.pvalue;
     }
 
+    public double logFoldChange() {
+      return Math.log(info_1.pvalue / info_2.pvalue) / Math.log(2);
+    }
+
     @Override
+
     public String toString() {
+      return toString(false);
+    }
+    public String toString(boolean useLogFoldChange) {
       StringBuilder result = new StringBuilder();
       result.append(info_1.position.toString()).append("\t").append(info_1.word).append("\t");
       result.append(info_2.position.toString()).append("\t").append(info_2.word).append("\t");
@@ -105,7 +113,21 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
       result.append(info_1.allele).append("/").append(info_2.allele).append("\t");
       result.append(info_1.pvalue).append("\t").append(info_2.pvalue).append("\t");
 
-      result.append(foldChange());
+      if (useLogFoldChange) {
+        result.append(logFoldChange());
+      } else {
+        result.append(foldChange());
+      }
+      return result.toString();
+    }
+
+    public String toStringShort() {
+      StringBuilder result = new StringBuilder();
+      result.append(String.format("%.2e", info_1.pvalue)).append("\t");
+      result.append(String.format("%.2e", info_2.pvalue)).append("\t");
+      result.append(info_1.position.toStringShort()).append("\t");
+      result.append(info_2.position.toStringShort());
+
       return result.toString();
     }
   }
