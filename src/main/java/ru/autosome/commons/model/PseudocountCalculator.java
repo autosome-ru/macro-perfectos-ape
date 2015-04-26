@@ -8,6 +8,7 @@ public abstract class PseudocountCalculator {
       return Math.log(Math.max(count, 2));
     }
   };
+
   static public final PseudocountCalculator sqrtPseudocount = new PseudocountCalculator() {
     @Override
     public Double calculatePseudocount(double count) {
@@ -22,6 +23,7 @@ public abstract class PseudocountCalculator {
       }
     };
   }
+
   static public PseudocountCalculator fromString(String s) {
     if (s.toLowerCase().equals("log")) {
       return logPseudocount;

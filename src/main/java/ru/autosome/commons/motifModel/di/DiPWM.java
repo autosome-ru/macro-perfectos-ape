@@ -3,10 +3,7 @@ package ru.autosome.commons.motifModel.di;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.motifModel.Alignable;
-import ru.autosome.commons.motifModel.BackgroundAppliable;
-import ru.autosome.commons.motifModel.Discretable;
-import ru.autosome.commons.motifModel.ScoreDistribution;
+import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
 import ru.autosome.commons.scoringModel.DiPWMOnBackground;
@@ -20,7 +17,8 @@ import static java.lang.Math.min;
 public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundModel, DiPWMOnBackground>,
                                             Discretable<DiPWM>,
                                             ScoreDistribution<DiBackgroundModel>,
-                                            PositionWeightModel, Alignable<DiPWM> {
+                                            PositionWeightModel, Alignable<DiPWM>,
+                                            ScoreBoundaries {
 
   private double[][] cache_best_suffices;
   private double[][] cache_worst_suffices;

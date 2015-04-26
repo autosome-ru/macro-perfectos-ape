@@ -15,7 +15,7 @@ public class PvalueBsearchList {
     public final double threshold;
     public final double pvalue;
 
-    ThresholdPvaluePair(double threshold, double pvalue) {
+    public ThresholdPvaluePair(double threshold, double pvalue) {
       this.threshold = threshold;
       this.pvalue = pvalue;
     }
@@ -41,12 +41,7 @@ public class PvalueBsearchList {
 
        @Override
        public int compare(Object o1, Object o2) {
-//         System.err.println(o1.toString() + o2.toString() + val(o1).toString() + val(o2).toString());
-         if (val(o1) < val(o2)) {
-           return -1;
-         } else if (val(o1) > val(o2)) {
-           return 1;
-         } else return 0;
+         return val(o1).compareTo(val(o2));
        }
      };
 
@@ -67,11 +62,7 @@ public class PvalueBsearchList {
 
        @Override
        public int compare(Object o1, Object o2) {
-         if (val(o1) < val(o2)) {
-           return 1;
-         } else if (val(o1) > val(o2)) {
-           return -1;
-         } else return 0;
+         return val(o1).compareTo(val(o2));
        }
      };
 
@@ -99,16 +90,16 @@ public class PvalueBsearchList {
 
   private final List<ThresholdPvaluePair> list;
   public PvalueBsearchList() {
-    this.list = new ArrayList<ThresholdPvaluePair>();
+    this.list = new ArrayList<>();
   }
   public PvalueBsearchList(List<ThresholdPvaluePair> infos) {
     Collections.sort(infos, ThresholdPvaluePair.thresholdComparator);
-    this.list = without_consequent_duplicates(without_zero_pvalue(infos));
+    this.list = without_consequent_duplicates(without_inf_nan_scores(without_zero_pvalue(infos)));
   }
 
   private List<ThresholdPvaluePair> without_consequent_duplicates(List<ThresholdPvaluePair> infos) {
     List<ThresholdPvaluePair> reduced_infos;
-    reduced_infos = new ArrayList<ThresholdPvaluePair>();
+    reduced_infos = new ArrayList<>();
     if (infos.isEmpty()) {
       return reduced_infos;
     }
@@ -123,9 +114,21 @@ public class PvalueBsearchList {
 
   private List<ThresholdPvaluePair> without_zero_pvalue(List<ThresholdPvaluePair> infos) {
     List<ThresholdPvaluePair> reduced_infos;
-    reduced_infos = new ArrayList<ThresholdPvaluePair>();
+    reduced_infos = new ArrayList<>();
     for (ThresholdPvaluePair info: infos) {
       if (info.pvalue != 0) {
+        reduced_infos.add(info);
+      }
+    }
+    return reduced_infos;
+  }
+
+  private List<ThresholdPvaluePair> without_inf_nan_scores(List<ThresholdPvaluePair> infos) {
+    List<ThresholdPvaluePair> reduced_infos;
+    reduced_infos = new ArrayList<>();
+    for (ThresholdPvaluePair info: infos) {
+      Double score = info.threshold;
+      if (!score.isNaN() && !score.isInfinite()) {
         reduced_infos.add(info);
       }
     }
@@ -195,7 +198,7 @@ public class PvalueBsearchList {
   }
 
   private static List<ThresholdPvaluePair> load_thresholds_list(List<String> lines) {
-    List<ThresholdPvaluePair> result = new ArrayList<ThresholdPvaluePair>();
+    List<ThresholdPvaluePair> result = new ArrayList<>();
     for (String s : lines) {
       String[] line_tokens = s.replaceAll("\\s+", "\t").split("\t");
       if (line_tokens.length < 2) continue;

@@ -10,7 +10,9 @@ import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Discretable;
+import ru.autosome.commons.motifModel.ScoreBoundaries;
 import ru.autosome.commons.motifModel.ScoreDistribution;
+import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.io.File;
@@ -18,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PrecalculateThresholds<ModelType extends Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class PrecalculateThresholds<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & ScoreBoundaries, BackgroundType extends GeneralizedBackgroundModel> {
   protected Discretizer discretizer;
   protected BackgroundType background;
   protected BoundaryType pvalue_boundary;

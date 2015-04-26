@@ -267,13 +267,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
         ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo s1, s2;
         s1 = (ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo)o1;
         s2 = (ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo)o2;
-        if (s1.similarity() < s2.similarity()) {
-          return 1;
-        } else if (s1.similarity() > s2.similarity()) {
-          return -1;
-        } else {
-          return 0;
-        }
+        return s1.similarity().compareTo(s2.similarity());
       }
     });
     result.data = data;
