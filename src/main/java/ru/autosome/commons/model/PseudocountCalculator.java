@@ -5,7 +5,7 @@ public abstract class PseudocountCalculator {
   static public final PseudocountCalculator logPseudocount = new PseudocountCalculator() {
     @Override
     public Double calculatePseudocount(double count) {
-      return Math.log(count);
+      return Math.log(Math.max(count, 2));
     }
   };
   static public final PseudocountCalculator sqrtPseudocount = new PseudocountCalculator() {
