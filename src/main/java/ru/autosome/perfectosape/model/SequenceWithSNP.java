@@ -12,10 +12,13 @@ import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SequenceWithSNP {
   // Duplicated in class Sequence
   private static final TCharSet allowedLetters = new TCharHashSet(new char[]{'A','C','G','T','a','c','g','t', 'n', 'N'});
+  static Pattern SNVSequencePattern = Pattern.compile("([ACGTN]*)\\[([ACGTN](?:/[ACGTN])+)\\]([ACGTN]*)", Pattern.CASE_INSENSITIVE);
 
   final public String left;
   final public String right;
@@ -48,22 +51,13 @@ public class SequenceWithSNP {
   }
 
   public static SequenceWithSNP fromString(String seq_w_snp) {
-    String[] seq_parts = seq_w_snp.split("\\[|\\]");  // split by [ or ]
-    if (seq_parts.length == 3) { // acc[T/A]cca  or acc[TA]cca or  acc[T/A/G]cca  or acc[TAG]cca
-      String left = seq_parts[0];
-      char[] mid = seq_parts[1].replaceAll("/", "").toCharArray();
-      String right = seq_parts[2];
 
-      return new SequenceWithSNP(left, mid, right);
-    }
-    else if (seq_parts.length == 1) { //   accT/Acca  or  accT/A/Gcca
-      int left_separator = seq_w_snp.indexOf("/");
-      int right_separator = seq_w_snp.lastIndexOf("/");
-
-      String left = seq_w_snp.substring(0, left_separator - 1);
-      String right = seq_w_snp.substring(right_separator + 2, seq_w_snp.length());
-      char[] mid = seq_w_snp.substring(left_separator - 1, right_separator + 2).replaceAll("/", "").toCharArray();
-
+    Matcher matcher = SNVSequencePattern.matcher(seq_w_snp);
+    if (matcher.find()) {
+      String left = matcher.group(1);
+      String mid_str = matcher.group(2);
+      char[] mid = mid_str.replaceAll("/", "").toCharArray();
+      String right = matcher.group(3);
       return new SequenceWithSNP(left, mid, right);
     } else {
       throw new IllegalArgumentException("Can't parse sequence with SNPs: " + seq_w_snp);
