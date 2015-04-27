@@ -1,28 +1,11 @@
+поправить инфу в мануале про формат входных сиквенсов
+сделать возможность грузить сиквенсы из dbSNP-шного формата
 поправить инфу про то как вычисляется логарифмический псевдокаунт
 
 нужно порядок результатов в find_threshold / find_pvalue сохранять
 
 понять с какого фига снип-сканер на seqs_rand_genome.txt (120Mb) отжирает почти полтора гига оперативки. Тупо на сиквенсы?
 
-!!! PrecalculateThresholds рушится на MA0173.1 CG11617 (сортировка встречает NaN):
-http://habrahabr.ru/post/247015/
->MA0173.1 CG11617
-1 0 0 16
-0 0 0 17
-10  0 3 4
-17  0 0 0
-0 17  0 0
-17  0 0 0
-0 0 0 1
-
-А также выдает NaN на MA0298.1  FZF1
->MA0298.1 FZF1
-0.000 1.000 0.000 0.000
-0.000 0.000 0.000 1.000
-1.000 0.000 0.000 0.000
-0.000 0.000 0.000 1.000
-0.000 1.000 0.000 0.000
-1.000 0.000 0.000 0.000
 
 ConvertMotif pcm pwm KLF4_f2.pcm
 ls *.pcm | ConvertMotif pcm pwm
@@ -35,10 +18,6 @@ ls *.pcm | ConvertMotif dipcm dipwm --background 0.7
 ls *.pcm | ConvertMotif dipcm dipwm --background 0.0625,0.0625,...,0.0625
 
 
-
-
-почему-то театральный перфектос ломается на сиквенсе с двумя пробелами между именем и сиквенсом, если нет доп.данных (rs1314913  CTTTCAAATCTCTCCAAGTTGATTAATCATTTTCTTGTTCTGACT[C/T]ATTCAGGCCTCTAGAAAAATAGCTGTAGGT)
-перфектос ломается на пустых строках
 
 мануал:
   - проставить ссылки на разделы
@@ -78,8 +57,6 @@ ls *.pcm | ConvertMotif dipcm dipwm --background 0.0625,0.0625,...,0.0625
 
 Сделать парсинг аргументов командной строки библиотечным: http://pholser.github.io/jopt-simple/examples.html
 
-Есть ли возможность делать сиквенсы с N-ками?
-довольно тупо генерить короткий сиквенс для каждого сдвига, это слишком дорого. Хорошо бы ф-циям типа score давать длинный сиквенс и сдвиг
 
 GGGAAGGTGGCTGGAGGGTGGTGCTCTCTC[C/T]TCTTCTCTAAATTGTCTGTCCCGGGAGAAG
 rs12355688  REST_f1

@@ -10,6 +10,7 @@ import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SequenceWithSNP {
@@ -126,5 +127,21 @@ public class SequenceWithSNP {
       encodedVariants.add(seq.diEncode());
     }
     return new SequenceWithSNPDiEncoded(encodedVariants);
+  }
+
+  private String polyNString(int len) {
+    char[] buf = new char[len];
+    Arrays.fill(buf, 'N');
+    return new String(buf);
+  }
+
+  // Expands sequence with poly-N flanks if necessary
+  // sequenceRadius includes substitution position
+  public SequenceWithSNP expandFlanksUpTo(int sequenceRadius) {
+    int leftExpansionLength = Math.max(sequenceRadius - 1 - left.length(), 0);
+    int rightExpansionLength = Math.max(sequenceRadius - 1 - right.length(), 0);
+    return new SequenceWithSNP(polyNString(leftExpansionLength) + left,
+                               mid,
+                               right + polyNString(rightExpansionLength));
   }
 }

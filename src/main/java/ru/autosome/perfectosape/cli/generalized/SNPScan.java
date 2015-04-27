@@ -295,11 +295,25 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
         System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
       }
     }
+
+    final int necessaryLength = necessaryFlankLength();
+
     for (Named<SequenceWithSNP> sequenceWithSNV: snp_list) {
+      SequenceWithSNP sequence = sequenceWithSNV.getObject();
+      SequenceWithSNP sequenceExpanded = sequence.expandFlanksUpTo(necessaryLength);
+
       process_snp(sequenceWithSNV.getName(),
-                  sequenceWithSNV.getObject(),
-                  encodeSequenceWithSNV(sequenceWithSNV.getObject()) );
+                  sequenceExpanded,
+                  encodeSequenceWithSNV(sequenceExpanded));
     }
+  }
+
+  int necessaryFlankLength() {
+    int maxMotifLength = 1;
+    for (ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType> evaluator : pwmCollection) {
+      maxMotifLength = Math.max(maxMotifLength, evaluator.pwm.length());
+    }
+    return maxMotifLength + expand_region_length;
   }
 
 }
