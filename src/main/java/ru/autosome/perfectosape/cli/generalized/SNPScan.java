@@ -78,10 +78,11 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
     "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
     "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
-    "  [--expand-region <length>] - expand region used to find sites by length positions at each side,\n" +
-    "                               so that site needn't overlap substitution.\n" +
-    "  [--short-format] - use more compact output format.\n" +
-    "  [--log-fold-change] - use logarithmic (log 2) fold changes (both in output and in cutoff setup).\n" +
+    "  [--expand-region <length>] - expand the region to scan for PWM hits by <length> positions\n" +
+    "                               from each side allowing PWM to be located nearby but not necessarily\n"+
+    "                               overlap the nucleotide substitution position.\n" +
+    "  [--compact] - use compact output format.\n" +
+    "  [--log-fold-change] - use logarithmic (log2) fold change scale (both in output and in cutoff setup).\n" +
      DOC_additional_options() +
     "\n" +
     "Examples:\n" +
@@ -208,7 +209,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       transpose = true;
     } else if (opt.equals("--expand-region")) {
       expand_region_length = Integer.valueOf(argv.remove(0));
-    } else if(opt.equals("--short-format")) {
+    } else if(opt.equals("--compact")) {
       shortFormat = true;
     }  else if(opt.equals("--log-fold-change")) {
       useLogFoldChange = true;
