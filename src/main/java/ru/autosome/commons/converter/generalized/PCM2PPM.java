@@ -13,7 +13,7 @@ public abstract class PCM2PPM<ModelTypeFrom extends PositionCountModel,
   public PCM2PPM() { }
 
   public Named<ModelTypeTo> convert(Named<ModelTypeFrom> namedModel) {
-    return new Named<>(convert(namedModel.getObject()),
+    return new Named<ModelTypeTo>(convert(namedModel.getObject()),
                        namedModel.getName());
   }
 

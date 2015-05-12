@@ -165,14 +165,14 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   }
 
   protected List<PWMWithThreshold> collectThreshold() throws HashOverflowException {
-    List<PWMWithThreshold> result = new ArrayList<>();
+    List<PWMWithThreshold> result = new ArrayList<PWMWithThreshold>();
     for (Named<ModelType> pwm: pwmCollection) {
-      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, roughDiscretizer, maxHashSize);
+      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm.getObject(), background, roughDiscretizer, maxHashSize);
       CanFindThreshold.ThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double roughThreshold = roughThresholdInfo.threshold;
       double roughCount = roughThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());
 
-      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, preciseDiscretizer, maxHashSize);
+      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm.getObject(), background, preciseDiscretizer, maxHashSize);
       CanFindThreshold.ThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double preciseThreshold = preciseThresholdInfo.threshold;
       double preciseCount = preciseThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());

@@ -31,7 +31,7 @@ public class InputExtensions {
   }
 
   public static List<String> filter_empty_strings(List<String> list) {
-    List<String> result = new ArrayList<>();
+    List<String> result = new ArrayList<String>();
     for (String str : list) {
       if (!str.trim().isEmpty()) {
         result.add(str);
@@ -41,7 +41,7 @@ public class InputExtensions {
   }
 
   public static List<String> filter_comment_strings(List<String> list) {
-    List<String> result = new ArrayList<>();
+    List<String> result = new ArrayList<String>();
     for (String str : list) {
       if (str.charAt(0) != '#') {
         result.add(str);

@@ -57,7 +57,7 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
   }
 
   protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<>();
+    ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }

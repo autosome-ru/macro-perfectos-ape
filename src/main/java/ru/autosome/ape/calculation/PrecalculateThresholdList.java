@@ -38,13 +38,13 @@ public class PrecalculateThresholdList<ModelType extends  Discretable<ModelType>
   }
 
   protected CanFindThreshold find_threshold_calculator(ModelType motif) {
-    return new FindThresholdAPE<>(motif, background, discretizer, max_hash_size);
+    return new FindThresholdAPE<ModelType, BackgroundType>(motif, background, discretizer, max_hash_size);
   }
 
   public PvalueBsearchList bsearch_list_for_pwm(ModelType motif) throws HashOverflowException {
     CanFindThreshold.ThresholdInfo[] infos = find_threshold_calculator(motif).thresholdsByPvalues(pvalues, pvalue_boundary);
 
-    List<PvalueBsearchList.ThresholdPvaluePair> pairs = new ArrayList<>(infos.length + 2);
+    List<PvalueBsearchList.ThresholdPvaluePair> pairs = new ArrayList<PvalueBsearchList.ThresholdPvaluePair>(infos.length + 2);
     for (CanFindThreshold.ThresholdInfo info: infos) {
       pairs.add(new PvalueBsearchList.ThresholdPvaluePair(info));
     }

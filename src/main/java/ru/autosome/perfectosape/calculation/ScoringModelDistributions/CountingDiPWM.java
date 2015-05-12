@@ -10,6 +10,7 @@ import ru.autosome.ape.model.ScoreDistributionTop;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
+import ru.autosome.commons.scoringModel.DiPWMOnBackground;
 
 public class CountingDiPWM extends ScoringModelDistributions {
   private final Integer maxHashSize;
@@ -25,7 +26,7 @@ public class CountingDiPWM extends ScoringModelDistributions {
 
   @Override
   CanFindThresholdApproximation gaussianThresholdEstimator() {
-    return new GaussianThresholdEstimator<>(dipwm.onBackground(dibackground));
+    return new GaussianThresholdEstimator<DiPWMOnBackground>(dipwm.onBackground(dibackground));
   }
 
   protected TDoubleDoubleMap[] initialCountDistribution() {

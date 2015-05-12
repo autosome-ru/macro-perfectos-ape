@@ -275,7 +275,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
       if (predefinedSecondThreshold != null) {
         cacheSecondThreshold = predefinedSecondThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer, maxHashSize);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer, maxHashSize);
         cacheSecondThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }

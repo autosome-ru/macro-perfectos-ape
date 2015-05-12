@@ -42,7 +42,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
   protected CanFindPvalue calculator() {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
-        cache_calculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer, max_hash_size);
+        cache_calculator = new FindPvalueAPE<DiPWM, DiBackgroundModel>(motif.getObject(), background, discretizer, max_hash_size);
       } else {
         cache_calculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif.getName());
       }
@@ -98,7 +98,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
   }
 
   protected static FindPvalue from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<>();
+    ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }

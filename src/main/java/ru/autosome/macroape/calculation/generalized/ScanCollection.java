@@ -43,10 +43,10 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
 
   public List<SimilarityInfo> similarityInfos() throws HashOverflowException {
     List<SimilarityInfo> result;
-    result = new ArrayList<>(thresholdEvaluators.size());
+    result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
 
-    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<>(queryPWM, queryBackground, roughDiscretizer, maxHashSize);
-    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<>(queryPWM, queryBackground, preciseDiscretizer, maxHashSize);
+    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, roughDiscretizer, maxHashSize);
+    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, preciseDiscretizer, maxHashSize);
 
     double roughQueryThreshold = queryThreshold(roughDiscretizer);
     double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
@@ -95,7 +95,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     if (queryPredefinedThreshold != null) {
       return queryPredefinedThreshold;
     } else {
-      CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(queryPWM, queryBackground, discretizer, maxHashSize);
+      CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(queryPWM, queryBackground, discretizer, maxHashSize);
       return pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
     }
   }

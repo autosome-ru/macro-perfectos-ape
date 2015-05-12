@@ -26,7 +26,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
 
   @Override
   protected PrecalculateThresholdList<PWM, BackgroundModel> calculator() {
-    return new PrecalculateThresholdList<>(pvalues, discretizer, background, pvalue_boundary, max_hash_size);
+    return new PrecalculateThresholdList<PWM, BackgroundModel>(pvalues, discretizer, background, pvalue_boundary, max_hash_size);
   }
 
   @Override
@@ -57,7 +57,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
   }
 
   protected static ru.autosome.ape.PrecalculateThresholds from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<>();
+    ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }

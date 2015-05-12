@@ -133,7 +133,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
   }
 
   List<Named<ModelType>> loadMotifs(File[] files) {
-    List<Named<ModelType>> results = new ArrayList<>();
+    List<Named<ModelType>> results = new ArrayList<Named<ModelType>>();
 
     for (File file : files) {
       results.add(loadMotif(file));

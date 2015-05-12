@@ -1,6 +1,7 @@
 package ru.autosome.commons.importer;
 
 import ru.autosome.commons.model.Named;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +20,7 @@ public abstract class MotifImporter<ModelType> {
   }
   public Named<ModelType> loadMotifWithName(List<String> lines){
     ParsingResult parsingInfo = parse(lines);
-    return new Named<>(createMotif(parsingInfo.getMatrix()),
+    return new Named<ModelType>(createMotif(parsingInfo.getMatrix()),
                        parsingInfo.getName());
   }
   public ModelType loadMotif(String filename) {
@@ -41,7 +42,7 @@ public abstract class MotifImporter<ModelType> {
     } else {
       name = parsingInfo.getName();
     }
-    return new Named<>(createMotif(parsingInfo.getMatrix()), name);
+    return new Named<ModelType>(createMotif(parsingInfo.getMatrix()), name);
   }
   public Named<ModelType> loadMotifWithName(String filename) {
     return loadMotifWithName(new File(filename));
@@ -49,7 +50,7 @@ public abstract class MotifImporter<ModelType> {
 
   public List<ModelType> loadMotifCollection(File pathToMotifs) {
     List<Named<ModelType>> namedMotifs = loadMotifCollectionWithNames(pathToMotifs);
-    List<ModelType> result = new ArrayList<>(namedMotifs.size());
+    List<ModelType> result = new ArrayList<ModelType>(namedMotifs.size());
     for (Named<ModelType> namedModel: namedMotifs) {
       result.add(namedModel.getObject());
     }
@@ -65,7 +66,7 @@ public abstract class MotifImporter<ModelType> {
   }
 
   public List<Named<ModelType>> loadMotifCollectionWithNamesFromFolder(File pathToPWMs) {
-    List<Named<ModelType>> result = new ArrayList<>();
+    List<Named<ModelType>> result = new ArrayList<Named<ModelType>>();
     File[] files = pathToPWMs.listFiles();
     if (files == null) {
       return result;
@@ -81,8 +82,9 @@ public abstract class MotifImporter<ModelType> {
 
 
   public List<Named<ModelType>> loadMotifCollectionWithNamesFromFile(File pathToPWMs) {
+    throw new NotImplementedException();
     // TODO: fix!!!!!
     // TODO: make use of MotifSplitter
-    return new ArrayList<>();
+    // return new ArrayList<Named<ModelType>>();
   }
 }

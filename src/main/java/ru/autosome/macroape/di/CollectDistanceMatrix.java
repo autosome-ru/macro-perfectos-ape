@@ -85,7 +85,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
 
   private static CollectDistanceMatrix from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<>();
+    ArrayList<String> argv = new ArrayList<String>();
     Collections.addAll(argv, args);
     return from_arglist(argv);
   }

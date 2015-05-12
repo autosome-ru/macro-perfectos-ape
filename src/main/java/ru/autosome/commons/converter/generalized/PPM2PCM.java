@@ -16,7 +16,7 @@ public abstract class PPM2PCM<ModelTypeFrom extends PositionFrequencyModel,
   }
 
   public Named<ModelTypeTo> convert(Named<ModelTypeFrom> namedModel) {
-    return new Named<>(convert(namedModel.getObject()),
+    return new Named<ModelTypeTo>(convert(namedModel.getObject()),
                        namedModel.getName());
   }
 

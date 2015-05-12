@@ -47,15 +47,15 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected void load_collection_of_pwms_with_evaluators() {
     List<Named<MotifType>> motifList = load_collection_of_pwms();
 
-    pwmCollection = new ArrayList<>();
+    pwmCollection = new ArrayList<ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType>>();
     for (Named<MotifType> motif: motifList) {
       CanFindPvalue pvalueCalculator;
       if (thresholds_folder == null) {
-        pvalueCalculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer, max_hash_size);
+        pvalueCalculator = new FindPvalueAPE<MotifType, BackgroundType>(motif.getObject(), background, discretizer, max_hash_size);
       } else {
         pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif.getName());
       }
-      pwmCollection.add(new ThresholdEvaluator<>(motif.getObject().onBackground(background), pvalueCalculator, motif.getName()));
+      pwmCollection.add(new ThresholdEvaluator<SequenceType,SequenceWithSNVType,ModelType>(motif.getObject().onBackground(background), pvalueCalculator, motif.getName()));
     }
   }
 
@@ -232,12 +232,12 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       input_lines = InputExtensions.filter_empty_strings(input_lines);
       input_lines = InputExtensions.filter_comment_strings(input_lines);
 
-      snp_list = new ArrayList<>(input_lines.size());
+      snp_list = new ArrayList<Named<SequenceWithSNP>>(input_lines.size());
       for (String snp_input : input_lines) {
         String[] input_parts = snp_input.replaceAll("\\s+", " ").split(" ", 3);
         String snp_name = input_parts[0];
         SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(input_parts[1]);
-        snp_list.add( new Named<>(seq_w_snp, snp_name) );
+        snp_list.add( new Named<SequenceWithSNP>(seq_w_snp, snp_name) );
       }
 
     } catch (Exception e) {
@@ -272,7 +272,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
       if (seq_w_snp.length() >= pwm.length()) {
         SingleSNPScan.RegionAffinityInfos affinityInfos;
-        affinityInfos = new SingleSNPScan<>(pwm, seq_w_snp, encodedSequenceWithSNP, motifEvaluator.pvalueCalculator, expand_region_length).affinityInfos();
+        affinityInfos = new SingleSNPScan<SequenceType, SequenceWithSNVType, ModelType>(pwm, seq_w_snp, encodedSequenceWithSNP, motifEvaluator.pvalueCalculator, expand_region_length).affinityInfos();
         if (affinityChangeSignificant(affinityInfos)) {
           if (shortFormat) {
             System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + affinityInfos.toStringShort());

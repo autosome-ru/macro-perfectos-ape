@@ -138,7 +138,7 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
 
   public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) throws HashOverflowException {
     EstimateAffinityMinPvalue affinity_calculator;
-    affinity_calculator = new EstimateAffinityMinPvalue<>(pwm,
+    affinity_calculator = new EstimateAffinityMinPvalue<SequenceType, ModelType>(pwm,
                                                           encodedSequenceWithSNP.sequenceVariant(allele_number),
                                                           pvalueCalculator,
                                                           positionsToCheck());

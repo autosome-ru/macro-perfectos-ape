@@ -108,7 +108,7 @@ public class SequenceWithSNP {
   }
 
   public SequenceWithSNPMonoEncoded monoEncode() {
-    List<SequenceMonoEncoded> encodedVariants = new ArrayList<>(num_cases());
+    List<SequenceMonoEncoded> encodedVariants = new ArrayList<SequenceMonoEncoded>(num_cases());
     for (Sequence seq: sequence_variants()) {
       encodedVariants.add(seq.monoEncode());
     }
@@ -116,7 +116,7 @@ public class SequenceWithSNP {
   }
 
   public SequenceWithSNPDiEncoded diEncode() {
-    List<SequenceDiEncoded> encodedVariants = new ArrayList<>(num_cases());
+    List<SequenceDiEncoded> encodedVariants = new ArrayList<SequenceDiEncoded>(num_cases());
     for (Sequence seq: sequence_variants()) {
       encodedVariants.add(seq.diEncode());
     }

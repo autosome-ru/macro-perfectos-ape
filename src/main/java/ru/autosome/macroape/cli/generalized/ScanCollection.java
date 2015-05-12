@@ -292,15 +292,15 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   protected List<ThresholdEvaluator> load_collection_of_pwms() {
     List<Named<ModelType>> pwmList = loadMotifCollection();
     List<ThresholdEvaluator> result;
-    result = new ArrayList<>();
+    result = new ArrayList<ThresholdEvaluator>();
     for (Named<ModelType> namedModel: pwmList) {
       ModelType pwm = namedModel.getObject();
       if (thresholds_folder == null) {
         result.add(new ThresholdEvaluator( pwm,
-                                           new FindThresholdAPE<>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
-                                           new FindThresholdAPE<>(pwm, collectionBackground, preciseDiscretizer, maxHashSize),
-                                           new FindPvalueAPE<>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
-                                           new FindPvalueAPE<>(pwm, collectionBackground, preciseDiscretizer, maxHashSize)));
+                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
+                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize),
+                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
+                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize)));
       } else {
         result.add(new ThresholdEvaluator( pwm,
                                            new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(namedModel.getName()),
