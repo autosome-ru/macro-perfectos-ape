@@ -28,8 +28,8 @@ public class DiPWMOnBackground implements ScoringModel<SequenceDiEncoded>, Encod
   }
 
   private double[][] calculateMatrixIUPAC() {
-    double[][] result = new double[dipwm.length()][];
-    for (int posIndex = 0; posIndex < dipwm.length(); ++posIndex) {
+    double[][] result = new double[dipwm.getMatrix().length][];
+    for (int posIndex = 0; posIndex < dipwm.getMatrix().length ; ++posIndex) {
       result[posIndex] = new double[25];
       for (int firstLetterIndex = 0; firstLetterIndex < 4; ++firstLetterIndex) {
         // AA,AC,AG,AT, CA,CC,CG,CT, GA,GC,GG,GT, TA,TC,TG,TT
