@@ -5,9 +5,9 @@ import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.importer.InputExtensions;
-import ru.autosome.commons.model.*;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
+import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.perfectosape.calculation.SingleSNPScan;
@@ -15,9 +15,7 @@ import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +104,6 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected PseudocountCalculator pseudocount;
   protected File thresholds_folder;
 
-  List<Named<SequenceWithSNP>> snp_list;
   protected List<ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType>> pwmCollection;
 
   protected double max_pvalue_cutoff;
@@ -180,7 +177,6 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     }
 
     load_collection_of_pwms_with_evaluators();
-    load_snp_list();
   }
 
   protected void extract_option(ArrayList<String> argv) {
@@ -224,27 +220,6 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     return true;
   }
 
-  protected void load_snp_list() {
-    // Input format: "rs9929218 GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA [Any] [other] [data]"
-    try {
-      InputStream reader = new FileInputStream(path_to_file_w_snps);
-      List<String> input_lines = InputExtensions.readLinesFromInputStream(reader);
-      input_lines = InputExtensions.filter_empty_strings(input_lines);
-      input_lines = InputExtensions.filter_comment_strings(input_lines);
-
-      snp_list = new ArrayList<Named<SequenceWithSNP>>(input_lines.size());
-      for (String snp_input : input_lines) {
-        String[] input_parts = snp_input.replaceAll("\\s+", " ").split(" ", 3);
-        String snp_name = input_parts[0];
-        SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(input_parts[1]);
-        snp_list.add( new Named<SequenceWithSNP>(seq_w_snp, snp_name) );
-      }
-
-    } catch (Exception e) {
-      throw new IllegalArgumentException("Failed to load pack of SNPs", e);
-    }
-  }
-
   protected abstract SequenceWithSNVType encodeSequenceWithSNV(SequenceWithSNP sequenceWithSNV);
 
   boolean pvalueSignificant(SingleSNPScan.RegionAffinityInfos affinityInfos) {
@@ -286,7 +261,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     }
   }
 
-  public void process() throws HashOverflowException {
+  public void process() throws HashOverflowException, IOException {
     if (shortFormat) {
       System.out.println("# SNP name\tmotif\tP-value 1\tP-value 2\tposition 1\torientation 1\tposition 2\torientation 2");
     } else {
@@ -299,13 +274,21 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
     final int necessaryLength = necessaryFlankLength();
 
-    for (Named<SequenceWithSNP> sequenceWithSNV: snp_list) {
-      SequenceWithSNP sequence = sequenceWithSNV.getObject();
-      SequenceWithSNP sequenceExpanded = sequence.expandFlanksUpTo(necessaryLength);
-
-      process_snp(sequenceWithSNV.getName(),
-                  sequenceExpanded,
-                  encodeSequenceWithSNV(sequenceExpanded));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path_to_file_w_snps)));
+    try {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        if (line.trim().isEmpty() || line.charAt(0) == '#') continue;
+        String[] input_parts = line.split("\\s+", 3);
+        String snp_name = input_parts[0];
+        SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(input_parts[1]);
+        SequenceWithSNP seq_extended = seq_w_snp.expandFlanksUpTo(necessaryLength);
+        process_snp(snp_name,
+                    seq_extended,
+                    encodeSequenceWithSNV(seq_extended));
+      }
+    } finally {
+      reader.close();
     }
   }
 

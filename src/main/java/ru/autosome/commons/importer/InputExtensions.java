@@ -7,11 +7,6 @@ import java.util.StringTokenizer;
 
 public class InputExtensions {
 
-  static public List<String> readLinesFromFile(String filename) throws FileNotFoundException {
-    InputStream reader = new FileInputStream(filename);
-    return readLinesFromInputStream(reader);
-  }
-
   static public List<String> readLinesFromFile(File file) throws FileNotFoundException {
     InputStream reader = new FileInputStream(file);
     return readLinesFromInputStream(reader);
@@ -28,26 +23,6 @@ public class InputExtensions {
     } catch (IOException e) {
     }
     return lines;
-  }
-
-  public static List<String> filter_empty_strings(List<String> list) {
-    List<String> result = new ArrayList<String>();
-    for (String str : list) {
-      if (!str.trim().isEmpty()) {
-        result.add(str);
-      }
-    }
-    return result;
-  }
-
-  public static List<String> filter_comment_strings(List<String> list) {
-    List<String> result = new ArrayList<String>();
-    for (String str : list) {
-      if (str.charAt(0) != '#') {
-        result.add(str);
-      }
-    }
-    return result;
   }
 
   public static boolean startWithDouble(String s) {
