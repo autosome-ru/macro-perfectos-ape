@@ -30,16 +30,18 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
 
   public class ThresholdEvaluator {
     public final ModelType pwm;
+    public final String name;
     public final CanFindThreshold roughThresholdCalculator;
     public final CanFindThreshold preciseThresholdCalculator;
 
     public final CanFindPvalue roughPvalueCalculator;
     public final CanFindPvalue precisePvalueCalculator;
 
-    public ThresholdEvaluator(ModelType pwm,
+    public ThresholdEvaluator(ModelType pwm, String name,
                               CanFindThreshold roughThresholdCalculator, CanFindThreshold preciseThresholdCalculator,
                               CanFindPvalue roughPvalueCalculator, CanFindPvalue precisePvalueCalculator) {
       this.pwm = pwm;
+      this.name = name;
       this.roughThresholdCalculator = roughThresholdCalculator;
       this.preciseThresholdCalculator = preciseThresholdCalculator;
       this.roughPvalueCalculator = roughPvalueCalculator;
@@ -296,13 +298,13 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     for (Named<ModelType> namedModel: pwmList) {
       ModelType pwm = namedModel.getObject();
       if (thresholds_folder == null) {
-        result.add(new ThresholdEvaluator( pwm,
+        result.add(new ThresholdEvaluator( pwm, namedModel.getName(),
                                            new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
                                            new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize),
                                            new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
                                            new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize)));
       } else {
-        result.add(new ThresholdEvaluator( pwm,
+        result.add(new ThresholdEvaluator( pwm, namedModel.getName(),
                                            new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(namedModel.getName()),
                                            null,
                                            new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(namedModel.getName()),
