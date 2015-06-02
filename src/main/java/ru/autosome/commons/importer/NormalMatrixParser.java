@@ -1,5 +1,8 @@
 package ru.autosome.commons.importer;
 
+import ru.autosome.commons.model.Named;
+import ru.autosome.commons.support.ArrayExtensions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class NormalMatrixParser {
     }
   }
 
-  public ParsingResult parse(List<String> strings) {
+  public Named<double[][]> parse(List<String> strings) {
     String name = getName(strings);
     strings = InputExtensions.beforeEmptyLine(withoutHeader(strings));
     List<double[]> matrix = new ArrayList<double[]>();
@@ -44,6 +47,6 @@ public class NormalMatrixParser {
       }
       matrix.add(positionParsed);
     }
-    return new ParsingResult(matrix, name);
+    return new Named<double[][]>(ArrayExtensions.toPrimitiveArray(matrix), name);
   }
 }

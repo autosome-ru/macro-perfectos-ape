@@ -1,5 +1,7 @@
 package ru.autosome.commons.importer;
 
+import ru.autosome.commons.model.Named;
+import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.commons.support.StringExtensions;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class ChIPMunkParser {
     this.alphabet_size = alphabet_size;
   }
 
-  public ParsingResult parse(List<String> strings) {
+  public Named<double[][]> parse(List<String> strings) {
     List<double[]> matrix = new ArrayList<double[]>();
 
     strings = InputExtensions.trimAll(strings);
@@ -44,6 +46,6 @@ public class ChIPMunkParser {
     if (matrix.size() == 0) {
       throw new RuntimeException("Corrupted ChIPMunk output detected.");
     }
-    return new ParsingResult(matrix, null);
+    return new Named<double[][]>(ArrayExtensions.toPrimitiveArray(matrix));
   }
 }

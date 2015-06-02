@@ -3,6 +3,7 @@ package ru.autosome.commons.importer;
 import ru.autosome.commons.model.Named;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.lang.model.element.Name;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public abstract class MotifImporter<ModelType> {
   abstract public ModelType createMotif(double matrix[][]);
-  abstract public ParsingResult parse(List<String> strings);
+  abstract public Named<double[][]> parse(List<String> strings);
 
   public ModelType loadMotif(List<String> lines){
     return loadMotifWithName(lines).getObject();
@@ -19,8 +20,8 @@ public abstract class MotifImporter<ModelType> {
     return loadMotifWithName(file).getObject();
   }
   public Named<ModelType> loadMotifWithName(List<String> lines){
-    ParsingResult parsingInfo = parse(lines);
-    return new Named<ModelType>(createMotif(parsingInfo.getMatrix()),
+    Named<double[][]> parsingInfo = parse(lines);
+    return new Named<ModelType>(createMotif(parsingInfo.getObject()),
                        parsingInfo.getName());
   }
   public ModelType loadMotif(String filename) {
@@ -35,14 +36,14 @@ public abstract class MotifImporter<ModelType> {
     } catch (FileNotFoundException e) {
       return null;
     }
-    ParsingResult parsingInfo = parse(lines);
+    Named<double[][]> parsingInfo = parse(lines);
     String name;
     if (parsingInfo.getName() == null || parsingInfo.getName().isEmpty()) {
       name = file.getName().replaceAll("\\.[^.]+$", "");
     } else {
       name = parsingInfo.getName();
     }
-    return new Named<ModelType>(createMotif(parsingInfo.getMatrix()), name);
+    return new Named<ModelType>(createMotif(parsingInfo.getObject()), name);
   }
   public Named<ModelType> loadMotifWithName(String filename) {
     return loadMotifWithName(new File(filename));

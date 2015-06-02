@@ -3,6 +3,7 @@ package ru.autosome.commons.importer;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.DataModel;
@@ -30,7 +31,7 @@ public class DiPWMFromMonoImporter extends MotifImporter<DiPWM> {
   }
 
   @Override
-  public ParsingResult parse(List<String> strings) {
+  public Named<double[][]> parse(List<String> strings) {
     return monoImporter.parse(strings);
   }
 }

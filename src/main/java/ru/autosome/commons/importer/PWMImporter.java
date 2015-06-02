@@ -1,6 +1,7 @@
 package ru.autosome.commons.importer;
 
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
+import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.mono.PCM;
 import ru.autosome.commons.motifModel.mono.PPM;
@@ -53,7 +54,7 @@ public class PWMImporter extends MotifImporter<PWM> {
     return pwm;
   }
 
-  public ParsingResult parse(List<String> strings) {
+  public Named<double[][]> parse(List<String> strings) {
     if (StringExtensions.startWith(strings.get(0), "PROG|ru.autosome.ChIPMunk")) {
       return new ChIPMunkParser(4, "ru.autosome.ChIPMunk", "PWMA").parse(strings);
     } else { // load basic matrix
