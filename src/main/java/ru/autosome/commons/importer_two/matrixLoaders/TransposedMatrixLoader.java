@@ -1,14 +1,16 @@
-package ru.autosome.commons.importer;
+package ru.autosome.commons.importer_two.matrixLoaders;
 
+import ru.autosome.commons.importer.InputExtensions;
+import ru.autosome.commons.importer_two.matrixLoaders.MatrixLoader;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.support.ArrayExtensions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransposedMatrixParser {
+public class TransposedMatrixLoader extends MatrixLoader {
   public final int alphabet_size;
-  public TransposedMatrixParser(int alphabet_size) {
+  public TransposedMatrixLoader(int alphabet_size) {
     this.alphabet_size = alphabet_size;
   }
 
@@ -43,7 +45,7 @@ public class TransposedMatrixParser {
     return result;
   }
 
-  public Named<double[][]> parse(List<String> strings) {
+  public Named<double[][]> loadMatrix(List<String> strings) {
     String name = getName(strings);
     strings = beforeEmptyLine(withoutHeader(strings));
     List<double[]> matrix = new ArrayList<double[]>();

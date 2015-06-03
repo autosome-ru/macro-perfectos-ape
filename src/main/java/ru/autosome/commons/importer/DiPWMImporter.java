@@ -1,6 +1,9 @@
 package ru.autosome.commons.importer;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
+import ru.autosome.commons.importer_two.matrixLoaders.ChIPMunkMatrixLoader;
+import ru.autosome.commons.importer_two.matrixLoaders.NormalMatrixLoader;
+import ru.autosome.commons.importer_two.matrixLoaders.TransposedMatrixLoader;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.di.DiPCM;
@@ -56,12 +59,12 @@ public class DiPWMImporter extends MotifImporter<DiPWM> {
 
   public Named<double[][]> parse(List<String> strings) {
     if (StringExtensions.startWith(strings.get(0), "PROG|ru.autosome.di.ChIPMunk")) {
-      return new ChIPMunkParser(16, "ru.autosome.di.ChIPMunk", "PWAA").parse(strings);
+      return new ChIPMunkMatrixLoader(16, "ru.autosome.di.ChIPMunk", "PWAA").loadMatrix(strings);
     } else { // load basic matrix
       if (transpose) {
-        return new TransposedMatrixParser(16).parse(strings);
+        return new TransposedMatrixLoader(16).loadMatrix(strings);
       } else {
-        return new NormalMatrixParser(16).parse(strings);
+        return new NormalMatrixLoader(16).loadMatrix(strings);
       }
     }
   }

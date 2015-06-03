@@ -16,6 +16,22 @@ ls *.pcm | ConvertMotif dipcm dipwm --background 0.7
 ls *.pcm | ConvertMotif dipcm dipwm --background 0.0625,0.0625,...,0.0625
 
 
+--from pcm --to pwm --algorithm default --count
+
+
+ConvertMotif <algorithm> <algorithm params>
+ConvertMotif reformat pcm --from-format jaspar --to-transpose
+ConvertMotif reformat dipwm --from-transpose
+ConvertMotif discretize pcm 100
+ConvertMotif pcm2pwm --pseudocount log --background 0.6 --transpose-output
+ConvertMotif pcm2pwmMara --pseudocount log --background 0.6
+ConvertMotif pcm2pwm --input-format jaspar
+# ConvertMotif pcm2pwm --output-format xml
+ConvertMotif pwm2dipwm
+
+
+
+
 
 мануал:
   - проставить ссылки на разделы

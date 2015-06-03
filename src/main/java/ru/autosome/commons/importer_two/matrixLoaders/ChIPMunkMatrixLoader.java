@@ -1,5 +1,7 @@
-package ru.autosome.commons.importer;
+package ru.autosome.commons.importer_two.matrixLoaders;
 
+import ru.autosome.commons.importer.InputExtensions;
+import ru.autosome.commons.importer_two.matrixLoaders.MatrixLoader;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.commons.support.StringExtensions;
@@ -7,19 +9,19 @@ import ru.autosome.commons.support.StringExtensions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChIPMunkParser {
+public class ChIPMunkMatrixLoader extends MatrixLoader {
   public final int alphabet_size;
   public final String section;
   public final String matrix_start;
   // section is a string like "ru.autosome.di.ChIPMunk" representing start of motif output section
   // matrix_start is a string like "PWAA" representing first position line
-  public ChIPMunkParser(int alphabet_size, String section, String matrix_start) {
+  public ChIPMunkMatrixLoader(int alphabet_size, String section, String matrix_start) {
     this.section = section;
     this.matrix_start = matrix_start;
     this.alphabet_size = alphabet_size;
   }
 
-  public Named<double[][]> parse(List<String> strings) {
+  public Named<double[][]> loadMatrix(List<String> strings) {
     List<double[]> matrix = new ArrayList<double[]>();
 
     strings = InputExtensions.trimAll(strings);
