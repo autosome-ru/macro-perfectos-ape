@@ -266,7 +266,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       System.out.println("# SNP name\tmotif\tP-value 1\tP-value 2\tposition 1\torientation 1\tposition 2\torientation 2");
     } else {
       if (useLogFoldChange) {
-        System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change (log2 scale");
+        System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change (log2 scale)");
       } else {
         System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
       }
