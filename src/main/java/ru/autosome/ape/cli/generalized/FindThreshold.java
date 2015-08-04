@@ -12,8 +12,10 @@ import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.support.ArrayExtensions;
+import ru.autosome.commons.support.IOExtensions;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -142,6 +144,14 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
       }
     } catch (NumberFormatException e) {
     }
+
+    if (IOExtensions.hasNonTTYInput()) {
+      try {
+        IOExtensions.extract_doubles_from_input_stream(System.in, pvalues_tmp);
+      } catch (IOException e) { }
+    }
+
+
     if (pvalues_tmp.size() != 0) {
       pvalues = ArrayExtensions.toPrimitiveArray(pvalues_tmp);
     }

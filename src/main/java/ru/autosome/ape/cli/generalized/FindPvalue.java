@@ -9,8 +9,10 @@ import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.support.ArrayExtensions;
+import ru.autosome.commons.support.IOExtensions;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -83,13 +85,20 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
 
   protected void extract_threshold_lists(ArrayList<String> argv) {
     ArrayList<Double> thresholds_list = new ArrayList<Double>();
+
     try {
       while (!argv.isEmpty()) {
         thresholds_list.add(Double.valueOf(argv.get(0)));
         argv.remove(0);
       }
-    } catch (NumberFormatException e) {
+    } catch (NumberFormatException e) { }
+
+    if (IOExtensions.hasNonTTYInput()) {
+      try {
+        IOExtensions.extract_doubles_from_input_stream(System.in, thresholds_list);
+      } catch (IOException e) { }
     }
+
     if (thresholds_list.isEmpty()) {
       throw new IllegalArgumentException("You should specify at least one threshold");
     }
