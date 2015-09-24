@@ -14,7 +14,6 @@
       <element id="directory" name="lib">
         <element id="file-copy" path="$PROJECT_DIR$/lib/trove-3.0.3.zip" />
       </element>
-      <element id="module-output" name="macro-perfectos-ape" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/trove-3.0.3.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/jnr/jnr-posix/3.0.17/jnr-posix-3.0.17.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/jnr/jnr-ffi/2.0.3/jnr-ffi-2.0.3.jar" path-in-jar="/" />

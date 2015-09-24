@@ -3,19 +3,15 @@ package ru.autosome.perfectosape.di;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
-import ru.autosome.commons.backgroundModel.mono.Background;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
-import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.scoringModel.DiPWMOnBackground;
-import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
 import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNPDiEncoded;
 
 import java.util.ArrayList;
@@ -103,7 +99,7 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new ru.autosome.perfectosape.di.SNPScan().documentString());
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new SNPScan().documentString());
       System.exit(1);
 
     }

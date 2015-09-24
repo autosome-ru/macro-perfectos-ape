@@ -6,16 +6,12 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
-import ru.autosome.commons.backgroundModel.mono.Background;
-import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
-import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,7 +107,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new FindPvalue().documentString());
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new FindThreshold().documentString());
       System.exit(1);
     }
   }

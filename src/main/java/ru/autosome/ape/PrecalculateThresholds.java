@@ -69,7 +69,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new ru.autosome.ape.PrecalculateThresholds().documentString());
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new PrecalculateThresholds().documentString());
       System.exit(1);
     }
   }

@@ -6,10 +6,9 @@ import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.motifModel.Encodable;
 import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.perfectosape.model.Sequence;
-import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
 
 public class PWMOnBackground implements ScoringModel<SequenceMonoEncoded>, Encodable<SequenceMonoEncoded, SequenceWithSNPMonoEncoded> {

@@ -7,8 +7,8 @@ import ru.autosome.commons.motifModel.Encodable;
 import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.perfectosape.model.Sequence;
-import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
 import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNPDiEncoded;
 
 public class DiPWMOnBackground implements ScoringModel<SequenceDiEncoded>, Encodable<SequenceDiEncoded, SequenceWithSNPDiEncoded> {

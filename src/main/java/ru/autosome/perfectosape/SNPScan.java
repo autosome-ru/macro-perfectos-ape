@@ -8,8 +8,8 @@ import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.scoringModel.PWMOnBackground;
-import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
-      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new ru.autosome.perfectosape.SNPScan().documentString());
+      System.err.println("\n--------------------------------------\nUse --help option for help\n\n" + new SNPScan().documentString());
       System.exit(1);
 
     }

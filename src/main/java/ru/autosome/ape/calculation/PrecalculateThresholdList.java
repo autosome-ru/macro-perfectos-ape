@@ -10,7 +10,6 @@ import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreBoundaries;
 import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.commons.motifModel.ScoringModel;
 
 import java.util.ArrayList;
 import java.util.List;

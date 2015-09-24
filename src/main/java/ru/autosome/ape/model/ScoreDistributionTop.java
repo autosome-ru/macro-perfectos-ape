@@ -1,7 +1,6 @@
 package ru.autosome.ape.model;
 
 import gnu.trove.iterator.TDoubleDoubleIterator;
-import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.TDoubleObjectMap;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;

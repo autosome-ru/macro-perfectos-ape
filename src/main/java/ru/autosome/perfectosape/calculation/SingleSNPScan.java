@@ -6,10 +6,10 @@ import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.motifModel.Encodable;
 import ru.autosome.commons.motifModel.ScoringModel;
-import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
-import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
+import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 
 public class SingleSNPScan<SequenceType extends EncodedSequenceType,
                            SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
