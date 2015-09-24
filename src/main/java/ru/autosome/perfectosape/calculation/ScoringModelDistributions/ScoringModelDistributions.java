@@ -5,19 +5,18 @@ import gnu.trove.map.TDoubleObjectMap;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.ape.model.ScoreDistributionTop;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.support.ArrayExtensions;
 
 abstract public class ScoringModelDistributions {
   abstract CanFindThresholdApproximation gaussianThresholdEstimator();
-  protected abstract ScoreDistributionTop score_distribution_above_threshold(double threshold) throws HashOverflowException;
+  protected abstract ScoreDistributionTop score_distribution_above_threshold(double threshold);
 
-  private ScoreDistributionTop score_distribution() throws HashOverflowException {
+  private ScoreDistributionTop score_distribution() {
     return score_distribution_above_threshold(Double.NEGATIVE_INFINITY);
   }
 
-  private ScoreDistributionTop score_distribution_under_pvalue(double pvalue) throws HashOverflowException {
+  private ScoreDistributionTop score_distribution_under_pvalue(double pvalue) {
     final int maxNumberOfAttempts = 2;
     int numberOfAttempts = 0;
     ScoreDistributionTop scoreDistribution;
@@ -41,7 +40,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public TDoubleDoubleMap counts_above_thresholds(double[] thresholds) throws HashOverflowException {
+  public TDoubleDoubleMap counts_above_thresholds(double[] thresholds) {
     ScoreDistributionTop scoreDistribution = score_distribution_above_threshold(ArrayExtensions.min(thresholds));
     try {
       return scoreDistribution.counts_above_thresholds(thresholds);
@@ -50,7 +49,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public Double count_above_threshold(double threshold) throws HashOverflowException {
+  public Double count_above_threshold(double threshold) {
     ScoreDistributionTop scoreDistribution = score_distribution_above_threshold(threshold);
     try {
       return scoreDistribution.count_above_threshold(threshold);
@@ -59,7 +58,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  TDoubleObjectMap<ScoreDistributionTop.ThresholdsRange> thresholds_by_pvalues(double[] pvalues) throws HashOverflowException {
+  TDoubleObjectMap<ScoreDistributionTop.ThresholdsRange> thresholds_by_pvalues(double[] pvalues) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
       return scores_hash.thresholds_by_pvalues(pvalues);
@@ -69,7 +68,7 @@ abstract public class ScoringModelDistributions {
   }
 
   // "strong" means that threshold has real pvalue not more than requested one
-  public CanFindThreshold.ThresholdInfo[] strong_thresholds(double[] pvalues) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo[] strong_thresholds(double[] pvalues) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
       return scores_hash.strong_thresholds(pvalues);
@@ -78,7 +77,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public CanFindThreshold.ThresholdInfo strong_threshold(double pvalue) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo strong_threshold(double pvalue) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(pvalue);
     try {
       return scores_hash.strong_threshold(pvalue);
@@ -88,7 +87,7 @@ abstract public class ScoringModelDistributions {
   }
 
   // "strong" means that threshold has real pvalue not less than requested one
-  public CanFindThreshold.ThresholdInfo[] weak_thresholds(double[] pvalues) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo[] weak_thresholds(double[] pvalues) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
       return scores_hash.weak_thresholds(pvalues);
@@ -97,7 +96,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public CanFindThreshold.ThresholdInfo weak_threshold(double pvalue) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo weak_threshold(double pvalue) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(pvalue);
     try {
       return scores_hash.weak_threshold(pvalue);
@@ -106,7 +105,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public CanFindThreshold.ThresholdInfo[] thresholds(double[] pvalues, BoundaryType pvalueBoundary) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo[] thresholds(double[] pvalues, BoundaryType pvalueBoundary) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
       return scores_hash.thresholds(pvalues, pvalueBoundary);
@@ -115,7 +114,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public CanFindThreshold.ThresholdInfo threshold(double pvalue, BoundaryType pvalueBoundary) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo threshold(double pvalue, BoundaryType pvalueBoundary) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(pvalue);
     try {
       return scores_hash.threshold(pvalue, pvalueBoundary);

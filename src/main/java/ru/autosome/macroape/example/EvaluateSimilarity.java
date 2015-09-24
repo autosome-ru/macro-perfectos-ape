@@ -25,7 +25,7 @@ public class EvaluateSimilarity {
       BackgroundModel background = new WordwiseBackground();
 //      BackgroundModel background = new Background(new double[]{0.25,0.25,0.25,0.25});
 
-      CompareModels comparator = new CompareModels(firstPWM, secondPWM, background, background, discretizer, null, null);
+      CompareModels comparator = new CompareModels(firstPWM, secondPWM, background, background, discretizer);
       CompareModelsCountsGiven.SimilarityInfo similarityInfo = comparator.jaccard_by_weak_pvalue(0.0005);
       System.out.println("\n----------\n" + similarityInfo.similarity());
       System.out.println(similarityInfo.alignment);
@@ -43,9 +43,9 @@ public class EvaluateSimilarity {
       ru.autosome.macroape.calculation.di.CompareModels dicomparator;
       dicomparator = new ru.autosome.macroape.calculation.di.CompareModels(firstDiPWM , secondDiPWM,
                                dibackground, dibackground,
-                               new FindPvalueAPE<DiPWM, DiBackgroundModel>(firstDiPWM, dibackground, discretizer, null),
-                               new FindPvalueAPE<DiPWM, DiBackgroundModel>(secondDiPWM, dibackground, discretizer, null),
-                               discretizer, null);
+                               new FindPvalueAPE<DiPWM, DiBackgroundModel>(firstDiPWM, dibackground, discretizer),
+                               new FindPvalueAPE<DiPWM, DiBackgroundModel>(secondDiPWM, dibackground, discretizer),
+                               discretizer);
 
       CompareModelsCountsGiven.SimilarityInfo diSimilarityInfo = dicomparator.jaccard_by_weak_pvalue(0.0005);
       System.out.println("\n----------\n" + diSimilarityInfo.similarity());

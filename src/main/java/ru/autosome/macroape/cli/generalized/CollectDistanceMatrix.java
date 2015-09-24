@@ -2,7 +2,6 @@ package ru.autosome.macroape.cli.generalized;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -70,7 +69,6 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   protected File pathToCollectionOfPWMs;
   protected BackgroundType background;
   protected DataModel dataModel;
-  protected Integer maxHashSize, maxPairHashSize;
   protected double effectiveCount;
   protected PseudocountCalculator pseudocount;
   protected BoundaryType pvalueBoundary;
@@ -97,8 +95,6 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     initialize_default_background();
     roughDiscretizer = new Discretizer(1.0);
     preciseDiscretizer = new Discretizer(10.0);
-    maxHashSize = 10000000;
-    maxPairHashSize = 10000;
     dataModel = DataModel.PWM;
     effectiveCount = 100;
     pseudocount = PseudocountCalculator.logPseudocount;
@@ -120,10 +116,6 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
       background = extract_background(argv.remove(0));
     } else if(opt.equals("-p") || opt.equals("--pvalue")) {
       pvalue = Double.valueOf(argv.remove(0));
-    } else if (opt.equals("--max-hash-size")) {
-      maxHashSize = Integer.valueOf(argv.remove(0));
-    } else if (opt.equals("--max-2d-hash-size")) {
-      maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("--rough-discretization") || opt.equals("-d") || opt.equals("--discretization")) {
       roughDiscretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--precise-discretization")) {
@@ -164,15 +156,15 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     }
   }
 
-  protected List<PWMWithThreshold> collectThreshold() throws HashOverflowException {
+  protected List<PWMWithThreshold> collectThreshold() {
     List<PWMWithThreshold> result = new ArrayList<PWMWithThreshold>();
     for (Named<ModelType> pwm: pwmCollection) {
-      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm.getObject(), background, roughDiscretizer, maxHashSize);
+      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm.getObject(), background, roughDiscretizer);
       CanFindThreshold.ThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double roughThreshold = roughThresholdInfo.threshold;
       double roughCount = roughThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());
 
-      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm.getObject(), background, preciseDiscretizer, maxHashSize);
+      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm.getObject(), background, preciseDiscretizer);
       CanFindThreshold.ThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double preciseThreshold = preciseThresholdInfo.threshold;
       double preciseCount = preciseThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());
@@ -184,7 +176,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     return result;
   }
 
-  protected double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) throws HashOverflowException {
+  protected double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) {
     CompareModelsCountsGiven calc;
     CompareModelsCountsGiven.SimilarityInfo info;
     calc = calculator(first.pwm.getObject(), second.pwm.getObject());
@@ -199,7 +191,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     return info.distance();
   }
 
-  public void process() throws HashOverflowException {
+  public void process() {
     int taskNum = 0;
     List<PWMWithThreshold> thresholds = collectThreshold();
     Collections.sort(thresholds, new Comparator<PWMWithThreshold>() {

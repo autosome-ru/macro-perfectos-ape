@@ -1,7 +1,6 @@
 package ru.autosome.perfectosape.calculation;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.motifModel.Encodable;
@@ -136,7 +135,7 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
     return sequenceWithSNP.positionsOverlappingSNV(pwm.length()).expand(expandRegionLength);
   }
 
-  public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) throws HashOverflowException {
+  public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) {
     EstimateAffinityMinPvalue affinity_calculator;
     affinity_calculator = new EstimateAffinityMinPvalue<SequenceType, ModelType>(pwm,
                                                           encodedSequenceWithSNP.sequenceVariant(allele_number),
@@ -152,7 +151,7 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
     return new RegionAffinityVariantInfo(pos_centered, allele, pvalue, word);
   }
 
-  public RegionAffinityInfos affinityInfos() throws HashOverflowException {
+  public RegionAffinityInfos affinityInfos() {
     return new RegionAffinityInfos(affinityVariantInfo(0), affinityVariantInfo(1));
   }
 }

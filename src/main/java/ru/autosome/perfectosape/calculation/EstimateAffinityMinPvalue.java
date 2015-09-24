@@ -1,7 +1,6 @@
 package ru.autosome.perfectosape.calculation;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.motifModel.HasLength;
@@ -33,7 +32,7 @@ public class EstimateAffinityMinPvalue<SequenceType extends HasLength,
   }
 
   @Override
-  public double affinity() throws HashOverflowException {
+  public double affinity() {
     double score = scanSequence().best_score();
     return pvalueCalculator.pvalueByThreshold(score).pvalue;
   }

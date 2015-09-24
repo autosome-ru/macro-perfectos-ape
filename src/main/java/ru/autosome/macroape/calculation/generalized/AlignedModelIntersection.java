@@ -1,6 +1,5 @@
 package ru.autosome.macroape.calculation.generalized;
 
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
@@ -11,7 +10,6 @@ abstract public class AlignedModelIntersection <ModelType extends Alignable<Mode
   public final BackgroundType firstBackground;
   public final BackgroundType secondBackground;
   public final PairAligned<ModelType> alignment;
-  public Double maxPairHashSize;
 
   public AlignedModelIntersection(PairAligned<ModelType> alignment,
                                   BackgroundType firstBackground, BackgroundType secondBackground) {
@@ -32,7 +30,7 @@ abstract public class AlignedModelIntersection <ModelType extends Alignable<Mode
     this.alignment = new PairAligned<ModelType>(firstPWM, secondPWM, relativePosition);
   }
 
-  public double count_in_intersection(double first_threshold, double second_threshold) throws HashOverflowException {
+  public double count_in_intersection(double first_threshold, double second_threshold) {
     double[] intersections = counts_for_two_matrices(first_threshold, second_threshold);
 
     return combine_intersection_values(intersections[0], intersections[1]);
@@ -42,7 +40,7 @@ abstract public class AlignedModelIntersection <ModelType extends Alignable<Mode
     return Math.sqrt(intersection_count_1 * intersection_count_2);
   }
 
-  private double[] counts_for_two_matrices(double threshold_first, double threshold_second) throws HashOverflowException {
+  private double[] counts_for_two_matrices(double threshold_first, double threshold_second) {
     if (firstBackground.equals(secondBackground)) {
       final BackgroundType background = firstBackground;
       double result = get_counts(threshold_first, threshold_second, background);
@@ -57,5 +55,5 @@ abstract public class AlignedModelIntersection <ModelType extends Alignable<Mode
     }
   }
 
-  abstract protected double get_counts(double threshold_first, double threshold_second, BackgroundType background) throws HashOverflowException;
+  abstract protected double get_counts(double threshold_first, double threshold_second, BackgroundType background);
 }

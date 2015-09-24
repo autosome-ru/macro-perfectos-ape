@@ -73,8 +73,6 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     calculator.queryBackground = queryBackground;
     calculator.collectionBackground = collectionBackground;
     calculator.pvalueBoundaryType = pvalueBoundaryType;
-    calculator.maxHashSize = maxHashSize;
-    calculator.maxPairHashSize = maxPairHashSize;
     calculator.similarityCutoff = similarityCutoff;
     calculator.preciseRecalculationCutoff = preciseRecalculationCutoff;
     return calculator;

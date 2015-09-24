@@ -58,8 +58,6 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
 
   protected BackgroundType queryBackground, collectionBackground;
   protected Discretizer roughDiscretizer, preciseDiscretizer;
-  protected Integer maxHashSize;
-  protected Integer maxPairHashSize;
   protected double pvalue;
   protected Double queryPredefinedThreshold;
   protected Double similarityCutoff;
@@ -129,8 +127,6 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     initialize_default_background();
     roughDiscretizer = new Discretizer(1.0);
     preciseDiscretizer = new Discretizer(10.0);
-    maxHashSize = 10000000;
-    maxPairHashSize = 10000;
     queryDataModel = DataModel.PWM;
     collectionDataModel = DataModel.PWM;
     queryEffectiveCount = 100.0;
@@ -156,10 +152,6 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
       queryBackground = extractBackground(argv.remove(0));
     } else if (opt.equals("--collection-background")) {
       collectionBackground = extractBackground(argv.remove(0));
-    } else if (opt.equals("--max-hash-size")) {
-      maxHashSize = Integer.valueOf(argv.remove(0));
-    } else if (opt.equals("--max-2d-hash-size")) {
-      maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("--rough-discretization") || opt.equals("-d") || opt.equals("--discretization")) {
       roughDiscretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--precise-discretization")) {
@@ -299,10 +291,10 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
       ModelType pwm = namedModel.getObject();
       if (thresholds_folder == null) {
         result.add(new ThresholdEvaluator( pwm, namedModel.getName(),
-                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
-                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize),
-                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer, maxHashSize),
-                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer, maxHashSize)));
+                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer),
+                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer),
+                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer),
+                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer)));
       } else {
         result.add(new ThresholdEvaluator( pwm, namedModel.getName(),
                                            new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(namedModel.getName()),

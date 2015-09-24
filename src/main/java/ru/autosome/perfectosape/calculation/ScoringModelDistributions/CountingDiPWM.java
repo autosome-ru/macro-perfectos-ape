@@ -7,21 +7,18 @@ import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import ru.autosome.ape.calculation.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.scoringModel.DiPWMOnBackground;
 
 public class CountingDiPWM extends ScoringModelDistributions {
-  private final Integer maxHashSize;
 
   private final DiPWM dipwm;
   private final DiBackgroundModel dibackground;
 
-  public CountingDiPWM(DiPWM dipwm, DiBackgroundModel dibackground, Integer maxHashSize) {
+  public CountingDiPWM(DiPWM dipwm, DiBackgroundModel dibackground) {
     this.dipwm = dipwm;
     this.dibackground = dibackground;
-    this.maxHashSize = maxHashSize;
   }
 
   @Override
@@ -39,7 +36,7 @@ public class CountingDiPWM extends ScoringModelDistributions {
   }
 
   @Override
-  protected ScoreDistributionTop score_distribution_above_threshold(double threshold) throws HashOverflowException {
+  protected ScoreDistributionTop score_distribution_above_threshold(double threshold) {
     // scores[index_of_letter 'A'] are scores of words of specific (current) length ending with A
     TDoubleDoubleMap[] scores = initialCountDistribution();
     for (int column = 0; column < dipwm.getMatrix().length; ++column) {
@@ -48,9 +45,6 @@ public class CountingDiPWM extends ScoringModelDistributions {
         least_sufficient[letter] = threshold - dipwm.best_suffix(column + 1, letter);
       }
       scores = recalc_score_hash(scores, dipwm.getMatrix()[column], least_sufficient);
-      if (exceedHashSizeLimit(scores)) {
-        throw new HashOverflowException("Hash overflow in DiPWM::ThresholdByPvalue#score_distribution_above_threshold");
-      }
     }
 
     TDoubleDoubleMap score_count_hash = combine_scores(scores);
@@ -100,9 +94,5 @@ public class CountingDiPWM extends ScoringModelDistributions {
 
   public double vocabularyVolume() {
     return Math.pow(dibackground.volume(), dipwm.length());
-  }
-
-  protected boolean exceedHashSizeLimit(TDoubleDoubleMap[] scores) {
-    return maxHashSize != null && (scores[0].size() + scores[1].size() + scores[2].size() + scores[3].size()) > maxHashSize;
   }
 }

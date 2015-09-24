@@ -4,7 +4,6 @@ import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -26,7 +25,6 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
   public Discretizer roughDiscretizer, preciseDiscretizer;
   public BackgroundType queryBackground, collectionBackground;
   public BoundaryType pvalueBoundaryType;
-  public Integer maxHashSize, maxPairHashSize;
   public Double similarityCutoff;
   public Double preciseRecalculationCutoff; // null means that no recalculation will be performed
 
@@ -39,14 +37,14 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
   abstract protected CompareModels<ModelType, BackgroundType> calculation(ModelType firstMotif, ModelType secondMotif,
                                                                           BackgroundType firstBackground, BackgroundType secondBackground,
                                                                           CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
-                                                                          Discretizer discretizer, Integer maxHashSize);
+                                                                          Discretizer discretizer);
 
-  public List<SimilarityInfo> similarityInfos() throws HashOverflowException {
+  public List<SimilarityInfo> similarityInfos() {
     List<SimilarityInfo> result;
     result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
 
-    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, roughDiscretizer, maxHashSize);
-    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, preciseDiscretizer, maxHashSize);
+    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, roughDiscretizer);
+    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, preciseDiscretizer);
 
     double roughQueryThreshold = queryThreshold(roughDiscretizer);
     double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
@@ -59,7 +57,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                    queryBackground, collectionBackground,
                                                    roughQueryPvalueEvaluator,
                                                    knownMotifEvaluator.roughPvalueCalculator,
-                                                   roughDiscretizer, maxPairHashSize);
+                                                   roughDiscretizer);
 
       Double roughCollectionThreshold = knownMotifEvaluator.roughThresholdCalculator
                                          .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
@@ -74,7 +72,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                        queryBackground, collectionBackground,
                                                        preciseQueryPvalueEvaluator,
                                                        knownMotifEvaluator.precisePvalueCalculator,
-                                                       preciseDiscretizer, maxPairHashSize);
+                                                       preciseDiscretizer);
 
         Double preciseCollectionThreshold = knownMotifEvaluator.preciseThresholdCalculator
                                              .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
@@ -91,11 +89,11 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
   }
 
 
-  double queryThreshold(Discretizer discretizer) throws HashOverflowException {
+  double queryThreshold(Discretizer discretizer) {
     if (queryPredefinedThreshold != null) {
       return queryPredefinedThreshold;
     } else {
-      CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(queryPWM, queryBackground, discretizer, maxHashSize);
+      CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(queryPWM, queryBackground, discretizer);
       return pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
     }
   }

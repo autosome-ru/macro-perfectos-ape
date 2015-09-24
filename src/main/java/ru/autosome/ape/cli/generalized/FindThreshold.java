@@ -1,7 +1,6 @@
 package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
@@ -50,7 +49,6 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   protected Discretizer discretizer;
 
   protected BoundaryType pvalue_boundary;
-  protected Integer max_hash_size; // not int because it can be null
 
   protected double[] pvalues;
   protected boolean transpose;
@@ -73,7 +71,6 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     initialize_default_background();
     discretizer = new Discretizer(10000.0);
     pvalue_boundary = BoundaryType.LOWER;
-    max_hash_size = 10000000;
     data_model = DataModel.PWM;
     effective_count = 100;
     pseudocount = PseudocountCalculator.logPseudocount;
@@ -97,8 +94,6 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));
-    } else if (opt.equals("--max-hash-size")) {
-      max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
@@ -194,7 +189,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     return report_table(data_list);
   }
 
-  protected OutputInformation report_table() throws HashOverflowException {
+  protected OutputInformation report_table() {
     CanFindThreshold.ThresholdInfo[] results = calculator().thresholdsByPvalues(pvalues, pvalue_boundary);
     return report_table(results);
   }

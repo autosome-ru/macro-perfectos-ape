@@ -4,7 +4,6 @@ package ru.autosome.perfectosape.example;
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearch;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MultiSNPScan {
-  public static void main(String[] args) throws HashOverflowException {
+  public static void main(String[] args) {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,10 +42,6 @@ public class MultiSNPScan {
     BackgroundModel background = new WordwiseBackground();
     // A actual pvalue will be less than requested. Not very important setting in this task
     BoundaryType pvalue_boundary = BoundaryType.LOWER;
-    // Setting max_hash_size allows one to restrict memory exhausting during Pvalue calculation (using APE algorithm, not binary search)
-    // Reasonable value is about 10 millions elements. But actually only specially constructed matrices can reach such high hash sizes.
-    // So in standalone calculation we use null (not to check hash size) and in web version we use 1e7
-    Integer max_hash_size = null;
 
     // It sets effective count for ppm-->pcm (-->pwm) conversion when we load matrix from ppm
     double ppm_effective_count = 100;
@@ -108,8 +103,7 @@ public class MultiSNPScan {
     listCalculator = new PrecalculateThresholdList<PWM, BackgroundModel>(pvalues,
                                                      discretizer,
                                                      background,
-                                                     pvalue_boundary,
-                                                     max_hash_size);
+                                                     pvalue_boundary);
 
     for (Named<PWM> motif: pwmCollection) {
       CanFindPvalue findPvalue = new FindPvalueBsearch(listCalculator.bsearch_list_for_pwm(motif.getObject()));
@@ -136,7 +130,7 @@ public class MultiSNPScan {
 
     Map<PWM,CanFindPvalue> pwmCollectionWithPvalueCalculators = new HashMap<PWM, CanFindPvalue>();
     for (PWM pwm: pwmCollection) {
-      pwmCollectionWithPvalueCalculators.put(pwm, new FindPvalueAPE(pwm, discretizer, background, max_hash_size));
+      pwmCollectionWithPvalueCalculators.put(pwm, new FindPvalueAPE(pwm, discretizer, background));
     }
 */
 

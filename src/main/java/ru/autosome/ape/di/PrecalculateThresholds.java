@@ -37,7 +37,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
 
   @Override
   protected PrecalculateThresholdList<DiPWM, DiBackgroundModel> calculator() {
-    return new PrecalculateThresholdList<DiPWM, DiBackgroundModel>(pvalues, discretizer, background, pvalue_boundary, max_hash_size);
+    return new PrecalculateThresholdList<DiPWM, DiBackgroundModel>(pvalues, discretizer, background, pvalue_boundary);
   }
 
   @Override

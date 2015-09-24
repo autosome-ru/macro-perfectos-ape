@@ -4,7 +4,6 @@ import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Position;
@@ -22,14 +21,13 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
   public final CanFindPvalue firstPvalueCalculator;
   public final CanFindPvalue secondPvalueCalculator;
   public final Discretizer discretizer;
-  public final Integer maxPairHashSize;
 
   public CompareModels(ModelType firstPWM, ModelType secondPWM,
                        BackgroundType firstBackground,
                        BackgroundType secondBackground,
                        CanFindPvalue firstPvalueCalculator,
                        CanFindPvalue secondPvalueCalculator,
-                       Discretizer discretizer, Integer maxPairHashSize) {
+                       Discretizer discretizer) {
     this.firstPWM = firstPWM;
     this.secondPWM = secondPWM;
     this.firstBackground = firstBackground;
@@ -37,39 +35,36 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     this.firstPvalueCalculator = firstPvalueCalculator;
     this.secondPvalueCalculator = secondPvalueCalculator;
     this.discretizer = discretizer;
-    this.maxPairHashSize = maxPairHashSize;
   }
 
   public CompareModels(ModelType firstPWM, ModelType secondPWM,
                        BackgroundType firstBackground,
                        BackgroundType secondBackground,
-                       Discretizer discretizer,
-                       Integer maxPairHashSize, Integer maxHashSize) {
+                       Discretizer discretizer) {
     this.firstPWM = firstPWM;
     this.secondPWM = secondPWM;
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
-    this.firstPvalueCalculator = new FindPvalueAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer, maxHashSize);
-    this.secondPvalueCalculator = new FindPvalueAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer, maxHashSize);
+    this.firstPvalueCalculator = new FindPvalueAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer);
+    this.secondPvalueCalculator = new FindPvalueAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer);
     this.discretizer = discretizer;
-    this.maxPairHashSize = maxPairHashSize;
   }
 
   abstract protected CompareModelsCountsGiven<ModelType,BackgroundType> calculatorWithCountsGiven();
 
-  double firstCount(double threshold_first) throws HashOverflowException {
+  double firstCount(double threshold_first) {
     return firstPvalueCalculator
             .pvalueByThreshold(threshold_first)
             .numberOfRecognizedWords(firstBackground, firstPWM.length());
   }
 
-  double secondCount(double threshold_second) throws HashOverflowException {
+  double secondCount(double threshold_second) {
     return secondPvalueCalculator
             .pvalueByThreshold(threshold_second)
             .numberOfRecognizedWords(secondBackground, secondPWM.length());
   }
 
-  public CompareModelsCountsGiven.SimilarityInfo<ModelType> jaccard(double threshold_first, double threshold_second) throws HashOverflowException {
+  public CompareModelsCountsGiven.SimilarityInfo<ModelType> jaccard(double threshold_first, double threshold_second) {
     return calculatorWithCountsGiven()
             .jaccard(threshold_first, threshold_second,
                      firstCount(threshold_first),
@@ -77,7 +72,7 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
   }
 
   public CompareModelsCountsGiven.SimilarityInfo<ModelType> jaccardAtPosition(double threshold_first, double threshold_second,
-                                          Position position) throws HashOverflowException {
+                                          Position position) {
     return calculatorWithCountsGiven()
             .jaccardAtPosition(threshold_first, threshold_second,
                                firstCount(threshold_first),
@@ -85,18 +80,18 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
                                position);
   }
 
-  public CompareModelsCountsGiven.SimilarityInfo jaccard_by_pvalue(double pvalue) throws HashOverflowException {
-    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer, null);
-    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer, null);
+  public CompareModelsCountsGiven.SimilarityInfo jaccard_by_pvalue(double pvalue) {
+    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer);
+    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer);
 
     double threshold_first = canFindThresholdFirst.strongThresholdByPvalue(pvalue).threshold;
     double threshold_second = canFindThresholdSecond.strongThresholdByPvalue(pvalue).threshold;
     return jaccard(threshold_first, threshold_second);
   }
 
-  public CompareModelsCountsGiven.SimilarityInfo jaccard_by_weak_pvalue(double pvalue) throws HashOverflowException {
-    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer, null);
-    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer, null);
+  public CompareModelsCountsGiven.SimilarityInfo jaccard_by_weak_pvalue(double pvalue) {
+    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer);
+    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer);
 
     double threshold_first = canFindThresholdFirst.weakThresholdByPvalue(pvalue).threshold;
     double threshold_second = canFindThresholdSecond.weakThresholdByPvalue(pvalue).threshold;

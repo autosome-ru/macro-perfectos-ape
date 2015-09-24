@@ -2,7 +2,6 @@ package ru.autosome.macroape.cli.generalized;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.model.BoundaryType;
@@ -55,9 +54,6 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   protected BoundaryType pvalueBoundary;
   protected String firstPMFilename, secondPMFilename;
   protected DataModel dataModelFirst, dataModelSecond;
-
-  protected Integer maxHashSize;
-  protected Integer maxPairHashSize;
 
   protected PseudocountCalculator pseudocountFirst, pseudocountSecond;
   protected Double effectiveCountFirst, effectiveCountSecond;
@@ -119,8 +115,6 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     transposeFirst = false;
     transposeSecond = false;
 
-    maxHashSize = 10000000;
-    maxPairHashSize = 10000;
     pvalueBoundary = BoundaryType.UPPER;
     alignment = null;
   }
@@ -137,10 +131,6 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
       firstBackground = extract_background(argv.remove(0));
     } else if (opt.equals("--second-background")) {
       secondBackground = extract_background(argv.remove(0));
-    } else if (opt.equals("--max-hash-size")) {
-      maxHashSize = Integer.valueOf(argv.remove(0));
-    } else if (opt.equals("--max-2d-hash-size")) {
-      maxPairHashSize = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
@@ -223,7 +213,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     return infos;
   }
 
-  protected OutputInformation report_table(CompareModelsCountsGiven.SimilarityInfo info) throws HashOverflowException {
+  protected OutputInformation report_table(CompareModelsCountsGiven.SimilarityInfo info) {
     OutputInformation infos = report_table_layout();
     infos.add_resulting_value("S", "similarity", info.similarity());
     infos.add_resulting_value("D", "distance (1-similarity)", info.distance());
@@ -246,7 +236,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     return infos;
   }
 
-  protected CompareModelsCountsGiven.SimilarityInfo<ModelType> results() throws HashOverflowException {
+  protected CompareModelsCountsGiven.SimilarityInfo<ModelType> results() {
     if (alignment == null) {
       return calculator().jaccard(thresholdFirst(), thresholdSecond());
     } else {
@@ -258,24 +248,24 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     return report_table(results());
   }
 
-  protected double thresholdFirst() throws HashOverflowException {
+  protected double thresholdFirst() {
     if (cacheFirstThreshold == null) {
       if (predefinedFirstThreshold != null) {
         cacheFirstThreshold = predefinedFirstThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer, maxHashSize);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer);
         cacheFirstThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }
     return cacheFirstThreshold;
   }
 
-  protected double thresholdSecond() throws HashOverflowException {
+  protected double thresholdSecond() {
     if (cacheSecondThreshold == null) {
       if (predefinedSecondThreshold != null) {
         cacheSecondThreshold = predefinedSecondThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer, maxHashSize);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer);
         cacheSecondThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }

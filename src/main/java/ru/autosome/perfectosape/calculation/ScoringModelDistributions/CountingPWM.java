@@ -6,22 +6,18 @@ import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import ru.autosome.ape.calculation.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.scoringModel.PWMOnBackground;
 
 public class CountingPWM extends ScoringModelDistributions {
 
-  private final Integer maxHashSize;
-
   final PWM pwm;
   final BackgroundModel background;
 
-  public CountingPWM(PWM pwm, BackgroundModel background, Integer maxHashSize) {
+  public CountingPWM(PWM pwm, BackgroundModel background) {
     this.pwm = pwm;
     this.background = background;
-    this.maxHashSize = maxHashSize;
   }
 
   @Override
@@ -36,13 +32,10 @@ public class CountingPWM extends ScoringModelDistributions {
   }
 
   @Override
-  protected ScoreDistributionTop score_distribution_above_threshold(double threshold) throws HashOverflowException {
+  protected ScoreDistributionTop score_distribution_above_threshold(double threshold) {
     TDoubleDoubleMap scores = initialCountDistribution();
     for (int pos = 0; pos < pwm.length(); ++pos) {
       scores = recalc_score_hash(scores, pwm.getMatrix()[pos], threshold - pwm.best_suffix(pos + 1));
-      if (exceedHashSizeLimit(scores)) {
-        throw new HashOverflowException("Hash overflow in PWM::ThresholdByPvalue#score_distribution_above_threshold");
-      }
     }
     ScoreDistributionTop result = new ScoreDistributionTop(scores, vocabularyVolume(), threshold);
     result.setWorstScore(pwm.worst_score());
@@ -70,9 +63,5 @@ public class CountingPWM extends ScoringModelDistributions {
 
   private double vocabularyVolume() {
     return Math.pow(background.volume(), pwm.length());
-  }
-
-  private boolean exceedHashSizeLimit(TDoubleDoubleMap scores) {
-    return maxHashSize != null && scores.size() > maxHashSize;
   }
 }

@@ -104,8 +104,8 @@ public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWM
   }
 
   @Override
-  public ScoringModelDistributions scoringModelDistibutions(BackgroundModel background, Integer maxHashSize) {
-    return new CountingPWM(this, background, maxHashSize);
+  public ScoringModelDistributions scoringModelDistibutions(BackgroundModel background) {
+    return new CountingPWM(this, background);
   }
 
   @Override

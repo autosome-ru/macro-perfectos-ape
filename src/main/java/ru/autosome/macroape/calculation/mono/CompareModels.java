@@ -8,19 +8,19 @@ import ru.autosome.commons.motifModel.mono.PWM;
 public class CompareModels extends ru.autosome.macroape.calculation.generalized.CompareModels<PWM, BackgroundModel> {
 
   public CompareModels(PWM firstPWM, PWM secondPWM, BackgroundModel firstBackground, BackgroundModel secondBackground,
-                       CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator, Discretizer discretizer, Integer maxPairHashSize) {
-    super(firstPWM, secondPWM, firstBackground, secondBackground, firstPvalueCalculator, secondPvalueCalculator, discretizer, maxPairHashSize);
+                       CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator, Discretizer discretizer) {
+    super(firstPWM, secondPWM, firstBackground, secondBackground, firstPvalueCalculator, secondPvalueCalculator, discretizer);
   }
 
   public CompareModels(PWM firstPWM, PWM secondPWM, BackgroundModel firstBackground, BackgroundModel secondBackground,
-                       Discretizer discretizer, Integer maxPairHashSize, Integer maxHashSize) {
-    super(firstPWM, secondPWM, firstBackground, secondBackground, discretizer, maxPairHashSize, maxHashSize);
+                       Discretizer discretizer) {
+    super(firstPWM, secondPWM, firstBackground, secondBackground, discretizer);
   }
 
   @Override
   protected ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven calculatorWithCountsGiven() {
     return new CompareModelsCountsGiven(firstPWM, secondPWM,
                                      firstBackground, secondBackground,
-                                     discretizer, maxPairHashSize);
+                                     discretizer);
   }
 }

@@ -1,6 +1,5 @@
 package ru.autosome.ape.calculation.findThreshold;
 
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
@@ -15,32 +14,32 @@ public abstract class FindThresholdByDiscretization implements CanFindThreshold 
   abstract ScoringModelDistributions discretedScoringModel();
 
   @Override
-  public CanFindThreshold.ThresholdInfo weakThresholdByPvalue(double pvalue) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo weakThresholdByPvalue(double pvalue) {
     return discretedScoringModel().weak_threshold(pvalue).downscale(discretizer);
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo strongThresholdByPvalue(double pvalue) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo strongThresholdByPvalue(double pvalue) {
     return discretedScoringModel().strong_threshold(pvalue).downscale(discretizer);
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) {
     return discretedScoringModel().threshold(pvalue, boundaryType).downscale(discretizer);
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues) {
     return downscale_all(discretedScoringModel().weak_thresholds(pvalues));
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) {
     return downscale_all(discretedScoringModel().strong_thresholds(pvalues));
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) {
     return downscale_all(discretedScoringModel().thresholds(pvalues, boundaryType));
   }
 

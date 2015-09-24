@@ -1,7 +1,6 @@
 package ru.autosome.ape.calculation.findThreshold;
 
 import ru.autosome.ape.model.PvalueBsearchList;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.model.BoundaryType;
 
 public class FindThresholdBsearch implements CanFindThreshold  {
@@ -12,7 +11,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo weakThresholdByPvalue(double pvalue) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo weakThresholdByPvalue(double pvalue) {
     PvalueBsearchList.ThresholdPvaluePair info = bsearchList.weakThresholdByPvalue(pvalue);
     double threshold = info.threshold;
     double real_pvalue = info.pvalue;
@@ -20,7 +19,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo strongThresholdByPvalue(double pvalue) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo strongThresholdByPvalue(double pvalue) {
     PvalueBsearchList.ThresholdPvaluePair info = bsearchList.strongThresholdInfoByPvalue(pvalue);
     double threshold = info.threshold;
     double real_pvalue = info.pvalue;
@@ -28,7 +27,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) {
     if (boundaryType == BoundaryType.LOWER) {
       return strongThresholdByPvalue(pvalue);
     } else {
@@ -37,7 +36,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues) {
     CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[pvalues.length];
     for (int i = 0; i < pvalues.length; ++i) {
       result[i] = weakThresholdByPvalue(pvalues[i]);
@@ -46,7 +45,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) {
     CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[pvalues.length];
     for (int i = 0; i < pvalues.length; ++i) {
       result[i] = strongThresholdByPvalue(pvalues[i]);
@@ -55,7 +54,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) throws HashOverflowException {
+  public CanFindThreshold.ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) {
     CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[pvalues.length];
     for (int i = 0; i < pvalues.length; ++i) {
       result[i] = thresholdByPvalue(pvalues[i], boundaryType);

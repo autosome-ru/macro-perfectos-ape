@@ -133,8 +133,8 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
   }
 
   @Override
-  public ScoringModelDistributions scoringModelDistibutions(DiBackgroundModel background, Integer maxHashSize) {
-    return new CountingDiPWM(this, background, maxHashSize);
+  public ScoringModelDistributions scoringModelDistibutions(DiBackgroundModel background) {
+    return new CountingDiPWM(this, background);
   }
 
   @Override

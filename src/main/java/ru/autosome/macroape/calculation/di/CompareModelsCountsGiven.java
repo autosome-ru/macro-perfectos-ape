@@ -10,8 +10,8 @@ public class CompareModelsCountsGiven extends ru.autosome.macroape.calculation.g
   public CompareModelsCountsGiven(DiPWM firstPWM, DiPWM secondPWM,
                                   DiBackgroundModel firstBackground,
                                   DiBackgroundModel secondBackground,
-                                  Discretizer discretizer, Integer maxPairHashSize) {
-    super(firstPWM, secondPWM, firstBackground, secondBackground, discretizer, maxPairHashSize);
+                                  Discretizer discretizer) {
+    super(firstPWM, secondPWM, firstBackground, secondBackground, discretizer);
   }
 
   @Override

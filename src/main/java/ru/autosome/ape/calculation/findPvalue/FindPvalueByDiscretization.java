@@ -1,7 +1,6 @@
 package ru.autosome.ape.calculation.findPvalue;
 
 import gnu.trove.map.TDoubleDoubleMap;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.model.Discretizer;
@@ -32,7 +31,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   }
 
   @Override
-  public PvalueInfo[] pvaluesByThresholds(double[] thresholds) throws HashOverflowException {
+  public PvalueInfo[] pvaluesByThresholds(double[] thresholds) {
     TDoubleDoubleMap counts = discretedScoringModel().counts_above_thresholds(discretizer.upscale(thresholds));
 
     PvalueInfo[] infos = new PvalueInfo[thresholds.length];
@@ -43,7 +42,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   }
 
   @Override
-  public PvalueInfo pvalueByThreshold(double threshold) throws HashOverflowException {
+  public PvalueInfo pvalueByThreshold(double threshold) {
     double[] thresholds = {threshold};
     return pvaluesByThresholds(thresholds)[0];
   }

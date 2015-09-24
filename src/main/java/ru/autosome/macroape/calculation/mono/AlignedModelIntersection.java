@@ -4,7 +4,6 @@ import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.mono.PWM;
@@ -20,17 +19,6 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
     super(firstPWM, secondPWM, firstBackground, secondBackground,relativePosition);
   }
 
-
-  private int summarySize(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores) {
-    int sum = 0;
-    TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
-    while (iterator.hasNext()) {
-      iterator.advance();
-      sum += iterator.value().size();
-    }
-    return sum;
-  }
-
   // 2d-score hash before first step
   private TDoubleObjectHashMap<TDoubleDoubleHashMap> initialScoreHash() {
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
@@ -40,7 +28,7 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
   }
 
   @Override
-  protected double get_counts(double threshold_first, double threshold_second, BackgroundModel background) throws HashOverflowException {
+  protected double get_counts(double threshold_first, double threshold_second, BackgroundModel background) {
     // scores_on_first_pwm, scores_on_second_pwm --> count
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = initialScoreHash();
 
@@ -59,10 +47,6 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
                                    firstColumn, secondColumn,
                                    leastSufficientScoreFirst, leastSufficientScoreSecond,
                                    background);
-      }
-
-      if (maxPairHashSize != null && summarySize(scores) > maxPairHashSize) {
-        throw new HashOverflowException("Hash overflow in AlignedModelIntersection#get_counts");
       }
     }
 

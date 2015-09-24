@@ -107,7 +107,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected CompareModels calculator() {
-    return new CompareModels(firstPWM, secondPWM, firstBackground, secondBackground, discretizer, maxPairHashSize, maxHashSize);
+    return new CompareModels(firstPWM, secondPWM, firstBackground, secondBackground, discretizer);
   }
 
   public static void main(String[] args) {

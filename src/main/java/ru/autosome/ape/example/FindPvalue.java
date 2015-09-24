@@ -2,7 +2,6 @@ package ru.autosome.ape.example;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
@@ -20,31 +19,22 @@ public class FindPvalue {
     PWM pwm = new PWMImporter().loadMotif("test_data/pwm/KLF4_f2.pwm");
     BackgroundModel background = new WordwiseBackground();
     Discretizer discretizer = new Discretizer(10000.0);
-    Integer max_hash_size = null;
     double threshold = 3;
     double[] thresholds = {3,5,7};
 
-    FindPvalueAPE calculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretizer, max_hash_size);
+    FindPvalueAPE calculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretizer);
 
       // Single threshold
     {
       CanFindPvalue.PvalueInfo info = null;
-      try {
-        info = calculator.pvalueByThreshold(threshold);
-      } catch (HashOverflowException e) {
-        e.printStackTrace();
-      }
+      info = calculator.pvalueByThreshold(threshold);
       print_result(info, background, pwm.length());
     }
 
       // Multiple thresholds
     {
       CanFindPvalue.PvalueInfo[] infos = new CanFindPvalue.PvalueInfo[0];
-      try {
-        infos = calculator.pvaluesByThresholds(thresholds);
-      } catch (HashOverflowException e) {
-        e.printStackTrace();
-      }
+      infos = calculator.pvaluesByThresholds(thresholds);
       for (CanFindPvalue.PvalueInfo info : infos) {
         print_result(info, background, pwm.length());
       }

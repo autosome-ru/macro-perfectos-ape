@@ -1,6 +1,5 @@
 package ru.autosome.ape.calculation.findPvalue;
 
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
@@ -22,7 +21,7 @@ public interface CanFindPvalue {
 
   public OutputInformation report_table_layout();
 
-  public PvalueInfo[] pvaluesByThresholds(double[] thresholds) throws HashOverflowException;
+  public PvalueInfo[] pvaluesByThresholds(double[] thresholds);
 
-  public PvalueInfo pvalueByThreshold(double threshold) throws HashOverflowException;
+  public PvalueInfo pvalueByThreshold(double threshold);
 }

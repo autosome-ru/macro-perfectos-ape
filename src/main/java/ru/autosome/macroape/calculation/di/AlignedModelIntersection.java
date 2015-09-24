@@ -4,7 +4,6 @@ import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.di.DiPWM;
@@ -21,25 +20,6 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
 
   public AlignedModelIntersection(DiPWM firstPWM, DiPWM secondPWM, DiBackgroundModel firstBackground, DiBackgroundModel secondBackground, Position relativePosition) {
     super(firstPWM, secondPWM, firstBackground, secondBackground,relativePosition);
-  }
-
-
-  private int summarySize(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores) {
-    int sum = 0;
-    TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
-    while (iterator.hasNext()) {
-      iterator.advance();
-      sum += iterator.value().size();
-    }
-    return sum;
-  }
-
-  private int summarySize(List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> scores) {
-    int sum = 0;
-    for (TDoubleObjectHashMap<TDoubleDoubleHashMap> score_part: scores) {
-      sum += summarySize(score_part);
-    }
-    return sum;
   }
 
   // 2d-score hash before first step
@@ -73,7 +53,7 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
   }
 
   @Override
-  protected double get_counts(double threshold_first, double threshold_second, DiBackgroundModel background) throws HashOverflowException {
+  protected double get_counts(double threshold_first, double threshold_second, DiBackgroundModel background) {
     // last letter, scores_on_first_pwm, scores_on_second_pwm --> count
     List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> scores = initialScoreHash(background);
 
@@ -88,10 +68,6 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
                                  firstColumn, secondColumn,
                                  leastSufficientScoresFirst, leastSufficientScoresSecond,
                                  background);
-
-      if (maxPairHashSize != null && summarySize(scores) > maxPairHashSize) {
-        throw new HashOverflowException("Hash overflow in AlignedModelIntersection#get_counts");
-      }
     }
 
     return combine_scores(scores);

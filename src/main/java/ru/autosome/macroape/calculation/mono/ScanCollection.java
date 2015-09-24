@@ -11,9 +11,9 @@ public class ScanCollection extends ru.autosome.macroape.calculation.generalized
 
 
   protected CompareModels calculation(PWM firstMotif, PWM secondMotif,  BackgroundModel firstBackground, BackgroundModel secondBackground,
-                                      CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator, Discretizer discretizer, Integer max_hash_size) {
+                                      CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator, Discretizer discretizer) {
     return new CompareModels( firstMotif, secondMotif, firstBackground, secondBackground,
-                              firstPvalueCalculator, secondPvalueCalculator, discretizer, max_hash_size );
+                              firstPvalueCalculator, secondPvalueCalculator, discretizer);
   }
 
   public ScanCollection(List<ru.autosome.macroape.ScanCollection.ThresholdEvaluator> thresholdEvaluators, PWM queryPWM) {

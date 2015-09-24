@@ -2,7 +2,6 @@ package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.model.PvalueBsearchList;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.ape.model.progression.Progression;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
@@ -23,7 +22,6 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
   protected Discretizer discretizer;
   protected BackgroundType background;
   protected BoundaryType pvalue_boundary;
-  protected Integer max_hash_size;
   protected DataModel data_model;
   protected double effective_count; // used for converting PPM --> PWM
   protected PseudocountCalculator pseudocount;
@@ -47,7 +45,6 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     initialize_default_background();
     discretizer = new Discretizer(1000.0);
     pvalue_boundary = BoundaryType.LOWER;
-    max_hash_size = 10000000;
     pvalues = PrecalculateThresholdList.PVALUE_LIST;
     data_model = DataModel.PWM;
     effective_count = 100;
@@ -102,8 +99,6 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
       extract_background(argv.remove(0));
     } else if (opt.equals("--pvalues")) {
       pvalues = Progression.fromString(argv.remove(0)).values();
-    } else if (opt.equals("--max-hash-size")) {
-      max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
@@ -140,7 +135,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     return results;
   }
 
-  protected void calculate_thresholds_for_collection() throws HashOverflowException, IOException {
+  protected void calculate_thresholds_for_collection() throws IOException {
     for (Named<ModelType> motif: motifList) {
       if (!silenceLog) {
         System.err.println(motif.getName());

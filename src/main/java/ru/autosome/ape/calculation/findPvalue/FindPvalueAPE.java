@@ -9,15 +9,13 @@ import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringMod
 
 public class FindPvalueAPE<ModelType extends HasLength & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
                            BackgroundType extends GeneralizedBackgroundModel> extends FindPvalueByDiscretization<ModelType, BackgroundType> {
-  final Integer maxHashSize;
 
-  public FindPvalueAPE(ModelType pwm, BackgroundType background, Discretizer discretizer, Integer maxHashSize) {
+  public FindPvalueAPE(ModelType pwm, BackgroundType background, Discretizer discretizer) {
     super(pwm, background, discretizer);
-    this.maxHashSize = maxHashSize;
   }
 
   @Override
   ScoringModelDistributions discretedScoringModel() {
-    return motif.discrete(discretizer).scoringModelDistibutions(background, maxHashSize);
+    return motif.discrete(discretizer).scoringModelDistibutions(background);
   }
 }

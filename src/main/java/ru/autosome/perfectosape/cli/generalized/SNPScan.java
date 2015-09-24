@@ -3,7 +3,6 @@ package ru.autosome.perfectosape.cli.generalized;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
@@ -49,7 +48,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     for (Named<MotifType> motif: motifList) {
       CanFindPvalue pvalueCalculator;
       if (thresholds_folder == null) {
-        pvalueCalculator = new FindPvalueAPE<MotifType, BackgroundType>(motif.getObject(), background, discretizer, max_hash_size);
+        pvalueCalculator = new FindPvalueAPE<MotifType, BackgroundType>(motif.getObject(), background, discretizer);
       } else {
         pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif.getName());
       }
@@ -93,7 +92,6 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   }
 
   protected Discretizer discretizer;
-  protected Integer max_hash_size;
   protected int expand_region_length;
 
   protected File path_to_collection_of_pwms;
@@ -134,7 +132,6 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected void initialize_defaults() {
     initialize_default_background();
     discretizer = new Discretizer(100.0);
-    max_hash_size = 10000000;
     expand_region_length = 0;
 
     dataModel = DataModel.PWM;
@@ -183,8 +180,6 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));
-    } else if (opt.equals("--max-hash-size")) {
-      max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--pcm")) {
@@ -241,7 +236,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     return pvalueSignificant(affinityInfos) && foldChangeSignificant(affinityInfos);
   }
 
-  protected void process_snp(String snp_name, SequenceWithSNP seq_w_snp, SequenceWithSNVType encodedSequenceWithSNP) throws HashOverflowException {
+  protected void process_snp(String snp_name, SequenceWithSNP seq_w_snp, SequenceWithSNVType encodedSequenceWithSNP) {
     for (ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType> motifEvaluator: pwmCollection) {
       ModelType pwm = motifEvaluator.pwm;
 
@@ -261,7 +256,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     }
   }
 
-  public void process() throws HashOverflowException, IOException {
+  public void process() throws IOException {
     if (shortFormat) {
       System.out.println("# SNP name\tmotif\tP-value 1\tP-value 2\tposition 1\torientation 1\tposition 2\torientation 2");
     } else {

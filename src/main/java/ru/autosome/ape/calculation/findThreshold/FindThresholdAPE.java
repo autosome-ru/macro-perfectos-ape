@@ -8,19 +8,16 @@ import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringMod
 public class FindThresholdAPE<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType>,
                               BackgroundType> extends FindThresholdByDiscretization {
   final ModelType motif;
-  final Integer maxHashSize; // if maxHashSize is null - it's not applied
   final BackgroundType background;
 
-  public FindThresholdAPE(ModelType motif, BackgroundType background,
-                    Discretizer discretizer, Integer max_hash_size) {
+  public FindThresholdAPE(ModelType motif, BackgroundType background, Discretizer discretizer) {
     super(discretizer);
     this.motif = motif;
     this.background = background;
-    this.maxHashSize = max_hash_size;
   }
 
   @Override
   ScoringModelDistributions discretedScoringModel() {
-    return motif.discrete(discretizer).scoringModelDistibutions(background, maxHashSize);
+    return motif.discrete(discretizer).scoringModelDistibutions(background);
   }
 }

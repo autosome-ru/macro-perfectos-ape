@@ -1,6 +1,5 @@
 package ru.autosome.ape.calculation.findThreshold;
 
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.BoundaryType;
@@ -30,11 +29,11 @@ public interface CanFindThreshold {
     }
   }
 
-  ThresholdInfo weakThresholdByPvalue(double pvalue) throws HashOverflowException;
-  ThresholdInfo strongThresholdByPvalue(double pvalue) throws HashOverflowException;
-  ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) throws HashOverflowException;
+  ThresholdInfo weakThresholdByPvalue(double pvalue);
+  ThresholdInfo strongThresholdByPvalue(double pvalue);
+  ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType);
 
-  ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues) throws HashOverflowException;
-  ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) throws HashOverflowException;
-  ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) throws HashOverflowException;
+  ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues);
+  ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues);
+  ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType);
 }

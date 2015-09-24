@@ -1,7 +1,6 @@
 package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
-import ru.autosome.ape.model.exception.HashOverflowException;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.Discretizer;
@@ -47,7 +46,6 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   protected String pm_filename; // file with PM (not File instance because it can be .stdin)
   protected Discretizer discretizer;
   protected double[] thresholds;
-  protected Integer max_hash_size;
   protected DataModel data_model;
   protected double effective_count;
   protected PseudocountCalculator pseudocount;
@@ -68,7 +66,6 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     initialize_default_background();
     discretizer = new Discretizer(10000.0);
     thresholds = new double[0];
-    max_hash_size = 10000000;
     data_model = DataModel.PWM;
     thresholds_folder = null;
     effective_count = 100;
@@ -110,8 +107,6 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));
-    } else if (opt.equals("--max-hash-size")) {
-      max_hash_size = Integer.valueOf(argv.remove(0));
     } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--pcm")) {
@@ -162,7 +157,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     return report_table(data_list);
   }
 
-  protected OutputInformation report_table() throws HashOverflowException {
+  protected OutputInformation report_table() {
     CanFindPvalue.PvalueInfo[] results = calculator().pvaluesByThresholds(thresholds);
     return report_table(results);
   }
