@@ -144,7 +144,8 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
       matrix_revcomp[i] = new double[16];
       for (int first_letter_index = 0; first_letter_index < 4; ++first_letter_index) {
         for (int second_letter_index = 0; second_letter_index < 4; ++second_letter_index) {
-          matrix_revcomp[i][4*first_letter_index + second_letter_index] = matrix[matrix.length - 1 - i][4*second_letter_index + first_letter_index];
+          matrix_revcomp[i][4*first_letter_index + second_letter_index] =
+              matrix[matrix.length - 1 - i][4 * (3 - second_letter_index) + (3 - first_letter_index)];
         }
       }
     }
