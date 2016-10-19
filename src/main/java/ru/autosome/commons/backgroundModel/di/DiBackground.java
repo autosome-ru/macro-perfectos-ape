@@ -7,13 +7,15 @@ import ru.autosome.commons.support.ArrayExtensions;
 
 import java.util.List;
 
+import static ru.autosome.commons.model.indexingScheme.DiIndexingScheme.diIndex;
+
 public class DiBackground implements DiBackgroundModel {
   private double[] background;
   private double[][] _conditionalProbabilities;
 
   // TODO: whether we should check symmetricity of background
 
-  // probabilities are absolute, not conditional. Indices are (4*firstLetter + secondLetter)
+  // probabilities are absolute, not conditional. Indices fit DiPM indexing scheme.
   public DiBackground(double[] background) {
     if (background.length != 16) {
       throw new IllegalArgumentException("Background constructor takes an array of 16 frequencies");
@@ -44,7 +46,7 @@ public class DiBackground implements DiBackgroundModel {
       double[] background = new double[16];
       for (int letter = 0; letter < 4; ++letter) {
         for (int previousLetter = 0; previousLetter < 4; ++previousLetter) {
-          background[4 * previousLetter + letter] = backgroundModel.probability(letter) / 4;
+          background[diIndex(previousLetter, letter)] = backgroundModel.probability(letter) / 4;
         }
       }
       return new DiBackground(background);
@@ -76,7 +78,7 @@ public class DiBackground implements DiBackgroundModel {
   public double countAnyFirstLetter(int secondLetter) {
     double probabilityAnyLetter = 0;
     for (int firstLetter = 0; firstLetter < 4; ++firstLetter) {
-      probabilityAnyLetter += probability(4 * firstLetter + secondLetter);
+      probabilityAnyLetter += probability(diIndex(firstLetter, secondLetter));
     }
     return probabilityAnyLetter;
   }
@@ -85,7 +87,7 @@ public class DiBackground implements DiBackgroundModel {
   public double countAnySecondLetter(int firstLetter) {
     double probabilityAnyLetter = 0;
     for (int secondLetter = 0; secondLetter < 4; ++secondLetter) {
-      probabilityAnyLetter += probability(4 * firstLetter + secondLetter);
+      probabilityAnyLetter += probability(diIndex(firstLetter, secondLetter));
     }
     return probabilityAnyLetter;
   }
@@ -95,7 +97,7 @@ public class DiBackground implements DiBackgroundModel {
       _conditionalProbabilities = new double[4][4];
       for (int letterInCondition = 0; letterInCondition < 4; ++letterInCondition) {
         for (int letter = 0; letter < 4; ++letter) {
-          _conditionalProbabilities[letterInCondition][letter] = probability(4 * letterInCondition + letter) /
+          _conditionalProbabilities[letterInCondition][letter] = probability(diIndex(letterInCondition, letter)) /
                                                                   countAnySecondLetter(letterInCondition);
         }
       }
@@ -176,8 +178,8 @@ public class DiBackground implements DiBackgroundModel {
   public double average_by_second_letter(double[] values, int firstLetterIndex) {
     double result = 0;
     for (int secondLetterIndex = 0; secondLetterIndex < 4; ++secondLetterIndex) {
-      int letter = 4 * firstLetterIndex + secondLetterIndex;
-      result += values[letter] * probability(letter);
+      int diletter = diIndex(firstLetterIndex, secondLetterIndex);
+      result += values[diletter] * probability(diletter);
     }
     return result;
   }
@@ -186,8 +188,8 @@ public class DiBackground implements DiBackgroundModel {
   public double average_by_first_letter(double[] values, int secondLetterIndex) {
     double result = 0;
     for (int firstLetterIndex = 0; firstLetterIndex < 4; ++firstLetterIndex) {
-      int letter = 4 * firstLetterIndex + secondLetterIndex;
-      result += values[letter] * probability(letter);
+      int diletter = diIndex(firstLetterIndex, secondLetterIndex);
+      result += values[diletter] * probability(diletter);
     }
     return result;
   }

@@ -12,6 +12,8 @@ import ru.autosome.macroape.model.PairAligned;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.autosome.commons.model.indexingScheme.DiIndexingScheme.diIndex;
+
 public class AlignedModelIntersection extends ru.autosome.macroape.calculation.generalized.AlignedModelIntersection<DiPWM, DiBackgroundModel> {
 
   public AlignedModelIntersection(PairAligned<DiPWM> alignment, DiBackgroundModel firstBackground, DiBackgroundModel secondBackground) {
@@ -108,7 +110,7 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
         while (iterator.hasNext()) {
           iterator.advance();
           double score_first = iterator.key();
-          double new_score_first = score_first + firstColumn[4*first_letter + last_letter];
+          double new_score_first = score_first + firstColumn[diIndex(first_letter, last_letter)];
           if (new_score_first >= leastSufficientScoresFirst[last_letter]) {
             partiallyRecalculatedSeed.put(new_score_first, new TDoubleDoubleHashMap());
           }
@@ -144,10 +146,10 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
           double count = second_iterator.value();
 
           for (int last_letter = 0; last_letter < 4; ++last_letter) {
-            double new_score_first = score_first + firstColumn[4 * first_letter + last_letter];
+            double new_score_first = score_first + firstColumn[diIndex(first_letter, last_letter)];
 
             if (new_score_first >= leastSufficientScoresFirst[last_letter]) {
-              double new_score_second = score_second + secondColumn[4 * first_letter + last_letter];
+              double new_score_second = score_second + secondColumn[diIndex(first_letter, last_letter)];
 
               if (new_score_second >= leastSufficientScoresSecond[last_letter]) {
                 double add = background.conditionalCount(first_letter, last_letter) * count;

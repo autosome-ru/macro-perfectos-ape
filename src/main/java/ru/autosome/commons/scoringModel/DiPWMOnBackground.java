@@ -2,6 +2,7 @@ package ru.autosome.commons.scoringModel;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
+import ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC;
 import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.motifModel.Encodable;
 import ru.autosome.commons.motifModel.ScoringModel;
@@ -10,6 +11,9 @@ import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
 import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNPDiEncoded;
+import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
+
+import static ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC.N_index;
 
 public class DiPWMOnBackground implements ScoringModel<SequenceDiEncoded>, Encodable<SequenceDiEncoded, SequenceWithSNPDiEncoded> {
 
@@ -27,6 +31,7 @@ public class DiPWMOnBackground implements ScoringModel<SequenceDiEncoded>, Encod
     this.matrixIUPAC = calculateMatrixIUPAC();
   }
 
+  // Extract merging scheme
   private double[][] calculateMatrixIUPAC() {
     double[][] result = new double[dipwm.getMatrix().length][];
     for (int posIndex = 0; posIndex < dipwm.getMatrix().length ; ++posIndex) {
@@ -34,20 +39,20 @@ public class DiPWMOnBackground implements ScoringModel<SequenceDiEncoded>, Encod
       for (int firstLetterIndex = 0; firstLetterIndex < 4; ++firstLetterIndex) {
         // AA,AC,AG,AT, CA,CC,CG,CT, GA,GC,GG,GT, TA,TC,TG,TT
         for (int secondLetterIndex = 0; secondLetterIndex < 4; ++secondLetterIndex) {
-          result[posIndex][5 * firstLetterIndex + secondLetterIndex] =
-           dipwm.getMatrix()[posIndex][4 * firstLetterIndex + secondLetterIndex];
+          result[posIndex][DiIndexingSchemeIUPAC.diIndex(firstLetterIndex, secondLetterIndex)] =
+           dipwm.getMatrix()[posIndex][DiIndexingScheme.diIndex(firstLetterIndex, secondLetterIndex)];
         }
         // AN,CN,GN,TN
-        result[posIndex][5 * firstLetterIndex + 4] =
+        result[posIndex][DiIndexingSchemeIUPAC.diIndex(firstLetterIndex, N_index)] =
          dibackground.average_by_second_letter(dipwm.getMatrix()[posIndex], firstLetterIndex);
       }
       for (int secondLetterIndex = 0; secondLetterIndex < 4; ++secondLetterIndex) {
         // NA,NC,NG,NT
-        result[posIndex][20 + secondLetterIndex] =
+        result[posIndex][DiIndexingSchemeIUPAC.diIndex(N_index, secondLetterIndex)] =
          dibackground.average_by_first_letter(dipwm.getMatrix()[posIndex], secondLetterIndex);
       }
       // NN
-      result[posIndex][24] = dibackground.mean_value(dipwm.getMatrix()[posIndex]);
+      result[posIndex][DiIndexingSchemeIUPAC.diIndex(N_index, N_index)] = dibackground.mean_value(dipwm.getMatrix()[posIndex]);
     }
     return result;
   }

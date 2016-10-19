@@ -6,6 +6,8 @@ import ru.autosome.commons.support.ArrayExtensions;
 
 import java.util.List;
 
+import static ru.autosome.commons.model.indexingScheme.DiIndexingScheme.diIndex;
+
 public class Background implements BackgroundModel {
   private double[] background;
 
@@ -42,8 +44,8 @@ public class Background implements BackgroundModel {
         double sum = 0;
         // probability for A is an average of AA+AC+AT+AG and AA+CA+GA+TA
         for (int anotherLetter = 0; anotherLetter < 4; ++anotherLetter) {
-          sum += backgroundModel.probability(4 * letter + anotherLetter) +
-                 backgroundModel.probability(4 * anotherLetter + letter);
+          sum += backgroundModel.probability(diIndex(letter, anotherLetter)) +
+                 backgroundModel.probability(diIndex(anotherLetter, letter));
         }
         background[letter] = sum / 2;
       }

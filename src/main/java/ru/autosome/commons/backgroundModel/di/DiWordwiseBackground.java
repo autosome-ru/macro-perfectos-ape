@@ -1,5 +1,7 @@
 package ru.autosome.commons.backgroundModel.di;
 
+import static ru.autosome.commons.model.indexingScheme.DiIndexingScheme.diIndex;
+
 public class DiWordwiseBackground implements DiBackgroundModel {
   public DiWordwiseBackground() {
   }
@@ -67,7 +69,7 @@ public class DiWordwiseBackground implements DiBackgroundModel {
   public double average_by_second_letter(double[] values, int firstLetterIndex) {
     double result = 0;
     for (int secondLetterIndex = 0; secondLetterIndex < 4; ++secondLetterIndex) {
-      int letter = 4 * firstLetterIndex + secondLetterIndex;
+      int letter = diIndex(firstLetterIndex, secondLetterIndex);
       result += values[letter];
     }
     return result / 4.0;
@@ -77,7 +79,7 @@ public class DiWordwiseBackground implements DiBackgroundModel {
   public double average_by_first_letter(double[] values, int secondLetterIndex) {
     double result = 0;
     for (int firstLetterIndex = 0; firstLetterIndex < 4; ++firstLetterIndex) {
-      int letter = 4 * firstLetterIndex + secondLetterIndex;
+      int letter = diIndex(firstLetterIndex, secondLetterIndex);
       result += values[letter];
     }
     return result / 4.0;
