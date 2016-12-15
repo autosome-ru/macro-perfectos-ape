@@ -13,6 +13,7 @@ import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold<PWM, BackgroundModel> {
   @Override
@@ -55,7 +56,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
     initialize_defaults();
   }
 
-  private static FindThreshold from_arglist(ArrayList<String> argv) {
+  private static FindThreshold from_arglist(List<String> argv) {
     FindThreshold result = new FindThreshold();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);

@@ -10,6 +10,7 @@ import ru.autosome.macroape.calculation.mono.CompareModels;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSimilarity<PWM, BackgroundModel> {
   @Override
@@ -48,7 +49,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     initialize_defaults();
   }
 
-  private static EvalSimilarity from_arglist(ArrayList<String> argv) {
+  private static EvalSimilarity from_arglist(List<String> argv) {
     EvalSimilarity result = new EvalSimilarity();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);

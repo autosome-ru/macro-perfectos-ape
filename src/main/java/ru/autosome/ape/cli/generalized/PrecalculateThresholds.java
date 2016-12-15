@@ -53,7 +53,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     transpose = false;
   }
 
-  protected void setup_from_arglist(ArrayList<String> argv) {
+  protected void setup_from_arglist(List<String> argv) {
     File[] collection_folder = extract_collection_files(argv);
     extract_output_folder_name(argv);
 
@@ -65,7 +65,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     create_results_folder();
   }
 
-  protected File[] extract_collection_files(ArrayList<String> argv) {
+  protected File[] extract_collection_files(List<String> argv) {
     try {
       File collection_folder = new File(argv.remove(0));
       File[] files = collection_folder.listFiles();
@@ -79,7 +79,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     }
   }
 
-  protected void extract_output_folder_name(ArrayList<String> argv) {
+  protected void extract_output_folder_name(List<String> argv) {
     try {
       results_dir = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
@@ -93,7 +93,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     }
   }
 
-  protected void extract_option(ArrayList<String> argv) {
+  protected void extract_option(List<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));

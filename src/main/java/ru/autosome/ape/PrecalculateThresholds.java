@@ -12,6 +12,7 @@ import ru.autosome.commons.motifModel.mono.PWM;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.PrecalculateThresholds<PWM, BackgroundModel> {
 
@@ -49,7 +50,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
     initialize_defaults();
   }
 
-  protected static ru.autosome.ape.PrecalculateThresholds from_arglist(ArrayList<String> argv) {
+  protected static ru.autosome.ape.PrecalculateThresholds from_arglist(List<String> argv) {
     ru.autosome.ape.PrecalculateThresholds result = new ru.autosome.ape.PrecalculateThresholds();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);

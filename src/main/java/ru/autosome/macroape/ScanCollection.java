@@ -39,7 +39,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     initialize_defaults();
   }
 
-  private static ScanCollection from_arglist(ArrayList<String> argv) {
+  private static ScanCollection from_arglist(List<String> argv) {
     ScanCollection result = new ScanCollection();
     Helper.print_help_if_requested(argv, new ScanCollection().documentString());
     result.setup_from_arglist(argv);

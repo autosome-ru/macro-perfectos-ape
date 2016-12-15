@@ -81,7 +81,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     pvalues[0] = 0.0005;
   }
 
-  protected void setup_from_arglist(ArrayList<String> argv) {
+  protected void setup_from_arglist(List<String> argv) {
     extract_pm_filename(argv);
     extract_pvalue_list(argv);
     while (argv.size() > 0) {
@@ -90,7 +90,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     motif = loadMotif(pm_filename);
   }
 
-  protected void extract_option(ArrayList<String> argv) {
+  protected void extract_option(List<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));
@@ -122,14 +122,14 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   }
 
 
-  protected void extract_pm_filename(ArrayList<String> argv) {
+  protected void extract_pm_filename(List<String> argv) {
     if (argv.isEmpty()) {
       throw new IllegalArgumentException("No input. You should specify input file");
     }
     pm_filename = argv.remove(0);
   }
 
-  protected void extract_pvalue_list(ArrayList<String> argv) {
+  protected void extract_pvalue_list(List<String> argv) {
     ArrayList<Double> pvalues_tmp = new ArrayList<Double>();
 
     try {
@@ -177,7 +177,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     return infos;
   }
 
-  OutputInformation report_table(ArrayList<? extends ResultInfo> data) {
+  OutputInformation report_table(List<? extends ResultInfo> data) {
     OutputInformation result = report_table_layout();
     result.data = data;
     return result;

@@ -71,7 +71,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   protected abstract ModelType loadSecondPWM(String filename);
   protected abstract CompareModels<ModelType, BackgroundType> calculator();
 
-  protected void setup_from_arglist(ArrayList<String> argv) {
+  protected void setup_from_arglist(List<String> argv) {
     extract_first_pm_filename(argv);
     extract_second_pm_filename(argv);
     while (argv.size() > 0) {
@@ -81,14 +81,14 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     secondPWM = loadSecondPWM(secondPMFilename);
   }
 
-  protected void extract_first_pm_filename(ArrayList<String> argv) {
+  protected void extract_first_pm_filename(List<String> argv) {
     if (argv.isEmpty()) {
       throw new IllegalArgumentException("No input. You should specify input file");
     }
     firstPMFilename = argv.remove(0);
   }
 
-  protected void extract_second_pm_filename(ArrayList<String> argv) {
+  protected void extract_second_pm_filename(List<String> argv) {
     if (argv.isEmpty()) {
       throw new IllegalArgumentException("No input. You should specify input file");
     }
@@ -119,7 +119,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     alignment = null;
   }
 
-  protected void extract_option(ArrayList<String> argv) {
+  protected void extract_option(List<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       BackgroundType background = extract_background(argv.remove(0));

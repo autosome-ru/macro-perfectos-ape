@@ -80,7 +80,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
     }
   }
 
-  protected static ru.autosome.ape.di.PrecalculateThresholds from_arglist(ArrayList<String> argv) {
+  protected static ru.autosome.ape.di.PrecalculateThresholds from_arglist(List<String> argv) {
     ru.autosome.ape.di.PrecalculateThresholds result = new ru.autosome.ape.di.PrecalculateThresholds();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);

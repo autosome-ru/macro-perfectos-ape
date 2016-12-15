@@ -79,7 +79,7 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
     return sequenceWithSNV.diEncode();
   }
 
-  protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(ArrayList<String> argv) {
+  protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(List<String> argv) {
     ru.autosome.perfectosape.di.SNPScan result = new ru.autosome.perfectosape.di.SNPScan();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);

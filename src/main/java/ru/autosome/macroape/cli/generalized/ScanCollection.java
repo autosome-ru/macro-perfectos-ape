@@ -106,14 +106,14 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return "";
   }
 
-  protected void extract_query_pm_filename(ArrayList<String> argv) {
+  protected void extract_query_pm_filename(List<String> argv) {
     if (argv.isEmpty()) {
       throw new IllegalArgumentException("No input. You should specify input file");
     }
     queryPMFilename = argv.remove(0);
   }
 
-  protected void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
+  protected void extract_path_to_collection_of_pwms(List<String> argv) {
     try {
       pathToCollectionOfPWMs = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
@@ -142,7 +142,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     collectionTranspose = false;
   }
 
-  protected void extract_option(ArrayList<String> argv) {
+  protected void extract_option(List<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       BackgroundType background = extractBackground(argv.remove(0));
@@ -306,7 +306,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return result;
   }
 
-  protected void setup_from_arglist(ArrayList<String> argv) {
+  protected void setup_from_arglist(List<String> argv) {
     extract_query_pm_filename(argv);
     extract_path_to_collection_of_pwms(argv);
     while (argv.size() > 0) {

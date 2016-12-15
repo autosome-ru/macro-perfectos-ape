@@ -86,7 +86,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
     initialize_defaults();
   }
 
-  protected static FindPvalue from_arglist(ArrayList<String> argv) {
+  protected static FindPvalue from_arglist(List<String> argv) {
     FindPvalue result = new FindPvalue();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);

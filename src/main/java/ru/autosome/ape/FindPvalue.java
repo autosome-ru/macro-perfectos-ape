@@ -13,6 +13,7 @@ import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, BackgroundModel> {
   @Override
@@ -56,7 +57,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, 
     initialize_defaults();
   }
 
-  protected static FindPvalue from_arglist(ArrayList<String> argv) {
+  protected static FindPvalue from_arglist(List<String> argv) {
     FindPvalue result = new FindPvalue();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);

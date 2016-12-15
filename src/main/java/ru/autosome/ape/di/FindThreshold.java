@@ -87,7 +87,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
     initialize_defaults();
   }
 
-  protected static FindThreshold from_arglist(ArrayList<String> argv) {
+  protected static FindThreshold from_arglist(List<String> argv) {
     FindThreshold result = new FindThreshold();
     Helper.print_help_if_requested(argv, result.documentString());
     result.setup_from_arglist(argv);

@@ -113,7 +113,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected boolean shortFormat;
   protected boolean useLogFoldChange;
 
-  void extract_path_to_collection_of_pwms(ArrayList<String> argv) {
+  void extract_path_to_collection_of_pwms(List<String> argv) {
     try {
       path_to_collection_of_pwms = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
@@ -121,7 +121,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     }
   }
 
-  void extract_path_to_file_w_snps(ArrayList<String> argv) {
+  void extract_path_to_file_w_snps(List<String> argv) {
     try {
       path_to_file_w_snps = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
@@ -149,7 +149,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     initialize_defaults();
   }
 
-  protected void setup_from_arglist(ArrayList<String> argv) {
+  protected void setup_from_arglist(List<String> argv) {
     extract_path_to_collection_of_pwms(argv);
     extract_path_to_file_w_snps(argv);
 
@@ -176,7 +176,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     load_collection_of_pwms_with_evaluators();
   }
 
-  protected void extract_option(ArrayList<String> argv) {
+  protected void extract_option(List<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));
