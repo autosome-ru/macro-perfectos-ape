@@ -6,7 +6,7 @@ import ru.autosome.commons.cli.ResultInfo;
 
 import java.util.List;
 
-public interface CanFindPvalue {
+public interface CanFindPvalue extends ReportableParams {
   public static class PvalueInfo extends ResultInfo {
     public final double threshold;
     public final double pvalue;
@@ -20,8 +20,6 @@ public interface CanFindPvalue {
       return pvalue * Math.pow(background.volume(), length);
     }
   }
-
-  public OutputInformation report_table_layout();
 
   public List<PvalueInfo> pvaluesByThresholds(List<Double> thresholds);
 

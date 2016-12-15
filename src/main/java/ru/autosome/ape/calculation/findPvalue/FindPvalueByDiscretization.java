@@ -59,7 +59,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
 
     infos.add_table_parameter("T", "threshold", "threshold");
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords",new OutputInformation.Callback<PvalueInfo>() {
+      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords", new OutputInformation.Callback<PvalueInfo>() {
         @Override
         public Object run(PvalueInfo cell) {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.length());
