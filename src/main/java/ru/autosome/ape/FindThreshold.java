@@ -47,10 +47,6 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
     return cache_calculator;
   }
 
-  public FindThreshold() {
-    initialize_defaults();
-  }
-
   private static FindThreshold from_arglist(String[] args) {
     FindThreshold result = new FindThreshold();
     result.setup_from_arglist(args);

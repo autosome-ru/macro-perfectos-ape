@@ -201,4 +201,8 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     CanFindThreshold.ThresholdInfo[] results = calculator().thresholdsByPvalues(pvalues, pvalue_boundary);
     return report_table(results);
   }
+
+  protected FindThreshold() {
+    initialize_defaults();
+  }
 }

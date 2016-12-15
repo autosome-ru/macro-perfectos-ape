@@ -38,6 +38,10 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     }
   }
 
+  protected CollectDistanceMatrix() {
+    initialize_defaults();
+  }
+
   abstract protected String DOC_background_option();
   abstract protected String DOC_run_string();
   protected String documentString() {

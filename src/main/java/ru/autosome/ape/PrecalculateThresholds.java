@@ -42,10 +42,6 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
     return "java ru.autosome.ape.PrecalculateThresholds";
   }
 
-  public PrecalculateThresholds() {
-    initialize_defaults();
-  }
-
   protected static ru.autosome.ape.PrecalculateThresholds from_arglist(String[] args) {
     ru.autosome.ape.PrecalculateThresholds result = new ru.autosome.ape.PrecalculateThresholds();
     result.setup_from_arglist(args);

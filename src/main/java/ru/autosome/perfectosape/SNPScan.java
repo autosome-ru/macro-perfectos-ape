@@ -23,10 +23,6 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
     return "ACGT - 4 numbers, comma-delimited(spaces not allowed), sum should be equal to 1, like 0.25,0.24,0.26,0.25";
   }
 
-  private SNPScan() {
-    super();
-  }
-
   @Override
   protected void extract_background(String str) {
     background = Background.fromString(str);

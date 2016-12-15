@@ -39,11 +39,6 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     return secondMotifImporter.loadMotif(filename);
   }
 
-
-  private EvalSimilarity() {
-    initialize_defaults();
-  }
-
   private static EvalSimilarity from_arglist(String[] args) {
     EvalSimilarity result = new EvalSimilarity();
     result.setup_from_arglist(args);

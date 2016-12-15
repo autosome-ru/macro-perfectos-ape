@@ -170,4 +170,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     return report_table(results);
   }
 
+  protected FindPvalue() {
+    initialize_defaults();
+  }
 }

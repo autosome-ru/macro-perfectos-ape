@@ -107,6 +107,10 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return "";
   }
 
+  protected ScanCollection() {
+    initialize_defaults();
+  }
+
   protected void extract_query_pm_filename(List<String> argv) {
     if (argv.isEmpty()) {
       throw new IllegalArgumentException("No input. You should specify input file");

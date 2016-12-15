@@ -66,10 +66,6 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
     return DiBackground.fromString(str);
   }
 
-  private CollectDistanceMatrix() {
-    initialize_defaults();
-  }
-
   private static CollectDistanceMatrix from_arglist(String[] args) {
     CollectDistanceMatrix result = new CollectDistanceMatrix();
     result.setup_from_arglist(args);

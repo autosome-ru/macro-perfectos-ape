@@ -48,10 +48,6 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
     }
   }
 
-  private SNPScan() {
-    super();
-  }
-
   @Override
   protected void extract_background(String str) {
     background = DiBackground.fromString(str);

@@ -28,6 +28,10 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     return "";
   }
 
+  protected EvalSimilarity() {
+    initialize_defaults();
+  }
+
   protected String documentString() {
    return "Command-line format:\n" +
     DOC_run_string() + " <1st matrix pat-file> <2nd matrix pat-file> [options]\n" +

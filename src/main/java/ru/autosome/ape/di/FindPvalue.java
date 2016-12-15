@@ -79,10 +79,6 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
     return importer.loadMotifWithName(filename);
   }
 
-  protected FindPvalue() {
-    initialize_defaults();
-  }
-
   protected static FindPvalue from_arglist(String[] args) {
     FindPvalue result = new FindPvalue();
     result.setup_from_arglist(args);

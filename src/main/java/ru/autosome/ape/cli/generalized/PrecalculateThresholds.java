@@ -180,4 +180,8 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     return "";
   }
 
+  protected PrecalculateThresholds() {
+    initialize_defaults();
+  }
+
 }

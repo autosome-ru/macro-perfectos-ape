@@ -63,10 +63,6 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
     return "  [--from-mono]  - obtain DiPWMs from mono PWM/PCM/PPMs.\n";
   }
 
-  protected PrecalculateThresholds() {
-    initialize_defaults();
-  }
-
   @Override
   protected boolean failed_to_recognize_additional_options(String opt, List<String> argv) {
     if (opt.equals("--from-mono")) {

@@ -32,10 +32,6 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     collectionBackground = new WordwiseBackground();
   }
 
-  private ScanCollection() {
-    initialize_defaults();
-  }
-
   private static ScanCollection from_arglist(String[] args) {
     ScanCollection result = new ScanCollection();
     result.setup_from_arglist(args);
