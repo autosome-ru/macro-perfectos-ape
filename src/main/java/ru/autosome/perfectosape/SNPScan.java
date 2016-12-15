@@ -3,7 +3,6 @@ package ru.autosome.perfectosape;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
@@ -12,8 +11,6 @@ import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<SequenceMonoEncoded, SequenceWithSNPMonoEncoded, PWM, PWMOnBackground, BackgroundModel> {
@@ -49,17 +46,10 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
     return sequenceWithSNV.monoEncode();
   }
 
-  protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(List<String> argv) {
-    ru.autosome.perfectosape.SNPScan result = new ru.autosome.perfectosape.SNPScan();
-    Helper.print_help_if_requested(argv, result.documentString());
-    result.setup_from_arglist(argv);
-    return result;
-  }
-
   protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
-    Collections.addAll(argv, args);
-    return from_arglist(argv);
+    ru.autosome.perfectosape.SNPScan result = new ru.autosome.perfectosape.SNPScan();
+    result.setup_from_arglist(args);
+    return result;
   }
 
   public static void main(String[] args) {

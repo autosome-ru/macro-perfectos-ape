@@ -3,14 +3,11 @@ package ru.autosome.macroape;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCollection<PWM, BackgroundModel> {
@@ -39,17 +36,10 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     initialize_defaults();
   }
 
-  private static ScanCollection from_arglist(List<String> argv) {
-    ScanCollection result = new ScanCollection();
-    Helper.print_help_if_requested(argv, new ScanCollection().documentString());
-    result.setup_from_arglist(argv);
-    return result;
-  }
-
   private static ScanCollection from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
-    Collections.addAll(argv, args);
-    return from_arglist(argv);
+    ScanCollection result = new ScanCollection();
+    result.setup_from_arglist(args);
+    return result;
   }
 
   protected List<Named<PWM>> loadMotifCollection() {

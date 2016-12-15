@@ -6,15 +6,12 @@ import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
-import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM, DiBackgroundModel> {
@@ -86,17 +83,10 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
     initialize_defaults();
   }
 
-  protected static FindPvalue from_arglist(List<String> argv) {
-    FindPvalue result = new FindPvalue();
-    Helper.print_help_if_requested(argv, result.documentString());
-    result.setup_from_arglist(argv);
-    return result;
-  }
-
   protected static FindPvalue from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
-    Collections.addAll(argv, args);
-    return from_arglist(argv);
+    FindPvalue result = new FindPvalue();
+    result.setup_from_arglist(args);
+    return result;
   }
 
   public static void main(String[] args) {

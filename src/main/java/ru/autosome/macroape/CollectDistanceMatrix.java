@@ -3,15 +3,12 @@ package ru.autosome.macroape;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.CollectDistanceMatrix<PWM, BackgroundModel> {
@@ -38,17 +35,10 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
     initialize_defaults();
   }
 
-  private static CollectDistanceMatrix from_arglist(List<String> argv) {
-    CollectDistanceMatrix result = new CollectDistanceMatrix();
-    Helper.print_help_if_requested(argv, new CollectDistanceMatrix().documentString());
-    result.setup_from_arglist(argv);
-    return result;
-  }
-
   private static CollectDistanceMatrix from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
-    Collections.addAll(argv, args);
-    return from_arglist(argv);
+    CollectDistanceMatrix result = new CollectDistanceMatrix();
+    result.setup_from_arglist(args);
+    return result;
   }
 
   @Override

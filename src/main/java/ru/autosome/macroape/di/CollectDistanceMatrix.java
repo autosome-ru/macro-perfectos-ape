@@ -3,7 +3,6 @@ package ru.autosome.macroape.di;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
-import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
@@ -12,8 +11,6 @@ import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.macroape.calculation.di.CompareModelsCountsGiven;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.CollectDistanceMatrix<DiPWM, DiBackgroundModel> {
@@ -73,19 +70,11 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
     initialize_defaults();
   }
 
-  private static CollectDistanceMatrix from_arglist(List<String> argv) {
+  private static CollectDistanceMatrix from_arglist(String[] args) {
     CollectDistanceMatrix result = new CollectDistanceMatrix();
-    Helper.print_help_if_requested(argv, new CollectDistanceMatrix().documentString());
-    result.setup_from_arglist(argv);
+    result.setup_from_arglist(args);
     return result;
   }
-
-  private static CollectDistanceMatrix from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
-    Collections.addAll(argv, args);
-    return from_arglist(argv);
-  }
-
 
   @Override
   protected CompareModelsCountsGiven calculator(DiPWM firstModel, DiPWM secondModel) {

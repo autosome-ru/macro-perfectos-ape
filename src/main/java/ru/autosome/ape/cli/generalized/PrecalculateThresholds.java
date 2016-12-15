@@ -4,6 +4,7 @@ import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.ape.model.progression.Progression;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
@@ -16,6 +17,7 @@ import ru.autosome.commons.motifModel.types.DataModel;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class PrecalculateThresholds<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & ScoreBoundaries, BackgroundType extends GeneralizedBackgroundModel> {
@@ -53,7 +55,14 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     transpose = false;
   }
 
+  protected void setup_from_arglist(String[] args) {
+    ArrayList<String> argv = new ArrayList<String>();
+    Collections.addAll(argv, args);
+    setup_from_arglist(argv);
+  }
+
   protected void setup_from_arglist(List<String> argv) {
+    Helper.print_help_if_requested(argv, documentString());
     File[] collection_folder = extract_collection_files(argv);
     extract_output_folder_name(argv);
 

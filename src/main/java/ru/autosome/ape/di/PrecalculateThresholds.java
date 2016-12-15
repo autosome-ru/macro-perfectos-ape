@@ -4,7 +4,6 @@ import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
-import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
@@ -12,8 +11,6 @@ import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.PrecalculateThresholds<DiPWM,DiBackgroundModel> {
@@ -80,18 +77,12 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
     }
   }
 
-  protected static ru.autosome.ape.di.PrecalculateThresholds from_arglist(List<String> argv) {
+  protected static ru.autosome.ape.di.PrecalculateThresholds from_arglist(String[] args) {
     ru.autosome.ape.di.PrecalculateThresholds result = new ru.autosome.ape.di.PrecalculateThresholds();
-    Helper.print_help_if_requested(argv, result.documentString());
-    result.setup_from_arglist(argv);
+    result.setup_from_arglist(args);
     return result;
   }
 
-  protected static ru.autosome.ape.di.PrecalculateThresholds from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
-    Collections.addAll(argv, args);
-    return from_arglist(argv);
-  }
 
   public static void main(String[] args) {
     try {

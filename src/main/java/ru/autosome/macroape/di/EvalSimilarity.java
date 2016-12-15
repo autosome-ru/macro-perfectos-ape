@@ -3,15 +3,12 @@ package ru.autosome.macroape.di;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
-import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.macroape.calculation.di.CompareModels;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSimilarity<DiPWM, DiBackgroundModel> {
@@ -92,17 +89,10 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     initialize_defaults();
   }
 
-  private static EvalSimilarity from_arglist(List<String> argv) {
-    EvalSimilarity result = new EvalSimilarity();
-    Helper.print_help_if_requested(argv, result.documentString());
-    result.setup_from_arglist(argv);
-    return result;
-  }
-
   private static EvalSimilarity from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
-    Collections.addAll(argv, args);
-    return from_arglist(argv);
+    EvalSimilarity result = new EvalSimilarity();
+    result.setup_from_arglist(args);
+    return result;
   }
 
   @Override

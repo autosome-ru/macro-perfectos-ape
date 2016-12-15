@@ -7,6 +7,7 @@ import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.InputExtensions;
@@ -306,7 +307,14 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return result;
   }
 
+  protected void setup_from_arglist(String[] args) {
+    ArrayList<String> argv = new ArrayList<String>();
+    Collections.addAll(argv, args);
+    setup_from_arglist(argv);
+  }
+
   protected void setup_from_arglist(List<String> argv) {
+    Helper.print_help_if_requested(argv, documentString());
     extract_query_pm_filename(argv);
     extract_path_to_collection_of_pwms(argv);
     while (argv.size() > 0) {

@@ -3,6 +3,7 @@ package ru.autosome.macroape.cli.generalized;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -16,6 +17,7 @@ import ru.autosome.macroape.calculation.generalized.CompareModels;
 import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
@@ -71,7 +73,14 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   protected abstract ModelType loadSecondPWM(String filename);
   protected abstract CompareModels<ModelType, BackgroundType> calculator();
 
+  protected void setup_from_arglist(String[] args) {
+    ArrayList<String> argv = new ArrayList<String>();
+    Collections.addAll(argv, args);
+    setup_from_arglist(argv);
+  }
+
   protected void setup_from_arglist(List<String> argv) {
+    Helper.print_help_if_requested(argv, documentString());
     extract_first_pm_filename(argv);
     extract_second_pm_filename(argv);
     while (argv.size() > 0) {

@@ -1,6 +1,7 @@
 package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.Discretizer;
@@ -133,12 +134,19 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   }
 
   protected void setup_from_arglist(List<String> argv) {
+    Helper.print_help_if_requested(argv, documentString());
     extract_pm_filename(argv);
     extract_threshold_lists(argv);
     while (argv.size() > 0) {
       extract_option(argv);
     }
     motif = loadMotif(pm_filename);
+  }
+
+  protected void setup_from_arglist(String[] args) {
+    ArrayList<String> argv = new ArrayList<String>();
+    Collections.addAll(argv, args);
+    setup_from_arglist(argv);
   }
 
   OutputInformation report_table_layout() {
