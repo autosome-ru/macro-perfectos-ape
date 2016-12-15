@@ -9,6 +9,9 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FindThreshold {
   static void print_result(CanFindThreshold.ThresholdInfo info, BackgroundModel background, int pwmLength) {
     System.out.println( "expected pvalue: " + info.expected_pvalue + "\n" +
@@ -23,7 +26,10 @@ public class FindThreshold {
     Discretizer discretizer = new Discretizer(10000.0);
     BoundaryType pvalue_boundary = BoundaryType.LOWER;
     double pvalue = 0.0005;
-    double[] pvalues = {0.0001, 0.0005, 0.001};
+    List<Double> pvalues = new ArrayList<Double>();
+    pvalues.add(0.0001);
+    pvalues.add(0.0005);
+    pvalues.add(0.001);
 
     CanFindThreshold calculator = new FindThresholdAPE<PWM, BackgroundModel>(pwm, background, discretizer);
 
@@ -35,9 +41,7 @@ public class FindThreshold {
     }
     // Multiple thresholds
     {
-      CanFindThreshold.ThresholdInfo[] infos = new CanFindThreshold.ThresholdInfo[0];
-      infos = calculator.thresholdsByPvalues(pvalues, pvalue_boundary);
-      for (CanFindThreshold.ThresholdInfo info : infos) {
+      for (CanFindThreshold.ThresholdInfo info : calculator.thresholdsByPvalues(pvalues, pvalue_boundary)) {
         print_result(info, background, pwm.length());
       }
     }

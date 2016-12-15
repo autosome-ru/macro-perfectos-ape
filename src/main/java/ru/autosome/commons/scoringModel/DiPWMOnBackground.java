@@ -2,8 +2,9 @@ package ru.autosome.commons.scoringModel;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
-import ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC;
 import ru.autosome.commons.model.Orientation;
+import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
+import ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC;
 import ru.autosome.commons.motifModel.Encodable;
 import ru.autosome.commons.motifModel.ScoringModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
@@ -11,7 +12,6 @@ import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
 import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNPDiEncoded;
-import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
 
 import static ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC.N_index;
 

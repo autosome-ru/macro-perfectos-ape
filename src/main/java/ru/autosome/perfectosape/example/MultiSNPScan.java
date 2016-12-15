@@ -31,7 +31,7 @@ public class MultiSNPScan {
 
     // Reasonable defaults
     //    List of pvalues to be precalculated (One can rely on this default value)
-    double[] pvalues = PrecalculateThresholdList.PVALUE_LIST;
+    List<Double> pvalues = PrecalculateThresholdList.PVALUE_LIST;
     // Higher discretization - better precision of score to Pvalue calculation and higher precalculation time
     // (given discretization is high enough, precalculation step though can take about a pair of minutes on large PWM collection)
     // But precalculation step should be done once

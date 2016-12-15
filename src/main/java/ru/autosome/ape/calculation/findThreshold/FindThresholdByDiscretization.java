@@ -4,6 +4,9 @@ import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class FindThresholdByDiscretization implements CanFindThreshold {
   final Discretizer discretizer;
 
@@ -29,24 +32,24 @@ public abstract class FindThresholdByDiscretization implements CanFindThreshold 
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues) {
+  public List<CanFindThreshold.ThresholdInfo> weakThresholdsByPvalues(List<Double> pvalues) {
     return downscale_all(discretedScoringModel().weak_thresholds(pvalues));
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) {
+  public List<CanFindThreshold.ThresholdInfo> strongThresholsdByPvalues(List<Double> pvalues) {
     return downscale_all(discretedScoringModel().strong_thresholds(pvalues));
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) {
+  public List<CanFindThreshold.ThresholdInfo> thresholdsByPvalues(List<Double> pvalues, BoundaryType boundaryType) {
     return downscale_all(discretedScoringModel().thresholds(pvalues, boundaryType));
   }
 
-  private CanFindThreshold.ThresholdInfo[] downscale_all(CanFindThreshold.ThresholdInfo[] thresholdInfos) {
-    CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[thresholdInfos.length];
-    for (int i = 0; i < thresholdInfos.length; ++i) {
-      result[i] = thresholdInfos[i].downscale(discretizer);
+  private List<CanFindThreshold.ThresholdInfo> downscale_all(List<CanFindThreshold.ThresholdInfo> thresholdInfos) {
+    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    for (CanFindThreshold.ThresholdInfo thresholdInfo: thresholdInfos) {
+      result.add(thresholdInfo.downscale(discretizer));
     }
     return result;
   }

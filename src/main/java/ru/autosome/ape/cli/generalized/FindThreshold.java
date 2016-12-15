@@ -11,7 +11,6 @@ import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.commons.support.IOExtensions;
 
 import java.io.File;
@@ -51,7 +50,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
 
   protected BoundaryType pvalue_boundary;
 
-  protected double[] pvalues;
+  protected List<Double> pvalues;
   protected boolean transpose;
 
   protected String pm_filename;
@@ -78,8 +77,8 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     thresholds_folder = null;
     transpose = false;
 
-    pvalues = new double[1];
-    pvalues[0] = 0.0005;
+    pvalues = new ArrayList<Double>();
+    pvalues.add(0.0005);
   }
 
   protected void setup_from_arglist(List<String> argv) {
@@ -156,7 +155,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
 
 
     if (pvalues_tmp.size() != 0) {
-      pvalues = ArrayExtensions.toPrimitiveArray(pvalues_tmp);
+      this.pvalues = pvalues_tmp;
     }
   }
 
@@ -191,15 +190,8 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     return result;
   }
 
-  <R extends ResultInfo> OutputInformation report_table(R[] data) {
-    ArrayList<R> data_list = new ArrayList<R>(data.length);
-    Collections.addAll(data_list, data);
-    return report_table(data_list);
-  }
-
   protected OutputInformation report_table() {
-    CanFindThreshold.ThresholdInfo[] results = calculator().thresholdsByPvalues(pvalues, pvalue_boundary);
-    return report_table(results);
+    return report_table(calculator().thresholdsByPvalues(pvalues, pvalue_boundary));
   }
 
   protected FindThreshold() {

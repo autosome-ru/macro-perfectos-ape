@@ -30,7 +30,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
   protected boolean silenceLog;
 
   protected java.io.File results_dir;
-  protected double[] pvalues;
+  protected List<Double> pvalues;
   protected boolean transpose;
 
   protected List<Named<ModelType>> motifList;

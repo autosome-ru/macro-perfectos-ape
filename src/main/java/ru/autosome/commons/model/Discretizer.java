@@ -1,5 +1,8 @@
 package ru.autosome.commons.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Math.ceil;
 
 public class Discretizer {
@@ -21,10 +24,10 @@ public class Discretizer {
     }
   }
 
-  public double[] upscale(double[] values) {
-    double[] result = new double[values.length];
-    for (int i = 0; i < values.length; ++i) {
-      result[i] = upscale(values[i]);
+  public List<Double> upscale(List<Double> values) {
+    List<Double> result = new ArrayList<Double>();
+    for (Double value: values) {
+      result.add(upscale(value));
     }
     return result;
   }

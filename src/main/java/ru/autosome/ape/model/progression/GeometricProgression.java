@@ -1,8 +1,7 @@
 package ru.autosome.ape.model.progression;
 
-import ru.autosome.commons.support.ArrayExtensions;
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class GeometricProgression extends Progression {
   final double from;
@@ -10,7 +9,7 @@ public class GeometricProgression extends Progression {
   final double step;
 
   @Override
-  public double[] values() {
+  public List<Double> values() {
     ArrayList<Double> results = new ArrayList<Double>();
     if (to >= from) {
       for (double x = from; x <= to; x *= step) {
@@ -21,7 +20,7 @@ public class GeometricProgression extends Progression {
         results.add(x);
       }
     }
-    return ArrayExtensions.toPrimitiveArray(results);
+    return results;
   }
 
   public GeometricProgression(double from, double to, double step) {

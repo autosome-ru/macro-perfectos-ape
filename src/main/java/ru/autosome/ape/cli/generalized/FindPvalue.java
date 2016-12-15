@@ -8,7 +8,6 @@ import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.commons.support.ArrayExtensions;
 import ru.autosome.commons.support.IOExtensions;
 
 import java.io.File;
@@ -46,7 +45,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
 
   protected String pm_filename; // file with PM (not File instance because it can be .stdin)
   protected Discretizer discretizer;
-  protected double[] thresholds;
+  protected List<Double> thresholds;
   protected DataModel data_model;
   protected double effective_count;
   protected PseudocountCalculator pseudocount;
@@ -66,7 +65,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   protected void initialize_defaults() {
     initialize_default_background();
     discretizer = new Discretizer(10000.0);
-    thresholds = new double[0];
+    thresholds = new ArrayList<Double>();
     data_model = DataModel.PWM;
     thresholds_folder = null;
     effective_count = 100;
@@ -100,7 +99,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     if (thresholds_list.isEmpty()) {
       throw new IllegalArgumentException("You should specify at least one threshold");
     }
-    thresholds = ArrayExtensions.toPrimitiveArray(thresholds_list);
+    this.thresholds = thresholds_list;
   }
 
 
@@ -159,15 +158,8 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     return result;
   }
 
-  <R extends ResultInfo> OutputInformation report_table(R[] data) {
-    ArrayList<R> data_list = new ArrayList<R>(data.length);
-    Collections.addAll(data_list, data);
-    return report_table(data_list);
-  }
-
   protected OutputInformation report_table() {
-    CanFindPvalue.PvalueInfo[] results = calculator().pvaluesByThresholds(thresholds);
-    return report_table(results);
+    return report_table(calculator().pvaluesByThresholds(thresholds));
   }
 
   protected FindPvalue() {

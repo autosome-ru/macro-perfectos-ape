@@ -59,7 +59,7 @@ public class ScoreDistributionTop {
   }
 
   // returns map threshold --> count
-  public TDoubleDoubleMap counts_above_thresholds(double[] thresholds) throws NotRepresentativeDistribution {
+  public TDoubleDoubleMap counts_above_thresholds(List<Double> thresholds) throws NotRepresentativeDistribution {
     TDoubleDoubleMap result = new TDoubleDoubleHashMap();
     for (double threshold : thresholds) {
       result.put(threshold, count_above_threshold(threshold));
@@ -116,7 +116,7 @@ public class ScoreDistributionTop {
     return top_part_count() / total_count;
   }
 
-  public TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues(double[] pvalues) throws NotRepresentativeDistribution {
+  public TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues(List<Double> pvalues) throws NotRepresentativeDistribution {
     double eps = 1e-10; // allowable discrepancy
     if (top_part_pvalue() + eps < ArrayExtensions.max(pvalues)) {
       throw new NotRepresentativeDistribution("Score distribution covers values up to pvalue " + top_part_pvalue() +
@@ -141,28 +141,32 @@ public class ScoreDistributionTop {
 
 
   // "strong" means that threshold has real pvalue not more than requested one
-  public CanFindThreshold.ThresholdInfo[] strong_thresholds(double[] pvalues) throws NotRepresentativeDistribution {
+  public List<CanFindThreshold.ThresholdInfo> strong_thresholds(List<Double> pvalues) throws NotRepresentativeDistribution {
     return thresholds(pvalues, BoundaryType.LOWER);
   }
 
   public CanFindThreshold.ThresholdInfo strong_threshold(double pvalue) throws NotRepresentativeDistribution {
-    return strong_thresholds(new double[]{pvalue})[0];
+    List<Double> pvalues = new ArrayList<Double>();
+    pvalues.add(pvalue);
+    return strong_thresholds(pvalues).get(0);
   }
 
   // "strong" means that threshold has real pvalue not less than requested one
-  public CanFindThreshold.ThresholdInfo[] weak_thresholds(double[] pvalues) throws NotRepresentativeDistribution {
+  public List<CanFindThreshold.ThresholdInfo> weak_thresholds(List<Double> pvalues) throws NotRepresentativeDistribution {
     return thresholds(pvalues, BoundaryType.UPPER);
   }
 
   public CanFindThreshold.ThresholdInfo weak_threshold(double pvalue) throws NotRepresentativeDistribution {
-    return weak_thresholds(new double[]{pvalue})[0];
+    List<Double> pvalues = new ArrayList<Double>();
+    pvalues.add(pvalue);
+    return weak_thresholds(pvalues).get(0);
   }
 
-  public CanFindThreshold.ThresholdInfo[] thresholds(double[] pvalues, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
+  public List<CanFindThreshold.ThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
     ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
     TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
-    for (int i = 0; i < pvalues.length; ++i) {
-      double pvalue = pvalues[i];
+    for (int i = 0; i < pvalues.size(); ++i) {
+      double pvalue = pvalues.get(i);
       ThresholdsRange range = thresholds_by_pvalues.get(pvalue);
       double threshold, real_pvalue;
       if (pvalueBoundary == BoundaryType.LOWER) { // strong threshold
@@ -174,11 +178,13 @@ public class ScoreDistributionTop {
       }
       results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
     }
-    return results.toArray(new CanFindThreshold.ThresholdInfo[results.size()]);
+    return results;
   }
 
   public CanFindThreshold.ThresholdInfo threshold(double pvalue, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
-    return thresholds(new double[]{pvalue}, pvalueBoundary)[0];
+    List<Double> pvalues = new ArrayList<Double>();
+    pvalues.add(pvalue);
+    return thresholds(pvalues, pvalueBoundary).get(0);
   }
 
 

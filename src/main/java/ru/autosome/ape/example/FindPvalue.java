@@ -8,6 +8,9 @@ import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FindPvalue {
   static void print_result(CanFindPvalue.PvalueInfo info, BackgroundModel background, int pwmLength) {
     System.out.println( "threshold: " + info.threshold + "\n" +
@@ -20,9 +23,13 @@ public class FindPvalue {
     BackgroundModel background = new WordwiseBackground();
     Discretizer discretizer = new Discretizer(10000.0);
     double threshold = 3;
-    double[] thresholds = {3,5,7};
+    List<Double> thresholds_list = new ArrayList<Double>();
+    thresholds_list.add(3.0);
+    thresholds_list.add(5.0);
+    thresholds_list.add(6.0);
 
-    FindPvalueAPE calculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretizer);
+
+    FindPvalueAPE<PWM, BackgroundModel> calculator = new FindPvalueAPE<PWM, BackgroundModel>(pwm, background, discretizer);
 
       // Single threshold
     {
@@ -33,9 +40,7 @@ public class FindPvalue {
 
       // Multiple thresholds
     {
-      CanFindPvalue.PvalueInfo[] infos = new CanFindPvalue.PvalueInfo[0];
-      infos = calculator.pvaluesByThresholds(thresholds);
-      for (CanFindPvalue.PvalueInfo info : infos) {
+      for (CanFindPvalue.PvalueInfo info : calculator.pvaluesByThresholds(thresholds_list)) {
         print_result(info, background, pwm.length());
       }
     }

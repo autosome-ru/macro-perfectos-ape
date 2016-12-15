@@ -8,6 +8,9 @@ import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class FindPvalueByDiscretization <ModelType extends Discretable<ModelType> & HasLength,
                                                   BackgroundType extends GeneralizedBackgroundModel> implements CanFindPvalue {
 
@@ -31,20 +34,21 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   }
 
   @Override
-  public PvalueInfo[] pvaluesByThresholds(double[] thresholds) {
+  public List<PvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
     TDoubleDoubleMap counts = discretedScoringModel().counts_above_thresholds(discretizer.upscale(thresholds));
 
-    PvalueInfo[] infos = new PvalueInfo[thresholds.length];
-    for (int i = 0; i < thresholds.length; ++i) {
-      infos[i] = infos_by_count(counts, thresholds[i]);
+    List<PvalueInfo> infos = new ArrayList<PvalueInfo>();
+    for (double threshold: thresholds) {
+      infos.add(infos_by_count(counts, threshold));
     }
     return infos;
   }
 
   @Override
   public PvalueInfo pvalueByThreshold(double threshold) {
-    double[] thresholds = {threshold};
-    return pvaluesByThresholds(thresholds)[0];
+    List<Double> thresholds = new ArrayList<Double>();
+    thresholds.add(threshold);
+    return pvaluesByThresholds(thresholds).get(0);
   }
 
   @Override

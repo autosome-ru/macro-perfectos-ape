@@ -3,6 +3,9 @@ package ru.autosome.ape.calculation.findPvalue;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.commons.cli.OutputInformation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // Looks for rough pValue of motif under given threshold
 // using a sorted list of predefined threshold-pvalues pairs
 // by performing binary search
@@ -16,10 +19,10 @@ public class FindPvalueBsearch implements CanFindPvalue {
   }
 
   @Override
-  public PvalueInfo[] pvaluesByThresholds(double[] thresholds) {
-    PvalueInfo[] results = new PvalueInfo[thresholds.length];
-    for (int i = 0; i < thresholds.length; ++i) {
-      results[i] = pvalueByThreshold(thresholds[i]);
+  public List<PvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
+    List<PvalueInfo> results = new ArrayList<PvalueInfo>();
+    for (double threshold: thresholds) {
+      results.add(pvalueByThreshold(threshold));
     }
     return results;
   }

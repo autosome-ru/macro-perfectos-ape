@@ -273,19 +273,11 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return result;
   }
 
-  protected <R extends ResultInfo> OutputInformation report_table(R[] data) {
-    List<R> data_list = new ArrayList<R>(data.length);
-    Collections.addAll(data_list, data);
-    return report_table(data_list);
-  }
-
   protected List<? extends ResultInfo> process() throws Exception {
     List<ru.autosome.macroape.calculation.generalized.ScanCollection<ModelType, BackgroundType>.SimilarityInfo> infos;
     infos = calculator().similarityInfos();
     return infos;
   }
-
-
 
   // TODO: Refactor usage of one-stage and two-stage search
   protected List<ThresholdEvaluator> load_collection_of_pwms() {

@@ -18,15 +18,15 @@ public class PrecalculateThresholdList<ModelType extends  Discretable<ModelType>
   // We expect not to have P-values less than 1e-15 in common case.
   // It's possible only for motifs of length 25 or more.
   // For SNPScan differences in such low P-values actually doesn't matter
-  public static final double[] PVALUE_LIST = new GeometricProgression(1.0, 1E-15, 1.05).values();
+  public static final List<Double> PVALUE_LIST = new GeometricProgression(1.0, 1E-15, 1.05).values();
 
-  final double[] pvalues;
+  final List<Double> pvalues;
   final BoundaryType pvalue_boundary;
 
   final Discretizer discretizer;
   final BackgroundType background;
 
-  public PrecalculateThresholdList(double[] pvalues, Discretizer discretizer, BackgroundType background, BoundaryType pvalue_boundary) {
+  public PrecalculateThresholdList(List<Double> pvalues, Discretizer discretizer, BackgroundType background, BoundaryType pvalue_boundary) {
     this.pvalues = pvalues;
     this.discretizer = discretizer;
     this.background = background;
@@ -38,9 +38,9 @@ public class PrecalculateThresholdList<ModelType extends  Discretable<ModelType>
   }
 
   public PvalueBsearchList bsearch_list_for_pwm(ModelType motif) {
-    CanFindThreshold.ThresholdInfo[] infos = find_threshold_calculator(motif).thresholdsByPvalues(pvalues, pvalue_boundary);
+    List<CanFindThreshold.ThresholdInfo> infos = find_threshold_calculator(motif).thresholdsByPvalues(pvalues, pvalue_boundary);
 
-    List<PvalueBsearchList.ThresholdPvaluePair> pairs = new ArrayList<PvalueBsearchList.ThresholdPvaluePair>(infos.length + 2);
+    List<PvalueBsearchList.ThresholdPvaluePair> pairs = new ArrayList<PvalueBsearchList.ThresholdPvaluePair>(infos.size() + 2);
     for (CanFindThreshold.ThresholdInfo info: infos) {
       pairs.add(new PvalueBsearchList.ThresholdPvaluePair(info));
     }

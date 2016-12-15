@@ -1,9 +1,10 @@
 package ru.autosome.ape.model.progression;
 
+import java.util.List;
 import java.util.StringTokenizer;
 
 abstract public class Progression {
-  public abstract double[] values();
+  public abstract List<Double> values();
 
   public static Progression fromString(String s) {
     StringTokenizer parser = new StringTokenizer(s);

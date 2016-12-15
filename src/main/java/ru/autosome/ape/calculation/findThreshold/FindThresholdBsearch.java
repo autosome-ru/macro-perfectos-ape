@@ -3,6 +3,9 @@ package ru.autosome.ape.calculation.findThreshold;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.commons.model.BoundaryType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FindThresholdBsearch implements CanFindThreshold  {
   final PvalueBsearchList bsearchList;
 
@@ -36,28 +39,28 @@ public class FindThresholdBsearch implements CanFindThreshold  {
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues) {
-    CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[pvalues.length];
-    for (int i = 0; i < pvalues.length; ++i) {
-      result[i] = weakThresholdByPvalue(pvalues[i]);
+  public List<CanFindThreshold.ThresholdInfo> weakThresholdsByPvalues(List<Double> pvalues) {
+    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    for (double pvalue: pvalues) {
+      result.add(weakThresholdByPvalue(pvalue));
     }
     return result;
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues) {
-    CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[pvalues.length];
-    for (int i = 0; i < pvalues.length; ++i) {
-      result[i] = strongThresholdByPvalue(pvalues[i]);
+  public List<CanFindThreshold.ThresholdInfo> strongThresholsdByPvalues(List<Double> pvalues) {
+    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    for (double pvalue: pvalues) {
+      result.add(strongThresholdByPvalue(pvalue));
     }
     return result;
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType) {
-    CanFindThreshold.ThresholdInfo[] result = new CanFindThreshold.ThresholdInfo[pvalues.length];
-    for (int i = 0; i < pvalues.length; ++i) {
-      result[i] = thresholdByPvalue(pvalues[i], boundaryType);
+  public List<CanFindThreshold.ThresholdInfo> thresholdsByPvalues(List<Double> pvalues, BoundaryType boundaryType) {
+    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    for (Double pvalue: pvalues) {
+      result.add(thresholdByPvalue(pvalue, boundaryType));
     }
     return result;
   }

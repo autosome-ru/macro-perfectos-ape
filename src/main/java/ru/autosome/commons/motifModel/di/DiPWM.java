@@ -2,8 +2,8 @@ package ru.autosome.commons.motifModel.di;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
-import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;

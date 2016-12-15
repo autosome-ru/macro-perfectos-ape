@@ -8,6 +8,8 @@ import ru.autosome.ape.model.ScoreDistributionTop;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.support.ArrayExtensions;
 
+import java.util.List;
+
 abstract public class ScoringModelDistributions {
   abstract CanFindThresholdApproximation gaussianThresholdEstimator();
   protected abstract ScoreDistributionTop score_distribution_above_threshold(double threshold);
@@ -40,7 +42,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public TDoubleDoubleMap counts_above_thresholds(double[] thresholds) {
+  public TDoubleDoubleMap counts_above_thresholds(List<Double> thresholds) {
     ScoreDistributionTop scoreDistribution = score_distribution_above_threshold(ArrayExtensions.min(thresholds));
     try {
       return scoreDistribution.counts_above_thresholds(thresholds);
@@ -58,7 +60,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  TDoubleObjectMap<ScoreDistributionTop.ThresholdsRange> thresholds_by_pvalues(double[] pvalues) {
+  TDoubleObjectMap<ScoreDistributionTop.ThresholdsRange> thresholds_by_pvalues(List<Double> pvalues) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
       return scores_hash.thresholds_by_pvalues(pvalues);
@@ -68,7 +70,7 @@ abstract public class ScoringModelDistributions {
   }
 
   // "strong" means that threshold has real pvalue not more than requested one
-  public CanFindThreshold.ThresholdInfo[] strong_thresholds(double[] pvalues) {
+  public List<CanFindThreshold.ThresholdInfo> strong_thresholds(List<Double> pvalues) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
       return scores_hash.strong_thresholds(pvalues);
@@ -87,7 +89,7 @@ abstract public class ScoringModelDistributions {
   }
 
   // "strong" means that threshold has real pvalue not less than requested one
-  public CanFindThreshold.ThresholdInfo[] weak_thresholds(double[] pvalues) {
+  public List<CanFindThreshold.ThresholdInfo> weak_thresholds(List<Double> pvalues) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
       return scores_hash.weak_thresholds(pvalues);
@@ -105,7 +107,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public CanFindThreshold.ThresholdInfo[] thresholds(double[] pvalues, BoundaryType pvalueBoundary) {
+  public List<CanFindThreshold.ThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
       return scores_hash.thresholds(pvalues, pvalueBoundary);

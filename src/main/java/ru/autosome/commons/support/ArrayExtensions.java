@@ -19,7 +19,7 @@ public class ArrayExtensions {
     return result;
   }
 
-  public static double max(double... array) throws IllegalArgumentException {
+  public static double max(double[] array) throws IllegalArgumentException {
     if (array.length == 0) {
       throw new IllegalArgumentException("Can't calculate maximum of empty array");
     }
@@ -30,11 +30,33 @@ public class ArrayExtensions {
     return result;
   }
 
-  public static double min(double... array) throws IllegalArgumentException {
+  public static double min(double[] array) throws IllegalArgumentException {
     if (array.length == 0) {
       throw new IllegalArgumentException("Can't calculate minimum of empty array");
     }
     double result = array[0];
+    for (double pos : array) {
+      result = Math.min(result, pos);
+    }
+    return result;
+  }
+
+  public static double max(List<Double> array) throws IllegalArgumentException {
+    if (array.isEmpty()) {
+      throw new IllegalArgumentException("Can't calculate maximum of empty array");
+    }
+    double result = array.get(0);
+    for (double pos : array) {
+      result = Math.max(result, pos);
+    }
+    return result;
+  }
+
+  public static double min(List<Double> array) throws IllegalArgumentException {
+    if (array.isEmpty()) {
+      throw new IllegalArgumentException("Can't calculate minimum of empty array");
+    }
+    double result = array.get(0);
     for (double pos : array) {
       result = Math.min(result, pos);
     }

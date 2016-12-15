@@ -5,6 +5,8 @@ import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 
+import java.util.List;
+
 // TODO: Make use of strong/weak thresholds or thresholds depending on BoundaryType (it wasn't implemented for bsearch lists
 public interface CanFindThreshold {
   class ThresholdInfo extends ResultInfo {
@@ -33,7 +35,7 @@ public interface CanFindThreshold {
   ThresholdInfo strongThresholdByPvalue(double pvalue);
   ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType);
 
-  ThresholdInfo[] weakThresholdsByPvalues(double[] pvalues);
-  ThresholdInfo[] strongThresholsdByPvalues(double[] pvalues);
-  ThresholdInfo[] thresholdsByPvalues(double[] pvalues, BoundaryType boundaryType);
+  List<ThresholdInfo> weakThresholdsByPvalues(List<Double> pvalues);
+  List<ThresholdInfo> strongThresholsdByPvalues(List<Double> pvalues);
+  List<ThresholdInfo> thresholdsByPvalues(List<Double> pvalues, BoundaryType boundaryType);
 }
