@@ -1,7 +1,7 @@
 package ru.autosome.ape.calculation.findPvalue;
 
-import ru.autosome.commons.cli.OutputInformation;
+import ru.autosome.commons.cli.ReportLayout;
 
 public interface ReportableParams {
-  OutputInformation report_table_layout();
+  ReportLayout report_table_layout();
 }

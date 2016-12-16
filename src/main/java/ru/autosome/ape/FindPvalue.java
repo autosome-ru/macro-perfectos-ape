@@ -57,7 +57,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, 
   public static void main(String[] args) {
     try {
       FindPvalue cli = FindPvalue.from_arglist(args);
-      System.out.println(cli.report_table().report());
+      System.out.println(cli.report());
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();

@@ -1,7 +1,6 @@
 package ru.autosome.ape.calculation.findPvalue;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.cli.OutputInformation;
 import ru.autosome.commons.cli.ResultInfo;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package ru.autosome.ape.calculation.findPvalue;
 
 import gnu.trove.map.TDoubleDoubleMap;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.cli.OutputInformation;
+import ru.autosome.commons.cli.ReportLayout;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.HasLength;
@@ -52,14 +52,14 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   }
 
   @Override
-  public OutputInformation report_table_layout() {
-    OutputInformation infos = new OutputInformation();
+  public ReportLayout report_table_layout() {
+    ReportLayout infos = new ReportLayout();
     infos.add_parameter("V", "discretization value", discretizer);
     infos.background_parameter("B", "background", background);
 
     infos.add_table_parameter("T", "threshold", "threshold");
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords", new OutputInformation.Callback<PvalueInfo>() {
+      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords", new ReportLayout.Callback<PvalueInfo>() {
         @Override
         public Object run(PvalueInfo cell) {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.length());

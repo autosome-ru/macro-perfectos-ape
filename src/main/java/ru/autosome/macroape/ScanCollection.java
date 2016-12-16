@@ -69,7 +69,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     try {
       ScanCollection calculation = ScanCollection.from_arglist(args);
       List<? extends ResultInfo> infos = calculation.process();
-      System.out.println(calculation.report_table(infos).report());
+      System.out.println(calculation.report(infos));
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();

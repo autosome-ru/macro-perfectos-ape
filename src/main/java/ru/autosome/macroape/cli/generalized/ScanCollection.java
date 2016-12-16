@@ -8,7 +8,7 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.cli.OutputInformation;
+import ru.autosome.commons.cli.ReportLayout;
 import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
@@ -227,8 +227,8 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return true;
   }
 
-  public OutputInformation report_table_layout() {
-    OutputInformation infos = new OutputInformation();
+  public ReportLayout report_table_layout() {
+    ReportLayout infos = new ReportLayout();
     infos.add_parameter("MS", "minimal similarity to output", similarityCutoff);
     infos.add_parameter("P", "P-value", pvalue);
     infos.add_parameter("PB", "P-value boundary", pvalueBoundaryType);
@@ -248,7 +248,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     infos.add_table_parameter_without_description("overlap", "overlap");
     infos.add_table_parameter_without_description("orientation", "orientation");
     if (preciseRecalculationCutoff != null) {
-      infos.add_table_parameter_without_description("precise mode", "precision_mode", new OutputInformation.Callback<ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo>(){
+      infos.add_table_parameter_without_description("precise mode", "precision_mode", new ReportLayout.Callback<ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo>(){
         @Override
         public String run(ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo cell) {
           return cell.precise ? "*" : ".";
@@ -258,8 +258,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return infos;
   }
 
-  protected OutputInformation report_table(List<? extends ResultInfo> data) {
-    OutputInformation result = report_table_layout();
+  protected String report(List<? extends ResultInfo> data) {
     Collections.sort(data, new Comparator<Object>() {
       @Override
       public int compare(Object o1, Object o2) {
@@ -269,8 +268,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
         return s1.similarity().compareTo(s2.similarity());
       }
     });
-    result.data = data;
-    return result;
+    return report_table_layout().report(data);
   }
 
   protected List<? extends ResultInfo> process() throws Exception {

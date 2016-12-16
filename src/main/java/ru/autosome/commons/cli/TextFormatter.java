@@ -78,7 +78,10 @@ class TextFormatter<CertainResultInfo extends ResultInfo> implements ValueWithDe
         }
         table_headers.add(parameter.name);
       }
-      String header = "# " + StringExtensions.join(table_headers, "\t");
+      String header = "";
+      if (!table_headers.isEmpty()) {
+        header = "# " + StringExtensions.join(table_headers, "\t");
+      }
       List<String> tableRows = new ArrayList<String>();
       for (CertainResultInfo row : data) {
         tableRows.add(formatRow(columns, row));

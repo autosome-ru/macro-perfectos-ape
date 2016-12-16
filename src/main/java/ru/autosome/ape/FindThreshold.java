@@ -56,7 +56,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
   public static void main(String args[]) {
     try {
       FindThreshold cli = FindThreshold.from_arglist(args);
-      System.out.println(cli.report_table().report());
+      System.out.println(cli.report());
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();

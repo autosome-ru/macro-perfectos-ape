@@ -4,7 +4,7 @@ import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.cli.OutputInformation;
+import ru.autosome.commons.cli.ReportLayout;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Position;
@@ -202,8 +202,8 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     }
   }
 
-  OutputInformation report_table_layout() {
-    OutputInformation infos = new OutputInformation();
+  ReportLayout report_table_layout() {
+    ReportLayout infos = new ReportLayout();
 
     infos.add_parameter("V", "discretization", discretizer);
     if (predefinedFirstThreshold == null || predefinedSecondThreshold == null) {
@@ -226,8 +226,9 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     return infos;
   }
 
-  protected OutputInformation report_table(CompareModelsCountsGiven.SimilarityInfo info) {
-    OutputInformation infos = report_table_layout();
+  // ToDo: separate ResultingValues from ReportLayout (as it's counterintuitive)
+  protected ReportLayout report_table(CompareModelsCountsGiven.SimilarityInfo info) {
+    ReportLayout infos = report_table_layout();
     infos.add_resulting_value("S", "similarity", info.similarity());
     infos.add_resulting_value("D", "distance (1-similarity)", info.distance());
     infos.add_resulting_value("L", "length of the alignment", info.alignment.length());
@@ -257,7 +258,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     }
   }
 
-  protected OutputInformation report_table() throws Exception {
+  protected ReportLayout report_table() throws Exception {
     return report_table(results());
   }
 

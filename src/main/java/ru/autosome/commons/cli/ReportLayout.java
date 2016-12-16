@@ -6,24 +6,15 @@ import ru.autosome.commons.support.StringExtensions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutputInformation {
-  public interface Callback<CertainResultInfo extends ResultInfo>  {
-    Object run(CertainResultInfo cell);
-  }
-  private List<ValueWithDescription> parameters;
-  private List<ValueWithDescription> resulting_values;
-  private List<TabularParameterConfig> columns;
+public class ReportLayout {
+  public List<ValueWithDescription> parameters;
+  public List<ValueWithDescription> resulting_values;
+  public List<TabularParameterConfig> columns;
 
-  public List<? extends ResultInfo> data;
-
-  private void initialize() {
+  public ReportLayout() {
     parameters = new ArrayList<ValueWithDescription>();
     resulting_values = new ArrayList<ValueWithDescription>();
     columns = new ArrayList<TabularParameterConfig>();
-  }
-
-  public OutputInformation() {
-    initialize();
   }
 
   public void add_parameter(String param_name, String description, Object value) {
@@ -57,6 +48,10 @@ public class OutputInformation {
   }
 
   public String report() {
+    return report(new ArrayList<ResultInfo>());
+  }
+
+  public String report(List<? extends ResultInfo> data) {
     ValueWithDescriptionFormatter formatter = new TextFormatter();
     List<String> sections = new ArrayList<String>();
     sections.add(formatter.formatParameter(parameters));
@@ -64,11 +59,15 @@ public class OutputInformation {
     sections.add(formatter.formatTable(columns, data));
 
     List<String> results = new ArrayList<String>();
-    for (String section: sections) {
+    for (String section : sections) {
       if (!section.isEmpty()) {
         results.add(section);
       }
     }
     return StringExtensions.join(results, "\n#\n");
+  }
+
+  public interface Callback<CertainResultInfo extends ResultInfo> {
+    Object run(CertainResultInfo cell);
   }
 }
