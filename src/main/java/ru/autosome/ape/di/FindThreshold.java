@@ -12,6 +12,7 @@ import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 
+import java.io.File;
 import java.util.List;
 
 public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold<DiPWM, DiBackgroundModel> {
@@ -74,7 +75,8 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
       if (thresholds_folder == null) {
         cache_calculator = new FindThresholdAPE<DiPWM, DiBackgroundModel>(motif.getObject(), background, discretizer);
       } else {
-        cache_calculator = new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(motif.getName());
+        File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
+        cache_calculator = new FindThresholdBsearchBuilder(thresholds_file).thresholdCalculator();
       }
     }
     return cache_calculator;

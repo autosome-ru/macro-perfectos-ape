@@ -12,6 +12,7 @@ import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 
+import java.io.File;
 import java.util.List;
 
 public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM, DiBackgroundModel> {
@@ -37,7 +38,8 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
       if (thresholds_folder == null) {
         cache_calculator = new FindPvalueAPE<DiPWM, DiBackgroundModel>(motif.getObject(), background, discretizer);
       } else {
-        cache_calculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif.getName());
+        File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
+        cache_calculator = new FindPvalueBsearchBuilder(thresholds_file).pvalueCalculator();
       }
     }
     return cache_calculator;

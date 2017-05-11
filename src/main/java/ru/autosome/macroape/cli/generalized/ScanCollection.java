@@ -291,10 +291,11 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
                                            new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer),
                                            new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer)));
       } else {
+        File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
         result.add(new ThresholdEvaluator( pwm, namedModel.getName(),
-                                           new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(namedModel.getName()),
+                                           new FindThresholdBsearchBuilder(thresholds_file).thresholdCalculator(),
                                            null,
-                                           new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(namedModel.getName()),
+                                           new FindPvalueBsearchBuilder(thresholds_file).pvalueCalculator(),
                                            null));
       }
     }

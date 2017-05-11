@@ -6,15 +6,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class FindPvalueBsearchBuilder {
-  final File pathToThresholds;
+  final File thresholds_file;
 
-  public FindPvalueBsearchBuilder(File pathToThresholds) {
-    this.pathToThresholds = pathToThresholds;
+  public FindPvalueBsearchBuilder(File thresholds_file) {
+    this.thresholds_file = thresholds_file;
   }
 
-  public CanFindPvalue pvalueCalculator(String motifName) {
+  public CanFindPvalue pvalueCalculator() {
     try {
-      File thresholds_file = new File(pathToThresholds, motifName + ".thr");
       PvalueBsearchList pvalueBsearchList = PvalueBsearchList.load_from_file(thresholds_file);
       return new FindPvalueBsearch(pvalueBsearchList);
     } catch (FileNotFoundException e) {

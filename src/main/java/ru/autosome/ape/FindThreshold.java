@@ -10,6 +10,8 @@ import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 
+import java.io.File;
+
 public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold<PWM, BackgroundModel> {
   @Override
   protected String DOC_background_option() {
@@ -41,7 +43,8 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
       if (thresholds_folder == null) {
         cache_calculator = new FindThresholdAPE<PWM, BackgroundModel>(motif.getObject(), background, discretizer);
       } else {
-        cache_calculator = new FindThresholdBsearchBuilder(thresholds_folder).thresholdCalculator(motif.getName());
+        File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
+        cache_calculator = new FindThresholdBsearchBuilder(thresholds_file).thresholdCalculator();
       }
     }
     return cache_calculator;

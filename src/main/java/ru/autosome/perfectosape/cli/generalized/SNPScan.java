@@ -52,7 +52,8 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       if (thresholds_folder == null) {
         pvalueCalculator = new FindPvalueAPE<MotifType, BackgroundType>(motif.getObject(), background, discretizer);
       } else {
-        pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_folder).pvalueCalculator(motif.getName());
+        File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
+        pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_file).pvalueCalculator();
       }
       pwmCollection.add(new ThresholdEvaluator<SequenceType,SequenceWithSNVType,ModelType>(motif.getObject().onBackground(background), pvalueCalculator, motif.getName()));
     }
