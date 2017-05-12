@@ -142,7 +142,7 @@ public class MultiSNPScan {
     results = new HashMap<String, Map<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>>();
     for (String pwmName: pwmCollectionWithPvalueCalculators.keySet()) {
       PWM pwm = pwmCollectionByName.get(pwmName);
-      CanFindPvalue pvalueCalculator = pwmCollectionWithPvalueCalculators.get(pwm);
+      CanFindPvalue pvalueCalculator = pwmCollectionWithPvalueCalculators.get(pwmName);
 
       Map<SequenceWithSNP,SingleSNPScan.RegionAffinityInfos> result_part;
       result_part = new HashMap<SequenceWithSNP, SingleSNPScan.RegionAffinityInfos>();

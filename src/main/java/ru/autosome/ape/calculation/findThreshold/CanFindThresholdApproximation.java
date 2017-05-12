@@ -4,5 +4,5 @@ package ru.autosome.ape.calculation.findThreshold;
 // but makes no guaranties about lower or upper boundary
 // and don't know real pvalue of predicted threshold
 public interface CanFindThresholdApproximation {
-  public double thresholdByPvalue(double pvalue);
+  double thresholdByPvalue(double pvalue);
 }

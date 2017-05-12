@@ -1,18 +1,18 @@
 package ru.autosome.commons.backgroundModel;
 
 public interface GeneralizedBackgroundModel {
-  public double probability(int index);
+  double probability(int index);
 
-  public double volume(); // 1 for probability model, 4 for wordwise model
+  double volume(); // 1 for probability model, 4 for wordwise model
 
   @Override
-  public String toString();
+  String toString();
 
-  public boolean is_wordwise();
+  boolean is_wordwise();
 
-  public double mean_value(double[] values);
+  double mean_value(double[] values);
 
-  public double mean_square_value(double[] values);
+  double mean_square_value(double[] values);
 
-  public double variance(double[] values);
+  double variance(double[] values);
 }
