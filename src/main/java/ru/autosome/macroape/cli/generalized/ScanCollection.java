@@ -29,24 +29,40 @@ import java.util.List;
 public abstract class ScanCollection<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> &Alignable<ModelType>,
                                      BackgroundType extends GeneralizedBackgroundModel> {
 
+  public class SingleThresholdEvaluator {
+    public final ModelType pwm;
+    public final String name;
+    public final CanFindThreshold thresholdCalculator;
+    public final CanFindPvalue pvalueCalculator;
+
+    public SingleThresholdEvaluator(ModelType pwm, String name,
+                                    CanFindThreshold thresholdCalculator,
+                                    CanFindPvalue pvalueCalculator) {
+      this.pwm = pwm;
+      this.name = name;
+      this.thresholdCalculator = thresholdCalculator;
+      this.pvalueCalculator = pvalueCalculator;
+    }
+  }
+
+
   public class ThresholdEvaluator {
     public final ModelType pwm;
     public final String name;
-    public final CanFindThreshold roughThresholdCalculator;
-    public final CanFindThreshold preciseThresholdCalculator;
-
-    public final CanFindPvalue roughPvalueCalculator;
-    public final CanFindPvalue precisePvalueCalculator;
+    public final SingleThresholdEvaluator rough;
+    public final SingleThresholdEvaluator precise;
+    //    List<SingleThresholdEvaluator> consequentEvaluators;
 
     public ThresholdEvaluator(ModelType pwm, String name,
                               CanFindThreshold roughThresholdCalculator, CanFindThreshold preciseThresholdCalculator,
                               CanFindPvalue roughPvalueCalculator, CanFindPvalue precisePvalueCalculator) {
       this.pwm = pwm;
       this.name = name;
-      this.roughThresholdCalculator = roughThresholdCalculator;
-      this.preciseThresholdCalculator = preciseThresholdCalculator;
-      this.roughPvalueCalculator = roughPvalueCalculator;
-      this.precisePvalueCalculator = precisePvalueCalculator;
+      this.rough = new SingleThresholdEvaluator(pwm, name, roughThresholdCalculator, roughPvalueCalculator);
+      this.precise = new SingleThresholdEvaluator(pwm, name, preciseThresholdCalculator, precisePvalueCalculator);
+//      consequentEvaluators = new ArrayList<SingleThresholdEvaluator>();
+//      consequentEvaluators.add(this.rough);
+//      consequentEvaluators.add(this.precise);
     }
   }
 

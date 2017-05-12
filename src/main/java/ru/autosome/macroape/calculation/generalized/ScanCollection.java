@@ -39,6 +39,50 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                                           CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
                                                                           Discretizer discretizer);
 
+  public SimilarityInfo similarityInfo(FindPvalueAPE roughQueryPvalueEvaluator,
+                                       FindPvalueAPE preciseQueryPvalueEvaluator,
+                                       double roughQueryThreshold,
+                                       double preciseQueryThreshold,
+                                       ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator knownMotifEvaluator) {
+    CompareModelsCountsGiven.SimilarityInfo<ModelType> info;
+    boolean precise = false;
+    CompareModels<ModelType,BackgroundType> roughCalculation = calculation(
+        queryPWM, knownMotifEvaluator.pwm,
+        queryBackground, collectionBackground,
+        roughQueryPvalueEvaluator,
+        knownMotifEvaluator.rough.pvalueCalculator,
+        roughDiscretizer);
+
+    Double roughCollectionThreshold = knownMotifEvaluator.rough.thresholdCalculator
+                                          .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
+
+    info = roughCalculation.jaccard(roughQueryThreshold,
+        roughCollectionThreshold);
+
+    if (preciseRecalculationCutoff != null &&
+            info.similarity() >= preciseRecalculationCutoff &&
+            knownMotifEvaluator.precise.thresholdCalculator != null) {
+      CompareModels<ModelType,BackgroundType> preciseCalculation = calculation(
+          queryPWM, knownMotifEvaluator.pwm,
+          queryBackground, collectionBackground,
+          preciseQueryPvalueEvaluator,
+          knownMotifEvaluator.precise.pvalueCalculator,
+          preciseDiscretizer);
+
+      Double preciseCollectionThreshold = knownMotifEvaluator.precise.thresholdCalculator
+                                              .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
+
+      info = preciseCalculation.jaccard(preciseQueryThreshold,
+          preciseCollectionThreshold);
+      precise = true;
+    }
+    if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
+      return new SimilarityInfo(knownMotifEvaluator.pwm, knownMotifEvaluator.name, info, precise);
+    } else {
+      return null;
+    }
+  }
+
   public List<SimilarityInfo> similarityInfos() {
     List<SimilarityInfo> result;
     result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
@@ -49,40 +93,12 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     double roughQueryThreshold = queryThreshold(roughDiscretizer);
     double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
 
-
     for (ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
-      CompareModelsCountsGiven.SimilarityInfo<ModelType> info;
-      boolean precise = false;
-      CompareModels<ModelType,BackgroundType> roughCalculation = calculation(queryPWM, knownMotifEvaluator.pwm,
-                                                   queryBackground, collectionBackground,
-                                                   roughQueryPvalueEvaluator,
-                                                   knownMotifEvaluator.roughPvalueCalculator,
-                                                   roughDiscretizer);
-
-      Double roughCollectionThreshold = knownMotifEvaluator.roughThresholdCalculator
-                                         .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
-
-      info = roughCalculation.jaccard(roughQueryThreshold,
-                                      roughCollectionThreshold);
-
-      if (preciseRecalculationCutoff != null &&
-           info.similarity() >= preciseRecalculationCutoff &&
-           knownMotifEvaluator.preciseThresholdCalculator != null) {
-        CompareModels<ModelType,BackgroundType> preciseCalculation = calculation(queryPWM, knownMotifEvaluator.pwm,
-                                                       queryBackground, collectionBackground,
-                                                       preciseQueryPvalueEvaluator,
-                                                       knownMotifEvaluator.precisePvalueCalculator,
-                                                       preciseDiscretizer);
-
-        Double preciseCollectionThreshold = knownMotifEvaluator.preciseThresholdCalculator
-                                             .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
-
-        info = preciseCalculation.jaccard(preciseQueryThreshold,
-                                          preciseCollectionThreshold);
-        precise = true;
-      }
-      if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
-        result.add(new SimilarityInfo(knownMotifEvaluator.pwm, knownMotifEvaluator.name, info, precise));
+      SimilarityInfo info = similarityInfo(roughQueryPvalueEvaluator, preciseQueryPvalueEvaluator,
+          roughQueryThreshold, preciseQueryThreshold,
+          knownMotifEvaluator);
+      if (info != null) {
+        result.add(info);
       }
     }
     return result;

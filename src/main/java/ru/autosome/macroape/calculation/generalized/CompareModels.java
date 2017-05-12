@@ -97,8 +97,4 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     double threshold_second = canFindThresholdSecond.weakThresholdByPvalue(pvalue).threshold;
     return jaccard(threshold_first, threshold_second);
   }
-
-
-
-
 }
