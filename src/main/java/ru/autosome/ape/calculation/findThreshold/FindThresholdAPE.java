@@ -18,6 +18,6 @@ public class FindThresholdAPE<ModelType extends Discretable<ModelType> & ScoreDi
 
   @Override
   ScoringModelDistributions discretedScoringModel() {
-    return motif.discrete(discretizer).scoringModelDistibutions(background);
+    return motif.discrete(discretizer).scoringModel(background);
   }
 }

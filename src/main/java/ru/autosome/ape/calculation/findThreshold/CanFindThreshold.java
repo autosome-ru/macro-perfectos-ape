@@ -7,7 +7,7 @@ import ru.autosome.commons.model.Discretizer;
 
 import java.util.List;
 
-// TODO: Make use of strong/weak thresholds or thresholds depending on BoundaryType (it wasn't implemented for bsearch lists
+// TODO: Make use of strong/weak thresholds or thresholds depending on BoundaryType (it wasn't implemented for bsearch lists)
 public interface CanFindThreshold {
   class ThresholdInfo extends ResultInfo {
     public final double threshold;
@@ -24,8 +24,7 @@ public interface CanFindThreshold {
       return real_pvalue * Math.pow(background.volume(), length);
     }
 
-
-    // generate infos for non-disreeted matrix from infos for discreeted matrix
+    // generate infos for non-discreeted matrix from infos for discreeted matrix
     public ThresholdInfo downscale(Discretizer discretizer) {
       return new ThresholdInfo(discretizer.downscale(threshold), real_pvalue, expected_pvalue);
     }
