@@ -51,6 +51,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
 
   protected List<Double> pvalues;
   protected boolean transpose;
+  protected boolean should_extract_values_from_stdin;
 
   protected String pm_filename;
   protected DataModel data_model;
@@ -75,6 +76,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     pseudocount = PseudocountCalculator.logPseudocount;
     thresholds_folder = null;
     transpose = false;
+    should_extract_values_from_stdin = false;
 
     pvalues = new ArrayList<Double>();
     pvalues.add(0.0005);
@@ -116,7 +118,9 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
       thresholds_folder = new File(argv.remove(0));
     } else if (opt.equals("--transpose")) {
       transpose = true;
-    } else {
+    } else if (opt.equals("--pvalues-from-stdin")) {
+      should_extract_values_from_stdin = true;
+    }  else {
       if (failed_to_recognize_additional_options(opt, argv)) {
         throw new IllegalArgumentException("Unknown option '" + opt + "'");
       }
@@ -146,7 +150,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     } catch (NumberFormatException e) {
     }
 
-    if (IOExtensions.hasNonTTYInput()) {
+    if (should_extract_values_from_stdin) {
       try {
         IOExtensions.extract_doubles_from_input_stream(System.in, pvalues_tmp);
       } catch (IOException e) { }

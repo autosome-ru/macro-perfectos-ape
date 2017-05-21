@@ -1,17 +1,12 @@
 package ru.autosome.commons.support;
 
-import jnr.posix.POSIX;
-import jnr.posix.POSIXFactory;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public class IOExtensions {
-  public static boolean hasNonTTYInput() {
-    POSIX posix = POSIXFactory.getPOSIX();
-    return !posix.isatty(FileDescriptor.in);
-  }
-
   public static void extract_doubles_from_input_stream(InputStream inputStream, List<Double> thresholds_list) throws IOException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
     String line;

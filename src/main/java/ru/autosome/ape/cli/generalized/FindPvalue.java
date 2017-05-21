@@ -48,6 +48,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   protected double effective_count;
   protected PseudocountCalculator pseudocount;
   protected boolean transpose;
+  protected boolean should_extract_values_from_stdin;
 
   protected Named<ModelType> motif;
   protected BackgroundType background;
@@ -69,6 +70,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     effective_count = 100;
     pseudocount = PseudocountCalculator.logPseudocount;
     transpose = false;
+    should_extract_values_from_stdin = false;
   }
 
   protected void extract_pm_filename(List<String> argv) {
@@ -88,11 +90,13 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
       }
     } catch (NumberFormatException e) { }
 
-    if (IOExtensions.hasNonTTYInput()) {
+    if (should_extract_values_from_stdin) {
       try {
         IOExtensions.extract_doubles_from_input_stream(System.in, thresholds_list);
-      } catch (IOException e) { }
+      } catch (IOException e) {
+      }
     }
+
 
     if (thresholds_list.isEmpty()) {
       throw new IllegalArgumentException("You should specify at least one threshold");
@@ -119,6 +123,8 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
       thresholds_folder = new File(argv.remove(0));
     } else if (opt.equals("--transpose")) {
       transpose = true;
+    } else if (opt.equals("--thresholds-from-stdin")) {
+      should_extract_values_from_stdin = true;
     } else {
       if (failed_to_recognize_additional_options(opt, argv)) {
         throw new IllegalArgumentException("Unknown option '" + opt + "'");
