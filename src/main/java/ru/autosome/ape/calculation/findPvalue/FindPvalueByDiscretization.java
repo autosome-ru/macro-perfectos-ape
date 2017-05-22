@@ -37,7 +37,7 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   public List<PvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
     TDoubleDoubleMap counts = discretedScoringModel().counts_above_thresholds(discretizer.upscale(thresholds));
 
-    List<PvalueInfo> infos = new ArrayList<PvalueInfo>();
+    List<PvalueInfo> infos = new ArrayList<>();
     for (double threshold: thresholds) {
       infos.add(infos_by_count(counts, threshold));
     }
@@ -46,14 +46,14 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
 
   @Override
   public PvalueInfo pvalueByThreshold(double threshold) {
-    List<Double> thresholds = new ArrayList<Double>();
+    List<Double> thresholds = new ArrayList<>();
     thresholds.add(threshold);
     return pvaluesByThresholds(thresholds).get(0);
   }
 
   @Override
   public ReportLayout<PvalueInfo> report_table_layout() {
-    ReportLayout<PvalueInfo> infos = new ReportLayout<PvalueInfo>();
+    ReportLayout<PvalueInfo> infos = new ReportLayout<>();
     infos.add_parameter("V", "discretization value", discretizer);
     infos.background_parameter("B", "background", background);
 

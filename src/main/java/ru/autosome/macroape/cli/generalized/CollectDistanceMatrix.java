@@ -85,7 +85,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   protected List<Named<ModelType>> pwmCollection;
 
   protected void setup_from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }
@@ -169,14 +169,14 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   }
 
   protected List<PWMWithThreshold> collectThreshold() {
-    List<PWMWithThreshold> result = new ArrayList<PWMWithThreshold>();
+    List<PWMWithThreshold> result = new ArrayList<>();
     for (Named<ModelType> pwm: pwmCollection) {
-      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm.getObject(), background, roughDiscretizer);
+      CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, roughDiscretizer);
       CanFindThreshold.ThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double roughThreshold = roughThresholdInfo.threshold;
       double roughCount = roughThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());
 
-      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<ModelType, BackgroundType>(pwm.getObject(), background, preciseDiscretizer);
+      CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, preciseDiscretizer);
       CanFindThreshold.ThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double preciseThreshold = preciseThresholdInfo.threshold;
       double preciseCount = preciseThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());
@@ -206,12 +206,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   public void process() {
     int taskNum = 0;
     List<PWMWithThreshold> thresholds = collectThreshold();
-    Collections.sort(thresholds, new Comparator<PWMWithThreshold>() {
-      @Override
-      public int compare(PWMWithThreshold o1, PWMWithThreshold o2) {
-        return o1.pwm.getName().compareTo(o2.pwm.getName());
-      }
-    });
+    thresholds.sort(Comparator.comparing(o -> o.pwm.getName()));
 
     System.out.print("Motif name"+ "\t");
     for(PWMWithThreshold second: thresholds) {

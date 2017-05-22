@@ -27,10 +27,10 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
   // 2d-score hash before first step
   private List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> initialScoreHash(DiBackgroundModel dibackground) {
     List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> scores;
-    scores = new ArrayList<TDoubleObjectHashMap<TDoubleDoubleHashMap>>(4);
+    scores = new ArrayList<>(4);
     for (int last_letter_index = 0; last_letter_index < 4; ++last_letter_index) {
       TDoubleObjectHashMap<TDoubleDoubleHashMap> scores_by_letter;
-      scores_by_letter = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
+      scores_by_letter = new TDoubleObjectHashMap<>();
       scores_by_letter.put(0.0, new TDoubleDoubleHashMap(new double[] {0.0},
                                                          new double[] {dibackground.countAnyFirstLetter(last_letter_index)}) );
       scores.add(scores_by_letter);
@@ -100,10 +100,10 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
   // list of 2d-hashes which has first level keys initialized, but second level is empty
   List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> seedHashToRecalc(List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> scores,
                                                                     double[] firstColumn, double[] leastSufficientScoresFirst) {
-    List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> result = new ArrayList<TDoubleObjectHashMap<TDoubleDoubleHashMap>>(4);
+    List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> result = new ArrayList<>(4);
 
     for (int last_letter = 0; last_letter < 4; ++last_letter) {
-      TDoubleObjectHashMap<TDoubleDoubleHashMap> partiallyRecalculatedSeed = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
+      TDoubleObjectHashMap<TDoubleDoubleHashMap> partiallyRecalculatedSeed = new TDoubleObjectHashMap<>();
       for (int first_letter = 0; first_letter < 4; ++first_letter) {
         TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.get(first_letter).iterator();
 

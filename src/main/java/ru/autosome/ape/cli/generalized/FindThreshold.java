@@ -78,7 +78,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     transpose = false;
     should_extract_values_from_stdin = false;
 
-    pvalues = new ArrayList<Double>();
+    pvalues = new ArrayList<>();
     pvalues.add(0.0005);
   }
 
@@ -93,7 +93,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   }
 
   protected void setup_from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }
@@ -140,7 +140,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   }
 
   protected void extract_pvalue_list(List<String> argv) {
-    ArrayList<Double> pvalues_tmp = new ArrayList<Double>();
+    ArrayList<Double> pvalues_tmp = new ArrayList<>();
 
     try {
       while (!argv.isEmpty()) {
@@ -163,7 +163,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   }
 
   ReportLayout<CanFindThreshold.ThresholdInfo> report_table_layout() {
-    ReportLayout<CanFindThreshold.ThresholdInfo> infos = new ReportLayout<CanFindThreshold.ThresholdInfo>();
+    ReportLayout<CanFindThreshold.ThresholdInfo> infos = new ReportLayout<>();
 
     infos.add_parameter("V", "discretization value", discretizer);
     infos.add_parameter("PB", "P-value boundary", pvalue_boundary);

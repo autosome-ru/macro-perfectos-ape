@@ -12,7 +12,7 @@ public class InputExtensions {
     return readLinesFromInputStream(reader);
   }
   static public List<String> readLinesFromInputStream(InputStream in) {
-    List<String> lines = new ArrayList<String>();
+    List<String> lines = new ArrayList<>();
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
     String line;
     String newline = System.getProperty("line.separator");
@@ -39,7 +39,7 @@ public class InputExtensions {
   }
 
   static public List<String> beforeEmptyLine(List<String> lines) {
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
     for (String line: lines) {
       if (line.trim().isEmpty()) {
         return result;
@@ -50,7 +50,7 @@ public class InputExtensions {
   }
 
   static public List<String> trimAll(List<String> lines) {
-    List<String> result = new ArrayList<String>(lines.size());
+    List<String> result = new ArrayList<>(lines.size());
     for (String line: lines) {
       result.add(line.trim());
     }
@@ -59,7 +59,7 @@ public class InputExtensions {
 
   public static List<Double> listOfDoubleTokens(String s) {
     StringTokenizer tokenizer = new StringTokenizer(s, ",");
-    List<Double> tokens = new ArrayList<Double>();
+    List<Double> tokens = new ArrayList<>();
     while (tokenizer.hasMoreTokens()) {
       tokens.add(Double.valueOf(tokenizer.nextToken()));
     }

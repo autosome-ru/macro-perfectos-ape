@@ -76,7 +76,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
       precise = true;
     }
     if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
-      return new ScanningSimilarityInfo<ModelType>(knownMotifEvaluator.pwm, knownMotifEvaluator.name, info, precise);
+      return new ScanningSimilarityInfo<>(knownMotifEvaluator.pwm, knownMotifEvaluator.name, info, precise);
     } else {
       return null;
     }
@@ -84,10 +84,10 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
 
   public List<ScanningSimilarityInfo> similarityInfos() {
     List<ScanningSimilarityInfo> result;
-    result = new ArrayList<ScanningSimilarityInfo>(thresholdEvaluators.size());
+    result = new ArrayList<>(thresholdEvaluators.size());
 
-    CanFindPvalue roughQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, roughDiscretizer);
-    CanFindPvalue preciseQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, preciseDiscretizer);
+    CanFindPvalue roughQueryPvalueEvaluator = new FindPvalueAPE<>(queryPWM, queryBackground, roughDiscretizer);
+    CanFindPvalue preciseQueryPvalueEvaluator = new FindPvalueAPE<>(queryPWM, queryBackground, preciseDiscretizer);
 
     double roughQueryThreshold = queryThreshold(roughDiscretizer);
     double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
@@ -108,7 +108,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     if (queryPredefinedThreshold != null) {
       return queryPredefinedThreshold;
     } else {
-      CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(queryPWM, queryBackground, discretizer);
+      CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(queryPWM, queryBackground, discretizer);
       return pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
     }
   }

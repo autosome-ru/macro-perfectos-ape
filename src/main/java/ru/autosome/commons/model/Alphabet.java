@@ -76,8 +76,8 @@ public class Alphabet {
       throw new RuntimeException("Error in program: number of letters and complement letters in alphabet definition differs");
     }
 
-    Map<String, Byte> letterIndices = new HashMap<String, Byte>();
-    Map<Byte, Byte> complements = new HashMap<Byte, Byte>();
+    Map<String, Byte> letterIndices = new HashMap<>();
+    Map<Byte, Byte> complements = new HashMap<>();
     String[] separateLetters = new String[(int)Math.pow(letters.length(), codeLength)];
 
     letters = letters.toUpperCase();

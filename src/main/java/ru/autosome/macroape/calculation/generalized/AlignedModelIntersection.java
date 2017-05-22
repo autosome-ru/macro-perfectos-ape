@@ -27,7 +27,7 @@ abstract public class AlignedModelIntersection <ModelType extends Alignable<Mode
                                   Position relativePosition) {
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
-    this.alignment = new PairAligned<ModelType>(firstPWM, secondPWM, relativePosition);
+    this.alignment = new PairAligned<>(firstPWM, secondPWM, relativePosition);
   }
 
   public double count_in_intersection(double first_threshold, double second_threshold) {

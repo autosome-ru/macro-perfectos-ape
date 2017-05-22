@@ -64,7 +64,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   protected void initialize_defaults() {
     initialize_default_background();
     discretizer = new Discretizer(10000.0);
-    thresholds = new ArrayList<Double>();
+    thresholds = new ArrayList<>();
     data_model = DataModel.PWM;
     thresholds_folder = null;
     effective_count = 100;
@@ -81,7 +81,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   }
 
   protected void extract_threshold_lists(List<String> argv) {
-    ArrayList<Double> thresholds_list = new ArrayList<Double>();
+    ArrayList<Double> thresholds_list = new ArrayList<>();
 
     try {
       while (!argv.isEmpty()) {
@@ -147,7 +147,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   }
 
   protected void setup_from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }

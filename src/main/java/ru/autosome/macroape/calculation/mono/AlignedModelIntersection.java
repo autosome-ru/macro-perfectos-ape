@@ -21,7 +21,7 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
 
   // 2d-score hash before first step
   private TDoubleObjectHashMap<TDoubleDoubleHashMap> initialScoreHash() {
-    TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = new TDoubleObjectHashMap<>();
     scores.put(0.0, new TDoubleDoubleHashMap(new double[] {0},
                                              new double[] {1}) );
     return scores;
@@ -70,7 +70,7 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
   // 2d-hash which has first level keys initialized, but second level is empty
   TDoubleObjectHashMap<TDoubleDoubleHashMap> seedHashToRecalc(TDoubleObjectHashMap<TDoubleDoubleHashMap> scores,
                                                               double[] firstColumn, double leastSufficientScoreFirst) {
-    TDoubleObjectHashMap<TDoubleDoubleHashMap> result = new TDoubleObjectHashMap<TDoubleDoubleHashMap>();
+    TDoubleObjectHashMap<TDoubleDoubleHashMap> result = new TDoubleObjectHashMap<>();
 
     TDoubleObjectIterator<TDoubleDoubleHashMap> iterator = scores.iterator();
     while (iterator.hasNext()) {

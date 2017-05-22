@@ -40,7 +40,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
 
   @Override
   public List<CanFindThreshold.ThresholdInfo> weakThresholdsByPvalues(List<Double> pvalues) {
-    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<>();
     for (double pvalue: pvalues) {
       result.add(weakThresholdByPvalue(pvalue));
     }
@@ -49,7 +49,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
 
   @Override
   public List<CanFindThreshold.ThresholdInfo> strongThresholsdByPvalues(List<Double> pvalues) {
-    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<>();
     for (double pvalue: pvalues) {
       result.add(strongThresholdByPvalue(pvalue));
     }
@@ -58,7 +58,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
 
   @Override
   public List<CanFindThreshold.ThresholdInfo> thresholdsByPvalues(List<Double> pvalues, BoundaryType boundaryType) {
-    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<>();
     for (Double pvalue: pvalues) {
       result.add(thresholdByPvalue(pvalue, boundaryType));
     }

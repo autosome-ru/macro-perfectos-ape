@@ -224,7 +224,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   }
 
   public ReportLayout<ScanningSimilarityInfo> report_table_layout() {
-    ReportLayout<ScanningSimilarityInfo> infos = new ReportLayout<ScanningSimilarityInfo>();
+    ReportLayout<ScanningSimilarityInfo> infos = new ReportLayout<>();
     infos.add_parameter("MS", "minimal similarity to output", similarityCutoff);
     infos.add_parameter("P", "P-value", pvalue);
     infos.add_parameter("PB", "P-value boundary", pvalueBoundaryType);
@@ -238,13 +238,13 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     infos.background_parameter("BQ", "background for query matrix", queryBackground);
     infos.background_parameter("BC", "background for collection", collectionBackground);
 
-    infos.add_table_parameter_without_description("motif", (ScanningSimilarityInfo cell) -> cell.name);
-    infos.add_table_parameter_without_description("similarity", (ScanningSimilarityInfo cell) -> cell.similarity());
-    infos.add_table_parameter_without_description("shift", (ScanningSimilarityInfo cell) -> cell.shift());
-    infos.add_table_parameter_without_description("overlap", (ScanningSimilarityInfo cell) -> cell.overlap());
-    infos.add_table_parameter_without_description("orientation", (ScanningSimilarityInfo cell) -> cell.orientation());
+    infos.add_table_parameter("motif", (ScanningSimilarityInfo cell) -> cell.name);
+    infos.add_table_parameter("similarity", ScanningSimilarityInfo::similarity);
+    infos.add_table_parameter("shift", ScanningSimilarityInfo::shift);
+    infos.add_table_parameter("overlap", ScanningSimilarityInfo::overlap);
+    infos.add_table_parameter("orientation", ScanningSimilarityInfo::orientation);
     if (preciseRecalculationCutoff != null) {
-      infos.add_table_parameter_without_description("precise mode", (ScanningSimilarityInfo cell) -> {
+      infos.add_table_parameter("precise mode", (ScanningSimilarityInfo cell) -> {
           return cell.precise ? "*" : ".";
         });
     }
@@ -252,12 +252,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   }
 
   protected String report(List<ScanningSimilarityInfo> data) {
-    Collections.sort(data, new Comparator<ScanningSimilarityInfo>() {
-      @Override
-      public int compare(ScanningSimilarityInfo o1, ScanningSimilarityInfo o2) {
-        return o1.similarity().compareTo(o2.similarity());
-      }
-    });
+    data.sort(Comparator.comparing(ScanningSimilarityInfo::similarity));
     return report_table_layout().report(data);
   }
 
@@ -271,22 +266,22 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   protected List<ThresholdEvaluator<ModelType>> load_collection_of_pwms() {
     List<Named<ModelType>> pwmList = loadMotifCollection();
     List<ThresholdEvaluator<ModelType>> result;
-    result = new ArrayList<ThresholdEvaluator<ModelType>>();
+    result = new ArrayList<>();
     for (Named<ModelType> namedModel: pwmList) {
       ModelType pwm = namedModel.getObject();
       if (thresholds_folder == null) {
         SingleThresholdEvaluator roughEvaluator =
             new SingleThresholdEvaluator(pwm, namedModel.getName(),
-                                            new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer),
-                                            new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer)
+                                            new FindThresholdAPE<>(pwm, collectionBackground, roughDiscretizer),
+                                            new FindPvalueAPE<>(pwm, collectionBackground, roughDiscretizer)
         );
         SingleThresholdEvaluator preciseEvaluator =
             new SingleThresholdEvaluator(pwm, namedModel.getName(),
-                                            new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer),
-                                            new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer)
+                                            new FindThresholdAPE<>(pwm, collectionBackground, preciseDiscretizer),
+                                            new FindPvalueAPE<>(pwm, collectionBackground, preciseDiscretizer)
             );
 
-        result.add(new ThresholdEvaluator<ModelType>( pwm, namedModel.getName(), roughEvaluator, preciseEvaluator));
+        result.add(new ThresholdEvaluator<>(pwm, namedModel.getName(), roughEvaluator, preciseEvaluator));
       } else {
         File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
         SingleThresholdEvaluator evaluator =
@@ -294,14 +289,14 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
                                             new FindThresholdBsearchBuilder(thresholds_file).thresholdCalculator(),
                                             new FindPvalueBsearchBuilder(thresholds_file).pvalueCalculator()
             );
-        result.add(new ThresholdEvaluator<ModelType>( pwm, namedModel.getName(), evaluator, null));
+        result.add(new ThresholdEvaluator<>(pwm, namedModel.getName(), evaluator, null));
       }
     }
     return result;
   }
 
   protected void setup_from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }

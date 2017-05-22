@@ -8,7 +8,6 @@ import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.commons.scoringModel.PWMOnBackground;
 
 public class CountingPWM extends ScoringModelDistributions {
 
@@ -22,7 +21,7 @@ public class CountingPWM extends ScoringModelDistributions {
 
   @Override
   CanFindThresholdApproximation gaussianThresholdEstimator() {
-    return new GaussianThresholdEstimator<PWMOnBackground>(pwm.onBackground(background));
+    return new GaussianThresholdEstimator<>(pwm.onBackground(background));
   }
 
   protected TDoubleDoubleMap initialCountDistribution() {

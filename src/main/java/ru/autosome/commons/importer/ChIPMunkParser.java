@@ -18,7 +18,7 @@ public class ChIPMunkParser {
   }
 
   public ParsingResult parse(List<String> strings) {
-    List<double[]> matrix = new ArrayList<double[]>();
+    List<double[]> matrix = new ArrayList<>();
 
     strings = InputExtensions.trimAll(strings);
     int start = strings.lastIndexOf("OUTC|" + section);

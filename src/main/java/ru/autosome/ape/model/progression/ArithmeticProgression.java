@@ -10,7 +10,7 @@ public class ArithmeticProgression extends Progression {
 
   @Override
   public List<Double> values() {
-    ArrayList<Double> results = new ArrayList<Double>();
+    ArrayList<Double> results = new ArrayList<>();
     if (to >= from) {
       for (double x = from; x <= to; x += step) {
         results.add(x);

@@ -20,7 +20,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
 
   @Override
   public List<PvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
-    List<PvalueInfo> results = new ArrayList<PvalueInfo>();
+    List<PvalueInfo> results = new ArrayList<>();
     for (double threshold: thresholds) {
       results.add(pvalueByThreshold(threshold));
     }
@@ -36,7 +36,7 @@ public class FindPvalueBsearch implements CanFindPvalue {
   // TODO: decide which parameters are relevant
   @Override
   public ReportLayout<PvalueInfo> report_table_layout() {
-    ReportLayout<PvalueInfo> infos = new ReportLayout<PvalueInfo>();
+    ReportLayout<PvalueInfo> infos = new ReportLayout<>();
 
     infos.add_table_parameter("T", "threshold", (PvalueInfo cell) -> cell.threshold);
     infos.add_table_parameter("P", "P-value", (PvalueInfo cell) -> cell.pvalue);

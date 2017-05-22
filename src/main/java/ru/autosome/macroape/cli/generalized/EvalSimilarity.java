@@ -78,7 +78,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   protected abstract CompareModels<ModelType, BackgroundType> calculator();
 
   protected void setup_from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }
@@ -267,7 +267,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
       if (predefinedFirstThreshold != null) {
         cacheFirstThreshold = predefinedFirstThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
         cacheFirstThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }
@@ -279,7 +279,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
       if (predefinedSecondThreshold != null) {
         cacheSecondThreshold = predefinedSecondThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
         cacheSecondThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }

@@ -9,7 +9,6 @@ import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.commons.scoringModel.DiPWMOnBackground;
 
 public class CountingDiPWM extends ScoringModelDistributions {
 
@@ -23,7 +22,7 @@ public class CountingDiPWM extends ScoringModelDistributions {
 
   @Override
   CanFindThresholdApproximation gaussianThresholdEstimator() {
-    return new GaussianThresholdEstimator<DiPWMOnBackground>(dipwm.onBackground(dibackground));
+    return new GaussianThresholdEstimator<>(dipwm.onBackground(dibackground));
   }
 
   protected TDoubleDoubleMap[] initialCountDistribution() {

@@ -41,7 +41,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
   protected CanFindThreshold calculator() {
     if (cache_calculator == null) {
       if (thresholds_folder == null) {
-        cache_calculator = new FindThresholdAPE<PWM, BackgroundModel>(motif.getObject(), background, discretizer);
+        cache_calculator = new FindThresholdAPE<>(motif.getObject(), background, discretizer);
       } else {
         File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
         cache_calculator = new FindThresholdBsearchBuilder(thresholds_file).thresholdCalculator();

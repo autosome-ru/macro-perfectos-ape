@@ -30,8 +30,8 @@ public abstract class PCM2PWM<ModelTypeFrom extends PositionCountModel,
   }
 
   public Named<ModelTypeTo> convert(Named<ModelTypeFrom> namedModel) {
-    return new Named<ModelTypeTo>(convert(namedModel.getObject()),
-                       namedModel.getName());
+    return new Named<>(convert(namedModel.getObject()),
+                          namedModel.getName());
   }
   public ModelTypeTo convert(ModelTypeFrom pcm) {
     double new_matrix[][] = new double[pcm.getMatrix().length][];

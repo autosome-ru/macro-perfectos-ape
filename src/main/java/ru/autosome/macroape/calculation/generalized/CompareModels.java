@@ -45,8 +45,8 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     this.secondPWM = secondPWM;
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
-    this.firstPvalueCalculator = new FindPvalueAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer);
-    this.secondPvalueCalculator = new FindPvalueAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer);
+    this.firstPvalueCalculator = new FindPvalueAPE<>(firstPWM, firstBackground, discretizer);
+    this.secondPvalueCalculator = new FindPvalueAPE<>(secondPWM, secondBackground, discretizer);
     this.discretizer = discretizer;
   }
 
@@ -81,8 +81,8 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
   }
 
   public CompareModelsCountsGiven.SimilarityInfo jaccard_by_pvalue(double pvalue) {
-    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer);
-    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer);
+    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
+    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
 
     double threshold_first = canFindThresholdFirst.strongThresholdByPvalue(pvalue).threshold;
     double threshold_second = canFindThresholdSecond.strongThresholdByPvalue(pvalue).threshold;
@@ -90,8 +90,8 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
   }
 
   public CompareModelsCountsGiven.SimilarityInfo jaccard_by_weak_pvalue(double pvalue) {
-    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<ModelType, BackgroundType>(firstPWM, firstBackground, discretizer);
-    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<ModelType, BackgroundType>(secondPWM, secondBackground, discretizer);
+    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
+    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
 
     double threshold_first = canFindThresholdFirst.weakThresholdByPvalue(pvalue).threshold;
     double threshold_second = canFindThresholdSecond.weakThresholdByPvalue(pvalue).threshold;

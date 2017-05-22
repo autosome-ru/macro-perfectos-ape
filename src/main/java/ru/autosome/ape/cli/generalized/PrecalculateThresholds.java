@@ -56,7 +56,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
   }
 
   protected void setup_from_arglist(String[] args) {
-    ArrayList<String> argv = new ArrayList<String>();
+    ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }
@@ -136,7 +136,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
   }
 
   List<Named<ModelType>> loadMotifs(File[] files) {
-    List<Named<ModelType>> results = new ArrayList<Named<ModelType>>();
+    List<Named<ModelType>> results = new ArrayList<>();
 
     for (File file : files) {
       results.add(loadMotif(file));

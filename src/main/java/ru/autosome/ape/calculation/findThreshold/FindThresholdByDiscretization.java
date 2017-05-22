@@ -47,7 +47,7 @@ public abstract class FindThresholdByDiscretization implements CanFindThreshold 
   }
 
   private List<CanFindThreshold.ThresholdInfo> downscale_all(List<CanFindThreshold.ThresholdInfo> thresholdInfos) {
-    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<>();
     for (CanFindThreshold.ThresholdInfo thresholdInfo: thresholdInfos) {
       result.add(thresholdInfo.downscale(discretizer));
     }

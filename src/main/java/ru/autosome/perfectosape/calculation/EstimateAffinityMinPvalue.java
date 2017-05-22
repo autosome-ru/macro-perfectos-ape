@@ -26,7 +26,7 @@ public class EstimateAffinityMinPvalue<SequenceType extends HasLength,
 
   ScanSequence scanSequence() {
     if (cache_scanSequence == null) {
-      cache_scanSequence = new ScanSequence<SequenceType>(sequence, pwm, positions_to_check);
+      cache_scanSequence = new ScanSequence<>(sequence, pwm, positions_to_check);
     }
     return cache_scanSequence;
   }

@@ -131,7 +131,7 @@ public class ScoreDistributionTop {
     }
     List<Double> partial_sums = ArrayExtensions.partial_sums(counts, 0.0);
 
-    TDoubleObjectMap<ThresholdsRange> results = new TDoubleObjectHashMap<ThresholdsRange>();
+    TDoubleObjectMap<ThresholdsRange> results = new TDoubleObjectHashMap<>();
     for (double pvalue : pvalues) {
       double look_for_count = pvalue * total_count;
       results.put(pvalue, thresholdsRangeByCount(scores, partial_sums, look_for_count));
@@ -146,7 +146,7 @@ public class ScoreDistributionTop {
   }
 
   public CanFindThreshold.ThresholdInfo strong_threshold(double pvalue) throws NotRepresentativeDistribution {
-    List<Double> pvalues = new ArrayList<Double>();
+    List<Double> pvalues = new ArrayList<>();
     pvalues.add(pvalue);
     return strong_thresholds(pvalues).get(0);
   }
@@ -157,13 +157,13 @@ public class ScoreDistributionTop {
   }
 
   public CanFindThreshold.ThresholdInfo weak_threshold(double pvalue) throws NotRepresentativeDistribution {
-    List<Double> pvalues = new ArrayList<Double>();
+    List<Double> pvalues = new ArrayList<>();
     pvalues.add(pvalue);
     return weak_thresholds(pvalues).get(0);
   }
 
   public List<CanFindThreshold.ThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
-    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
+    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<>();
     TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     for (double pvalue: pvalues) {
       ThresholdsRange range = thresholds_by_pvalues.get(pvalue);
@@ -181,7 +181,7 @@ public class ScoreDistributionTop {
   }
 
   public CanFindThreshold.ThresholdInfo threshold(double pvalue, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
-    List<Double> pvalues = new ArrayList<Double>();
+    List<Double> pvalues = new ArrayList<>();
     pvalues.add(pvalue);
     return thresholds(pvalues, pvalueBoundary).get(0);
   }

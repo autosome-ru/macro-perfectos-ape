@@ -20,8 +20,8 @@ public abstract class MotifImporter<ModelType> {
   }
   public Named<ModelType> loadMotifWithName(List<String> lines){
     ParsingResult parsingInfo = parse(lines);
-    return new Named<ModelType>(createMotif(parsingInfo.getMatrix()),
-                       parsingInfo.getName());
+    return new Named<>(createMotif(parsingInfo.getMatrix()),
+                          parsingInfo.getName());
   }
   public ModelType loadMotif(String filename) {
     return loadMotifWithName(filename).getObject();
@@ -42,7 +42,7 @@ public abstract class MotifImporter<ModelType> {
     } else {
       name = parsingInfo.getName();
     }
-    return new Named<ModelType>(createMotif(parsingInfo.getMatrix()), name);
+    return new Named<>(createMotif(parsingInfo.getMatrix()), name);
   }
   public Named<ModelType> loadMotifWithName(String filename) {
     return loadMotifWithName(new File(filename));
@@ -50,7 +50,7 @@ public abstract class MotifImporter<ModelType> {
 
   public List<ModelType> loadMotifCollection(File pathToMotifs) {
     List<Named<ModelType>> namedMotifs = loadMotifCollectionWithNames(pathToMotifs);
-    List<ModelType> result = new ArrayList<ModelType>(namedMotifs.size());
+    List<ModelType> result = new ArrayList<>(namedMotifs.size());
     for (Named<ModelType> namedModel: namedMotifs) {
       result.add(namedModel.getObject());
     }
@@ -66,7 +66,7 @@ public abstract class MotifImporter<ModelType> {
   }
 
   public List<Named<ModelType>> loadMotifCollectionWithNamesFromFolder(File pathToPWMs) {
-    List<Named<ModelType>> result = new ArrayList<Named<ModelType>>();
+    List<Named<ModelType>> result = new ArrayList<>();
     File[] files = pathToPWMs.listFiles();
     if (files == null) {
       return result;

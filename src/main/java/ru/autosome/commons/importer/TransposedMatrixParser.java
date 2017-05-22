@@ -30,7 +30,7 @@ public class TransposedMatrixParser {
   }
 
   List<String> beforeEmptyLine(List<String> lines) {
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
     for (String line: lines) {
       if (line.trim().isEmpty()) {
         return result;
@@ -43,7 +43,7 @@ public class TransposedMatrixParser {
   public ParsingResult parse(List<String> strings) {
     String name = getName(strings);
     strings = beforeEmptyLine(withoutHeader(strings));
-    List<double[]> matrix = new ArrayList<double[]>();
+    List<double[]> matrix = new ArrayList<>();
     if (strings.size() != alphabet_size) {
       throw new RuntimeException("Incorrect number of weight lines in the transposed matrix input file.");
     }

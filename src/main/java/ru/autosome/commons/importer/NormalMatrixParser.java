@@ -32,7 +32,7 @@ public class NormalMatrixParser {
   public ParsingResult parse(List<String> strings) {
     String name = getName(strings);
     strings = InputExtensions.beforeEmptyLine(withoutHeader(strings));
-    List<double[]> matrix = new ArrayList<double[]>();
+    List<double[]> matrix = new ArrayList<>();
     for (String positionString: strings) {
       String[] weights = positionString.split("\\s+");
       if (weights.length != alphabet_size) {

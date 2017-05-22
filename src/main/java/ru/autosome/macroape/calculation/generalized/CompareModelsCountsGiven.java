@@ -33,7 +33,7 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
   }
 
   private List<Position> relative_alignments() {
-    List<Position> result = new ArrayList<Position>();
+    List<Position> result = new ArrayList<>();
     for(int shift = -secondPWM.length(); shift <= firstPWM.length(); ++shift) {
       result.add(new Position(shift, Orientation.direct));
       result.add(new Position(shift, Orientation.revcomp));
@@ -67,14 +67,14 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
   public SimilarityInfo<ModelType> jaccardAtPosition(double thresholdFirst, double thresholdSecond,
                                           double firstCount, double secondCount,
                                           Position position) {
-    PairAligned<ModelType> alignment = new PairAligned<ModelType>(firstPWM, secondPWM, position);
+    PairAligned<ModelType> alignment = new PairAligned<>(firstPWM, secondPWM, position);
     double intersection = calculator(alignment).count_in_intersection(discretizer.upscale(thresholdFirst),
                                                                       discretizer.upscale(thresholdSecond));
 
     double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
     double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
 
-    return new SimilarityInfo<ModelType>(alignment, intersection, firstCountRenormed, secondCountRenormed);
+    return new SimilarityInfo<>(alignment, intersection, firstCountRenormed, secondCountRenormed);
   }
 
   protected abstract ru.autosome.macroape.calculation

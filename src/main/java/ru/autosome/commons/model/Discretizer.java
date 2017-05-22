@@ -25,7 +25,7 @@ public class Discretizer {
   }
 
   public List<Double> upscale(List<Double> values) {
-    List<Double> result = new ArrayList<Double>();
+    List<Double> result = new ArrayList<>();
     for (Double value: values) {
       result.add(upscale(value));
     }
