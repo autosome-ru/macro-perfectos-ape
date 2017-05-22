@@ -238,43 +238,15 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     infos.background_parameter("BQ", "background for query matrix", queryBackground);
     infos.background_parameter("BC", "background for collection", collectionBackground);
 
-    infos.add_table_parameter_without_description("motif", new ReportLayout.Callback<ScanningSimilarityInfo>() {
-      @Override
-      public Object run(ScanningSimilarityInfo cell) {
-        return cell.name;
-      }
-    });
-    infos.add_table_parameter_without_description("similarity", new ReportLayout.Callback<ScanningSimilarityInfo>() {
-      @Override
-      public Object run(ScanningSimilarityInfo cell) {
-        return cell.similarity();
-      }
-    });
-    infos.add_table_parameter_without_description("shift", new ReportLayout.Callback<ScanningSimilarityInfo>() {
-      @Override
-      public Object run(ScanningSimilarityInfo cell) {
-        return cell.shift();
-      }
-    });
-    infos.add_table_parameter_without_description("overlap", new ReportLayout.Callback<ScanningSimilarityInfo>() {
-      @Override
-      public Object run(ScanningSimilarityInfo cell) {
-        return cell.overlap();
-      }
-    });
-    infos.add_table_parameter_without_description("orientation", new ReportLayout.Callback<ScanningSimilarityInfo>() {
-      @Override
-      public Object run(ScanningSimilarityInfo cell) {
-        return cell.orientation();
-      }
-    });
+    infos.add_table_parameter_without_description("motif", (ScanningSimilarityInfo cell) -> cell.name);
+    infos.add_table_parameter_without_description("similarity", (ScanningSimilarityInfo cell) -> cell.similarity());
+    infos.add_table_parameter_without_description("shift", (ScanningSimilarityInfo cell) -> cell.shift());
+    infos.add_table_parameter_without_description("overlap", (ScanningSimilarityInfo cell) -> cell.overlap());
+    infos.add_table_parameter_without_description("orientation", (ScanningSimilarityInfo cell) -> cell.orientation());
     if (preciseRecalculationCutoff != null) {
-      infos.add_table_parameter_without_description("precise mode", new ReportLayout.Callback<ScanningSimilarityInfo>(){
-        @Override
-        public String run(ScanningSimilarityInfo cell) {
+      infos.add_table_parameter_without_description("precise mode", (ScanningSimilarityInfo cell) -> {
           return cell.precise ? "*" : ".";
-        }
-      });
+        });
     }
     return infos;
   }

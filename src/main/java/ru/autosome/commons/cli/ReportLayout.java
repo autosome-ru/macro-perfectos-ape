@@ -27,11 +27,11 @@ public class ReportLayout<ResultInfo> {
     }
   }
 
-  public void add_table_parameter(String param_name, String description, Callback<ResultInfo> callback) {
+  public void add_table_parameter(String param_name, String description, java.util.function.Function<ResultInfo, Object> callback) {
     columns.add(new TabularParameterConfig<ResultInfo>(param_name, description, callback));
   }
 
-  public void add_table_parameter_without_description(String param_name, Callback<ResultInfo> callback) {
+  public void add_table_parameter_without_description(String param_name, java.util.function.Function<ResultInfo, Object> callback) {
     columns.add(new TabularParameterConfig<ResultInfo>(param_name, null, callback));
   }
 
@@ -57,9 +57,5 @@ public class ReportLayout<ResultInfo> {
       }
     }
     return StringExtensions.join(results, "\n#\n");
-  }
-
-  public interface Callback<ResultInfo> {
-    Object run(ResultInfo cell);
   }
 }

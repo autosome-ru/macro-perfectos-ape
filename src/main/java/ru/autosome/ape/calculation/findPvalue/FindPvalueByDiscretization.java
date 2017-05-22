@@ -57,27 +57,14 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
     infos.add_parameter("V", "discretization value", discretizer);
     infos.background_parameter("B", "background", background);
 
-    infos.add_table_parameter("T", "threshold", new ReportLayout.Callback<PvalueInfo>() {
-      @Override
-      public Object run(PvalueInfo cell) {
-        return cell.threshold;
-      }
-    });
+    infos.add_table_parameter("T", "threshold", (PvalueInfo cell) -> cell.threshold);
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", new ReportLayout.Callback<PvalueInfo>() {
-        @Override
-        public Object run(PvalueInfo cell) {
+      infos.add_table_parameter("W", "number of recognized words", (PvalueInfo cell) -> {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.length());
           return (long)numberOfRecognizedWords;
-        }
-      });
+        });
     }
-    infos.add_table_parameter("P", "P-value", new ReportLayout.Callback<PvalueInfo>() {
-      @Override
-      public Object run(PvalueInfo cell) {
-        return cell.pvalue;
-      }
-    });
+    infos.add_table_parameter("P", "P-value", (PvalueInfo cell) -> cell.pvalue);
 
     return infos;
   }

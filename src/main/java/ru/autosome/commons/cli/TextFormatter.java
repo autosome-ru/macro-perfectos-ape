@@ -56,7 +56,7 @@ class TextFormatter<ResultInfo> implements ValueWithDescriptionFormatter<ResultI
   public String formatRow(List<TabularParameterConfig<ResultInfo>> columns, ResultInfo rowData) {
     List<String> rowCells = new ArrayList<String>();
     for (TabularParameterConfig<ResultInfo> parameter : columns) {
-      rowCells.add(parameter.callback.run(rowData).toString());
+      rowCells.add(parameter.callback.apply(rowData).toString());
     }
     return StringExtensions.join(rowCells, "\t");
   }

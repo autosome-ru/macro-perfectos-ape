@@ -170,34 +170,16 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
 
     infos.background_parameter("B", "background", background);
 
-    infos.add_table_parameter("P", "requested P-value", new ReportLayout.Callback<CanFindThreshold.ThresholdInfo>() {
-      @Override
-      public Object run(CanFindThreshold.ThresholdInfo cell) {
-        return cell.expected_pvalue;
-      }
-    });
-    infos.add_table_parameter("AP", "actual P-value", new ReportLayout.Callback<CanFindThreshold.ThresholdInfo>() {
-      @Override
-      public Object run(CanFindThreshold.ThresholdInfo cell) {
-        return cell.real_pvalue;
-      }
-    });
+    infos.add_table_parameter("P", "requested P-value", (CanFindThreshold.ThresholdInfo cell)-> cell.expected_pvalue);
+    infos.add_table_parameter("AP", "actual P-value", (CanFindThreshold.ThresholdInfo cell) -> cell.real_pvalue);
 
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", new ReportLayout.Callback<CanFindThreshold.ThresholdInfo>() {
-        @Override
-        public Object run(CanFindThreshold.ThresholdInfo cell) {
+      infos.add_table_parameter("W", "number of recognized words", (CanFindThreshold.ThresholdInfo cell) -> {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.getObject().length());
           return (long)numberOfRecognizedWords;
-        }
-      });
+        });
     }
-    infos.add_table_parameter("T", "threshold", new ReportLayout.Callback<CanFindThreshold.ThresholdInfo>() {
-      @Override
-      public Object run(CanFindThreshold.ThresholdInfo cell) {
-        return cell.threshold;
-      }
-    });
+    infos.add_table_parameter("T", "threshold", (CanFindThreshold.ThresholdInfo cell) -> cell.threshold);
 
     return infos;
   }
