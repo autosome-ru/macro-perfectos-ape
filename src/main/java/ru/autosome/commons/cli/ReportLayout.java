@@ -31,7 +31,7 @@ public class ReportLayout<ResultInfo> {
     columns.add(new TabularParameterConfig<>(param_name, description, callback));
   }
 
-  public void add_table_parameter_without_description(String param_name, java.util.function.Function<ResultInfo, Object> callback) {
+  public void add_table_parameter(String param_name, java.util.function.Function<ResultInfo, Object> callback) {
     columns.add(new TabularParameterConfig<>(param_name, null, callback));
   }
 
@@ -44,7 +44,7 @@ public class ReportLayout<ResultInfo> {
   }
 
   public String report(List<ResultInfo> data) {
-    ValueWithDescriptionFormatter<ResultInfo> formatter = new TextFormatter<>();
+    TextFormatter<ResultInfo> formatter = new TextFormatter<>();
     List<String> sections = new ArrayList<>();
     sections.add(formatter.formatParameter(parameters));
     sections.add(formatter.formatResult(resulting_values));

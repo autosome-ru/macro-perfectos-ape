@@ -5,7 +5,7 @@ import ru.autosome.commons.support.StringExtensions;
 import java.util.ArrayList;
 import java.util.List;
 
-class TextFormatter<ResultInfo> implements ValueWithDescriptionFormatter<ResultInfo> {
+class TextFormatter<ResultInfo> {
 
   protected String parameter_description_string(String param_name, String description) {
     return "# " + param_name + ": " + description;
@@ -21,7 +21,6 @@ class TextFormatter<ResultInfo> implements ValueWithDescriptionFormatter<ResultI
     return StringExtensions.join(nonEmptySections, "\n");
   }
 
-  @Override
   public String formatParameter(List<ValueWithDescription> parameters) {
     List<String> descriptions = new ArrayList<>();
     List<String> values = new ArrayList<>();
@@ -37,7 +36,6 @@ class TextFormatter<ResultInfo> implements ValueWithDescriptionFormatter<ResultI
         );
   }
 
-  @Override
   public String formatResult(List<ValueWithDescription> parameters) {
     List<String> descriptions = new ArrayList<>();
     List<String> values = new ArrayList<>();
@@ -53,7 +51,7 @@ class TextFormatter<ResultInfo> implements ValueWithDescriptionFormatter<ResultI
     );
   }
 
-  public String formatRow(List<TabularParameterConfig<ResultInfo>> columns, ResultInfo rowData) {
+  protected String formatRow(List<TabularParameterConfig<ResultInfo>> columns, ResultInfo rowData) {
     List<String> rowCells = new ArrayList<>();
     for (TabularParameterConfig<ResultInfo> parameter : columns) {
       rowCells.add(parameter.callback.apply(rowData).toString());
@@ -61,7 +59,6 @@ class TextFormatter<ResultInfo> implements ValueWithDescriptionFormatter<ResultI
     return StringExtensions.join(rowCells, "\t");
   }
 
-  @Override
   public String formatTable(List<TabularParameterConfig<ResultInfo>> columns, List<ResultInfo> data) {
     if (data == null) {
       return "";
