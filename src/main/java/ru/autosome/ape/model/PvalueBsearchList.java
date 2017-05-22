@@ -12,10 +12,10 @@ import java.util.List;
 // List of pvalue-threshold pairs sorted by threshold ascending
 public class PvalueBsearchList {
   public static class ThresholdPvaluePair {
-    public final double threshold;
-    public final double pvalue;
+    public final Double threshold;
+    public final Double pvalue;
 
-    public ThresholdPvaluePair(double threshold, double pvalue) {
+    public ThresholdPvaluePair(Double threshold, Double pvalue) {
       this.threshold = threshold;
       this.pvalue = pvalue;
     }
@@ -25,46 +25,23 @@ public class PvalueBsearchList {
       this.pvalue = info.real_pvalue;
     }
 
-    public static final Comparator thresholdComparator =
-     new Comparator<Object>() {
-       Double val(Object obj) {
-         double value;
-         if (obj instanceof ThresholdPvaluePair) {
-           value = ((ThresholdPvaluePair) obj).threshold;
-         } else if (obj instanceof Double) {
-           value = (Double) obj;
-         } else {
-           throw new ClassCastException("Incorrect type for comparison");
-         }
-         return value;
-       }
-
-       @Override
-       public int compare(Object o1, Object o2) {
-         return val(o1).compareTo(val(o2));
-       }
-     };
+    static final Comparator<ThresholdPvaluePair> thresholdComparator =
+        new Comparator<ThresholdPvaluePair>() {
+          @Override
+          public int compare(ThresholdPvaluePair o1, ThresholdPvaluePair o2) {
+            return (o1.threshold).compareTo(o2.threshold);
+          }
+        };
 
     // reversed comparison (thresholds are sorted ascending, so pvalues descending)
-    public static final Comparator pvalueComparator =
-     new Comparator<Object>() {
-       Double val(Object obj) {
-         double value;
-         if (obj instanceof ThresholdPvaluePair) {
-           value = ((ThresholdPvaluePair) obj).pvalue;
-         } else if (obj instanceof Double) {
-           value = (Double) obj;
-         } else {
-           throw new ClassCastException("Incorrect type for comparison");
-         }
-         return value;
-       }
+    static final Comparator<ThresholdPvaluePair> pvalueComparator =
+        new Comparator<ThresholdPvaluePair>() {
+          @Override
+          public int compare(ThresholdPvaluePair o1, ThresholdPvaluePair o2) {
+            return (o1.pvalue).compareTo(o2.pvalue);
+          }
+        };
 
-       @Override
-       public int compare(Object o1, Object o2) {
-         return val(o1).compareTo(val(o2));
-       }
-     };
 
     @Override
     public boolean equals(Object other) {
@@ -76,8 +53,8 @@ public class PvalueBsearchList {
     @Override
     public int hashCode() {
       int hash = 1;
-      hash  = hash * 17 + ((Double)threshold).hashCode();
-      hash  = hash * 31 + ((Double)pvalue).hashCode();
+      hash  = hash * 17 + threshold.hashCode();
+      hash  = hash * 31 + pvalue.hashCode();
       return hash;
     }
 
@@ -140,7 +117,7 @@ public class PvalueBsearchList {
   }
 
   public double pvalue_by_threshold(double threshold) {
-    int index = Collections.binarySearch(list, threshold, ThresholdPvaluePair.thresholdComparator);
+    int index = Collections.binarySearch(list, new ThresholdPvaluePair(threshold, null), ThresholdPvaluePair.thresholdComparator);
     if (index >= 0) {
       return list.get(index).pvalue;
     }
@@ -157,7 +134,7 @@ public class PvalueBsearchList {
   }
 
   public ThresholdPvaluePair strongThresholdInfoByPvalue(double pvalue) {
-    int index = Collections.binarySearch(list, pvalue, ThresholdPvaluePair.pvalueComparator);
+    int index = Collections.binarySearch(list, new ThresholdPvaluePair(null, pvalue), ThresholdPvaluePair.pvalueComparator);
     if (index >= 0) {
       return list.get(index);
     }
@@ -173,7 +150,7 @@ public class PvalueBsearchList {
   }
 
   public ThresholdPvaluePair weakThresholdByPvalue(double pvalue) {
-    int index = Collections.binarySearch(list, pvalue, ThresholdPvaluePair.pvalueComparator);
+    int index = Collections.binarySearch(list, new ThresholdPvaluePair(null, pvalue), ThresholdPvaluePair.pvalueComparator);
     if (index >= 0) {
       return list.get(index);
     }
