@@ -258,7 +258,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     }
   }
 
-  protected ReportLayout report_table() throws Exception {
+  protected ReportLayout report_table() {
     return report_table(results());
   }
 

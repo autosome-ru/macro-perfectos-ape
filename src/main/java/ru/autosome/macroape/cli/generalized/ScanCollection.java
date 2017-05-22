@@ -287,7 +287,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return report_table_layout().report(data);
   }
 
-  protected List<? extends ResultInfo> process() throws Exception {
+  protected List<? extends ResultInfo> process() {
     List<ru.autosome.macroape.calculation.generalized.ScanCollection<ModelType, BackgroundType>.SimilarityInfo> infos;
     infos = calculator().similarityInfos();
     return infos;
