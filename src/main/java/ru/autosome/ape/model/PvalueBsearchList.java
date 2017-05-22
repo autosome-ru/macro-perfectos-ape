@@ -45,9 +45,12 @@ public class PvalueBsearchList {
 
     @Override
     public boolean equals(Object other) {
-      return (other instanceof ThresholdPvaluePair) &&
-              threshold == ((ThresholdPvaluePair) other).threshold &&
-              pvalue == ((ThresholdPvaluePair) other).pvalue;
+      if (other instanceof ThresholdPvaluePair) {
+        ThresholdPvaluePair otherConv = (ThresholdPvaluePair) other;
+        return threshold.equals(otherConv.threshold) && pvalue.equals(otherConv.pvalue);
+      } else {
+        return false;
+      }
     }
 
     @Override

@@ -165,8 +165,7 @@ public class ScoreDistributionTop {
   public List<CanFindThreshold.ThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
     ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<CanFindThreshold.ThresholdInfo>();
     TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
-    for (int i = 0; i < pvalues.size(); ++i) {
-      double pvalue = pvalues.get(i);
+    for (double pvalue: pvalues) {
       ThresholdsRange range = thresholds_by_pvalues.get(pvalue);
       double threshold, real_pvalue;
       if (pvalueBoundary == BoundaryType.LOWER) { // strong threshold

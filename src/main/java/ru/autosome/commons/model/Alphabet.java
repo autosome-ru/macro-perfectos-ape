@@ -22,12 +22,12 @@ public class Alphabet {
       if (k.length() != codeLength) {
         throw new IllegalArgumentException("Key size should be equal to code size");
       }
-      if (k != letters[letterIndices.get(k)]) {
+      if (!k.equals(letters[letterIndices.get(k)])) {
         throw new IllegalArgumentException("Letters should be compatible with letter indices");
       }
     }
     for (Map.Entry<Byte,Byte> entry: reverseComplements.entrySet()) {
-      if (entry.getKey() != reverseComplements.get(entry.getValue())) {
+      if (!entry.getKey().equals(reverseComplements.get(entry.getValue()))) {
         throw new IllegalArgumentException("Reverse of reverse should be equal to itself");
       }
     }

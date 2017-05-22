@@ -35,7 +35,7 @@ public class FindThreshold {
 
     // Single threshold
     {
-      CanFindThreshold.ThresholdInfo info = null;
+      CanFindThreshold.ThresholdInfo info;
       info = calculator.thresholdByPvalue(pvalue, pvalue_boundary);
       print_result(info, background, pwm.length());
     }

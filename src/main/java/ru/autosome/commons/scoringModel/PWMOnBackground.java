@@ -32,9 +32,7 @@ public class PWMOnBackground implements ScoringModel<SequenceMonoEncoded>, Encod
     double[][] result = new double[pwm.length()][];
     for (int posIndex = 0; posIndex < pwm.length(); ++posIndex) {
       result[posIndex] = new double[5];
-      for (int letterIndex = 0; letterIndex < PWM.ALPHABET_SIZE; ++letterIndex) {
-        result[posIndex][letterIndex] = pwm.getMatrix()[posIndex][letterIndex];
-      }
+      System.arraycopy(pwm.getMatrix()[posIndex], 0, result[posIndex], 0, PWM.ALPHABET_SIZE);
       result[posIndex][4] = background.mean_value(pwm.getMatrix()[posIndex]);
     }
     return result;

@@ -121,13 +121,12 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
     }
 
     public String toStringShort() {
-      StringBuilder result = new StringBuilder();
-      result.append(String.format("%.2e", info_1.pvalue)).append("\t");
-      result.append(String.format("%.2e", info_2.pvalue)).append("\t");
-      result.append(info_1.position.toStringShort()).append("\t");
-      result.append(info_2.position.toStringShort());
+      String result = String.format("%.2e", info_1.pvalue) + "\t" +
+                          String.format("%.2e", info_2.pvalue) + "\t" +
+                          info_1.position.toStringShort() + "\t" +
+                          info_2.position.toStringShort();
 
-      return result.toString();
+      return result;
     }
   }
 

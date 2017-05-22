@@ -33,7 +33,7 @@ public class FindPvalue {
 
       // Single threshold
     {
-      CanFindPvalue.PvalueInfo info = null;
+      CanFindPvalue.PvalueInfo info;
       info = calculator.pvalueByThreshold(threshold);
       print_result(info, background, pwm.length());
     }
