@@ -9,7 +9,6 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ReportLayout;
-import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -19,6 +18,7 @@ import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.macroape.model.ScanningSimilarityInfo;
 import ru.autosome.macroape.model.ThresholdEvaluator;
 
 import java.io.File;
@@ -223,8 +223,8 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return true;
   }
 
-  public ReportLayout report_table_layout() {
-    ReportLayout infos = new ReportLayout();
+  public ReportLayout<ScanningSimilarityInfo> report_table_layout() {
+    ReportLayout<ScanningSimilarityInfo> infos = new ReportLayout<ScanningSimilarityInfo>();
     infos.add_parameter("MS", "minimal similarity to output", similarityCutoff);
     infos.add_parameter("P", "P-value", pvalue);
     infos.add_parameter("PB", "P-value boundary", pvalueBoundaryType);
@@ -238,15 +238,40 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     infos.background_parameter("BQ", "background for query matrix", queryBackground);
     infos.background_parameter("BC", "background for collection", collectionBackground);
 
-    infos.add_table_parameter_without_description("motif", "name");
-    infos.add_table_parameter_without_description("similarity", "similarity");
-    infos.add_table_parameter_without_description("shift", "shift");
-    infos.add_table_parameter_without_description("overlap", "overlap");
-    infos.add_table_parameter_without_description("orientation", "orientation");
+    infos.add_table_parameter_without_description("motif", new ReportLayout.Callback<ScanningSimilarityInfo>() {
+      @Override
+      public Object run(ScanningSimilarityInfo cell) {
+        return cell.name;
+      }
+    });
+    infos.add_table_parameter_without_description("similarity", new ReportLayout.Callback<ScanningSimilarityInfo>() {
+      @Override
+      public Object run(ScanningSimilarityInfo cell) {
+        return cell.similarity();
+      }
+    });
+    infos.add_table_parameter_without_description("shift", new ReportLayout.Callback<ScanningSimilarityInfo>() {
+      @Override
+      public Object run(ScanningSimilarityInfo cell) {
+        return cell.shift();
+      }
+    });
+    infos.add_table_parameter_without_description("overlap", new ReportLayout.Callback<ScanningSimilarityInfo>() {
+      @Override
+      public Object run(ScanningSimilarityInfo cell) {
+        return cell.overlap();
+      }
+    });
+    infos.add_table_parameter_without_description("orientation", new ReportLayout.Callback<ScanningSimilarityInfo>() {
+      @Override
+      public Object run(ScanningSimilarityInfo cell) {
+        return cell.orientation();
+      }
+    });
     if (preciseRecalculationCutoff != null) {
-      infos.add_table_parameter_without_description("precise mode", "precision_mode", new ReportLayout.Callback<ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo>(){
+      infos.add_table_parameter_without_description("precise mode", new ReportLayout.Callback<ScanningSimilarityInfo>(){
         @Override
-        public String run(ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo cell) {
+        public String run(ScanningSimilarityInfo cell) {
           return cell.precise ? "*" : ".";
         }
       });
@@ -254,21 +279,18 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return infos;
   }
 
-  protected String report(List<? extends ResultInfo> data) {
-    Collections.sort(data, new Comparator<Object>() {
+  protected String report(List<ScanningSimilarityInfo> data) {
+    Collections.sort(data, new Comparator<ScanningSimilarityInfo>() {
       @Override
-      public int compare(Object o1, Object o2) {
-        ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo s1, s2;
-        s1 = (ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo)o1;
-        s2 = (ru.autosome.macroape.calculation.generalized.ScanCollection.SimilarityInfo)o2;
-        return s1.similarity().compareTo(s2.similarity());
+      public int compare(ScanningSimilarityInfo o1, ScanningSimilarityInfo o2) {
+        return o1.similarity().compareTo(o2.similarity());
       }
     });
     return report_table_layout().report(data);
   }
 
-  protected List<? extends ResultInfo> process() {
-    List<ru.autosome.macroape.calculation.generalized.ScanCollection<ModelType, BackgroundType>.SimilarityInfo> infos;
+  protected List<ScanningSimilarityInfo> process() {
+    List<ScanningSimilarityInfo> infos;
     infos = calculator().similarityInfos();
     return infos;
   }

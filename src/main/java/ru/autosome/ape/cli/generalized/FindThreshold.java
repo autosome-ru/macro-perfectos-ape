@@ -162,19 +162,29 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     }
   }
 
-  ReportLayout report_table_layout() {
-    ReportLayout infos = new ReportLayout();
+  ReportLayout<CanFindThreshold.ThresholdInfo> report_table_layout() {
+    ReportLayout<CanFindThreshold.ThresholdInfo> infos = new ReportLayout<CanFindThreshold.ThresholdInfo>();
 
     infos.add_parameter("V", "discretization value", discretizer);
     infos.add_parameter("PB", "P-value boundary", pvalue_boundary);
 
     infos.background_parameter("B", "background", background);
 
-    infos.add_table_parameter("P", "requested P-value", "expected_pvalue");
-    infos.add_table_parameter("AP", "actual P-value", "real_pvalue");
+    infos.add_table_parameter("P", "requested P-value", new ReportLayout.Callback<CanFindThreshold.ThresholdInfo>() {
+      @Override
+      public Object run(CanFindThreshold.ThresholdInfo cell) {
+        return cell.expected_pvalue;
+      }
+    });
+    infos.add_table_parameter("AP", "actual P-value", new ReportLayout.Callback<CanFindThreshold.ThresholdInfo>() {
+      @Override
+      public Object run(CanFindThreshold.ThresholdInfo cell) {
+        return cell.real_pvalue;
+      }
+    });
 
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords", new ReportLayout.Callback<CanFindThreshold.ThresholdInfo>() {
+      infos.add_table_parameter("W", "number of recognized words", new ReportLayout.Callback<CanFindThreshold.ThresholdInfo>() {
         @Override
         public Object run(CanFindThreshold.ThresholdInfo cell) {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.getObject().length());
@@ -182,7 +192,12 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
         }
       });
     }
-    infos.add_table_parameter("T", "threshold", "threshold");
+    infos.add_table_parameter("T", "threshold", new ReportLayout.Callback<CanFindThreshold.ThresholdInfo>() {
+      @Override
+      public Object run(CanFindThreshold.ThresholdInfo cell) {
+        return cell.threshold;
+      }
+    });
 
     return infos;
   }

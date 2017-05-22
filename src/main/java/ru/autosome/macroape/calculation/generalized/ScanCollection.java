@@ -10,7 +10,7 @@ import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.macroape.model.PairAligned;
+import ru.autosome.macroape.model.ScanningSimilarityInfo;
 import ru.autosome.macroape.model.ThresholdEvaluator;
 
 import java.util.ArrayList;
@@ -40,11 +40,11 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                                           CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
                                                                           Discretizer discretizer);
 
-  public SimilarityInfo similarityInfo(CanFindPvalue roughQueryPvalueEvaluator,
-                                       CanFindPvalue preciseQueryPvalueEvaluator,
-                                       double roughQueryThreshold,
-                                       double preciseQueryThreshold,
-                                       ThresholdEvaluator<ModelType> knownMotifEvaluator) {
+  public ScanningSimilarityInfo similarityInfo(CanFindPvalue roughQueryPvalueEvaluator,
+                                               CanFindPvalue preciseQueryPvalueEvaluator,
+                                               double roughQueryThreshold,
+                                               double preciseQueryThreshold,
+                                               ThresholdEvaluator<ModelType> knownMotifEvaluator) {
     CompareModelsCountsGiven.SimilarityInfo<ModelType> info;
     boolean precise = false;
     CompareModels<ModelType,BackgroundType> roughCalculation = calculation(
@@ -76,15 +76,15 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
       precise = true;
     }
     if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
-      return new SimilarityInfo(knownMotifEvaluator.pwm, knownMotifEvaluator.name, info, precise);
+      return new ScanningSimilarityInfo<ModelType>(knownMotifEvaluator.pwm, knownMotifEvaluator.name, info, precise);
     } else {
       return null;
     }
   }
 
-  public List<SimilarityInfo> similarityInfos() {
-    List<SimilarityInfo> result;
-    result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
+  public List<ScanningSimilarityInfo> similarityInfos() {
+    List<ScanningSimilarityInfo> result;
+    result = new ArrayList<ScanningSimilarityInfo>(thresholdEvaluators.size());
 
     CanFindPvalue roughQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, roughDiscretizer);
     CanFindPvalue preciseQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, preciseDiscretizer);
@@ -93,7 +93,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
 
     for (ThresholdEvaluator<ModelType> knownMotifEvaluator: thresholdEvaluators) {
-      SimilarityInfo info = similarityInfo(roughQueryPvalueEvaluator, preciseQueryPvalueEvaluator,
+      ScanningSimilarityInfo info = similarityInfo(roughQueryPvalueEvaluator, preciseQueryPvalueEvaluator,
           roughQueryThreshold, preciseQueryThreshold,
           knownMotifEvaluator);
       if (info != null) {
@@ -113,28 +113,4 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     }
   }
 
-  public class SimilarityInfo extends CompareModelsCountsGiven.SimilarityInfo<ModelType> {
-    public final ModelType collectionPWM;
-    public final String name;
-    public final boolean precise;
-
-    public SimilarityInfo(ModelType collectionPWM, String name, PairAligned<ModelType> alignment,
-                          double recognizedByBoth, double recognizedByFirst, double recognizedBySecond,
-                          boolean precise) {
-      super(alignment, recognizedByBoth, recognizedByFirst, recognizedBySecond);
-      this.collectionPWM = collectionPWM;
-      this.name = name;
-      this.precise = precise;
-
-    }
-    public SimilarityInfo(ModelType collectionPWM, String name, CompareModelsCountsGiven.SimilarityInfo<ModelType> similarityInfo, boolean precise) {
-      super(similarityInfo.alignment,
-            similarityInfo.recognizedByBoth,
-            similarityInfo.recognizedByFirst,
-            similarityInfo.recognizedBySecond);
-      this.collectionPWM = collectionPWM;
-      this.name = name;
-      this.precise = precise;
-    }
-  }
 }

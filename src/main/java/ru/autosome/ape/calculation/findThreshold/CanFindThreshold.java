@@ -1,7 +1,6 @@
 package ru.autosome.ape.calculation.findThreshold;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 
@@ -9,7 +8,7 @@ import java.util.List;
 
 // TODO: Make use of strong/weak thresholds or thresholds depending on BoundaryType (it wasn't implemented for bsearch lists)
 public interface CanFindThreshold {
-  class ThresholdInfo extends ResultInfo {
+  class ThresholdInfo {
     public final double threshold;
     public final double real_pvalue;
     public final double expected_pvalue;

@@ -5,7 +5,7 @@ import ru.autosome.commons.support.StringExtensions;
 import java.util.ArrayList;
 import java.util.List;
 
-class TextFormatter<CertainResultInfo extends ResultInfo> implements ValueWithDescriptionFormatter<CertainResultInfo> {
+class TextFormatter<ResultInfo> implements ValueWithDescriptionFormatter<ResultInfo> {
 
   protected String parameter_description_string(String param_name, String description) {
     return "# " + param_name + ": " + description;
@@ -53,26 +53,22 @@ class TextFormatter<CertainResultInfo extends ResultInfo> implements ValueWithDe
     );
   }
 
-  public String formatRow(List<TabularParameterConfig<CertainResultInfo>> columns, CertainResultInfo rowData) {
+  public String formatRow(List<TabularParameterConfig<ResultInfo>> columns, ResultInfo rowData) {
     List<String> rowCells = new ArrayList<String>();
-    for (TabularParameterConfig<CertainResultInfo> parameter : columns) {
-      if (parameter.callback == null) {
-        rowCells.add(rowData.get(parameter.key_in_hash).toString());
-      } else {
-        rowCells.add(parameter.callback.run(rowData).toString());
-      }
+    for (TabularParameterConfig<ResultInfo> parameter : columns) {
+      rowCells.add(parameter.callback.run(rowData).toString());
     }
     return StringExtensions.join(rowCells, "\t");
   }
 
   @Override
-  public String formatTable(List<TabularParameterConfig<CertainResultInfo>> columns, List<CertainResultInfo> data) {
+  public String formatTable(List<TabularParameterConfig<ResultInfo>> columns, List<ResultInfo> data) {
     if (data == null) {
       return "";
     } else {
       List<String> descriptionRows = new ArrayList<String>();
       List<String> table_headers = new ArrayList<String>();
-      for (TabularParameterConfig<CertainResultInfo> parameter : columns) {
+      for (TabularParameterConfig<ResultInfo> parameter : columns) {
         if (parameter.description != null) {
           descriptionRows.add(parameter_description_string(parameter.name, parameter.description));
         }
@@ -83,7 +79,7 @@ class TextFormatter<CertainResultInfo extends ResultInfo> implements ValueWithDe
         header = "# " + StringExtensions.join(table_headers, "\t");
       }
       List<String> tableRows = new ArrayList<String>();
-      for (CertainResultInfo row : data) {
+      for (ResultInfo row : data) {
         tableRows.add(formatRow(columns, row));
       }
 

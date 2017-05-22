@@ -3,10 +3,10 @@ package ru.autosome.macroape;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
-import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.macroape.model.ScanningSimilarityInfo;
 
 import java.util.List;
 
@@ -68,7 +68,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   public static void main(String[] args) {
     try {
       ScanCollection calculation = ScanCollection.from_arglist(args);
-      List<? extends ResultInfo> infos = calculation.process();
+      List<ScanningSimilarityInfo> infos = calculation.process();
       System.out.println(calculation.report(infos));
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");

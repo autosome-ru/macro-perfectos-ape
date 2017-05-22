@@ -35,11 +35,21 @@ public class FindPvalueBsearch implements CanFindPvalue {
 
   // TODO: decide which parameters are relevant
   @Override
-  public ReportLayout report_table_layout() {
-    ReportLayout infos = new ReportLayout();
+  public ReportLayout<PvalueInfo> report_table_layout() {
+    ReportLayout<PvalueInfo> infos = new ReportLayout<PvalueInfo>();
 
-    infos.add_table_parameter("T", "threshold", "threshold");
-    infos.add_table_parameter("P", "P-value", "pvalue");
+    infos.add_table_parameter("T", "threshold", new ReportLayout.Callback<PvalueInfo>() {
+      @Override
+      public Object run(PvalueInfo cell) {
+        return cell.threshold;
+      }
+    });
+    infos.add_table_parameter("P", "P-value", new ReportLayout.Callback<PvalueInfo>() {
+      @Override
+      public Object run(PvalueInfo cell) {
+        return cell.pvalue;
+      }
+    });
 
     return infos;
   }

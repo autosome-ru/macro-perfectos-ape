@@ -1,7 +1,6 @@
 package ru.autosome.macroape.calculation.generalized;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.cli.ResultInfo;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
@@ -82,7 +81,7 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
                       .generalized.AlignedModelIntersection
                       <ModelType, BackgroundType> calculator(PairAligned<ModelType> alignment);
 
-  public static class SimilarityInfo<ModelType extends Alignable<ModelType>> extends ResultInfo {
+  public static class SimilarityInfo<ModelType extends Alignable<ModelType>> {
     public final PairAligned<ModelType> alignment;
     public final double recognizedByBoth;
     public final double recognizedByFirst;

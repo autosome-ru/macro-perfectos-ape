@@ -52,14 +52,19 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   }
 
   @Override
-  public ReportLayout report_table_layout() {
-    ReportLayout infos = new ReportLayout();
+  public ReportLayout<PvalueInfo> report_table_layout() {
+    ReportLayout<PvalueInfo> infos = new ReportLayout<PvalueInfo>();
     infos.add_parameter("V", "discretization value", discretizer);
     infos.background_parameter("B", "background", background);
 
-    infos.add_table_parameter("T", "threshold", "threshold");
+    infos.add_table_parameter("T", "threshold", new ReportLayout.Callback<PvalueInfo>() {
+      @Override
+      public Object run(PvalueInfo cell) {
+        return cell.threshold;
+      }
+    });
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", "numberOfRecognizedWords", new ReportLayout.Callback<PvalueInfo>() {
+      infos.add_table_parameter("W", "number of recognized words", new ReportLayout.Callback<PvalueInfo>() {
         @Override
         public Object run(PvalueInfo cell) {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.length());
@@ -67,7 +72,12 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
         }
       });
     }
-    infos.add_table_parameter("P", "P-value", "pvalue");
+    infos.add_table_parameter("P", "P-value", new ReportLayout.Callback<PvalueInfo>() {
+      @Override
+      public Object run(PvalueInfo cell) {
+        return cell.pvalue;
+      }
+    });
 
     return infos;
   }
