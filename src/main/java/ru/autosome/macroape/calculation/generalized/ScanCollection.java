@@ -11,13 +11,14 @@ import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.macroape.model.PairAligned;
+import ru.autosome.macroape.model.ThresholdEvaluator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ScanCollection <ModelType extends Alignable<ModelType> & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
 
-  protected final List<ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator> thresholdEvaluators;
+  protected final List<ThresholdEvaluator<ModelType>> thresholdEvaluators;
 
   public final ModelType queryPWM;
   public double pvalue;
@@ -29,7 +30,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
   public Double preciseRecalculationCutoff; // null means that no recalculation will be performed
 
 
-  public ScanCollection(List<ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator> thresholdEvaluators, ModelType queryPWM) {
+  public ScanCollection(List<ThresholdEvaluator<ModelType>> thresholdEvaluators, ModelType queryPWM) {
     this.thresholdEvaluators = thresholdEvaluators;
     this.queryPWM = queryPWM;
   }
@@ -39,11 +40,11 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                                           CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
                                                                           Discretizer discretizer);
 
-  public SimilarityInfo similarityInfo(FindPvalueAPE roughQueryPvalueEvaluator,
-                                       FindPvalueAPE preciseQueryPvalueEvaluator,
+  public SimilarityInfo similarityInfo(CanFindPvalue roughQueryPvalueEvaluator,
+                                       CanFindPvalue preciseQueryPvalueEvaluator,
                                        double roughQueryThreshold,
                                        double preciseQueryThreshold,
-                                       ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator knownMotifEvaluator) {
+                                       ThresholdEvaluator<ModelType> knownMotifEvaluator) {
     CompareModelsCountsGiven.SimilarityInfo<ModelType> info;
     boolean precise = false;
     CompareModels<ModelType,BackgroundType> roughCalculation = calculation(
@@ -56,8 +57,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     Double roughCollectionThreshold = knownMotifEvaluator.rough.thresholdCalculator
                                           .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
 
-    info = roughCalculation.jaccard(roughQueryThreshold,
-        roughCollectionThreshold);
+    info = roughCalculation.jaccard(roughQueryThreshold, roughCollectionThreshold);
 
     if (preciseRecalculationCutoff != null &&
             info.similarity() >= preciseRecalculationCutoff &&
@@ -72,8 +72,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
       Double preciseCollectionThreshold = knownMotifEvaluator.precise.thresholdCalculator
                                               .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
 
-      info = preciseCalculation.jaccard(preciseQueryThreshold,
-          preciseCollectionThreshold);
+      info = preciseCalculation.jaccard(preciseQueryThreshold, preciseCollectionThreshold);
       precise = true;
     }
     if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
@@ -87,13 +86,13 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     List<SimilarityInfo> result;
     result = new ArrayList<SimilarityInfo>(thresholdEvaluators.size());
 
-    FindPvalueAPE roughQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, roughDiscretizer);
-    FindPvalueAPE preciseQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, preciseDiscretizer);
+    CanFindPvalue roughQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, roughDiscretizer);
+    CanFindPvalue preciseQueryPvalueEvaluator = new FindPvalueAPE<ModelType, BackgroundType>(queryPWM, queryBackground, preciseDiscretizer);
 
     double roughQueryThreshold = queryThreshold(roughDiscretizer);
     double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
 
-    for (ru.autosome.macroape.cli.generalized.ScanCollection<ModelType,BackgroundType>.ThresholdEvaluator knownMotifEvaluator: thresholdEvaluators) {
+    for (ThresholdEvaluator<ModelType> knownMotifEvaluator: thresholdEvaluators) {
       SimilarityInfo info = similarityInfo(roughQueryPvalueEvaluator, preciseQueryPvalueEvaluator,
           roughQueryThreshold, preciseQueryThreshold,
           knownMotifEvaluator);

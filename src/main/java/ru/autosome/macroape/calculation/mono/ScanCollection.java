@@ -4,6 +4,7 @@ import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.macroape.model.ThresholdEvaluator;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class ScanCollection extends ru.autosome.macroape.calculation.generalized
                               firstPvalueCalculator, secondPvalueCalculator, discretizer);
   }
 
-  public ScanCollection(List<ru.autosome.macroape.ScanCollection.ThresholdEvaluator> thresholdEvaluators, PWM queryPWM) {
+  public ScanCollection(List<ThresholdEvaluator<PWM>> thresholdEvaluators, PWM queryPWM) {
     super(thresholdEvaluators, queryPWM);
   }
 }

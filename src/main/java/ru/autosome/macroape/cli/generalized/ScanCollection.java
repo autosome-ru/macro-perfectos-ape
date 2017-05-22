@@ -19,6 +19,7 @@ import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.macroape.model.ThresholdEvaluator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,27 +46,6 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     }
   }
 
-
-  public class ThresholdEvaluator {
-    public final ModelType pwm;
-    public final String name;
-    public final SingleThresholdEvaluator rough;
-    public final SingleThresholdEvaluator precise;
-    //    List<SingleThresholdEvaluator> consequentEvaluators;
-
-    public ThresholdEvaluator(ModelType pwm, String name,
-                              CanFindThreshold roughThresholdCalculator, CanFindThreshold preciseThresholdCalculator,
-                              CanFindPvalue roughPvalueCalculator, CanFindPvalue precisePvalueCalculator) {
-      this.pwm = pwm;
-      this.name = name;
-      this.rough = new SingleThresholdEvaluator(pwm, name, roughThresholdCalculator, roughPvalueCalculator);
-      this.precise = new SingleThresholdEvaluator(pwm, name, preciseThresholdCalculator, precisePvalueCalculator);
-//      consequentEvaluators = new ArrayList<SingleThresholdEvaluator>();
-//      consequentEvaluators.add(this.rough);
-//      consequentEvaluators.add(this.precise);
-    }
-  }
-
   protected DataModel collectionDataModel;
   protected Double collectionEffectiveCount;
   protected PseudocountCalculator collectionPseudocount;
@@ -84,7 +64,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   protected File pathToCollectionOfPWMs;
   protected File thresholds_folder;
   protected ModelType queryPWM;
-  protected List<ThresholdEvaluator> pwmCollection;
+  protected List<ThresholdEvaluator<ModelType>> pwmCollection;
   protected boolean queryTranspose, collectionTranspose;
 
   abstract protected String DOC_background_option();
@@ -294,25 +274,33 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   }
 
   // TODO: Refactor usage of one-stage and two-stage search
-  protected List<ThresholdEvaluator> load_collection_of_pwms() {
+  protected List<ThresholdEvaluator<ModelType>> load_collection_of_pwms() {
     List<Named<ModelType>> pwmList = loadMotifCollection();
-    List<ThresholdEvaluator> result;
-    result = new ArrayList<ThresholdEvaluator>();
+    List<ThresholdEvaluator<ModelType>> result;
+    result = new ArrayList<ThresholdEvaluator<ModelType>>();
     for (Named<ModelType> namedModel: pwmList) {
       ModelType pwm = namedModel.getObject();
       if (thresholds_folder == null) {
-        result.add(new ThresholdEvaluator( pwm, namedModel.getName(),
-                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer),
-                                           new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer),
-                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer),
-                                           new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer)));
+        SingleThresholdEvaluator roughEvaluator =
+            new SingleThresholdEvaluator(pwm, namedModel.getName(),
+                                            new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer),
+                                            new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, roughDiscretizer)
+        );
+        SingleThresholdEvaluator preciseEvaluator =
+            new SingleThresholdEvaluator(pwm, namedModel.getName(),
+                                            new FindThresholdAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer),
+                                            new FindPvalueAPE<ModelType, BackgroundType>(pwm, collectionBackground, preciseDiscretizer)
+            );
+
+        result.add(new ThresholdEvaluator<ModelType>( pwm, namedModel.getName(), roughEvaluator, preciseEvaluator));
       } else {
         File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
-        result.add(new ThresholdEvaluator( pwm, namedModel.getName(),
-                                           new FindThresholdBsearchBuilder(thresholds_file).thresholdCalculator(),
-                                           null,
-                                           new FindPvalueBsearchBuilder(thresholds_file).pvalueCalculator(),
-                                           null));
+        SingleThresholdEvaluator evaluator =
+            new SingleThresholdEvaluator(pwm, namedModel.getName(),
+                                            new FindThresholdBsearchBuilder(thresholds_file).thresholdCalculator(),
+                                            new FindPvalueBsearchBuilder(thresholds_file).pvalueCalculator()
+            );
+        result.add(new ThresholdEvaluator<ModelType>( pwm, namedModel.getName(), evaluator, null));
       }
     }
     return result;
