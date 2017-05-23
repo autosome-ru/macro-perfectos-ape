@@ -30,7 +30,7 @@ public class PvalueBsearchList {
 
     // reversed comparison (thresholds are sorted ascending, so pvalues descending)
     static final Comparator<ThresholdPvaluePair> pvalueComparator =
-        Comparator.comparing(o -> (o.pvalue));
+        Comparator.comparing(o -> (-o.pvalue));
 
 
     @Override
