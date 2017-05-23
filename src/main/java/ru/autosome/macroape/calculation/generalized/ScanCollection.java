@@ -10,6 +10,7 @@ import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
+import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 import ru.autosome.macroape.model.ScanningSimilarityInfo;
 import ru.autosome.macroape.model.ThresholdEvaluator;
 
@@ -45,7 +46,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                double roughQueryThreshold,
                                                double preciseQueryThreshold,
                                                ThresholdEvaluator<ModelType> knownMotifEvaluator) {
-    CompareModelsCountsGiven.SimilarityInfo<ModelType> info;
+    ComparisonSimilarityInfo<ModelType> info;
     boolean precise = false;
     CompareModels<ModelType,BackgroundType> roughCalculation = calculation(
         queryPWM, knownMotifEvaluator.pwm,

@@ -1,7 +1,7 @@
 package ru.autosome.ape.calculation.findPvalue;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.cli.ReportLayout;
+import ru.autosome.commons.cli.ReportListLayout;
 
 import java.util.List;
 
@@ -23,5 +23,5 @@ public interface CanFindPvalue {
   List<PvalueInfo> pvaluesByThresholds(List<Double> thresholds);
 
   PvalueInfo pvalueByThreshold(double threshold);
-  ReportLayout<PvalueInfo> report_table_layout();
+  ReportListLayout<PvalueInfo> report_table_layout();
 }

@@ -10,6 +10,7 @@ import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
+import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 
 abstract public class CompareModels<ModelType extends Alignable<ModelType> &Discretable<ModelType> &ScoreDistribution<BackgroundType> ,
                                     BackgroundType extends GeneralizedBackgroundModel> {
@@ -64,15 +65,15 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
             .numberOfRecognizedWords(secondBackground, secondPWM.length());
   }
 
-  public CompareModelsCountsGiven.SimilarityInfo<ModelType> jaccard(double threshold_first, double threshold_second) {
+  public ComparisonSimilarityInfo<ModelType> jaccard(double threshold_first, double threshold_second) {
     return calculatorWithCountsGiven()
             .jaccard(threshold_first, threshold_second,
                      firstCount(threshold_first),
                      secondCount(threshold_second));
   }
 
-  public CompareModelsCountsGiven.SimilarityInfo<ModelType> jaccardAtPosition(double threshold_first, double threshold_second,
-                                          Position position) {
+  public ComparisonSimilarityInfo<ModelType> jaccardAtPosition(double threshold_first, double threshold_second,
+                                                               Position position) {
     return calculatorWithCountsGiven()
             .jaccardAtPosition(threshold_first, threshold_second,
                                firstCount(threshold_first),
@@ -80,7 +81,7 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
                                position);
   }
 
-  public CompareModelsCountsGiven.SimilarityInfo jaccard_by_pvalue(double pvalue) {
+  public ComparisonSimilarityInfo jaccard_by_pvalue(double pvalue) {
     CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
     CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
 
@@ -89,7 +90,7 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     return jaccard(threshold_first, threshold_second);
   }
 
-  public CompareModelsCountsGiven.SimilarityInfo jaccard_by_weak_pvalue(double pvalue) {
+  public ComparisonSimilarityInfo jaccard_by_weak_pvalue(double pvalue) {
     CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
     CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
 

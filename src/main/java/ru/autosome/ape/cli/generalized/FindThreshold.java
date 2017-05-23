@@ -1,12 +1,11 @@
 package ru.autosome.ape.cli.generalized;
 
-import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.cli.ReportLayout;
-import ru.autosome.commons.cli.Reporter;
-import ru.autosome.commons.cli.TextReporter;
+import ru.autosome.commons.cli.ReportListLayout;
+import ru.autosome.commons.cli.ListReporter;
+import ru.autosome.commons.cli.TextListReporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
@@ -165,8 +164,8 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     }
   }
 
-  ReportLayout<CanFindThreshold.ThresholdInfo> report_table_layout() {
-    ReportLayout<CanFindThreshold.ThresholdInfo> infos = new ReportLayout<>();
+  ReportListLayout<CanFindThreshold.ThresholdInfo> report_table_layout() {
+    ReportListLayout<CanFindThreshold.ThresholdInfo> infos = new ReportListLayout<>();
 
     infos.add_parameter("V", "discretization value", discretizer);
     infos.add_parameter("PB", "P-value boundary", pvalue_boundary);
@@ -189,8 +188,8 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
 
   protected String report() {
     List<CanFindThreshold.ThresholdInfo> results = calculator().thresholdsByPvalues(pvalues, pvalue_boundary);
-    ReportLayout<CanFindThreshold.ThresholdInfo> layout = report_table_layout();
-    Reporter<CanFindThreshold.ThresholdInfo> reporter = new TextReporter<>();
+    ReportListLayout<CanFindThreshold.ThresholdInfo> layout = report_table_layout();
+    ListReporter<CanFindThreshold.ThresholdInfo> reporter = new TextListReporter<>();
     return reporter.report(results, layout);
   }
 

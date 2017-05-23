@@ -8,9 +8,9 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.cli.ReportLayout;
-import ru.autosome.commons.cli.Reporter;
-import ru.autosome.commons.cli.TextReporter;
+import ru.autosome.commons.cli.ReportListLayout;
+import ru.autosome.commons.cli.ListReporter;
+import ru.autosome.commons.cli.TextListReporter;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -225,8 +225,8 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return true;
   }
 
-  public ReportLayout<ScanningSimilarityInfo> report_table_layout() {
-    ReportLayout<ScanningSimilarityInfo> infos = new ReportLayout<>();
+  public ReportListLayout<ScanningSimilarityInfo> report_table_layout() {
+    ReportListLayout<ScanningSimilarityInfo> infos = new ReportListLayout<>();
     infos.add_parameter("MS", "minimal similarity to output", similarityCutoff);
     infos.add_parameter("P", "P-value", pvalue);
     infos.add_parameter("PB", "P-value boundary", pvalueBoundaryType);
@@ -255,8 +255,8 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
 
   protected String report(List<ScanningSimilarityInfo> data) {
     data.sort(Comparator.comparing(ScanningSimilarityInfo::similarity));
-    ReportLayout<ScanningSimilarityInfo> layout = report_table_layout();
-    Reporter<ScanningSimilarityInfo> reporter = new TextReporter<>();
+    ReportListLayout<ScanningSimilarityInfo> layout = report_table_layout();
+    ListReporter<ScanningSimilarityInfo> reporter = new TextListReporter<>();
     return reporter.report(data, layout);
   }
 

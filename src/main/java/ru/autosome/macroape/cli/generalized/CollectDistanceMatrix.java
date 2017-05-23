@@ -13,6 +13,7 @@ import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
+import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -190,7 +191,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
 
   protected double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) {
     CompareModelsCountsGiven calc;
-    CompareModelsCountsGiven.SimilarityInfo info;
+    ComparisonSimilarityInfo info;
     calc = calculator(first.pwm.getObject(), second.pwm.getObject());
 
     info = calc.jaccard(first.roughThreshold, second.roughThreshold,

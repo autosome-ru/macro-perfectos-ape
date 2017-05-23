@@ -1,7 +1,7 @@
 package ru.autosome.ape.calculation.findPvalue;
 
 import ru.autosome.ape.model.PvalueBsearchList;
-import ru.autosome.commons.cli.ReportLayout;
+import ru.autosome.commons.cli.ReportListLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +35,8 @@ public class FindPvalueBsearch implements CanFindPvalue {
 
   // TODO: decide which parameters are relevant
   @Override
-  public ReportLayout<PvalueInfo> report_table_layout() {
-    ReportLayout<PvalueInfo> infos = new ReportLayout<>();
+  public ReportListLayout<PvalueInfo> report_table_layout() {
+    ReportListLayout<PvalueInfo> infos = new ReportListLayout<>();
 
     infos.add_table_parameter("T", "threshold", (PvalueInfo cell) -> cell.threshold);
     infos.add_table_parameter("P", "P-value", (PvalueInfo cell) -> cell.pvalue);

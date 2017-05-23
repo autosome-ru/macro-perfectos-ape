@@ -6,13 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextReporter<ResultInfo> implements Reporter<ResultInfo> {
-
   @Override
-  public String report(List<ResultInfo> data, ReportLayout<ResultInfo> layout) {
+  public String report(ResultInfo data, ReportLayout<ResultInfo> layout) {
     List<String> sections = new ArrayList<>();
     sections.add(formatParameter(layout.parameters));
-    sections.add(formatResult(layout.resulting_values));
-    sections.add(formatTable(layout.columns, data));
+    sections.add(formatResult(data, layout.resulting_values));
 
     List<String> results = new ArrayList<>();
     for (String section : sections) {
@@ -27,16 +25,6 @@ public class TextReporter<ResultInfo> implements Reporter<ResultInfo> {
     return "# " + param_name + ": " + description;
   }
 
-  protected String glueSections(String... sections) {
-    List<String> nonEmptySections = new ArrayList<>();
-    for (String section : sections) {
-      if (!section.isEmpty()) {
-        nonEmptySections.add(section);
-      }
-    }
-    return StringExtensions.join(nonEmptySections, "\n");
-  }
-
   protected String formatParameter(List<ValueWithDescription> parameters) {
     List<String> descriptions = new ArrayList<>();
     List<String> values = new ArrayList<>();
@@ -46,61 +34,24 @@ public class TextReporter<ResultInfo> implements Reporter<ResultInfo> {
       }
       values.add("# " + parameter.name + " = " + parameter.value);
     }
-    return glueSections(
+    return StringExtensions.glueSections(
         StringExtensions.join(descriptions, "\n"),
         StringExtensions.join(values, "\n")
     );
   }
 
-  protected String formatResult(List<ValueWithDescription> parameters) {
+  protected String formatResult(ResultInfo data, List<ParameterDescription<ResultInfo>> parameters) {
     List<String> descriptions = new ArrayList<>();
     List<String> values = new ArrayList<>();
-    for (ValueWithDescription parameter: parameters) {
+    for (ParameterDescription<ResultInfo> parameter: parameters) {
       if (parameter.description != null) {
         descriptions.add(parameter_description_string(parameter.name, parameter.description));
       }
-      values.add(parameter.name + "\t" + parameter.value);
+      values.add(parameter.name + "\t" + parameter.callback.apply(data));
     }
-    return glueSections(
+    return StringExtensions.glueSections(
         StringExtensions.join(descriptions, "\n"),
         StringExtensions.join(values, "\n")
     );
-  }
-
-  protected String formatRow(List<TabularParameterConfig<ResultInfo>> columns, ResultInfo rowData) {
-    List<String> rowCells = new ArrayList<>();
-    for (TabularParameterConfig<ResultInfo> parameter : columns) {
-      rowCells.add(parameter.callback.apply(rowData).toString());
-    }
-    return StringExtensions.join(rowCells, "\t");
-  }
-
-  protected String formatTable(List<TabularParameterConfig<ResultInfo>> columns, List<ResultInfo> data) {
-    if (data == null) {
-      return "";
-    } else {
-      List<String> descriptionRows = new ArrayList<>();
-      List<String> table_headers = new ArrayList<>();
-      for (TabularParameterConfig<ResultInfo> parameter : columns) {
-        if (parameter.description != null) {
-          descriptionRows.add(parameter_description_string(parameter.name, parameter.description));
-        }
-        table_headers.add(parameter.name);
-      }
-      String header = "";
-      if (!table_headers.isEmpty()) {
-        header = "# " + StringExtensions.join(table_headers, "\t");
-      }
-      List<String> tableRows = new ArrayList<>();
-      for (ResultInfo row : data) {
-        tableRows.add(formatRow(columns, row));
-      }
-
-      return glueSections(
-          StringExtensions.join(descriptionRows, "\n"),
-          header,
-          StringExtensions.join(tableRows, "\n")
-      );
-    }
   }
 }

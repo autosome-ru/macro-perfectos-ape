@@ -2,7 +2,7 @@ package ru.autosome.ape.calculation.findPvalue;
 
 import gnu.trove.map.TDoubleDoubleMap;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.cli.ReportLayout;
+import ru.autosome.commons.cli.ReportListLayout;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.HasLength;
@@ -52,8 +52,8 @@ public abstract class FindPvalueByDiscretization <ModelType extends Discretable<
   }
 
   @Override
-  public ReportLayout<PvalueInfo> report_table_layout() {
-    ReportLayout<PvalueInfo> infos = new ReportLayout<>();
+  public ReportListLayout<PvalueInfo> report_table_layout() {
+    ReportListLayout<PvalueInfo> infos = new ReportListLayout<>();
     infos.add_parameter("V", "discretization value", discretizer);
     infos.background_parameter("B", "background", background);
 

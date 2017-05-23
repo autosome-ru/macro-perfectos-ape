@@ -14,7 +14,7 @@ import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.CompareModels;
-import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
+import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -202,64 +202,55 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     }
   }
 
-  ReportLayout report_table_layout() {
-    ReportLayout infos = new ReportLayout();
+  public ReportLayout<ComparisonSimilarityInfo<ModelType>> report_table_layout() {
+    ReportLayout<ComparisonSimilarityInfo<ModelType>> layout = new ReportLayout<>();
 
-    infos.add_parameter("V", "discretization", discretizer);
+    layout.add_parameter("V", "discretization", discretizer);
     if (predefinedFirstThreshold == null || predefinedSecondThreshold == null) {
-      infos.add_parameter("P", "requested P-value", pvalue);
+      layout.add_parameter("P", "requested P-value", pvalue);
     }
     if (predefinedFirstThreshold != null) {
-      infos.add_parameter("T1", "threshold for the 1st matrix", predefinedFirstThreshold);
+      layout.add_parameter("T1", "threshold for the 1st matrix", predefinedFirstThreshold);
     }
     if (predefinedSecondThreshold != null) {
-      infos.add_parameter("T2", "threshold for the 2nd matrix", predefinedSecondThreshold);
+      layout.add_parameter("T2", "threshold for the 2nd matrix", predefinedSecondThreshold);
     }
-    infos.add_parameter("PB", "P-value boundary", pvalueBoundary);
+    layout.add_parameter("PB", "P-value boundary", pvalueBoundary);
     if (firstBackground.equals(secondBackground)) {
-      infos.background_parameter("B", "background", firstBackground);
+      layout.background_parameter("B", "background", firstBackground);
     } else {
-      infos.background_parameter("B1", "background for the 1st model", firstBackground);
-      infos.background_parameter("B2", "background for the 2nd model", secondBackground);
+      layout.background_parameter("B1", "background for the 1st model", firstBackground);
+      layout.background_parameter("B2", "background for the 2nd model", secondBackground);
     }
 
-    return infos;
-  }
-
-  // ToDo: separate ResultingValues from ReportLayout (as it's counterintuitive)
-  protected ReportLayout report_table(CompareModelsCountsGiven.SimilarityInfo info) {
-    ReportLayout infos = report_table_layout();
-    infos.add_resulting_value("S", "similarity", info.similarity());
-    infos.add_resulting_value("D", "distance (1-similarity)", info.distance());
-    infos.add_resulting_value("L", "length of the alignment", info.alignment.length());
-    infos.add_resulting_value("SH", "shift of the 2nd PWM relative to the 1st", info.alignment.shift());
-    infos.add_resulting_value("OR", "orientation of the 2nd PWM relative to the 1st", info.alignment.orientation());
-    infos.add_resulting_value("A1", "aligned 1st matrix", info.alignment.first_model_alignment());
-    infos.add_resulting_value("A2", "aligned 2nd matrix", info.alignment.second_model_alignment());
-    infos.add_resulting_value("W", "number of words recognized by both models (model = PWM + threshold)", info.recognizedByBoth );
-    infos.add_resulting_value("W1", "number of words and recognized by the first model", info.recognizedByFirst );
-    infos.add_resulting_value("P1", "P-value for the 1st matrix", info.realPvalueFirst(firstBackground));
+    layout.add_resulting_value("S", "similarity", ComparisonSimilarityInfo::similarity);
+    layout.add_resulting_value("D", "distance (1-similarity)", ComparisonSimilarityInfo::distance);
+    layout.add_resulting_value("L", "length of the alignment", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.length());
+    layout.add_resulting_value("SH", "shift of the 2nd PWM relative to the 1st", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.shift());
+    layout.add_resulting_value("OR", "orientation of the 2nd PWM relative to the 1st", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.orientation());
+    layout.add_resulting_value("A1", "aligned 1st matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.first_model_alignment());
+    layout.add_resulting_value("A2", "aligned 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.second_model_alignment());
+    layout.add_resulting_value("W", "number of words recognized by both models (model = PWM + threshold)", (ComparisonSimilarityInfo<ModelType> info) -> info.recognizedByBoth);
+    layout.add_resulting_value("W1", "number of words and recognized by the first model", (ComparisonSimilarityInfo<ModelType> info) -> info.recognizedByFirst);
+    layout.add_resulting_value("P1", "P-value for the 1st matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.realPvalueFirst(firstBackground));
     if (predefinedFirstThreshold == null) {
-      infos.add_resulting_value("T1", "threshold for the 1st matrix", thresholdFirst() );
+      layout.add_resulting_value("T1", "threshold for the 1st matrix", (ComparisonSimilarityInfo<ModelType> info) -> thresholdFirst() );
     }
-    infos.add_resulting_value("W2", "number of words recognized by the 2nd model", info.recognizedBySecond );
-    infos.add_resulting_value("P2", "P-value for the 2nd matrix", info.realPvalueSecond(secondBackground));
+    layout.add_resulting_value("W2", "number of words recognized by the 2nd model", (ComparisonSimilarityInfo<ModelType> info) -> info.recognizedBySecond);
+    layout.add_resulting_value("P2", "P-value for the 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.realPvalueSecond(secondBackground));
     if (predefinedSecondThreshold == null) {
-      infos.add_resulting_value("T2", "threshold for the 2nd matrix", thresholdSecond() );
+      layout.add_resulting_value("T2", "threshold for the 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> thresholdSecond());
     }
-    return infos;
+
+    return layout;
   }
 
-  protected CompareModelsCountsGiven.SimilarityInfo<ModelType> results() {
+  protected ComparisonSimilarityInfo<ModelType> results() {
     if (alignment == null) {
       return calculator().jaccard(thresholdFirst(), thresholdSecond());
     } else {
       return calculator().jaccardAtPosition(thresholdFirst(), thresholdSecond(), alignment);
     }
-  }
-
-  protected ReportLayout report_table() {
-    return report_table(results());
   }
 
   protected double thresholdFirst() {
