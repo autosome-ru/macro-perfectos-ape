@@ -38,24 +38,4 @@ public class ReportLayout<ResultInfo> {
   public void add_resulting_value(String param_name, String description, Object value) {
     resulting_values.add(new ValueWithDescription(param_name, description, value));
   }
-
-  public String report() {
-    return report(new ArrayList<>());
-  }
-
-  public String report(List<ResultInfo> data) {
-    TextFormatter<ResultInfo> formatter = new TextFormatter<>();
-    List<String> sections = new ArrayList<>();
-    sections.add(formatter.formatParameter(parameters));
-    sections.add(formatter.formatResult(resulting_values));
-    sections.add(formatter.formatTable(columns, data));
-
-    List<String> results = new ArrayList<>();
-    for (String section : sections) {
-      if (!section.isEmpty()) {
-        results.add(section);
-      }
-    }
-    return StringExtensions.join(results, "\n#\n");
-  }
 }

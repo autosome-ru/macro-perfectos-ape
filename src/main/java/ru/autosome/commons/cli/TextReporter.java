@@ -5,7 +5,23 @@ import ru.autosome.commons.support.StringExtensions;
 import java.util.ArrayList;
 import java.util.List;
 
-class TextFormatter<ResultInfo> {
+public class TextReporter<ResultInfo> implements Reporter<ResultInfo> {
+
+  @Override
+  public String report(List<ResultInfo> data, ReportLayout<ResultInfo> layout) {
+    List<String> sections = new ArrayList<>();
+    sections.add(formatParameter(layout.parameters));
+    sections.add(formatResult(layout.resulting_values));
+    sections.add(formatTable(layout.columns, data));
+
+    List<String> results = new ArrayList<>();
+    for (String section : sections) {
+      if (!section.isEmpty()) {
+        results.add(section);
+      }
+    }
+    return StringExtensions.join(results, "\n#\n");
+  }
 
   protected String parameter_description_string(String param_name, String description) {
     return "# " + param_name + ": " + description;
@@ -21,7 +37,7 @@ class TextFormatter<ResultInfo> {
     return StringExtensions.join(nonEmptySections, "\n");
   }
 
-  public String formatParameter(List<ValueWithDescription> parameters) {
+  protected String formatParameter(List<ValueWithDescription> parameters) {
     List<String> descriptions = new ArrayList<>();
     List<String> values = new ArrayList<>();
     for (ValueWithDescription parameter: parameters) {
@@ -33,10 +49,10 @@ class TextFormatter<ResultInfo> {
     return glueSections(
         StringExtensions.join(descriptions, "\n"),
         StringExtensions.join(values, "\n")
-        );
+    );
   }
 
-  public String formatResult(List<ValueWithDescription> parameters) {
+  protected String formatResult(List<ValueWithDescription> parameters) {
     List<String> descriptions = new ArrayList<>();
     List<String> values = new ArrayList<>();
     for (ValueWithDescription parameter: parameters) {
@@ -59,7 +75,7 @@ class TextFormatter<ResultInfo> {
     return StringExtensions.join(rowCells, "\t");
   }
 
-  public String formatTable(List<TabularParameterConfig<ResultInfo>> columns, List<ResultInfo> data) {
+  protected String formatTable(List<TabularParameterConfig<ResultInfo>> columns, List<ResultInfo> data) {
     if (data == null) {
       return "";
     } else {

@@ -3,6 +3,9 @@ package ru.autosome.macroape;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
+import ru.autosome.commons.cli.ReportLayout;
+import ru.autosome.commons.cli.Reporter;
+import ru.autosome.commons.cli.TextReporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.calculation.mono.CompareModels;
@@ -53,7 +56,9 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   public static void main(String[] args) {
     try {
       EvalSimilarity cli = EvalSimilarity.from_arglist(args);
-      System.out.println(cli.report_table().report());
+      ReportLayout layout = cli.report_table();
+      Reporter reporter = new TextReporter<>();
+      System.out.println(reporter.report(layout));
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();

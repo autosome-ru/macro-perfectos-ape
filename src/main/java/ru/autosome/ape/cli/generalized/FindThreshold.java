@@ -1,9 +1,12 @@
 package ru.autosome.ape.cli.generalized;
 
+import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ReportLayout;
+import ru.autosome.commons.cli.Reporter;
+import ru.autosome.commons.cli.TextReporter;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
@@ -186,7 +189,9 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
 
   protected String report() {
     List<CanFindThreshold.ThresholdInfo> results = calculator().thresholdsByPvalues(pvalues, pvalue_boundary);
-    return report_table_layout().report(results);
+    ReportLayout<CanFindThreshold.ThresholdInfo> layout = report_table_layout();
+    Reporter<CanFindThreshold.ThresholdInfo> reporter = new TextReporter<>();
+    return reporter.report(results, layout);
   }
 
   protected FindThreshold() {

@@ -9,6 +9,8 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ReportLayout;
+import ru.autosome.commons.cli.Reporter;
+import ru.autosome.commons.cli.TextReporter;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -253,7 +255,9 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
 
   protected String report(List<ScanningSimilarityInfo> data) {
     data.sort(Comparator.comparing(ScanningSimilarityInfo::similarity));
-    return report_table_layout().report(data);
+    ReportLayout<ScanningSimilarityInfo> layout = report_table_layout();
+    Reporter<ScanningSimilarityInfo> reporter = new TextReporter<>();
+    return reporter.report(data, layout);
   }
 
   protected List<ScanningSimilarityInfo> process() {
