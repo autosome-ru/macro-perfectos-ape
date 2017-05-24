@@ -2,10 +2,10 @@ package ru.autosome.macroape.cli.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
-import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
+import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearch;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
-import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
+import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearch;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ReportListLayout;
@@ -24,6 +24,7 @@ import ru.autosome.macroape.model.ScanningSimilarityInfo;
 import ru.autosome.macroape.model.ThresholdEvaluator;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -272,8 +273,24 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     List<ThresholdEvaluator<ModelType>> result;
     result = new ArrayList<>();
     for (Named<ModelType> namedModel: pwmList) {
+      boolean bsearch_evaluator_succeed = false;
       ModelType pwm = namedModel.getObject();
-      if (thresholds_folder == null) {
+      if (thresholds_folder != null) {
+        File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
+        SingleThresholdEvaluator evaluator = null;
+        try {
+          evaluator = new SingleThresholdEvaluator(pwm, namedModel.getName(),
+                                          new FindThresholdBsearch(thresholds_file),
+                                          new FindPvalueBsearch(thresholds_file)
+          );
+          result.add(new ThresholdEvaluator<>(pwm, namedModel.getName(), evaluator, null));
+          bsearch_evaluator_succeed = true;
+        } catch (FileNotFoundException e) {
+          System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculations");
+        }
+      }
+
+      if (!bsearch_evaluator_succeed){
         SingleThresholdEvaluator roughEvaluator =
             new SingleThresholdEvaluator(pwm, namedModel.getName(),
                                             new FindThresholdAPE<>(pwm, collectionBackground, roughDiscretizer),
@@ -286,14 +303,6 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
             );
 
         result.add(new ThresholdEvaluator<>(pwm, namedModel.getName(), roughEvaluator, preciseEvaluator));
-      } else {
-        File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
-        SingleThresholdEvaluator evaluator =
-            new SingleThresholdEvaluator(pwm, namedModel.getName(),
-                                            new FindThresholdBsearchBuilder(thresholds_file).thresholdCalculator(),
-                                            new FindPvalueBsearchBuilder(thresholds_file).pvalueCalculator()
-            );
-        result.add(new ThresholdEvaluator<>(pwm, namedModel.getName(), evaluator, null));
       }
     }
     return result;

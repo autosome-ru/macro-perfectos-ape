@@ -2,7 +2,7 @@ package ru.autosome.perfectosape.cli.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
-import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearchBuilder;
+import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearch;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.model.Discretizer;
@@ -53,7 +53,12 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
         pvalueCalculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer);
       } else {
         File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
-        pvalueCalculator = new FindPvalueBsearchBuilder(thresholds_file).pvalueCalculator();
+        try {
+          pvalueCalculator = new FindPvalueBsearch(thresholds_file);
+        } catch (FileNotFoundException e) {
+          System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculation of P-value");
+          pvalueCalculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer);
+        }
       }
       pwmCollection.add(new ThresholdEvaluator<>(motif.getObject().onBackground(background), pvalueCalculator, motif.getName()));
     }

@@ -1,8 +1,11 @@
 package ru.autosome.ape.calculation.findPvalue;
 
+import ru.autosome.ape.FindPvalue;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.commons.cli.ReportListLayout;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +19,10 @@ public class FindPvalueBsearch implements CanFindPvalue {
 
   public FindPvalueBsearch(PvalueBsearchList bsearchList) {
     this.bsearchList = bsearchList;
+  }
+
+  public FindPvalueBsearch(File thresholds_file) throws FileNotFoundException {
+      this.bsearchList = PvalueBsearchList.load_from_file(thresholds_file);
   }
 
   @Override

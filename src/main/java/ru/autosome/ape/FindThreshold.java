@@ -2,7 +2,7 @@ package ru.autosome.ape;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
-import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearchBuilder;
+import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearch;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
@@ -11,6 +11,7 @@ import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold<PWM, BackgroundModel> {
   @Override
@@ -44,7 +45,12 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
         cache_calculator = new FindThresholdAPE<>(motif.getObject(), background, discretizer);
       } else {
         File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
-        cache_calculator = new FindThresholdBsearchBuilder(thresholds_file).thresholdCalculator();
+        try {
+          cache_calculator = new FindThresholdBsearch(thresholds_file);
+        } catch (FileNotFoundException e) {
+          System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculation of threshold");
+          cache_calculator = new FindThresholdAPE<>(motif.getObject(), background, discretizer);
+        }
       }
     }
     return cache_calculator;
