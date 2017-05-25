@@ -2,8 +2,8 @@ package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.cli.Helper;
-import ru.autosome.commons.cli.ReportListLayout;
 import ru.autosome.commons.cli.ListReporter;
+import ru.autosome.commons.cli.ReportListLayout;
 import ru.autosome.commons.cli.TextListReporter;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;

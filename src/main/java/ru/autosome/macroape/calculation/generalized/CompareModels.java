@@ -5,6 +5,7 @@ import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
@@ -85,8 +86,8 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
     CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
 
-    double threshold_first = canFindThresholdFirst.strongThresholdByPvalue(pvalue).threshold;
-    double threshold_second = canFindThresholdSecond.strongThresholdByPvalue(pvalue).threshold;
+    double threshold_first = canFindThresholdFirst.thresholdByPvalue(pvalue, BoundaryType.LOWER).threshold;
+    double threshold_second = canFindThresholdSecond.thresholdByPvalue(pvalue, BoundaryType.LOWER).threshold;
     return jaccard(threshold_first, threshold_second);
   }
 
@@ -94,8 +95,8 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
     CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
 
-    double threshold_first = canFindThresholdFirst.weakThresholdByPvalue(pvalue).threshold;
-    double threshold_second = canFindThresholdSecond.weakThresholdByPvalue(pvalue).threshold;
+    double threshold_first = canFindThresholdFirst.thresholdByPvalue(pvalue, BoundaryType.UPPER).threshold;
+    double threshold_second = canFindThresholdSecond.thresholdByPvalue(pvalue, BoundaryType.UPPER).threshold;
     return jaccard(threshold_first, threshold_second);
   }
 }

@@ -17,28 +17,8 @@ public abstract class FindThresholdByDiscretization implements CanFindThreshold 
   abstract ScoringModelDistributions discretedScoringModel();
 
   @Override
-  public CanFindThreshold.ThresholdInfo weakThresholdByPvalue(double pvalue) {
-    return discretedScoringModel().weak_threshold(pvalue).downscale(discretizer);
-  }
-
-  @Override
-  public CanFindThreshold.ThresholdInfo strongThresholdByPvalue(double pvalue) {
-    return discretedScoringModel().strong_threshold(pvalue).downscale(discretizer);
-  }
-
-  @Override
   public CanFindThreshold.ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) {
     return discretedScoringModel().threshold(pvalue, boundaryType).downscale(discretizer);
-  }
-
-  @Override
-  public List<CanFindThreshold.ThresholdInfo> weakThresholdsByPvalues(List<Double> pvalues) {
-    return downscale_all(discretedScoringModel().weak_thresholds(pvalues));
-  }
-
-  @Override
-  public List<CanFindThreshold.ThresholdInfo> strongThresholsdByPvalues(List<Double> pvalues) {
-    return downscale_all(discretedScoringModel().strong_thresholds(pvalues));
   }
 
   @Override

@@ -2,6 +2,7 @@ package ru.autosome.ape.model;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.commons.importer.InputExtensions;
+import ru.autosome.commons.model.BoundaryType;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -126,7 +127,15 @@ public class PvalueBsearchList {
     }
   }
 
-  public ThresholdPvaluePair strongThresholdInfoByPvalue(double pvalue) {
+  public ThresholdPvaluePair thresholdInfoByPvalue(double pvalue, BoundaryType boundaryType) {
+    if (boundaryType == BoundaryType.LOWER) {
+      return strongThresholdInfoByPvalue(pvalue);
+    } else {
+      return weakThresholdInfoByPvalue(pvalue);
+    }
+  }
+
+  private ThresholdPvaluePair strongThresholdInfoByPvalue(double pvalue) {
     int index = Collections.binarySearch(list, new ThresholdPvaluePair(null, pvalue), ThresholdPvaluePair.pvalueComparator);
     if (index >= 0) {
       return list.get(index);
@@ -142,7 +151,7 @@ public class PvalueBsearchList {
     }
   }
 
-  public ThresholdPvaluePair weakThresholdByPvalue(double pvalue) {
+  private ThresholdPvaluePair weakThresholdInfoByPvalue(double pvalue) {
     int index = Collections.binarySearch(list, new ThresholdPvaluePair(null, pvalue), ThresholdPvaluePair.pvalueComparator);
     if (index >= 0) {
       return list.get(index);

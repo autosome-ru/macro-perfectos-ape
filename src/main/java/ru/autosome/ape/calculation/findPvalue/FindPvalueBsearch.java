@@ -1,6 +1,5 @@
 package ru.autosome.ape.calculation.findPvalue;
 
-import ru.autosome.ape.FindPvalue;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.commons.cli.ReportListLayout;
 

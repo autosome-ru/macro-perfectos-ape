@@ -29,11 +29,7 @@ public interface CanFindThreshold {
     }
   }
 
-  ThresholdInfo weakThresholdByPvalue(double pvalue);
-  ThresholdInfo strongThresholdByPvalue(double pvalue);
   ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType);
 
-  List<ThresholdInfo> weakThresholdsByPvalues(List<Double> pvalues);
-  List<ThresholdInfo> strongThresholsdByPvalues(List<Double> pvalues);
   List<ThresholdInfo> thresholdsByPvalues(List<Double> pvalues, BoundaryType boundaryType);
 }
