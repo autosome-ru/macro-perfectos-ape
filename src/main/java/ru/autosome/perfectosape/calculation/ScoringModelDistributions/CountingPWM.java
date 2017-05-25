@@ -3,11 +3,11 @@ package ru.autosome.perfectosape.calculation.ScoringModelDistributions;
 import gnu.trove.iterator.TDoubleDoubleIterator;
 import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
-import ru.autosome.ape.calculation.findThreshold.CanFindThresholdApproximation;
 import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.commons.scoringModel.PWMOnBackground;
 
 public class CountingPWM extends ScoringModelDistributions {
 
@@ -20,7 +20,7 @@ public class CountingPWM extends ScoringModelDistributions {
   }
 
   @Override
-  CanFindThresholdApproximation gaussianThresholdEstimator() {
+  GaussianThresholdEstimator<PWMOnBackground> gaussianThresholdEstimator() {
     return new GaussianThresholdEstimator<>(pwm.onBackground(background));
   }
 

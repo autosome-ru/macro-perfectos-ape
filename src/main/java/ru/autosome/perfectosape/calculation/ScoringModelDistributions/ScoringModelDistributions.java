@@ -3,7 +3,7 @@ package ru.autosome.perfectosape.calculation.ScoringModelDistributions;
 import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.TDoubleObjectMap;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
-import ru.autosome.ape.calculation.findThreshold.CanFindThresholdApproximation;
+import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.support.ArrayExtensions;
@@ -11,7 +11,7 @@ import ru.autosome.commons.support.ArrayExtensions;
 import java.util.List;
 
 abstract public class ScoringModelDistributions {
-  abstract CanFindThresholdApproximation gaussianThresholdEstimator();
+  abstract GaussianThresholdEstimator gaussianThresholdEstimator();
   protected abstract ScoreDistributionTop score_distribution_above_threshold(double threshold);
 
   private ScoreDistributionTop score_distribution() {
@@ -22,7 +22,7 @@ abstract public class ScoringModelDistributions {
     final int maxNumberOfAttempts = 2;
     int numberOfAttempts = 0;
     ScoreDistributionTop scoreDistribution;
-    CanFindThresholdApproximation gaussianThresholdEstimation = gaussianThresholdEstimator();
+    GaussianThresholdEstimator gaussianThresholdEstimation = gaussianThresholdEstimator();
     double pvalue_to_estimate_threshold = pvalue;
     try {
       do {
