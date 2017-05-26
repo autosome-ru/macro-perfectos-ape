@@ -85,7 +85,7 @@ public class ScoreDistributionTop {
     return accum;
   }
 
-  ThresholdsRange thresholdsRangeByCount(double[] scores, List<Double> partial_sums, double look_for_count) {
+  private ThresholdsRange thresholdsRangeByCount(double[] scores, List<Double> partial_sums, double look_for_count) {
     int[] range_indices = ArrayExtensions.indices_of_range(partial_sums, look_for_count);
     if (range_indices[0] == -1) {
       return new ThresholdsRange(scores[0], getBestScore() + 1,
@@ -100,7 +100,7 @@ public class ScoreDistributionTop {
   }
 
   // count under given part of distribution
-  public double top_part_count() {
+  private double top_part_count() {
     double accum = 0.0;
     TDoubleDoubleIterator iterator = score_count_hash.iterator();
     while(iterator.hasNext()) {

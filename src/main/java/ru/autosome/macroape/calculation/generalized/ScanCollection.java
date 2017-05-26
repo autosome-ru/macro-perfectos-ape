@@ -77,7 +77,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
       precise = true;
     }
     if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
-      return new ScanningSimilarityInfo<>(knownMotifEvaluator.pwm, knownMotifEvaluator.name, info, precise);
+      return new ScanningSimilarityInfo<>(knownMotifEvaluator.name, info, precise);
     } else {
       return null;
     }

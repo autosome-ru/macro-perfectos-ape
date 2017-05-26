@@ -51,24 +51,6 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public Double count_above_threshold(double threshold) {
-    ScoreDistributionTop scoreDistribution = score_distribution_above_threshold(threshold);
-    try {
-      return scoreDistribution.count_above_threshold(threshold);
-    } catch (ScoreDistributionTop.NotRepresentativeDistribution exception) {
-      throw new RuntimeException("Should never be here", exception);
-    }
-  }
-
-  TDoubleObjectMap<ScoreDistributionTop.ThresholdsRange> thresholds_by_pvalues(List<Double> pvalues) {
-    ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
-    try {
-      return scores_hash.thresholds_by_pvalues(pvalues);
-    } catch (ScoreDistributionTop.NotRepresentativeDistribution exception) {
-      throw new RuntimeException("Should never be here", exception);
-    }
-  }
-
   public List<CanFindThreshold.ThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {

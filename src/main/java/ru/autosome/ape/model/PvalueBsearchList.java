@@ -33,7 +33,6 @@ public class PvalueBsearchList {
     static final Comparator<ThresholdPvaluePair> pvalueComparator =
         Comparator.comparing(o -> (-o.pvalue));
 
-
     @Override
     public boolean equals(Object other) {
       if (other instanceof ThresholdPvaluePair) {
@@ -60,9 +59,7 @@ public class PvalueBsearchList {
 
 
   private final List<ThresholdPvaluePair> list;
-  public PvalueBsearchList() {
-    this.list = new ArrayList<>();
-  }
+
   public PvalueBsearchList(List<ThresholdPvaluePair> infos) {
     infos.sort(ThresholdPvaluePair.thresholdComparator);
     this.list = without_consequent_duplicates(without_inf_nan_scores(without_zero_pvalue(infos)));

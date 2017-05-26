@@ -277,9 +277,8 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
       ModelType pwm = namedModel.getObject();
       if (thresholds_folder != null) {
         File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
-        SingleThresholdEvaluator evaluator = null;
         try {
-          evaluator = new SingleThresholdEvaluator(pwm, namedModel.getName(),
+          SingleThresholdEvaluator evaluator = new SingleThresholdEvaluator(pwm, namedModel.getName(),
                                           new FindThresholdBsearch(thresholds_file),
                                           new FindPvalueBsearch(thresholds_file)
           );
