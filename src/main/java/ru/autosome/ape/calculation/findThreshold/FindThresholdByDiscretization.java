@@ -1,8 +1,8 @@
 package ru.autosome.ape.calculation.findThreshold;
 
+import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 
 import java.util.ArrayList;
 import java.util.List;

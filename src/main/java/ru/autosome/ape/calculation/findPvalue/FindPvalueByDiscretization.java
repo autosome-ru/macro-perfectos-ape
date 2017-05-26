@@ -1,12 +1,12 @@
 package ru.autosome.ape.calculation.findPvalue;
 
 import gnu.trove.map.TDoubleDoubleMap;
+import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.ReportListLayout;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.HasLength;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 
 import java.util.ArrayList;
 import java.util.List;

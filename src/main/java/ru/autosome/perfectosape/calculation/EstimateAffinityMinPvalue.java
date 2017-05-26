@@ -7,7 +7,7 @@ import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.ScoringModel;
 
 public class EstimateAffinityMinPvalue<SequenceType extends HasLength,
-                                       ModelType extends ScoringModel<SequenceType>> implements EstimateAffinity {
+                                       ModelType extends ScoringModel<SequenceType>> {
   final ModelType pwm;
   final SequenceType sequence;
   final CanFindPvalue pvalueCalculator;
@@ -31,7 +31,6 @@ public class EstimateAffinityMinPvalue<SequenceType extends HasLength,
     return cache_scanSequence;
   }
 
-  @Override
   public double affinity() {
     double score = scanSequence().best_score();
     return pvalueCalculator.pvalueByThreshold(score).pvalue;

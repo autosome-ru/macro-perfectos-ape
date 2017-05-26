@@ -1,4 +1,4 @@
-package ru.autosome.perfectosape.calculation.ScoringModelDistributions;
+package ru.autosome.ape.calculation.ScoringModelDistributions;
 
 
 import gnu.trove.iterator.TDoubleDoubleIterator;

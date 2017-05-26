@@ -1,5 +1,7 @@
 package ru.autosome.commons.motifModel.di;
 
+import ru.autosome.ape.calculation.ScoringModelDistributions.CountingDiPWM;
+import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.model.Discretizer;
@@ -8,8 +10,6 @@ import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
 import ru.autosome.commons.scoringModel.DiPWMOnBackground;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.CountingDiPWM;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.perfectosape.model.Sequence;
 
 import static java.lang.Math.max;

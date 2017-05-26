@@ -1,7 +1,6 @@
-package ru.autosome.perfectosape.calculation.ScoringModelDistributions;
+package ru.autosome.ape.calculation.ScoringModelDistributions;
 
 import gnu.trove.map.TDoubleDoubleMap;
-import gnu.trove.map.TDoubleObjectMap;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;

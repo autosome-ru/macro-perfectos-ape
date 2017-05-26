@@ -1,5 +1,7 @@
 package ru.autosome.commons.motifModel.mono;
 
+import ru.autosome.ape.calculation.ScoringModelDistributions.CountingPWM;
+import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.model.Discretizer;
@@ -7,8 +9,6 @@ import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
 import ru.autosome.commons.scoringModel.PWMOnBackground;
 import ru.autosome.commons.support.ArrayExtensions;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.CountingPWM;
-import ru.autosome.perfectosape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.perfectosape.model.Sequence;
 
 public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWMOnBackground>,
