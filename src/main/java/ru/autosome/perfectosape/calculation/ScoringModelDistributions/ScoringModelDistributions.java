@@ -69,44 +69,6 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  // "strong" means that threshold has real pvalue not more than requested one
-  public List<CanFindThreshold.ThresholdInfo> strong_thresholds(List<Double> pvalues) {
-    ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
-    try {
-      return scores_hash.strong_thresholds(pvalues);
-    } catch (ScoreDistributionTop.NotRepresentativeDistribution exception) {
-      throw new RuntimeException("Should never be here", exception);
-    }
-  }
-
-  public CanFindThreshold.ThresholdInfo strong_threshold(double pvalue) {
-    ScoreDistributionTop scores_hash = score_distribution_under_pvalue(pvalue);
-    try {
-      return scores_hash.strong_threshold(pvalue);
-    } catch (ScoreDistributionTop.NotRepresentativeDistribution exception) {
-      throw new RuntimeException("Should never be here", exception);
-    }
-  }
-
-  // "strong" means that threshold has real pvalue not less than requested one
-  public List<CanFindThreshold.ThresholdInfo> weak_thresholds(List<Double> pvalues) {
-    ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
-    try {
-      return scores_hash.weak_thresholds(pvalues);
-    } catch (ScoreDistributionTop.NotRepresentativeDistribution exception) {
-      throw new RuntimeException("Should never be here", exception);
-    }
-  }
-
-  public CanFindThreshold.ThresholdInfo weak_threshold(double pvalue) {
-    ScoreDistributionTop scores_hash = score_distribution_under_pvalue(pvalue);
-    try {
-      return scores_hash.weak_threshold(pvalue);
-    } catch (ScoreDistributionTop.NotRepresentativeDistribution exception) {
-      throw new RuntimeException("Should never be here", exception);
-    }
-  }
-
   public List<CanFindThreshold.ThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
