@@ -138,7 +138,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     collectionEffectiveCount = 100.0;
     collectionPseudocount = PseudocountCalculator.logPseudocount;
     thresholds_folder = null;
-    pvalueBoundaryType = BoundaryType.UPPER;
+    pvalueBoundaryType = BoundaryType.WEAK;
     pvalue = 0.0005;
     similarityCutoff = 0.05;
     preciseRecalculationCutoff = null;
@@ -161,7 +161,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     } else if (opt.equals("--precise-discretization")) {
       preciseDiscretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
-      pvalueBoundaryType = BoundaryType.valueOf(argv.remove(0).toUpperCase());
+      pvalueBoundaryType = BoundaryType.fromString(argv.remove(0));
     } else if (opt.equals("--pcm")) {
       queryDataModel = DataModel.PCM;
       collectionDataModel = DataModel.PCM;

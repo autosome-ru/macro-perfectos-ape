@@ -86,8 +86,8 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
     CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
 
-    double threshold_first = canFindThresholdFirst.thresholdByPvalue(pvalue, BoundaryType.LOWER).threshold;
-    double threshold_second = canFindThresholdSecond.thresholdByPvalue(pvalue, BoundaryType.LOWER).threshold;
+    double threshold_first = canFindThresholdFirst.thresholdByPvalue(pvalue, BoundaryType.STRONG).threshold;
+    double threshold_second = canFindThresholdSecond.thresholdByPvalue(pvalue, BoundaryType.STRONG).threshold;
     return jaccard(threshold_first, threshold_second);
   }
 
@@ -95,8 +95,8 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
     CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
     CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
 
-    double threshold_first = canFindThresholdFirst.thresholdByPvalue(pvalue, BoundaryType.UPPER).threshold;
-    double threshold_second = canFindThresholdSecond.thresholdByPvalue(pvalue, BoundaryType.UPPER).threshold;
+    double threshold_first = canFindThresholdFirst.thresholdByPvalue(pvalue, BoundaryType.WEAK).threshold;
+    double threshold_second = canFindThresholdSecond.thresholdByPvalue(pvalue, BoundaryType.WEAK).threshold;
     return jaccard(threshold_first, threshold_second);
   }
 }

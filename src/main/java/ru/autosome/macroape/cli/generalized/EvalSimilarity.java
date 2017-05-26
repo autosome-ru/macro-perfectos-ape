@@ -128,7 +128,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     transposeFirst = false;
     transposeSecond = false;
 
-    pvalueBoundary = BoundaryType.UPPER;
+    pvalueBoundary = BoundaryType.WEAK;
     alignment = null;
   }
 
@@ -147,7 +147,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
-      pvalueBoundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
+      pvalueBoundary = BoundaryType.fromString(argv.remove(0));
     } else if (opt.equals("--pcm")) {
       dataModelFirst = DataModel.PCM;
       dataModelSecond = DataModel.PCM;

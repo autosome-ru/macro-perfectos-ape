@@ -46,7 +46,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
   protected void initialize_defaults() {
     initialize_default_background();
     discretizer = new Discretizer(1000.0);
-    pvalue_boundary = BoundaryType.LOWER;
+    pvalue_boundary = BoundaryType.STRONG;
     pvalues = PrecalculateThresholdList.PVALUE_LIST;
     data_model = DataModel.PWM;
     effective_count = 100;
@@ -111,7 +111,7 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
-      pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
+      pvalue_boundary = BoundaryType.fromString(argv.remove(0));
     } else if (opt.equals("--pcm")) {
       data_model = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {

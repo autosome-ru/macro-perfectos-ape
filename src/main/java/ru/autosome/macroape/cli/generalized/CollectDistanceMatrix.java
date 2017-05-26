@@ -112,7 +112,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     effectiveCount = 100;
     pseudocount = PseudocountCalculator.logPseudocount;
     pvalue = 0.0005;
-    pvalueBoundary = BoundaryType.UPPER;
+    pvalueBoundary = BoundaryType.WEAK;
     preciseRecalculationCutoff = null;
     transpose = false;
 
@@ -142,7 +142,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     } else if (opt.equals("--pseudocount")) {
       pseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
-      pvalueBoundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
+      pvalueBoundary = BoundaryType.fromString(argv.remove(0));
     } else if (opt.equals("--precise")) {
       preciseRecalculationCutoff = Double.valueOf(argv.remove(0));
     } else if (opt.equals("--parallelize")) {

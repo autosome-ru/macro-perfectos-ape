@@ -72,7 +72,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   protected void initialize_defaults() {
     initialize_default_background();
     discretizer = new Discretizer(10000.0);
-    pvalue_boundary = BoundaryType.LOWER;
+    pvalue_boundary = BoundaryType.STRONG;
     data_model = DataModel.PWM;
     effective_count = 100;
     pseudocount = PseudocountCalculator.logPseudocount;
@@ -107,7 +107,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
-      pvalue_boundary = BoundaryType.valueOf(argv.remove(0).toUpperCase());
+      pvalue_boundary = BoundaryType.fromString(argv.remove(0));
     } else if (opt.equals("--pcm")) {
       data_model = DataModel.PCM;
     } else if (opt.equals("--ppm") || opt.equals("--pfm")) {

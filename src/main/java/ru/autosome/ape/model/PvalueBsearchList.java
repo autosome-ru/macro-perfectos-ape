@@ -128,7 +128,7 @@ public class PvalueBsearchList {
   }
 
   public ThresholdPvaluePair thresholdInfoByPvalue(double pvalue, BoundaryType boundaryType) {
-    if (boundaryType == BoundaryType.LOWER) {
+    if (boundaryType == BoundaryType.STRONG) {
       return strongThresholdInfoByPvalue(pvalue);
     } else {
       return weakThresholdInfoByPvalue(pvalue);
