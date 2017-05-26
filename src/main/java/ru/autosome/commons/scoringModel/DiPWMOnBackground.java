@@ -1,21 +1,16 @@
 package ru.autosome.commons.scoringModel;
 
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
 import ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC;
-import ru.autosome.commons.motifModel.Encodable;
 import ru.autosome.commons.motifModel.ScoreStatistics;
 import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.perfectosape.model.Sequence;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
-import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNPDiEncoded;
 
 import static ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC.N_index;
 
-public class DiPWMOnBackground implements ScoreStatistics, ScoringModel<SequenceDiEncoded>, Encodable<SequenceDiEncoded, SequenceWithSNPDiEncoded> {
+public class DiPWMOnBackground implements ScoreStatistics, ScoringModel<SequenceDiEncoded> {
 
   private final DiPWM dipwm;
   private final DiBackgroundModel dibackground;
@@ -23,11 +18,6 @@ public class DiPWMOnBackground implements ScoreStatistics, ScoringModel<Sequence
   public DiPWMOnBackground(DiPWM dipwm, DiBackgroundModel dibackground) {
     this.dipwm = dipwm;
     this.dibackground = dibackground;
-    this.matrixIUPAC = calculateMatrixIUPAC();
-  }
-  public DiPWMOnBackground(DiPWM dipwm) {
-    this.dipwm = dipwm;
-    this.dibackground = new DiWordwiseBackground();
     this.matrixIUPAC = calculateMatrixIUPAC();
   }
 
@@ -102,14 +92,5 @@ public class DiPWMOnBackground implements ScoreStatistics, ScoringModel<Sequence
       variance += dibackground.variance(pos);
     }
     return variance;
-  }
-
-  @Override
-  public SequenceDiEncoded encodeSequence(Sequence sequence) {
-    return sequence.diEncode();
-  }
-  @Override
-  public SequenceWithSNPDiEncoded encodeSequenceWithSNP(SequenceWithSNP sequenceWithSNP) {
-    return sequenceWithSNP.diEncode();
   }
 }

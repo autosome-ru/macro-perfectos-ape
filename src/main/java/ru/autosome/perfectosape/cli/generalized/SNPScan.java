@@ -24,11 +24,11 @@ import java.util.List;
 abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLength,
                               SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
                               MotifType extends HasLength & Discretable<MotifType> & ScoreDistribution<BackgroundType> & BackgroundAppliable<BackgroundType, ModelType>,
-                              ModelType extends ScoringModel<SequenceType> & Encodable<SequenceType, SequenceWithSNVType>,
+                              ModelType extends ScoringModel<SequenceType>,
                               BackgroundType extends GeneralizedBackgroundModel> {
   public static class ThresholdEvaluator<SequenceType,
                                          SequenceWithSNVType,
-                                         ModelType extends ScoringModel<SequenceType> & Encodable<SequenceType, SequenceWithSNVType>> {
+                                         ModelType extends ScoringModel<SequenceType>> {
     public final ModelType pwm;
     public final CanFindPvalue pvalueCalculator;
     public final String name;

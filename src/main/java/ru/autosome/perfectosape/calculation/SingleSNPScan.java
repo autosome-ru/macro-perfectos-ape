@@ -3,7 +3,6 @@ package ru.autosome.perfectosape.calculation;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
-import ru.autosome.commons.motifModel.Encodable;
 import ru.autosome.commons.scoringModel.ScoringModel;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
@@ -12,7 +11,7 @@ import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 
 public class SingleSNPScan<SequenceType extends EncodedSequenceType,
                            SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
-                           ModelType extends ScoringModel<SequenceType> & Encodable<SequenceType, SequenceWithSNVType>> {
+                           ModelType extends ScoringModel<SequenceType>> {
   final ModelType pwm;
   final SequenceWithSNP sequenceWithSNP;
   final SequenceWithSNVType encodedSequenceWithSNP;
@@ -26,21 +25,6 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
     this.pwm = pwm;
     this.sequenceWithSNP = sequenceWithSNP;
     this.encodedSequenceWithSNP = encodedSequenceWithSNP; // Another representation of the same sequence with SNP (not checked they are in accordance due to performance reasons
-    this.pvalueCalculator = pvalueCalculator;
-    this.expandRegionLength = expandRegionLength;
-    if (sequenceWithSNP.num_cases() != 2) {
-      throw new IllegalArgumentException("Unable to process more than two variants of nucleotide for SNP " + sequenceWithSNP);
-    }
-  }
-
-  // More slow constructor than the full one: it encodes sequence in a constructor
-  public SingleSNPScan(ModelType pwm, SequenceWithSNP sequenceWithSNP, CanFindPvalue pvalueCalculator, int expandRegionLength) {
-    if (sequenceWithSNP.length() < pwm.length()) {
-      throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
-    }
-    this.pwm = pwm;
-    this.sequenceWithSNP = sequenceWithSNP;
-    this.encodedSequenceWithSNP = pwm.encodeSequenceWithSNP(sequenceWithSNP); // Another representation of the same sequence with SNP (not checked they are in accordance due to performance reasons
     this.pvalueCalculator = pvalueCalculator;
     this.expandRegionLength = expandRegionLength;
     if (sequenceWithSNP.num_cases() != 2) {

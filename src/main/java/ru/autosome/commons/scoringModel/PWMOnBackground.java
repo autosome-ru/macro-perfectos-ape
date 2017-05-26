@@ -1,17 +1,12 @@
 package ru.autosome.commons.scoringModel;
 
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.model.Orientation;
-import ru.autosome.commons.motifModel.Encodable;
 import ru.autosome.commons.motifModel.ScoreStatistics;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.perfectosape.model.Sequence;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
-import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
 
-public class PWMOnBackground implements ScoreStatistics, ScoringModel<SequenceMonoEncoded>, Encodable<SequenceMonoEncoded, SequenceWithSNPMonoEncoded> {
+public class PWMOnBackground implements ScoreStatistics, ScoringModel<SequenceMonoEncoded> {
   private final PWM pwm;
   private final BackgroundModel background;
   private final double[][] matrixIUPAC;
@@ -22,10 +17,6 @@ public class PWMOnBackground implements ScoreStatistics, ScoringModel<SequenceMo
     this.background = background;
     this.matrixIUPAC = calculateMatrixIUPAC();
     this.length = pwm.length();
-  }
-
-  public PWMOnBackground(PWM pwm) {
-    this(pwm, new WordwiseBackground());
   }
 
   private double[][] calculateMatrixIUPAC() {
@@ -84,14 +75,5 @@ public class PWMOnBackground implements ScoreStatistics, ScoringModel<SequenceMo
       variance += background.variance(pos);
     }
     return variance;
-  }
-
-  @Override
-  public SequenceMonoEncoded encodeSequence(Sequence sequence) {
-    return sequence.monoEncode();
-  }
-  @Override
-  public SequenceWithSNPMonoEncoded encodeSequenceWithSNP(SequenceWithSNP sequenceWithSNP) {
-    return sequenceWithSNP.monoEncode();
   }
 }
