@@ -1,7 +1,7 @@
 package ru.autosome.commons.model;
 
 import ru.autosome.commons.motifModel.HasLength;
-import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.scoringModel.ScoringModel;
 import ru.autosome.perfectosape.calculation.ScanSequence;
 
 public class PositionInterval {

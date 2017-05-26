@@ -10,6 +10,7 @@ import ru.autosome.commons.model.Named;
 import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.commons.scoringModel.ScoringModel;
 import ru.autosome.perfectosape.calculation.SingleSNPScan;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;

@@ -4,7 +4,7 @@ import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.motifModel.HasLength;
-import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.scoringModel.ScoringModel;
 
 public class EstimateAffinityMinPvalue<SequenceType extends HasLength,
                                        ModelType extends ScoringModel<SequenceType>> {

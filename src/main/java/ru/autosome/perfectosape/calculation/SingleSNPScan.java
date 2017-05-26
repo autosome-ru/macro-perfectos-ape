@@ -4,7 +4,7 @@ import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.motifModel.Encodable;
-import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.scoringModel.ScoringModel;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;

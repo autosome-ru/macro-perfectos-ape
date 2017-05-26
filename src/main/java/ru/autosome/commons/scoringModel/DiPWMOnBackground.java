@@ -6,7 +6,7 @@ import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
 import ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC;
 import ru.autosome.commons.motifModel.Encodable;
-import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.motifModel.ScoreStatistics;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
@@ -15,7 +15,7 @@ import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNPDiEncoded;
 
 import static ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC.N_index;
 
-public class DiPWMOnBackground implements ScoringModel<SequenceDiEncoded>, Encodable<SequenceDiEncoded, SequenceWithSNPDiEncoded> {
+public class DiPWMOnBackground implements ScoreStatistics, ScoringModel<SequenceDiEncoded>, Encodable<SequenceDiEncoded, SequenceWithSNPDiEncoded> {
 
   private final DiPWM dipwm;
   private final DiBackgroundModel dibackground;

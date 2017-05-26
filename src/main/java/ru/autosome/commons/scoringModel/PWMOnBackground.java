@@ -4,14 +4,14 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.motifModel.Encodable;
-import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.motifModel.ScoreStatistics;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
 
-public class PWMOnBackground implements ScoringModel<SequenceMonoEncoded>, Encodable<SequenceMonoEncoded, SequenceWithSNPMonoEncoded> {
+public class PWMOnBackground implements ScoreStatistics, ScoringModel<SequenceMonoEncoded>, Encodable<SequenceMonoEncoded, SequenceWithSNPMonoEncoded> {
   private final PWM pwm;
   private final BackgroundModel background;
   private final double[][] matrixIUPAC;

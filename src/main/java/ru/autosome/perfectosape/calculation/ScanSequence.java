@@ -4,7 +4,7 @@ import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.motifModel.HasLength;
-import ru.autosome.commons.motifModel.ScoringModel;
+import ru.autosome.commons.scoringModel.ScoringModel;
 
 public class ScanSequence<SequenceType extends HasLength> {
   private final SequenceType sequence;
