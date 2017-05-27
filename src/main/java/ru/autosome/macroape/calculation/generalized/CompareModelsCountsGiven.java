@@ -75,8 +75,6 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
     return new ComparisonSimilarityInfo<>(alignment, intersection, firstCountRenormed, secondCountRenormed);
   }
 
-  protected abstract ru.autosome.macroape.calculation
-                      .generalized.AlignedModelIntersection
-                      <ModelType, BackgroundType> calculator(PairAligned<ModelType> alignment);
+  protected abstract AlignedModelIntersection calculator(PairAligned<ModelType> alignment);
 
 }

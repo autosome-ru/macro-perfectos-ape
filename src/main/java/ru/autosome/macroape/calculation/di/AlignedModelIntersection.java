@@ -13,10 +13,13 @@ import java.util.List;
 
 import static ru.autosome.commons.model.indexingScheme.DiIndexingScheme.diIndex;
 
-public class AlignedModelIntersection extends ru.autosome.macroape.calculation.generalized.AlignedModelIntersection<DiPWM, DiBackgroundModel> {
+public class AlignedModelIntersection implements ru.autosome.macroape.calculation.generalized.AlignedModelIntersection {
+  public final DiBackgroundModel background;
+  public final PairAligned<DiPWM> alignment;
 
   public AlignedModelIntersection(PairAligned<DiPWM> alignment, DiBackgroundModel background) {
-    super(alignment, background);
+    this.background = background;
+    this.alignment = alignment;
   }
 
   // 2d-score hash before first step
@@ -50,7 +53,7 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
   }
 
   @Override
-  protected double count_in_intersection(double threshold_first, double threshold_second) {
+  public double count_in_intersection(double threshold_first, double threshold_second) {
     // last letter, scores_on_first_pwm, scores_on_second_pwm --> count
     List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> scores = initialScoreHash(background);
 
