@@ -58,14 +58,14 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
             .numberOfRecognizedWords(background, secondPWM.length());
   }
 
-  public ComparisonSimilarityInfo<ModelType> jaccard(double threshold_first, double threshold_second) {
+  public ComparisonSimilarityInfo jaccard(double threshold_first, double threshold_second) {
     return calculatorWithCountsGiven()
             .jaccard(threshold_first, threshold_second,
                      firstCount(threshold_first),
                      secondCount(threshold_second));
   }
 
-  public ComparisonSimilarityInfo<ModelType> jaccardAtPosition(double threshold_first, double threshold_second,
+  public ComparisonSimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
                                                                Position position) {
     return calculatorWithCountsGiven()
             .jaccardAtPosition(threshold_first, threshold_second,

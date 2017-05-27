@@ -57,9 +57,9 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     try {
       EvalSimilarity cli = EvalSimilarity.from_arglist(args);
 
-      ComparisonSimilarityInfo<PWM> result = cli.results();
-      ReportLayout<ComparisonSimilarityInfo<PWM>> layout = cli.report_table_layout();
-      Reporter<ComparisonSimilarityInfo<PWM>> reporter = new TextReporter<>();
+      ComparisonSimilarityInfo result = cli.results();
+      ReportLayout<ComparisonSimilarityInfo> layout = cli.report_table_layout();
+      Reporter<ComparisonSimilarityInfo> reporter = new TextReporter<>();
       System.out.println(reporter.report(result, layout));
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");

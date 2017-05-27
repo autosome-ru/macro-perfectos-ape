@@ -4,13 +4,13 @@ import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.motifModel.Alignable;
 
-public class ComparisonSimilarityInfo<ModelType extends Alignable<ModelType>> {
-  public final PairAligned<ModelType> alignment;
+public class ComparisonSimilarityInfo {
+  public final PairAligned alignment;
   public final double recognizedByBoth;
   public final double recognizedByFirst;
   public final double recognizedBySecond;
 
-  public ComparisonSimilarityInfo(PairAligned<ModelType> alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond) {
+  public ComparisonSimilarityInfo(PairAligned alignment, double recognizedByBoth, double recognizedByFirst, double recognizedBySecond) {
     this.recognizedByFirst = recognizedByFirst;
     this.recognizedBySecond = recognizedBySecond;
     this.recognizedByBoth = recognizedByBoth;

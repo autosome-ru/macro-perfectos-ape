@@ -46,12 +46,12 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
     return Math.pow(background.volume(), alignment.length() - secondPWM.length());
   }
 
-  public ComparisonSimilarityInfo<ModelType> jaccard(double thresholdFirst, double thresholdSecond,
+  public ComparisonSimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
                                                      double firstCount, double secondCount) {
     double bestSimilarity = -1;
-    ComparisonSimilarityInfo<ModelType> bestSimilarityInfo = null;
+    ComparisonSimilarityInfo bestSimilarityInfo = null;
     for (Position position: relative_alignments()) {
-      ComparisonSimilarityInfo<ModelType> similarityInfo;
+      ComparisonSimilarityInfo similarityInfo;
       similarityInfo = jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, position);
       double similarity = similarityInfo.similarity();
       if (similarity > bestSimilarity) {
@@ -62,7 +62,7 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
     return bestSimilarityInfo;
   }
 
-  public ComparisonSimilarityInfo<ModelType> jaccardAtPosition(double thresholdFirst, double thresholdSecond,
+  public ComparisonSimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
                                                                double firstCount, double secondCount,
                                                                Position position) {
     PairAligned<ModelType> alignment = new PairAligned<>(firstPWM, secondPWM, position);
@@ -72,7 +72,7 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
     double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
     double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
 
-    return new ComparisonSimilarityInfo<>(alignment, intersection, firstCountRenormed, secondCountRenormed);
+    return new ComparisonSimilarityInfo(alignment, intersection, firstCountRenormed, secondCountRenormed);
   }
 
   protected abstract AlignedModelIntersection calculator(PairAligned<ModelType> alignment);

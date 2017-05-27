@@ -1,12 +1,10 @@
 package ru.autosome.macroape.model;
 
-import ru.autosome.commons.motifModel.Alignable;
-
-public class ScanningSimilarityInfo<ModelType extends Alignable<ModelType>> extends ComparisonSimilarityInfo<ModelType> {
+public class ScanningSimilarityInfo extends ComparisonSimilarityInfo {
   public final String name;
   public final boolean precise;
 
-  public ScanningSimilarityInfo(String name, PairAligned<ModelType> alignment,
+  public ScanningSimilarityInfo(String name, PairAligned alignment,
                                 double recognizedByBoth, double recognizedByFirst, double recognizedBySecond,
                                 boolean precise) {
     super(alignment, recognizedByBoth, recognizedByFirst, recognizedBySecond);
@@ -14,7 +12,7 @@ public class ScanningSimilarityInfo<ModelType extends Alignable<ModelType>> exte
     this.precise = precise;
 
   }
-  public ScanningSimilarityInfo(String name, ComparisonSimilarityInfo<ModelType> similarityInfo, boolean precise) {
+  public ScanningSimilarityInfo(String name, ComparisonSimilarityInfo similarityInfo, boolean precise) {
     super(similarityInfo.alignment,
           similarityInfo.recognizedByBoth,
           similarityInfo.recognizedByFirst,

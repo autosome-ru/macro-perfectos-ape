@@ -46,7 +46,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                double roughQueryThreshold,
                                                double preciseQueryThreshold,
                                                ThresholdEvaluator<ModelType> knownMotifEvaluator) {
-    ComparisonSimilarityInfo<ModelType> info;
+    ComparisonSimilarityInfo info;
     boolean precise = false;
     CompareModels<ModelType,BackgroundType> roughCalculation = calculation(
         queryPWM, knownMotifEvaluator.pwm,
@@ -77,7 +77,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
       precise = true;
     }
     if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
-      return new ScanningSimilarityInfo<>(knownMotifEvaluator.name, info, precise);
+      return new ScanningSimilarityInfo(knownMotifEvaluator.name, info, precise);
     } else {
       return null;
     }

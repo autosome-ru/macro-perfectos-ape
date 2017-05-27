@@ -196,8 +196,8 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     }
   }
 
-  public ReportLayout<ComparisonSimilarityInfo<ModelType>> report_table_layout() {
-    ReportLayout<ComparisonSimilarityInfo<ModelType>> layout = new ReportLayout<>();
+  public ReportLayout<ComparisonSimilarityInfo> report_table_layout() {
+    ReportLayout<ComparisonSimilarityInfo> layout = new ReportLayout<>();
 
     layout.add_parameter("V", "discretization", discretizer);
     if (predefinedFirstThreshold == null || predefinedSecondThreshold == null) {
@@ -214,27 +214,27 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
 
     layout.add_resulting_value("S", "similarity", ComparisonSimilarityInfo::similarity);
     layout.add_resulting_value("D", "distance (1-similarity)", ComparisonSimilarityInfo::distance);
-    layout.add_resulting_value("L", "length of the alignment", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.length());
-    layout.add_resulting_value("SH", "shift of the 2nd PWM relative to the 1st", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.shift());
-    layout.add_resulting_value("OR", "orientation of the 2nd PWM relative to the 1st", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.orientation());
-    layout.add_resulting_value("A1", "aligned 1st matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.first_model_alignment());
-    layout.add_resulting_value("A2", "aligned 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.second_model_alignment());
-    layout.add_resulting_value("W", "number of words recognized by both models (model = PWM + threshold)", (ComparisonSimilarityInfo<ModelType> info) -> info.recognizedByBoth);
-    layout.add_resulting_value("W1", "number of words and recognized by the first model", (ComparisonSimilarityInfo<ModelType> info) -> info.recognizedByFirst);
-    layout.add_resulting_value("P1", "P-value for the 1st matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.realPvalueFirst(background));
+    layout.add_resulting_value("L", "length of the alignment", (ComparisonSimilarityInfo info) -> info.alignment.length());
+    layout.add_resulting_value("SH", "shift of the 2nd PWM relative to the 1st", (ComparisonSimilarityInfo info) -> info.alignment.shift());
+    layout.add_resulting_value("OR", "orientation of the 2nd PWM relative to the 1st", (ComparisonSimilarityInfo info) -> info.alignment.orientation());
+    layout.add_resulting_value("A1", "aligned 1st matrix", (ComparisonSimilarityInfo info) -> info.alignment.first_model_alignment());
+    layout.add_resulting_value("A2", "aligned 2nd matrix", (ComparisonSimilarityInfo info) -> info.alignment.second_model_alignment());
+    layout.add_resulting_value("W", "number of words recognized by both models (model = PWM + threshold)", (ComparisonSimilarityInfo info) -> info.recognizedByBoth);
+    layout.add_resulting_value("W1", "number of words and recognized by the first model", (ComparisonSimilarityInfo info) -> info.recognizedByFirst);
+    layout.add_resulting_value("P1", "P-value for the 1st matrix", (ComparisonSimilarityInfo info) -> info.realPvalueFirst(background));
     if (predefinedFirstThreshold == null) {
-      layout.add_resulting_value("T1", "threshold for the 1st matrix", (ComparisonSimilarityInfo<ModelType> info) -> thresholdFirst() );
+      layout.add_resulting_value("T1", "threshold for the 1st matrix", (ComparisonSimilarityInfo info) -> thresholdFirst() );
     }
-    layout.add_resulting_value("W2", "number of words recognized by the 2nd model", (ComparisonSimilarityInfo<ModelType> info) -> info.recognizedBySecond);
-    layout.add_resulting_value("P2", "P-value for the 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.realPvalueSecond(background));
+    layout.add_resulting_value("W2", "number of words recognized by the 2nd model", (ComparisonSimilarityInfo info) -> info.recognizedBySecond);
+    layout.add_resulting_value("P2", "P-value for the 2nd matrix", (ComparisonSimilarityInfo info) -> info.realPvalueSecond(background));
     if (predefinedSecondThreshold == null) {
-      layout.add_resulting_value("T2", "threshold for the 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> thresholdSecond());
+      layout.add_resulting_value("T2", "threshold for the 2nd matrix", (ComparisonSimilarityInfo info) -> thresholdSecond());
     }
 
     return layout;
   }
 
-  protected ComparisonSimilarityInfo<ModelType> results() {
+  protected ComparisonSimilarityInfo results() {
     if (alignment == null) {
       return calculator().jaccard(thresholdFirst(), thresholdSecond());
     } else {
