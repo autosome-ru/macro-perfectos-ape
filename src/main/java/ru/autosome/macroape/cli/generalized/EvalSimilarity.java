@@ -54,7 +54,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     "  "+ DOC_run_string() + " motifs/KLF4_f2.pat motifs/SP1_f1.pat -p 0.0005 -d 100 -b 0.3,0.2,0.2,0.3\n";
   }
 
-  protected BackgroundType firstBackground, secondBackground;
+  protected BackgroundType background;
   protected Discretizer discretizer;
   protected double pvalue;
   protected BoundaryType pvalueBoundary;
@@ -135,15 +135,9 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   protected void extract_option(List<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
-      BackgroundType background = extract_background(argv.remove(0));
-      firstBackground = background;
-      secondBackground = background;
+      background = extract_background(argv.remove(0));
     } else if (opt.equals("-p") || opt.equals("--pvalue")) {
       pvalue = Double.valueOf(argv.remove(0));
-    } else if (opt.equals("--first-background")) {
-      firstBackground = extract_background(argv.remove(0));
-    } else if (opt.equals("--second-background")) {
-      secondBackground = extract_background(argv.remove(0));
     } else if (opt.equals("-d") || opt.equals("--discretization")) {
       discretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--boundary")) {
@@ -216,12 +210,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
       layout.add_parameter("T2", "threshold for the 2nd matrix", predefinedSecondThreshold);
     }
     layout.add_parameter("PB", "P-value boundary", pvalueBoundary);
-    if (firstBackground.equals(secondBackground)) {
-      layout.background_parameter("B", "background", firstBackground);
-    } else {
-      layout.background_parameter("B1", "background for the 1st model", firstBackground);
-      layout.background_parameter("B2", "background for the 2nd model", secondBackground);
-    }
+    layout.background_parameter("B", "background", background);
 
     layout.add_resulting_value("S", "similarity", ComparisonSimilarityInfo::similarity);
     layout.add_resulting_value("D", "distance (1-similarity)", ComparisonSimilarityInfo::distance);
@@ -232,12 +221,12 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     layout.add_resulting_value("A2", "aligned 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.alignment.second_model_alignment());
     layout.add_resulting_value("W", "number of words recognized by both models (model = PWM + threshold)", (ComparisonSimilarityInfo<ModelType> info) -> info.recognizedByBoth);
     layout.add_resulting_value("W1", "number of words and recognized by the first model", (ComparisonSimilarityInfo<ModelType> info) -> info.recognizedByFirst);
-    layout.add_resulting_value("P1", "P-value for the 1st matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.realPvalueFirst(firstBackground));
+    layout.add_resulting_value("P1", "P-value for the 1st matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.realPvalueFirst(background));
     if (predefinedFirstThreshold == null) {
       layout.add_resulting_value("T1", "threshold for the 1st matrix", (ComparisonSimilarityInfo<ModelType> info) -> thresholdFirst() );
     }
     layout.add_resulting_value("W2", "number of words recognized by the 2nd model", (ComparisonSimilarityInfo<ModelType> info) -> info.recognizedBySecond);
-    layout.add_resulting_value("P2", "P-value for the 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.realPvalueSecond(secondBackground));
+    layout.add_resulting_value("P2", "P-value for the 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> info.realPvalueSecond(background));
     if (predefinedSecondThreshold == null) {
       layout.add_resulting_value("T2", "threshold for the 2nd matrix", (ComparisonSimilarityInfo<ModelType> info) -> thresholdSecond());
     }
@@ -258,7 +247,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
       if (predefinedFirstThreshold != null) {
         cacheFirstThreshold = predefinedFirstThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(firstPWM, background, discretizer);
         cacheFirstThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }
@@ -270,7 +259,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
       if (predefinedSecondThreshold != null) {
         cacheSecondThreshold = predefinedSecondThreshold;
       } else {
-        CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
+        CanFindThreshold pvalue_calculator = new FindThresholdAPE<>(secondPWM, background, discretizer);
         cacheSecondThreshold = pvalue_calculator.thresholdByPvalue(pvalue, pvalueBoundary).threshold;
       }
     }

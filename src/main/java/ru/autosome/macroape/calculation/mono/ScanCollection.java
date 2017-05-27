@@ -11,9 +11,9 @@ import java.util.List;
 public class ScanCollection extends ru.autosome.macroape.calculation.generalized.ScanCollection<PWM, BackgroundModel> {
 
 
-  protected CompareModels calculation(PWM firstMotif, PWM secondMotif,  BackgroundModel firstBackground, BackgroundModel secondBackground,
+  protected CompareModels calculation(PWM firstMotif, PWM secondMotif,  BackgroundModel background,
                                       CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator, Discretizer discretizer) {
-    return new CompareModels( firstMotif, secondMotif, firstBackground, secondBackground,
+    return new CompareModels( firstMotif, secondMotif, background,
                               firstPvalueCalculator, secondPvalueCalculator, discretizer);
   }
 

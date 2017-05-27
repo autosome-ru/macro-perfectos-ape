@@ -12,11 +12,11 @@ public class ScanCollection extends ru.autosome.macroape.calculation.generalized
 
 
   protected ru.autosome.macroape.calculation.di.CompareModels calculation(DiPWM firstMotif, DiPWM secondMotif,
-                                                                            DiBackgroundModel firstBackground, DiBackgroundModel secondBackground,
+                                                                            DiBackgroundModel background,
                                                                             CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
                                                                             Discretizer discretizer) {
     return new ru.autosome.macroape.calculation.di.CompareModels( firstMotif, secondMotif,
-                                                                   firstBackground, secondBackground,
+                                                                   background,
                                                                    firstPvalueCalculator, secondPvalueCalculator,
                                                                    discretizer);
   }

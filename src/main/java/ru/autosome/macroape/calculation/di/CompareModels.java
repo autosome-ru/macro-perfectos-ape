@@ -7,20 +7,19 @@ import ru.autosome.commons.motifModel.di.DiPWM;
 
 public class CompareModels extends ru.autosome.macroape.calculation.generalized.CompareModels<DiPWM, DiBackgroundModel> {
 
-  public CompareModels(DiPWM firstPWM, DiPWM secondPWM, DiBackgroundModel firstBackground, DiBackgroundModel secondBackground,
+  public CompareModels(DiPWM firstPWM, DiPWM secondPWM, DiBackgroundModel background,
                        CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator, Discretizer discretizer) {
-    super(firstPWM, secondPWM, firstBackground, secondBackground, firstPvalueCalculator, secondPvalueCalculator, discretizer);
+    super(firstPWM, secondPWM, background, firstPvalueCalculator, secondPvalueCalculator, discretizer);
   }
 
-  public CompareModels(DiPWM firstPWM, DiPWM secondPWM, DiBackgroundModel firstBackground, DiBackgroundModel secondBackground,
-                       Discretizer discretizer) {
-    super(firstPWM, secondPWM, firstBackground, secondBackground, discretizer);
+  public CompareModels(DiPWM firstPWM, DiPWM secondPWM, DiBackgroundModel background, Discretizer discretizer) {
+    super(firstPWM, secondPWM, background, discretizer);
   }
 
   @Override
   protected ru.autosome.macroape.calculation.di.CompareModelsCountsGiven calculatorWithCountsGiven() {
     return new CompareModelsCountsGiven(firstPWM, secondPWM,
-                                     firstBackground, secondBackground,
+                                     background,
                                      discretizer);
   }
 }

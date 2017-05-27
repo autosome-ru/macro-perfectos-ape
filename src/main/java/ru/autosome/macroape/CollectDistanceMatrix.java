@@ -45,9 +45,7 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
 
   @Override
   protected CompareModelsCountsGiven calculator(PWM firstModel, PWM secondModel) {
-    return new CompareModelsCountsGiven(firstModel, secondModel,
-                                 background, background,
-                                 roughDiscretizer);
+    return new CompareModelsCountsGiven(firstModel, secondModel, background, roughDiscretizer);
   }
 
 

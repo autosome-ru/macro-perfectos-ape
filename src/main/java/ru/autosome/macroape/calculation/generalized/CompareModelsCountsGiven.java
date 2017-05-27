@@ -17,19 +17,16 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
 
   public final ModelType firstPWM; // here we store discreted PWMs
   public final ModelType secondPWM;
-  public final BackgroundType firstBackground;
-  public final BackgroundType secondBackground;
-// PWMs are already stored discreted, disretization needed in order to upscale thresholds
+  public final BackgroundType background;
+  // PWMs are already stored discreted, disretization needed in order to upscale thresholds
   public final Discretizer discretizer;
 
   public CompareModelsCountsGiven(ModelType firstPWM, ModelType secondPWM,
-                               BackgroundType firstBackground,
-                               BackgroundType secondBackground,
+                               BackgroundType background,
                                Discretizer discretizer) {
     this.firstPWM = firstPWM.discrete(discretizer);
     this.secondPWM = secondPWM.discrete(discretizer);
-    this.firstBackground = firstBackground;
-    this.secondBackground = secondBackground;
+    this.background = background;
     this.discretizer = discretizer;
   }
 
@@ -43,10 +40,10 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
   }
 
   protected double firstCountRenormMultiplier(PairAligned alignment) {
-    return Math.pow(firstBackground.volume(), alignment.length() - firstPWM.length());
+    return Math.pow(background.volume(), alignment.length() - firstPWM.length());
   }
   protected double secondCountRenormMultiplier(PairAligned alignment) {
-    return Math.pow(secondBackground.volume(), alignment.length() - secondPWM.length());
+    return Math.pow(background.volume(), alignment.length() - secondPWM.length());
   }
 
   public ComparisonSimilarityInfo<ModelType> jaccard(double thresholdFirst, double thresholdSecond,

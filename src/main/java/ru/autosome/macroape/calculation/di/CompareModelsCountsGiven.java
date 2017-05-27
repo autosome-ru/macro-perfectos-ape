@@ -8,14 +8,13 @@ import ru.autosome.macroape.model.PairAligned;
 public class CompareModelsCountsGiven extends ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven<DiPWM, DiBackgroundModel> {
 
   public CompareModelsCountsGiven(DiPWM firstPWM, DiPWM secondPWM,
-                                  DiBackgroundModel firstBackground,
-                                  DiBackgroundModel secondBackground,
+                                  DiBackgroundModel background,
                                   Discretizer discretizer) {
-    super(firstPWM, secondPWM, firstBackground, secondBackground, discretizer);
+    super(firstPWM, secondPWM, background, discretizer);
   }
 
   @Override
   protected AlignedModelIntersection calculator(PairAligned<DiPWM> alignment) {
-    return new AlignedModelIntersection(alignment, firstBackground, secondBackground);
+    return new AlignedModelIntersection(alignment, background);
   }
 }

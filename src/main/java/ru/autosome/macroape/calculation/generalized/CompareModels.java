@@ -15,37 +15,32 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
 
   public final ModelType firstPWM;
   public final ModelType secondPWM;
-  public final BackgroundType firstBackground;
-  public final BackgroundType secondBackground;
+  public final BackgroundType background;
   public final CanFindPvalue firstPvalueCalculator;
   public final CanFindPvalue secondPvalueCalculator;
   public final Discretizer discretizer;
 
   public CompareModels(ModelType firstPWM, ModelType secondPWM,
-                       BackgroundType firstBackground,
-                       BackgroundType secondBackground,
+                       BackgroundType background,
                        CanFindPvalue firstPvalueCalculator,
                        CanFindPvalue secondPvalueCalculator,
                        Discretizer discretizer) {
     this.firstPWM = firstPWM;
     this.secondPWM = secondPWM;
-    this.firstBackground = firstBackground;
-    this.secondBackground = secondBackground;
+    this.background = background;
     this.firstPvalueCalculator = firstPvalueCalculator;
     this.secondPvalueCalculator = secondPvalueCalculator;
     this.discretizer = discretizer;
   }
 
   public CompareModels(ModelType firstPWM, ModelType secondPWM,
-                       BackgroundType firstBackground,
-                       BackgroundType secondBackground,
+                       BackgroundType background,
                        Discretizer discretizer) {
     this.firstPWM = firstPWM;
     this.secondPWM = secondPWM;
-    this.firstBackground = firstBackground;
-    this.secondBackground = secondBackground;
-    this.firstPvalueCalculator = new FindPvalueAPE<>(firstPWM, firstBackground, discretizer);
-    this.secondPvalueCalculator = new FindPvalueAPE<>(secondPWM, secondBackground, discretizer);
+    this.background = background;
+    this.firstPvalueCalculator = new FindPvalueAPE<>(firstPWM, background, discretizer);
+    this.secondPvalueCalculator = new FindPvalueAPE<>(secondPWM, background, discretizer);
     this.discretizer = discretizer;
   }
 
@@ -54,13 +49,13 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
   double firstCount(double threshold_first) {
     return firstPvalueCalculator
             .pvalueByThreshold(threshold_first)
-            .numberOfRecognizedWords(firstBackground, firstPWM.length());
+            .numberOfRecognizedWords(background, firstPWM.length());
   }
 
   double secondCount(double threshold_second) {
     return secondPvalueCalculator
             .pvalueByThreshold(threshold_second)
-            .numberOfRecognizedWords(secondBackground, secondPWM.length());
+            .numberOfRecognizedWords(background, secondPWM.length());
   }
 
   public ComparisonSimilarityInfo<ModelType> jaccard(double threshold_first, double threshold_second) {

@@ -58,8 +58,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
 
   @Override
   protected void initialize_default_background() {
-    queryBackground = new DiWordwiseBackground();
-    collectionBackground = new DiWordwiseBackground();
+    background = new DiWordwiseBackground();
   }
 
   private static ScanCollection from_arglist(String[] args) {
@@ -72,9 +71,9 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   protected List<Named<DiPWM>> loadMotifCollection() {
     MotifImporter<DiPWM> importer;
     if (collectionFromMononucleotide) {
-      importer = new DiPWMFromMonoImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
+      importer = new DiPWMFromMonoImporter(background, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
     } else {
-      importer = new DiPWMImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
+      importer = new DiPWMImporter(background, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
     }
     return importer.loadMotifCollectionWithNames(pathToCollectionOfPWMs);
   }
@@ -83,9 +82,9 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   protected DiPWM loadQueryMotif() {
     MotifImporter<DiPWM> importer;
     if (queryFromMononucleotide) {
-      importer = new DiPWMFromMonoImporter(queryBackground, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
+      importer = new DiPWMFromMonoImporter(background, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
     } else {
-      importer = new DiPWMImporter(queryBackground, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
+      importer = new DiPWMImporter(background, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
     }
     return importer.loadMotif(queryPMFilename);
   }
@@ -97,8 +96,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     calculator.queryPredefinedThreshold = queryPredefinedThreshold;
     calculator.roughDiscretizer = roughDiscretizer;
     calculator.preciseDiscretizer = preciseDiscretizer;
-    calculator.queryBackground = queryBackground;
-    calculator.collectionBackground = collectionBackground;
+    calculator.background = background;
     calculator.pvalueBoundaryType = pvalueBoundaryType;
     calculator.similarityCutoff = similarityCutoff;
     calculator.preciseRecalculationCutoff = preciseRecalculationCutoff;

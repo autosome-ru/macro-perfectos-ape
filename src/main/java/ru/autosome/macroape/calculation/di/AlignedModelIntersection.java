@@ -15,8 +15,8 @@ import static ru.autosome.commons.model.indexingScheme.DiIndexingScheme.diIndex;
 
 public class AlignedModelIntersection extends ru.autosome.macroape.calculation.generalized.AlignedModelIntersection<DiPWM, DiBackgroundModel> {
 
-  public AlignedModelIntersection(PairAligned<DiPWM> alignment, DiBackgroundModel firstBackground, DiBackgroundModel secondBackground) {
-    super(alignment, firstBackground, secondBackground);
+  public AlignedModelIntersection(PairAligned<DiPWM> alignment, DiBackgroundModel background) {
+    super(alignment, background);
   }
 
   // 2d-score hash before first step
@@ -50,7 +50,7 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
   }
 
   @Override
-  protected double get_counts(double threshold_first, double threshold_second, DiBackgroundModel background) {
+  protected double count_in_intersection(double threshold_first, double threshold_second) {
     // last letter, scores_on_first_pwm, scores_on_second_pwm --> count
     List<TDoubleObjectHashMap<TDoubleDoubleHashMap>> scores = initialScoreHash(background);
 

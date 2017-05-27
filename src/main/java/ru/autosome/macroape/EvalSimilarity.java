@@ -23,8 +23,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected void initialize_default_background() {
-    firstBackground = new WordwiseBackground();
-    secondBackground = new WordwiseBackground();
+    background = new WordwiseBackground();
   }
 
   @Override
@@ -34,12 +33,12 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected PWM loadFirstPWM(String filename) {
-    PWMImporter firstMotifImporter = new PWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
+    PWMImporter firstMotifImporter = new PWMImporter(background, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
     return firstMotifImporter.loadMotif(filename);
   }
   @Override
   protected PWM loadSecondPWM(String filename) {
-    PWMImporter secondMotifImporter = new PWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
+    PWMImporter secondMotifImporter = new PWMImporter(background, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
     return secondMotifImporter.loadMotif(filename);
   }
 
@@ -51,7 +50,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected CompareModels calculator() {
-    return new CompareModels(firstPWM, secondPWM, firstBackground, secondBackground, discretizer);
+    return new CompareModels(firstPWM, secondPWM, background, discretizer);
   }
 
   public static void main(String[] args) {

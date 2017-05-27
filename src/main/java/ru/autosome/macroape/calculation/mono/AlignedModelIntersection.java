@@ -10,8 +10,8 @@ import ru.autosome.macroape.model.PairAligned;
 
 public class AlignedModelIntersection extends ru.autosome.macroape.calculation.generalized.AlignedModelIntersection<PWM, BackgroundModel> {
 
-  public AlignedModelIntersection(PairAligned<PWM> alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {
-    super(alignment, firstBackground, secondBackground);
+  public AlignedModelIntersection(PairAligned<PWM> alignment, BackgroundModel background) {
+    super(alignment, background);
   }
 
   // 2d-score hash before first step
@@ -23,7 +23,7 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
   }
 
   @Override
-  protected double get_counts(double threshold_first, double threshold_second, BackgroundModel background) {
+  protected double count_in_intersection(double threshold_first, double threshold_second) {
     // scores_on_first_pwm, scores_on_second_pwm --> count
     TDoubleObjectHashMap<TDoubleDoubleHashMap> scores = initialScoreHash();
 

@@ -28,8 +28,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
 
   @Override
   protected void initialize_default_background() {
-    queryBackground = new WordwiseBackground();
-    collectionBackground = new WordwiseBackground();
+    background = new WordwiseBackground();
   }
 
   private static ScanCollection from_arglist(String[] args) {
@@ -39,12 +38,12 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   }
 
   protected List<Named<PWM>> loadMotifCollection() {
-    PWMImporter importer = new PWMImporter(collectionBackground, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
+    PWMImporter importer = new PWMImporter(background, collectionDataModel, collectionEffectiveCount, collectionTranspose, collectionPseudocount);
     return importer.loadMotifCollectionWithNames(pathToCollectionOfPWMs);
   }
 
   protected PWM loadQueryMotif() {
-    PWMImporter importer = new PWMImporter(queryBackground, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
+    PWMImporter importer = new PWMImporter(background, queryDataModel, queryEffectiveCount, queryTranspose, queryPseudocount);
     return importer.loadMotif(queryPMFilename);
   }
 
@@ -56,8 +55,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     calculator.queryPredefinedThreshold = queryPredefinedThreshold;
     calculator.roughDiscretizer = roughDiscretizer;
     calculator.preciseDiscretizer = preciseDiscretizer;
-    calculator.queryBackground = queryBackground;
-    calculator.collectionBackground = collectionBackground;
+    calculator.background = background;
     calculator.pvalueBoundaryType = pvalueBoundaryType;
     calculator.similarityCutoff = similarityCutoff;
     calculator.preciseRecalculationCutoff = preciseRecalculationCutoff;

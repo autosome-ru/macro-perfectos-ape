@@ -56,7 +56,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   protected Double queryEffectiveCount;
   protected PseudocountCalculator queryPseudocount;
 
-  protected BackgroundType queryBackground, collectionBackground;
+  protected BackgroundType background;
   protected Discretizer roughDiscretizer, preciseDiscretizer;
   protected double pvalue;
   protected Double queryPredefinedThreshold;
@@ -149,13 +149,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   protected void extract_option(List<String> argv) {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
-      BackgroundType background = extractBackground(argv.remove(0));
-      queryBackground = background;
-      collectionBackground = background;
-    } else if (opt.equals("--query-background")) {
-      queryBackground = extractBackground(argv.remove(0));
-    } else if (opt.equals("--collection-background")) {
-      collectionBackground = extractBackground(argv.remove(0));
+      background = extractBackground(argv.remove(0));
     } else if (opt.equals("--rough-discretization") || opt.equals("-d") || opt.equals("--discretization")) {
       roughDiscretizer = Discretizer.fromString(argv.remove(0));
     } else if (opt.equals("--precise-discretization")) {
@@ -238,8 +232,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     } else {
       infos.add_parameter("V", "discretization value", roughDiscretizer);
     }
-    infos.background_parameter("BQ", "background for query matrix", queryBackground);
-    infos.background_parameter("BC", "background for collection", collectionBackground);
+    infos.background_parameter("B", "background", background);
 
     infos.add_table_parameter("motif", (ScanningSimilarityInfo cell) -> cell.name);
     infos.add_table_parameter("similarity", ScanningSimilarityInfo::similarity);
@@ -292,13 +285,13 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
       if (!bsearch_evaluator_succeed){
         SingleThresholdEvaluator roughEvaluator =
             new SingleThresholdEvaluator(pwm, namedModel.getName(),
-                                            new FindThresholdAPE<>(pwm, collectionBackground, roughDiscretizer),
-                                            new FindPvalueAPE<>(pwm, collectionBackground, roughDiscretizer)
+                                            new FindThresholdAPE<>(pwm, background, roughDiscretizer),
+                                            new FindPvalueAPE<>(pwm, background, roughDiscretizer)
         );
         SingleThresholdEvaluator preciseEvaluator =
             new SingleThresholdEvaluator(pwm, namedModel.getName(),
-                                            new FindThresholdAPE<>(pwm, collectionBackground, preciseDiscretizer),
-                                            new FindPvalueAPE<>(pwm, collectionBackground, preciseDiscretizer)
+                                            new FindThresholdAPE<>(pwm, background, preciseDiscretizer),
+                                            new FindPvalueAPE<>(pwm, background, preciseDiscretizer)
             );
 
         result.add(new ThresholdEvaluator<>(pwm, namedModel.getName(), roughEvaluator, preciseEvaluator));

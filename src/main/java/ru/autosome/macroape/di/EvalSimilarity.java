@@ -42,8 +42,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected void initialize_default_background() {
-    firstBackground = new DiWordwiseBackground();
-    secondBackground = new DiWordwiseBackground();
+    background = new DiWordwiseBackground();
   }
 
   @Override
@@ -71,9 +70,9 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   protected DiPWM loadFirstPWM(String filename) {
     MotifImporter<DiPWM> importer;
     if (firstPWMFromMononucleotide) {
-      importer = new DiPWMFromMonoImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
+      importer = new DiPWMFromMonoImporter(background, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
     } else {
-      importer = new DiPWMImporter(firstBackground, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
+      importer = new DiPWMImporter(background, dataModelFirst, effectiveCountFirst, transposeFirst, pseudocountFirst);
     }
     return importer.loadMotif(filename);
 
@@ -82,9 +81,9 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   protected DiPWM loadSecondPWM(String filename) {
     MotifImporter<DiPWM> importer;
     if (secondPWMFromMononucleotide) {
-      importer = new DiPWMFromMonoImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
+      importer = new DiPWMFromMonoImporter(background, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
     } else {
-      importer = new DiPWMImporter(secondBackground, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
+      importer = new DiPWMImporter(background, dataModelSecond, effectiveCountSecond, transposeSecond, pseudocountSecond);
     }
     return importer.loadMotif(filename);
   }
@@ -97,7 +96,7 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
 
   @Override
   protected CompareModels calculator() {
-    return new CompareModels(firstPWM, secondPWM, firstBackground, secondBackground, discretizer);
+    return new CompareModels(firstPWM, secondPWM, background, discretizer);
   }
 
   public static void main(String[] args) {
