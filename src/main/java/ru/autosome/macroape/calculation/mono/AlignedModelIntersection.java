@@ -5,7 +5,6 @@ import gnu.trove.iterator.TDoubleObjectIterator;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
-import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.model.PairAligned;
 
@@ -13,10 +12,6 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
 
   public AlignedModelIntersection(PairAligned<PWM> alignment, BackgroundModel firstBackground, BackgroundModel secondBackground) {
     super(alignment, firstBackground, secondBackground);
-  }
-
-  public AlignedModelIntersection(PWM firstPWM, PWM secondPWM, BackgroundModel firstBackground, BackgroundModel secondBackground, Position relativePosition) {
-    super(firstPWM, secondPWM, firstBackground, secondBackground, relativePosition);
   }
 
   // 2d-score hash before first step

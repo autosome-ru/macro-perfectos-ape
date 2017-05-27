@@ -3,14 +3,12 @@ package ru.autosome.commons.motifModel.di;
 import ru.autosome.ape.calculation.ScoringModelDistributions.CountingDiPWM;
 import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
-import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
 import ru.autosome.commons.scoringModel.DiPWMOnBackground;
-import ru.autosome.perfectosape.model.Sequence;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -40,10 +38,6 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
       matrix[matrix.length - 1][letter] += pwm.getMatrix()[matrix.length][DiIndexingScheme.secondLetterIndex(letter)];
     }
     return new DiPWM(matrix);
-  }
-
-  public double score(Sequence word) {
-    return new DiPWMOnBackground(this, new DiWordwiseBackground()).score(word.diEncode());
   }
 
   public double best_score() {

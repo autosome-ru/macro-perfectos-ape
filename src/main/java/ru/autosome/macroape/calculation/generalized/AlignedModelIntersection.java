@@ -1,7 +1,6 @@
 package ru.autosome.macroape.calculation.generalized;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.macroape.model.PairAligned;
 
@@ -20,14 +19,6 @@ abstract public class AlignedModelIntersection <ModelType extends Alignable<Mode
     this.firstBackground = firstBackground;
     this.secondBackground = secondBackground;
     this.alignment = alignment;
-  }
-
-  public AlignedModelIntersection(ModelType firstPWM, ModelType secondPWM,
-                                  BackgroundType firstBackground, BackgroundType secondBackground,
-                                  Position relativePosition) {
-    this.firstBackground = firstBackground;
-    this.secondBackground = secondBackground;
-    this.alignment = new PairAligned<>(firstPWM, secondPWM, relativePosition);
   }
 
   public double count_in_intersection(double first_threshold, double second_threshold) {

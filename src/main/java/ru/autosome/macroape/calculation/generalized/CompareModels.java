@@ -2,10 +2,7 @@ package ru.autosome.macroape.calculation.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
-import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
-import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
