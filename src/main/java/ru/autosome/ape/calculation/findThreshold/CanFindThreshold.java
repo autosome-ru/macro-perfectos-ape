@@ -6,7 +6,6 @@ import ru.autosome.commons.model.Discretizer;
 
 import java.util.List;
 
-// TODO: Make use of strong/weak thresholds or thresholds depending on BoundaryType (it wasn't implemented for bsearch lists)
 public interface CanFindThreshold {
   class ThresholdInfo {
     public final double threshold;

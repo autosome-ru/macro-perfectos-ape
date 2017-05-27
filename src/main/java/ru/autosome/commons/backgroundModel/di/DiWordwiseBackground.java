@@ -60,12 +60,6 @@ public class DiWordwiseBackground implements DiBackgroundModel {
   }
 
   @Override
-  public double variance(double[] values) {
-    double mean = mean_value(values);
-    return mean_square_value(values) - mean * mean;
-  }
-
-  @Override
   public double average_by_second_letter(double[] values, int firstLetterIndex) {
     double result = 0;
     for (int secondLetterIndex = 0; secondLetterIndex < 4; ++secondLetterIndex) {

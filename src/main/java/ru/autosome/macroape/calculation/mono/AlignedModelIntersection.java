@@ -16,7 +16,7 @@ public class AlignedModelIntersection extends ru.autosome.macroape.calculation.g
   }
 
   public AlignedModelIntersection(PWM firstPWM, PWM secondPWM, BackgroundModel firstBackground, BackgroundModel secondBackground, Position relativePosition) {
-    super(firstPWM, secondPWM, firstBackground, secondBackground,relativePosition);
+    super(firstPWM, secondPWM, firstBackground, secondBackground, relativePosition);
   }
 
   // 2d-score hash before first step

@@ -14,5 +14,8 @@ public interface GeneralizedBackgroundModel {
 
   double mean_square_value(double[] values);
 
-  double variance(double[] values);
+  default double variance(double[] values) {
+    double mean = mean_value(values);
+    return mean_square_value(values) - mean * mean;
+  }
 }

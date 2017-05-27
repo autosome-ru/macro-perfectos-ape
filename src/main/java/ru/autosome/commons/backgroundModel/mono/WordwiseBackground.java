@@ -48,12 +48,6 @@ public class WordwiseBackground implements BackgroundModel {
   }
 
   @Override
-  public double variance(double[] values) {
-    double mean = mean_value(values);
-    return mean_square_value(values) - mean * mean;
-  }
-
-  @Override
   public boolean equals(Object other) {
     return other instanceof BackgroundModel && ((BackgroundModel) other).is_wordwise();
   }

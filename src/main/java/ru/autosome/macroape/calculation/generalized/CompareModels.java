@@ -81,22 +81,4 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
                                secondCount(threshold_second),
                                position);
   }
-
-  public ComparisonSimilarityInfo jaccard_by_pvalue(double pvalue) {
-    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
-    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
-
-    double threshold_first = canFindThresholdFirst.thresholdByPvalue(pvalue, BoundaryType.STRONG).threshold;
-    double threshold_second = canFindThresholdSecond.thresholdByPvalue(pvalue, BoundaryType.STRONG).threshold;
-    return jaccard(threshold_first, threshold_second);
-  }
-
-  public ComparisonSimilarityInfo jaccard_by_weak_pvalue(double pvalue) {
-    CanFindThreshold canFindThresholdFirst = new FindThresholdAPE<>(firstPWM, firstBackground, discretizer);
-    CanFindThreshold canFindThresholdSecond = new FindThresholdAPE<>(secondPWM, secondBackground, discretizer);
-
-    double threshold_first = canFindThresholdFirst.thresholdByPvalue(pvalue, BoundaryType.WEAK).threshold;
-    double threshold_second = canFindThresholdSecond.thresholdByPvalue(pvalue, BoundaryType.WEAK).threshold;
-    return jaccard(threshold_first, threshold_second);
-  }
 }

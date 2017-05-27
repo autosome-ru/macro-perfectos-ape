@@ -129,12 +129,6 @@ public class Background implements BackgroundModel {
   }
 
   @Override
-  public double variance(double[] values) {
-    double mean = mean_value(values);
-    return mean_square_value(values) - mean * mean;
-  }
-
-  @Override
   public boolean equals(Object other) {
     if (other instanceof BackgroundModel) {
       boolean result = true;
