@@ -2,7 +2,6 @@ package ru.autosome.macroape.model;
 
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Orientation;
-import ru.autosome.commons.motifModel.Alignable;
 
 public class ComparisonSimilarityInfo {
   public final PairAligned alignment;
