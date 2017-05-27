@@ -15,7 +15,7 @@ public class WordwiseBackground implements BackgroundModel {
   }
 
   @Override
-  public double volume() {
+  public int volume() {
     return 4;
   }
 

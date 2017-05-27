@@ -3,7 +3,7 @@ package ru.autosome.commons.backgroundModel;
 public interface GeneralizedBackgroundModel {
   double probability(int index);
 
-  double volume(); // 1 for probability model, 4 for wordwise model
+  int volume(); // 1 for probability model, 4 for wordwise model
 
   @Override
   String toString();

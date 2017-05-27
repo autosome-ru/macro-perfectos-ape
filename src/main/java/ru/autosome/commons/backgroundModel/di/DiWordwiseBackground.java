@@ -27,7 +27,7 @@ public class DiWordwiseBackground implements DiBackgroundModel {
   }
 
   @Override
-  public double volume() {
+  public int volume() {
     return 4;
   }
 

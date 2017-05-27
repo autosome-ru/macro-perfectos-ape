@@ -106,7 +106,7 @@ public class DiBackground implements DiBackgroundModel {
   }
 
   @Override
-  public double volume() {
+  public int volume() {
     return 1;
   }
 
