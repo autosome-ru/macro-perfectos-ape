@@ -47,7 +47,7 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
   }
 
   public ComparisonSimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
-                                                     double firstCount, double secondCount) {
+                                          double firstCount, double secondCount) {
     double bestSimilarity = -1;
     ComparisonSimilarityInfo bestSimilarityInfo = null;
     for (Position position: relative_alignments()) {
@@ -63,8 +63,8 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
   }
 
   public ComparisonSimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
-                                                               double firstCount, double secondCount,
-                                                               Position position) {
+                                                    double firstCount, double secondCount,
+                                                    Position position) {
     PairAligned<ModelType> alignment = new PairAligned<>(firstPWM, secondPWM, position);
     double intersection = calculator(alignment).count_in_intersection(discretizer.upscale(thresholdFirst),
                                                                       discretizer.upscale(thresholdSecond));

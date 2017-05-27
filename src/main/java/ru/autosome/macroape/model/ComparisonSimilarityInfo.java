@@ -38,7 +38,6 @@ public class ComparisonSimilarityInfo {
     return alignment.overlapSize();
   }
 
-
   public static Double jaccardByCounts(double recognizedByFirst, double recognizedBySecond, double recognizedByBoth) {
     if (recognizedByFirst == 0 || recognizedBySecond == 0) {
       return null;
