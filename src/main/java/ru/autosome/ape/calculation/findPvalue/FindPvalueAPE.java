@@ -25,24 +25,20 @@ public class FindPvalueAPE<ModelType extends Discretable<ModelType> & HasLength 
     this.discretizer = discretizer;
   }
 
-  ScoringModelDistributions discretedScoringModel() {
-    return motif.discrete(discretizer).scoringModel(background);
-  }
-
-  PvalueInfo infos_by_count(TDoubleDoubleMap counts, double non_upscaled_threshold) {
-    double count = counts.get(discretizer.upscale(non_upscaled_threshold));
-    double vocabularyVolume = Math.pow(background.volume(), motif.length());
-    double pvalue = count / vocabularyVolume;
-    return new PvalueInfo(non_upscaled_threshold, pvalue);
-  }
-
   @Override
   public List<PvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
-    TDoubleDoubleMap counts = discretedScoringModel().counts_above_thresholds(discretizer.upscale(thresholds));
+    double vocabularyVolume = Math.pow(background.volume(), motif.length());
+    ModelType discreted_motif = motif.discrete(discretizer);
+    ScoringModelDistributions discretedScoringModel = discreted_motif.scoringModel(background);
+    List<Double> upscaled_thresholds = discretizer.upscale(thresholds);
+    TDoubleDoubleMap counts = discretedScoringModel.counts_above_thresholds(upscaled_thresholds);
 
     List<PvalueInfo> infos = new ArrayList<>();
     for (double threshold: thresholds) {
-      infos.add(infos_by_count(counts, threshold));
+      double upscaled_threshold = discretizer.upscale(threshold);
+      double count = counts.get(upscaled_threshold);
+      double pvalue = count / vocabularyVolume;
+      infos.add(new PvalueInfo(threshold, pvalue));
     }
     return infos;
   }
