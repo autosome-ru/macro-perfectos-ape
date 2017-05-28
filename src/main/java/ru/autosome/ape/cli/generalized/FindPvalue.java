@@ -1,6 +1,7 @@
 package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ListReporter;
 import ru.autosome.commons.cli.ReportListLayout;
@@ -156,9 +157,9 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   }
 
   protected String report() {
-    List<CanFindPvalue.PvalueInfo> results = calculator().pvaluesByThresholds(thresholds);
-    ReportListLayout<CanFindPvalue.PvalueInfo> layout = calculator().report_table_layout();
-    ListReporter<CanFindPvalue.PvalueInfo> reporter = new TextListReporter<>();
+    List<FoundedPvalueInfo> results = calculator().pvaluesByThresholds(thresholds);
+    ReportListLayout<FoundedPvalueInfo> layout = calculator().report_table_layout();
+    ListReporter<FoundedPvalueInfo> reporter = new TextListReporter<>();
     return reporter.report(results, layout);
   }
 

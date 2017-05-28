@@ -26,44 +26,44 @@ public class FindPvalueAPE<ModelType extends Discretable<ModelType> & HasLength 
   }
 
   @Override
-  public List<PvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
+  public List<FoundedPvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
     double vocabularyVolume = Math.pow(background.volume(), motif.length());
     ModelType discreted_motif = motif.discrete(discretizer);
     ScoringModelDistributions discretedScoringModel = discreted_motif.scoringModel(background);
     List<Double> upscaled_thresholds = discretizer.upscale(thresholds);
     TDoubleDoubleMap counts = discretedScoringModel.counts_above_thresholds(upscaled_thresholds);
 
-    List<PvalueInfo> infos = new ArrayList<>();
+    List<FoundedPvalueInfo> infos = new ArrayList<>();
     for (double threshold: thresholds) {
       double upscaled_threshold = discretizer.upscale(threshold);
       double count = counts.get(upscaled_threshold);
       double pvalue = count / vocabularyVolume;
-      infos.add(new PvalueInfo(threshold, pvalue));
+      infos.add(new FoundedPvalueInfo(threshold, pvalue));
     }
     return infos;
   }
 
   @Override
-  public PvalueInfo pvalueByThreshold(double threshold) {
+  public FoundedPvalueInfo pvalueByThreshold(double threshold) {
     List<Double> thresholds = new ArrayList<>();
     thresholds.add(threshold);
     return pvaluesByThresholds(thresholds).get(0);
   }
 
   @Override
-  public ReportListLayout<PvalueInfo> report_table_layout() {
-    ReportListLayout<PvalueInfo> infos = new ReportListLayout<>();
+  public ReportListLayout<FoundedPvalueInfo> report_table_layout() {
+    ReportListLayout<FoundedPvalueInfo> infos = new ReportListLayout<>();
     infos.add_parameter("V", "discretization value", discretizer);
     infos.background_parameter("B", "background", background);
 
-    infos.add_table_parameter("T", "threshold", (PvalueInfo cell) -> cell.threshold);
+    infos.add_table_parameter("T", "threshold", (FoundedPvalueInfo cell) -> cell.threshold);
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", (PvalueInfo cell) -> {
+      infos.add_table_parameter("W", "number of recognized words", (FoundedPvalueInfo cell) -> {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.length());
           return (long)numberOfRecognizedWords;
         });
     }
-    infos.add_table_parameter("P", "P-value", (PvalueInfo cell) -> cell.pvalue);
+    infos.add_table_parameter("P", "P-value", (FoundedPvalueInfo cell) -> cell.pvalue);
 
     return infos;
   }

@@ -2,6 +2,7 @@ package ru.autosome.macroape.cli.generalized;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
+import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.model.BoundaryType;
@@ -173,12 +174,12 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     List<PWMWithThreshold> result = new ArrayList<>();
     for (Named<ModelType> pwm: pwmCollection) {
       CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, roughDiscretizer);
-      CanFindThreshold.ThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
+      FoundedThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double roughThreshold = roughThresholdInfo.threshold;
       double roughCount = roughThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());
 
       CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, preciseDiscretizer);
-      CanFindThreshold.ThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
+      FoundedThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
       double preciseThreshold = preciseThresholdInfo.threshold;
       double preciseCount = preciseThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());
 

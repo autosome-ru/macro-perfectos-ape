@@ -1,6 +1,6 @@
 package ru.autosome.ape.model;
 
-import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
+import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
 import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
 
@@ -21,7 +21,7 @@ public class PvalueBsearchList {
       this.pvalue = pvalue;
     }
 
-    public ThresholdPvaluePair(CanFindThreshold.ThresholdInfo info) {
+    public ThresholdPvaluePair(FoundedThresholdInfo info) {
       this.threshold = info.threshold;
       this.pvalue = info.real_pvalue;
     }

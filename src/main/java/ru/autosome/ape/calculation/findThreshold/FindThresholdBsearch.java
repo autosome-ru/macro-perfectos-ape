@@ -19,16 +19,16 @@ public class FindThresholdBsearch implements CanFindThreshold  {
   }
 
   @Override
-  public CanFindThreshold.ThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) {
+  public FoundedThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) {
     PvalueBsearchList.ThresholdPvaluePair info = bsearchList.thresholdInfoByPvalue(pvalue, boundaryType);
     double threshold = info.threshold;
     double real_pvalue = info.pvalue;
-    return new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue);
+    return new FoundedThresholdInfo(threshold, real_pvalue, pvalue);
   }
 
   @Override
-  public List<CanFindThreshold.ThresholdInfo> thresholdsByPvalues(List<Double> pvalues, BoundaryType boundaryType) {
-    List<CanFindThreshold.ThresholdInfo> result = new ArrayList<>();
+  public List<FoundedThresholdInfo> thresholdsByPvalues(List<Double> pvalues, BoundaryType boundaryType) {
+    List<FoundedThresholdInfo> result = new ArrayList<>();
     for (Double pvalue: pvalues) {
       result.add(thresholdByPvalue(pvalue, boundaryType));
     }

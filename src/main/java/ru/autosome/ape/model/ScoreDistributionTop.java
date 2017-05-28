@@ -5,7 +5,7 @@ import gnu.trove.map.TDoubleDoubleMap;
 import gnu.trove.map.TDoubleObjectMap;
 import gnu.trove.map.hash.TDoubleDoubleHashMap;
 import gnu.trove.map.hash.TDoubleObjectHashMap;
-import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
+import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.support.ArrayExtensions;
 
@@ -140,8 +140,8 @@ public class ScoreDistributionTop {
   }
 
 
-  public List<CanFindThreshold.ThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
-    ArrayList<CanFindThreshold.ThresholdInfo> results = new ArrayList<>();
+  public List<FoundedThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
+    ArrayList<FoundedThresholdInfo> results = new ArrayList<>();
     TDoubleObjectMap<ThresholdsRange> thresholds_by_pvalues = thresholds_by_pvalues(pvalues);
     for (double pvalue: pvalues) {
       ThresholdsRange range = thresholds_by_pvalues.get(pvalue);
@@ -153,12 +153,12 @@ public class ScoreDistributionTop {
         threshold = range.first_threshold;
         real_pvalue = range.first_count / total_count;
       }
-      results.add(new CanFindThreshold.ThresholdInfo(threshold, real_pvalue, pvalue));
+      results.add(new FoundedThresholdInfo(threshold, real_pvalue, pvalue));
     }
     return results;
   }
 
-  public CanFindThreshold.ThresholdInfo threshold(double pvalue, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
+  public FoundedThresholdInfo threshold(double pvalue, BoundaryType pvalueBoundary) throws NotRepresentativeDistribution {
     List<Double> pvalues = new ArrayList<>();
     pvalues.add(pvalue);
     return thresholds(pvalues, pvalueBoundary).get(0);

@@ -1,6 +1,7 @@
 package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
+import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ListReporter;
@@ -164,32 +165,32 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     }
   }
 
-  ReportListLayout<CanFindThreshold.ThresholdInfo> report_table_layout() {
-    ReportListLayout<CanFindThreshold.ThresholdInfo> infos = new ReportListLayout<>();
+  ReportListLayout<FoundedThresholdInfo> report_table_layout() {
+    ReportListLayout<FoundedThresholdInfo> infos = new ReportListLayout<>();
 
     infos.add_parameter("V", "discretization value", discretizer);
     infos.add_parameter("PB", "P-value boundary", pvalue_boundary);
 
     infos.background_parameter("B", "background", background);
 
-    infos.add_table_parameter("P", "requested P-value", (CanFindThreshold.ThresholdInfo cell)-> cell.expected_pvalue);
-    infos.add_table_parameter("AP", "actual P-value", (CanFindThreshold.ThresholdInfo cell) -> cell.real_pvalue);
+    infos.add_table_parameter("P", "requested P-value", (FoundedThresholdInfo cell)-> cell.expected_pvalue);
+    infos.add_table_parameter("AP", "actual P-value", (FoundedThresholdInfo cell) -> cell.real_pvalue);
 
     if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", (CanFindThreshold.ThresholdInfo cell) -> {
+      infos.add_table_parameter("W", "number of recognized words", (FoundedThresholdInfo cell) -> {
           double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.getObject().length());
           return (long)numberOfRecognizedWords;
         });
     }
-    infos.add_table_parameter("T", "threshold", (CanFindThreshold.ThresholdInfo cell) -> cell.threshold);
+    infos.add_table_parameter("T", "threshold", (FoundedThresholdInfo cell) -> cell.threshold);
 
     return infos;
   }
 
   protected String report() {
-    List<CanFindThreshold.ThresholdInfo> results = calculator().thresholdsByPvalues(pvalues, pvalue_boundary);
-    ReportListLayout<CanFindThreshold.ThresholdInfo> layout = report_table_layout();
-    ListReporter<CanFindThreshold.ThresholdInfo> reporter = new TextListReporter<>();
+    List<FoundedThresholdInfo> results = calculator().thresholdsByPvalues(pvalues, pvalue_boundary);
+    ReportListLayout<FoundedThresholdInfo> layout = report_table_layout();
+    ListReporter<FoundedThresholdInfo> reporter = new TextListReporter<>();
     return reporter.report(results, layout);
   }
 

@@ -1,7 +1,7 @@
 package ru.autosome.ape.calculation.ScoringModelDistributions;
 
 import gnu.trove.map.TDoubleDoubleMap;
-import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
+import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
 import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;
 import ru.autosome.commons.model.BoundaryType;
@@ -50,7 +50,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public List<CanFindThreshold.ThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) {
+  public List<FoundedThresholdInfo> thresholds(List<Double> pvalues, BoundaryType pvalueBoundary) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(ArrayExtensions.max(pvalues));
     try {
       return scores_hash.thresholds(pvalues, pvalueBoundary);
@@ -59,7 +59,7 @@ abstract public class ScoringModelDistributions {
     }
   }
 
-  public CanFindThreshold.ThresholdInfo threshold(double pvalue, BoundaryType pvalueBoundary) {
+  public FoundedThresholdInfo threshold(double pvalue, BoundaryType pvalueBoundary) {
     ScoreDistributionTop scores_hash = score_distribution_under_pvalue(pvalue);
     try {
       return scores_hash.threshold(pvalue, pvalueBoundary);

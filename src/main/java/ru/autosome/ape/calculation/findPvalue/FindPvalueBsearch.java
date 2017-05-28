@@ -25,8 +25,8 @@ public class FindPvalueBsearch implements CanFindPvalue {
   }
 
   @Override
-  public List<PvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
-    List<PvalueInfo> results = new ArrayList<>();
+  public List<FoundedPvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
+    List<FoundedPvalueInfo> results = new ArrayList<>();
     for (double threshold: thresholds) {
       results.add(pvalueByThreshold(threshold));
     }
@@ -34,18 +34,18 @@ public class FindPvalueBsearch implements CanFindPvalue {
   }
 
   @Override
-  public PvalueInfo pvalueByThreshold(double threshold) {
+  public FoundedPvalueInfo pvalueByThreshold(double threshold) {
     double pvalue = bsearchList.pvalue_by_threshold(threshold);
-    return new PvalueInfo(threshold, pvalue);
+    return new FoundedPvalueInfo(threshold, pvalue);
   }
 
   // TODO: decide which parameters are relevant
   @Override
-  public ReportListLayout<PvalueInfo> report_table_layout() {
-    ReportListLayout<PvalueInfo> infos = new ReportListLayout<>();
+  public ReportListLayout<FoundedPvalueInfo> report_table_layout() {
+    ReportListLayout<FoundedPvalueInfo> infos = new ReportListLayout<>();
 
-    infos.add_table_parameter("T", "threshold", (PvalueInfo cell) -> cell.threshold);
-    infos.add_table_parameter("P", "P-value", (PvalueInfo cell) -> cell.pvalue);
+    infos.add_table_parameter("T", "threshold", (FoundedPvalueInfo cell) -> cell.threshold);
+    infos.add_table_parameter("P", "P-value", (FoundedPvalueInfo cell) -> cell.pvalue);
 
     return infos;
   }

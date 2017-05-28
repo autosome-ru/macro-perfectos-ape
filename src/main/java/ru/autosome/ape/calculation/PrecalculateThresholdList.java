@@ -2,6 +2,7 @@ package ru.autosome.ape.calculation;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
+import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.ape.model.progression.GeometricProgression;
 import ru.autosome.commons.model.BoundaryType;
@@ -38,10 +39,10 @@ public class PrecalculateThresholdList<ModelType extends  Discretable<ModelType>
   }
 
   public PvalueBsearchList bsearch_list_for_pwm(ModelType motif) {
-    List<CanFindThreshold.ThresholdInfo> infos = find_threshold_calculator(motif).thresholdsByPvalues(pvalues, pvalue_boundary);
+    List<FoundedThresholdInfo> infos = find_threshold_calculator(motif).thresholdsByPvalues(pvalues, pvalue_boundary);
 
     List<PvalueBsearchList.ThresholdPvaluePair> pairs = new ArrayList<>(infos.size() + 2);
-    for (CanFindThreshold.ThresholdInfo info: infos) {
+    for (FoundedThresholdInfo info: infos) {
       pairs.add(new PvalueBsearchList.ThresholdPvaluePair(info));
     }
 
