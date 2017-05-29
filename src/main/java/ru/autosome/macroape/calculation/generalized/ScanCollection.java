@@ -37,10 +37,19 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     this.queryPWM = queryPWM;
   }
 
-  abstract protected CompareModels<ModelType, BackgroundType> calculation(ModelType firstMotif, ModelType secondMotif,
-                                                                          BackgroundType background,
-                                                                          CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
-                                                                          Discretizer discretizer);
+  abstract protected CompareModelsCountsGiven<ModelType, BackgroundType> calc_counts_given(ModelType firstMotif,
+                                                                                           ModelType secondMotif,
+                                                                                           BackgroundType background,
+                                                                                           Discretizer discretizer);
+  protected CompareModels<ModelType, BackgroundType> calculation(ModelType firstMotif, ModelType secondMotif,
+                                                                BackgroundType background,
+                                                                CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
+                                                                Discretizer discretizer) {
+    return new CompareModels<>(firstMotif, secondMotif,
+                                  background,
+                                  firstPvalueCalculator, secondPvalueCalculator,
+                                  discretizer, calc_counts_given(firstMotif, secondMotif, background, discretizer));
+  }
 
   public ComparisonSimilarityInfo comparisonInfo(CanFindPvalue queryPvalueEvaluator,
                                                  double queryThreshold,
