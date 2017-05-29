@@ -12,6 +12,7 @@ import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 import ru.autosome.macroape.model.ScanningSimilarityInfo;
+import ru.autosome.macroape.model.SingleThresholdEvaluator;
 import ru.autosome.macroape.model.ThresholdEvaluator;
 
 import java.util.ArrayList;
@@ -41,6 +42,23 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                                           CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
                                                                           Discretizer discretizer);
 
+  public ComparisonSimilarityInfo comparisonInfo(CanFindPvalue queryPvalueEvaluator,
+                                                 double queryThreshold,
+                                                 SingleThresholdEvaluator<ModelType> knownMotifEvaluator,
+                                                 Discretizer discretizer) {
+    CompareModels<ModelType,BackgroundType> roughCalculation = calculation(
+        queryPWM, knownMotifEvaluator.pwm,
+        background,
+        queryPvalueEvaluator,
+        knownMotifEvaluator.pvalueCalculator,
+        discretizer);
+    Double collectionThreshold = knownMotifEvaluator.thresholdCalculator
+                                          .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
+
+    return roughCalculation.jaccard(queryThreshold, collectionThreshold);
+  }
+
+
   public ScanningSimilarityInfo similarityInfo(CanFindPvalue roughQueryPvalueEvaluator,
                                                CanFindPvalue preciseQueryPvalueEvaluator,
                                                double roughQueryThreshold,
@@ -48,32 +66,13 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                ThresholdEvaluator<ModelType> knownMotifEvaluator) {
     ComparisonSimilarityInfo info;
     boolean precise = false;
-    CompareModels<ModelType,BackgroundType> roughCalculation = calculation(
-        queryPWM, knownMotifEvaluator.pwm,
-        background,
-        roughQueryPvalueEvaluator,
-        knownMotifEvaluator.rough.pvalueCalculator,
-        roughDiscretizer);
 
-    Double roughCollectionThreshold = knownMotifEvaluator.rough.thresholdCalculator
-                                          .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
-
-    info = roughCalculation.jaccard(roughQueryThreshold, roughCollectionThreshold);
+    info = comparisonInfo(roughQueryPvalueEvaluator, roughQueryThreshold, knownMotifEvaluator.rough, roughDiscretizer);
 
     if (preciseRecalculationCutoff != null &&
             info.similarity() >= preciseRecalculationCutoff &&
             knownMotifEvaluator.precise.thresholdCalculator != null) {
-      CompareModels<ModelType,BackgroundType> preciseCalculation = calculation(
-          queryPWM, knownMotifEvaluator.pwm,
-          background,
-          preciseQueryPvalueEvaluator,
-          knownMotifEvaluator.precise.pvalueCalculator,
-          preciseDiscretizer);
-
-      Double preciseCollectionThreshold = knownMotifEvaluator.precise.thresholdCalculator
-                                              .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
-
-      info = preciseCalculation.jaccard(preciseQueryThreshold, preciseCollectionThreshold);
+      info = comparisonInfo(preciseQueryPvalueEvaluator, preciseQueryThreshold, knownMotifEvaluator.precise, preciseDiscretizer);
       precise = true;
     }
     if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
