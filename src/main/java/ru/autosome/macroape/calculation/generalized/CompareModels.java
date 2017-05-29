@@ -10,8 +10,8 @@ import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 
-abstract public class CompareModels<ModelType extends Alignable<ModelType> &Discretable<ModelType> &ScoreDistribution<BackgroundType> ,
-                                    BackgroundType extends GeneralizedBackgroundModel> {
+public class CompareModels<ModelType extends Alignable<ModelType> & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
+                           BackgroundType extends GeneralizedBackgroundModel> {
 
   public final ModelType firstPWM;
   public final ModelType secondPWM;
@@ -19,32 +19,37 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
   public final CanFindPvalue firstPvalueCalculator;
   public final CanFindPvalue secondPvalueCalculator;
   public final Discretizer discretizer;
+  final CompareModelsCountsGiven calculatorWithCountsGiven;
 
   public CompareModels(ModelType firstPWM, ModelType secondPWM,
                        BackgroundType background,
                        CanFindPvalue firstPvalueCalculator,
                        CanFindPvalue secondPvalueCalculator,
-                       Discretizer discretizer) {
+                       Discretizer discretizer,
+                       CompareModelsCountsGiven calculatorWithCountsGiven) {
     this.firstPWM = firstPWM;
     this.secondPWM = secondPWM;
     this.background = background;
     this.firstPvalueCalculator = firstPvalueCalculator;
     this.secondPvalueCalculator = secondPvalueCalculator;
     this.discretizer = discretizer;
+    this.calculatorWithCountsGiven = calculatorWithCountsGiven;
+
   }
 
   public CompareModels(ModelType firstPWM, ModelType secondPWM,
                        BackgroundType background,
-                       Discretizer discretizer) {
+                       Discretizer discretizer,
+                       CompareModelsCountsGiven calculatorWithCountsGiven) {
     this.firstPWM = firstPWM;
     this.secondPWM = secondPWM;
     this.background = background;
     this.firstPvalueCalculator = new FindPvalueAPE<>(firstPWM, background, discretizer);
     this.secondPvalueCalculator = new FindPvalueAPE<>(secondPWM, background, discretizer);
     this.discretizer = discretizer;
+    this.calculatorWithCountsGiven = calculatorWithCountsGiven;
   }
 
-  abstract protected CompareModelsCountsGiven<ModelType,BackgroundType> calculatorWithCountsGiven();
 
   double firstCount(double threshold_first) {
     return firstPvalueCalculator
@@ -59,7 +64,7 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
   }
 
   public ComparisonSimilarityInfo jaccard(double threshold_first, double threshold_second) {
-    return calculatorWithCountsGiven()
+    return calculatorWithCountsGiven
             .jaccard(threshold_first, threshold_second,
                      firstCount(threshold_first),
                      secondCount(threshold_second));
@@ -67,7 +72,7 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> &Disc
 
   public ComparisonSimilarityInfo jaccardAtPosition(double threshold_first, double threshold_second,
                                                                Position position) {
-    return calculatorWithCountsGiven()
+    return calculatorWithCountsGiven
             .jaccardAtPosition(threshold_first, threshold_second,
                                firstCount(threshold_first),
                                secondCount(threshold_second),
