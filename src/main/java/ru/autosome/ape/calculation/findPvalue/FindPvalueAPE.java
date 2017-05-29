@@ -15,30 +15,21 @@ import java.util.List;
 public class FindPvalueAPE<ModelType extends Discretable<ModelType> & HasLength & ScoreDistribution<BackgroundType>,
                           BackgroundType extends GeneralizedBackgroundModel> implements CanFindPvalue {
 
+  final FindPvalueExact<ModelType, BackgroundType> pvalueCalculator;
   final Discretizer discretizer;
-  final ModelType motif;
-  final BackgroundType background;
 
   public FindPvalueAPE(ModelType motif, BackgroundType background, Discretizer discretizer) {
-    this.motif = motif;
-    this.background = background;
+    this.pvalueCalculator = new FindPvalueExact<>(motif.discrete(discretizer), background);
     this.discretizer = discretizer;
   }
 
   @Override
   public List<FoundedPvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
-    double vocabularyVolume = Math.pow(background.volume(), motif.length());
-    ModelType discreted_motif = motif.discrete(discretizer);
-    ScoringModelDistributions discretedScoringModel = discreted_motif.scoringModel(background);
-    List<Double> upscaled_thresholds = discretizer.upscale(thresholds);
-    TDoubleDoubleMap counts = discretedScoringModel.counts_above_thresholds(upscaled_thresholds);
+    List<FoundedPvalueInfo> infos_upscaled = pvalueCalculator.pvaluesByThresholds(discretizer.upscale(thresholds));
 
     List<FoundedPvalueInfo> infos = new ArrayList<>();
-    for (double threshold: thresholds) {
-      double upscaled_threshold = discretizer.upscale(threshold);
-      double count = counts.get(upscaled_threshold);
-      double pvalue = count / vocabularyVolume;
-      infos.add(new FoundedPvalueInfo(threshold, pvalue));
+    for (FoundedPvalueInfo info_upscaled: infos_upscaled) {
+      infos.add(info_upscaled.downscale(discretizer));
     }
     return infos;
   }
@@ -52,19 +43,9 @@ public class FindPvalueAPE<ModelType extends Discretable<ModelType> & HasLength 
 
   @Override
   public ReportListLayout<FoundedPvalueInfo> report_table_layout() {
-    ReportListLayout<FoundedPvalueInfo> infos = new ReportListLayout<>();
-    infos.add_parameter("V", "discretization value", discretizer);
-    infos.background_parameter("B", "background", background);
+    ReportListLayout<FoundedPvalueInfo> layout = pvalueCalculator.report_table_layout();
+    layout.add_parameter("V", "discretization value", discretizer);
 
-    infos.add_table_parameter("T", "threshold", (FoundedPvalueInfo cell) -> cell.threshold);
-    if (background.is_wordwise()) {
-      infos.add_table_parameter("W", "number of recognized words", (FoundedPvalueInfo cell) -> {
-          double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.length());
-          return (long)numberOfRecognizedWords;
-        });
-    }
-    infos.add_table_parameter("P", "P-value", (FoundedPvalueInfo cell) -> cell.pvalue);
-
-    return infos;
+    return layout;
   }
 }
