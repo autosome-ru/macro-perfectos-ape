@@ -1,6 +1,5 @@
 package ru.autosome.ape.calculation.findThreshold;
 
-import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Discretable;
@@ -11,34 +10,25 @@ import java.util.List;
 
 public class FindThresholdAPE<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType>,
                               BackgroundType> implements CanFindThreshold {
-  final ModelType motif;
-  final BackgroundType background;
+  final FindThresholdExact<ModelType, BackgroundType> thresholdCalculator;
   final Discretizer discretizer;
 
   public FindThresholdAPE(ModelType motif, BackgroundType background, Discretizer discretizer) {
     this.discretizer = discretizer;
-    this.motif = motif;
-    this.background = background;
-  }
-
-  ScoringModelDistributions discretedScoringModel() {
-    return motif.discrete(discretizer).scoringModel(background);
+    this.thresholdCalculator = new FindThresholdExact<>(motif.discrete(discretizer), background);
   }
 
   @Override
   public FoundedThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) {
-    return discretedScoringModel().threshold(pvalue, boundaryType).downscale(discretizer);
+    return thresholdCalculator.thresholdByPvalue(pvalue, boundaryType).downscale(discretizer);
   }
 
   @Override
   public List<FoundedThresholdInfo> thresholdsByPvalues(List<Double> pvalues, BoundaryType boundaryType) {
-    return downscale_all(discretedScoringModel().thresholds(pvalues, boundaryType));
-  }
-
-  private List<FoundedThresholdInfo> downscale_all(List<FoundedThresholdInfo> thresholdInfos) {
+    List<FoundedThresholdInfo> infos_upscaled = thresholdCalculator.thresholdsByPvalues(pvalues, boundaryType);
     List<FoundedThresholdInfo> result = new ArrayList<>();
-    for (FoundedThresholdInfo thresholdInfo: thresholdInfos) {
-      result.add(thresholdInfo.downscale(discretizer));
+    for (FoundedThresholdInfo info_upscaled: infos_upscaled) {
+      result.add(info_upscaled.downscale(discretizer));
     }
     return result;
   }
