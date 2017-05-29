@@ -1,7 +1,5 @@
 package ru.autosome.ape.calculation.findPvalue;
 
-import gnu.trove.map.TDoubleDoubleMap;
-import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.ReportListLayout;
 import ru.autosome.commons.model.Discretizer;
