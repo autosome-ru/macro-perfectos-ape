@@ -4,6 +4,7 @@ import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven;
@@ -44,8 +45,8 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
 
   @Override
-  protected CompareModelsCountsGiven calculator(PWM firstModel, PWM secondModel) {
-    return new CompareModelsCountsGiven(firstModel, secondModel, background, roughDiscretizer);
+  protected CompareModelsCountsGiven calculator(PWM firstModel, PWM secondModel, Discretizer discretizer) {
+    return new CompareModelsCountsGiven(firstModel, secondModel, background, discretizer);
   }
 
 

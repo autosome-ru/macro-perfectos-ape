@@ -6,6 +6,7 @@ import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
+import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.macroape.calculation.di.CompareModelsCountsGiven;
@@ -73,8 +74,8 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
 
   @Override
-  protected CompareModelsCountsGiven calculator(DiPWM firstModel, DiPWM secondModel) {
-    return new CompareModelsCountsGiven(firstModel, secondModel, background, roughDiscretizer);
+  protected CompareModelsCountsGiven calculator(DiPWM firstModel, DiPWM secondModel, Discretizer discretizer) {
+    return new CompareModelsCountsGiven(firstModel, secondModel, background, discretizer);
   }
 
 
