@@ -195,12 +195,12 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   }
 
   protected double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) {
-    CompareModels calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background, roughDiscretizer, calc_alignment());
+    CompareModels<ModelType> calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background.volume(), roughDiscretizer, calc_alignment());
     ComparisonSimilarityInfo info = calc.jaccard(first.roughThreshold, second.roughThreshold,
                                                  first.roughCount, second.roughCount);
 
     if (preciseRecalculationCutoff != null && info.similarity() > preciseRecalculationCutoff) {
-      calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background, preciseDiscretizer, calc_alignment());
+      calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background.volume(), preciseDiscretizer, calc_alignment());
       info = calc.jaccard(first.preciseThreshold, second.preciseThreshold,
                           first.preciseCount, second.preciseCount);
     }

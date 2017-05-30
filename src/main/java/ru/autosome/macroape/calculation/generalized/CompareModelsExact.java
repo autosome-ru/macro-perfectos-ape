@@ -1,6 +1,5 @@
 package ru.autosome.macroape.calculation.generalized;
 
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
@@ -12,19 +11,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-public class CompareModelsExact<ModelType extends Alignable<ModelType>,
-                                           BackgroundType extends GeneralizedBackgroundModel> {
+public class CompareModelsExact<ModelType extends Alignable<ModelType>> {
   private final ModelType firstPWM; // here we store discreted PWMs
   private final ModelType secondPWM;
-  private final BackgroundType background;
+  private final int backgroundVolume;
   private final Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calculatorOfAligned;
 
   public CompareModelsExact(ModelType firstPWM, ModelType secondPWM,
-                            BackgroundType background,
+                            int backgroundVolume,
                             Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calculatorOfAligned) {
     this.firstPWM = firstPWM;
     this.secondPWM = secondPWM;
-    this.background = background;
+    this.backgroundVolume = backgroundVolume;
     this.calculatorOfAligned = calculatorOfAligned;
   }
 
@@ -38,10 +36,10 @@ public class CompareModelsExact<ModelType extends Alignable<ModelType>,
   }
 
   private double firstCountRenormMultiplier(PairAligned alignment) {
-    return Math.pow(background.volume(), alignment.length() - firstPWM.length());
+    return Math.pow(backgroundVolume, alignment.length() - firstPWM.length());
   }
   private double secondCountRenormMultiplier(PairAligned alignment) {
-    return Math.pow(background.volume(), alignment.length() - secondPWM.length());
+    return Math.pow(backgroundVolume, alignment.length() - secondPWM.length());
   }
 
   public ComparisonSimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,

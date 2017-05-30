@@ -1,6 +1,5 @@
 package ru.autosome.macroape.calculation.generalized;
 
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
@@ -10,21 +9,20 @@ import ru.autosome.macroape.model.PairAligned;
 
 import java.util.function.Function;
 
-public class CompareModels<ModelType extends Alignable<ModelType> & Discretable<ModelType>,
-                           BackgroundType extends GeneralizedBackgroundModel> {
+public class CompareModels<ModelType extends Alignable<ModelType> & Discretable<ModelType>> {
 
   private final Discretizer discretizer;
-  private final CompareModelsExact<ModelType, BackgroundType> evaluator;
+  private final CompareModelsExact<ModelType> evaluator;
 
   public CompareModels(ModelType firstPWM, ModelType secondPWM,
-                       BackgroundType background,
+                       int backgroundVolume,
                        Discretizer discretizer,
                        Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calculatorOfAligned) {
     this.discretizer = discretizer;
     this.evaluator = new CompareModelsExact<>(firstPWM.discrete(discretizer),
-                                                            secondPWM.discrete(discretizer),
-                                                            background,
-                                                            calculatorOfAligned);
+                                              secondPWM.discrete(discretizer),
+                                              backgroundVolume,
+                                              calculatorOfAligned);
   }
 
 

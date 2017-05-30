@@ -41,8 +41,8 @@ public class ScanningCollection<ModelType extends Alignable<ModelType> & Discret
                                                  double queryThreshold,
                                                  SingleThresholdEvaluator<ModelType> knownMotifEvaluator,
                                                  Discretizer discretizer) {
-    CompareModels<ModelType, BackgroundType> calc;
-    calc = new CompareModels<>(queryPWM, knownMotifEvaluator.pwm, background, discretizer, calculatorOfAligned);
+    CompareModels<ModelType> calc;
+    calc = new CompareModels<>(queryPWM, knownMotifEvaluator.pwm, background.volume(), discretizer, calculatorOfAligned);
 
     Double collectionThreshold = knownMotifEvaluator.thresholdCalculator
                                           .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;

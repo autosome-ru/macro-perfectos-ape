@@ -239,7 +239,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   }
 
   protected ComparisonSimilarityInfo results() {
-    CompareModels<ModelType, BackgroundType> calc = new CompareModels<>(firstPWM, secondPWM, background, discretizer, calc_alignment());
+    CompareModels<ModelType> calc = new CompareModels<>(firstPWM, secondPWM, background.volume(), discretizer, calc_alignment());
     double thresholdFirst = thresholdFirst();
     double thresholdSecond = thresholdSecond();
     double firstCount = new FindPvalueAPE<>(firstPWM, background, discretizer)
