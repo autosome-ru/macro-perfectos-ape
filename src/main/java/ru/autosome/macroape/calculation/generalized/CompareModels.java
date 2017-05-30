@@ -12,8 +12,8 @@ import ru.autosome.macroape.model.PairAligned;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class CompareModelsCountsGiven <ModelType extends Alignable<ModelType> & Discretable<ModelType>,
-                                                BackgroundType extends GeneralizedBackgroundModel> {
+abstract public class CompareModels<ModelType extends Alignable<ModelType> & Discretable<ModelType>,
+                                    BackgroundType extends GeneralizedBackgroundModel> {
 
   public final ModelType firstPWM; // here we store discreted PWMs
   public final ModelType secondPWM;
@@ -21,9 +21,9 @@ abstract public class CompareModelsCountsGiven <ModelType extends Alignable<Mode
   // PWMs are already stored discreted, disretization needed in order to upscale thresholds
   public final Discretizer discretizer;
 
-  public CompareModelsCountsGiven(ModelType firstPWM, ModelType secondPWM,
-                               BackgroundType background,
-                               Discretizer discretizer) {
+  public CompareModels(ModelType firstPWM, ModelType secondPWM,
+                       BackgroundType background,
+                       Discretizer discretizer) {
     this.firstPWM = firstPWM.discrete(discretizer);
     this.secondPWM = secondPWM.discrete(discretizer);
     this.background = background;

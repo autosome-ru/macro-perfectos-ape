@@ -9,11 +9,11 @@ import java.util.List;
 
 public class ScanCollection extends ru.autosome.macroape.calculation.generalized.ScanCollection<DiPWM, DiBackgroundModel> {
 
-  protected CompareModelsCountsGiven calc_counts_given(DiPWM firstMotif,
-                                                       DiPWM secondMotif,
-                                                       DiBackgroundModel background,
-                                                       Discretizer discretizer) {
-  return new CompareModelsCountsGiven(firstMotif, secondMotif, background, discretizer);
+  protected CompareModels calculator(DiPWM firstMotif,
+                                     DiPWM secondMotif,
+                                     DiBackgroundModel background,
+                                     Discretizer discretizer) {
+  return new CompareModels(firstMotif, secondMotif, background, discretizer);
 }
 
   public ScanCollection(List<ThresholdEvaluator<DiPWM>> thresholdEvaluators, DiPWM queryPWM) {

@@ -7,7 +7,7 @@ import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven;
+import ru.autosome.macroape.calculation.mono.CompareModels;
 
 import java.io.File;
 import java.util.List;
@@ -45,8 +45,8 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
 
   @Override
-  protected CompareModelsCountsGiven calculator(PWM firstModel, PWM secondModel, Discretizer discretizer) {
-    return new CompareModelsCountsGiven(firstModel, secondModel, background, discretizer);
+  protected CompareModels calculator(PWM firstModel, PWM secondModel, Discretizer discretizer) {
+    return new CompareModels(firstModel, secondModel, background, discretizer);
   }
 
 

@@ -37,17 +37,17 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     this.queryPWM = queryPWM;
   }
 
-  abstract protected CompareModelsCountsGiven<ModelType, BackgroundType> calc_counts_given(ModelType firstMotif,
-                                                                                           ModelType secondMotif,
-                                                                                           BackgroundType background,
-                                                                                           Discretizer discretizer);
+  abstract protected CompareModels<ModelType, BackgroundType> calculator(ModelType firstMotif,
+                                                                         ModelType secondMotif,
+                                                                         BackgroundType background,
+                                                                         Discretizer discretizer);
 
   public ComparisonSimilarityInfo comparisonInfo(CanFindPvalue queryPvalueEvaluator,
                                                  double queryThreshold,
                                                  SingleThresholdEvaluator<ModelType> knownMotifEvaluator,
                                                  Discretizer discretizer) {
-    CompareModelsCountsGiven<ModelType, BackgroundType> calc_w_counts;
-    calc_w_counts = calc_counts_given(queryPWM, knownMotifEvaluator.pwm, background, discretizer);
+    CompareModels<ModelType, BackgroundType> calc;
+    calc = calculator(queryPWM, knownMotifEvaluator.pwm, background, discretizer);
 
     Double collectionThreshold = knownMotifEvaluator.thresholdCalculator
                                           .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
@@ -59,7 +59,7 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
     double known_count = knownMotifEvaluator.pvalueCalculator
                              .pvalueByThreshold(collectionThreshold)
                              .numberOfRecognizedWords(background, knownMotifEvaluator.pwm.length());
-    return calc_w_counts.jaccard(queryThreshold, collectionThreshold, query_count, known_count);
+    return calc.jaccard(queryThreshold, collectionThreshold, query_count, known_count);
   }
 
 

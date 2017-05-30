@@ -8,7 +8,7 @@ import ru.autosome.commons.cli.Reporter;
 import ru.autosome.commons.cli.TextReporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven;
+import ru.autosome.macroape.calculation.mono.CompareModels;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 
 public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSimilarity<PWM, BackgroundModel> {
@@ -49,8 +49,8 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   }
 
   @Override
-  protected CompareModelsCountsGiven calc_counts_given() {
-    return new CompareModelsCountsGiven(firstPWM, secondPWM, background, discretizer);
+  protected CompareModels calculator() {
+    return new CompareModels(firstPWM, secondPWM, background, discretizer);
   }
 
   public static void main(String[] args) {

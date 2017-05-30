@@ -14,7 +14,7 @@ import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
+import ru.autosome.macroape.calculation.generalized.CompareModels;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   protected abstract BackgroundType extract_background(String str);
   protected abstract ModelType loadFirstPWM(String filename);
   protected abstract ModelType loadSecondPWM(String filename);
-  protected abstract CompareModelsCountsGiven<ModelType, BackgroundType> calc_counts_given();
+  protected abstract CompareModels<ModelType, BackgroundType> calculator();
 
   protected void setup_from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<>();
@@ -236,7 +236,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   }
 
   protected ComparisonSimilarityInfo results() {
-    CompareModelsCountsGiven<ModelType, BackgroundType> calc_counts_given = calc_counts_given();
+    CompareModels<ModelType, BackgroundType> calc = calculator();
     double thresholdFirst = thresholdFirst();
     double thresholdSecond = thresholdSecond();
     double firstCount = new FindPvalueAPE<>(firstPWM, background, discretizer)
@@ -246,9 +246,9 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
                              .pvalueByThreshold(thresholdSecond)
                              .numberOfRecognizedWords(background, secondPWM.length());
     if (alignment == null) {
-      return calc_counts_given.jaccard(thresholdFirst, thresholdSecond, firstCount, secondCount);
+      return calc.jaccard(thresholdFirst, thresholdSecond, firstCount, secondCount);
     } else {
-      return calc_counts_given.jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, alignment);
+      return calc.jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, alignment);
     }
   }
 
