@@ -41,30 +41,25 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
                                                                                            ModelType secondMotif,
                                                                                            BackgroundType background,
                                                                                            Discretizer discretizer);
-  protected CompareModels<ModelType, BackgroundType> calculation(ModelType firstMotif, ModelType secondMotif,
-                                                                BackgroundType background,
-                                                                CanFindPvalue firstPvalueCalculator, CanFindPvalue secondPvalueCalculator,
-                                                                Discretizer discretizer) {
-    return new CompareModels<>(firstMotif, secondMotif,
-                                  background,
-                                  firstPvalueCalculator, secondPvalueCalculator,
-                                  discretizer, calc_counts_given(firstMotif, secondMotif, background, discretizer));
-  }
 
   public ComparisonSimilarityInfo comparisonInfo(CanFindPvalue queryPvalueEvaluator,
                                                  double queryThreshold,
                                                  SingleThresholdEvaluator<ModelType> knownMotifEvaluator,
                                                  Discretizer discretizer) {
-    CompareModels<ModelType,BackgroundType> roughCalculation = calculation(
-        queryPWM, knownMotifEvaluator.pwm,
-        background,
-        queryPvalueEvaluator,
-        knownMotifEvaluator.pvalueCalculator,
-        discretizer);
+    CompareModelsCountsGiven<ModelType, BackgroundType> calc_w_counts;
+    calc_w_counts = calc_counts_given(queryPWM, knownMotifEvaluator.pwm, background, discretizer);
+
     Double collectionThreshold = knownMotifEvaluator.thresholdCalculator
                                           .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
 
-    return roughCalculation.jaccard(queryThreshold, collectionThreshold);
+    double query_count = queryPvalueEvaluator
+                      .pvalueByThreshold(queryThreshold)
+                      .numberOfRecognizedWords(background, queryPWM.length());
+
+    double known_count = knownMotifEvaluator.pvalueCalculator
+                             .pvalueByThreshold(collectionThreshold)
+                             .numberOfRecognizedWords(background, knownMotifEvaluator.pwm.length());
+    return calc_w_counts.jaccard(queryThreshold, collectionThreshold, query_count, known_count);
   }
 
 

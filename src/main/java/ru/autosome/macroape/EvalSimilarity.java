@@ -8,7 +8,6 @@ import ru.autosome.commons.cli.Reporter;
 import ru.autosome.commons.cli.TextReporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.macroape.calculation.generalized.CompareModels;
 import ru.autosome.macroape.calculation.mono.CompareModelsCountsGiven;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 

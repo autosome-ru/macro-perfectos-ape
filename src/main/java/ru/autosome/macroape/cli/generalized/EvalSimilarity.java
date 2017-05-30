@@ -1,5 +1,6 @@
 package ru.autosome.macroape.cli.generalized;
 
+import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
@@ -13,7 +14,6 @@ import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.macroape.calculation.generalized.CompareModels;
 import ru.autosome.macroape.calculation.generalized.CompareModelsCountsGiven;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
 
@@ -77,10 +77,6 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   protected abstract ModelType loadFirstPWM(String filename);
   protected abstract ModelType loadSecondPWM(String filename);
   protected abstract CompareModelsCountsGiven<ModelType, BackgroundType> calc_counts_given();
-
-  protected CompareModels<ModelType, BackgroundType> calculator() {
-    return new CompareModels<>(firstPWM, secondPWM, background, discretizer, calc_counts_given());
-  }
 
   protected void setup_from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<>();
@@ -240,10 +236,19 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   }
 
   protected ComparisonSimilarityInfo results() {
+    CompareModelsCountsGiven<ModelType, BackgroundType> calc_counts_given = calc_counts_given();
+    double thresholdFirst = thresholdFirst();
+    double thresholdSecond = thresholdSecond();
+    double firstCount = new FindPvalueAPE<>(firstPWM, background, discretizer)
+                            .pvalueByThreshold(thresholdFirst)
+                            .numberOfRecognizedWords(background, firstPWM.length());
+    double secondCount = new FindPvalueAPE<>(secondPWM, background, discretizer)
+                             .pvalueByThreshold(thresholdSecond)
+                             .numberOfRecognizedWords(background, secondPWM.length());
     if (alignment == null) {
-      return calculator().jaccard(thresholdFirst(), thresholdSecond());
+      return calc_counts_given.jaccard(thresholdFirst, thresholdSecond, firstCount, secondCount);
     } else {
-      return calculator().jaccardAtPosition(thresholdFirst(), thresholdSecond(), alignment);
+      return calc_counts_given.jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, alignment);
     }
   }
 
