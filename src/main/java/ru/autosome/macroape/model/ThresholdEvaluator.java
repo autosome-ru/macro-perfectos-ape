@@ -1,16 +1,14 @@
 package ru.autosome.macroape.model;
 
 public class ThresholdEvaluator<ModelType> {
-  public final ModelType pwm;
   public final String name;
   public final SingleThresholdEvaluator<ModelType> rough;
   public final SingleThresholdEvaluator<ModelType> precise;
 //  List<SingleThresholdEvaluator<ModelType>> consequentEvaluators;
 
-  public ThresholdEvaluator(ModelType pwm, String name,
+  public ThresholdEvaluator(String name,
                             SingleThresholdEvaluator<ModelType> rough,
                             SingleThresholdEvaluator<ModelType> precise) {
-    this.pwm = pwm;
     this.name = name;
     this.rough = rough;
     this.precise = precise;

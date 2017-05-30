@@ -258,11 +258,11 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
       if (thresholds_folder != null) {
         File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
         try {
-          SingleThresholdEvaluator<ModelType> evaluator = new SingleThresholdEvaluator<>(pwm, namedModel.getName(),
+          SingleThresholdEvaluator<ModelType> evaluator = new SingleThresholdEvaluator<>(pwm,
                                           new FindThresholdBsearch(thresholds_file),
                                           new FindPvalueBsearch(thresholds_file)
           );
-          result.add(new ThresholdEvaluator<>(pwm, namedModel.getName(), evaluator, null));
+          result.add(new ThresholdEvaluator<>(namedModel.getName(), evaluator, null));
           bsearch_evaluator_succeed = true;
         } catch (FileNotFoundException e) {
           System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculations");
@@ -271,17 +271,17 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
 
       if (!bsearch_evaluator_succeed){
         SingleThresholdEvaluator<ModelType> roughEvaluator =
-            new SingleThresholdEvaluator<>(pwm, namedModel.getName(),
+            new SingleThresholdEvaluator<>(pwm,
                                             new FindThresholdAPE<>(pwm, background, roughDiscretizer),
                                             new FindPvalueAPE<>(pwm, background, roughDiscretizer)
         );
         SingleThresholdEvaluator<ModelType> preciseEvaluator =
-            new SingleThresholdEvaluator<>(pwm, namedModel.getName(),
+            new SingleThresholdEvaluator<>(pwm,
                                             new FindThresholdAPE<>(pwm, background, preciseDiscretizer),
                                             new FindPvalueAPE<>(pwm, background, preciseDiscretizer)
             );
 
-        result.add(new ThresholdEvaluator<>(pwm, namedModel.getName(), roughEvaluator, preciseEvaluator));
+        result.add(new ThresholdEvaluator<>(namedModel.getName(), roughEvaluator, preciseEvaluator));
       }
     }
     return result;
