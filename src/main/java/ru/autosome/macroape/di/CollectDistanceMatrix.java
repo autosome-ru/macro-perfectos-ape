@@ -6,13 +6,14 @@ import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
 import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
-import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.macroape.calculation.di.CompareModels;
+import ru.autosome.macroape.calculation.di.AlignedModelIntersection;
+import ru.autosome.macroape.model.PairAligned;
 
 import java.io.File;
 import java.util.List;
+import java.util.function.Function;
 
 public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.CollectDistanceMatrix<DiPWM, DiBackgroundModel> {
   @Override
@@ -74,11 +75,9 @@ public class CollectDistanceMatrix extends ru.autosome.macroape.cli.generalized.
   }
 
   @Override
-  protected CompareModels calculator(DiPWM firstModel, DiPWM secondModel, Discretizer discretizer) {
-    return new CompareModels(firstModel, secondModel, background, discretizer);
+  protected Function<PairAligned<DiPWM>, AlignedModelIntersection> calc_alignment() {
+    return (PairAligned<DiPWM> alignment)-> new AlignedModelIntersection(alignment, background);
   }
-
-
 
   public static void main(String[] args) {
     try {

@@ -14,12 +14,15 @@ import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.macroape.calculation.generalized.AlignedModelIntersection;
 import ru.autosome.macroape.calculation.generalized.CompareModels;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
+import ru.autosome.macroape.model.PairAligned;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
                                      BackgroundType extends GeneralizedBackgroundModel> {
@@ -76,7 +79,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   protected abstract BackgroundType extract_background(String str);
   protected abstract ModelType loadFirstPWM(String filename);
   protected abstract ModelType loadSecondPWM(String filename);
-  protected abstract CompareModels<ModelType, BackgroundType> calculator();
+  protected abstract Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calc_alignment();
 
   protected void setup_from_arglist(String[] args) {
     ArrayList<String> argv = new ArrayList<>();
@@ -236,7 +239,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   }
 
   protected ComparisonSimilarityInfo results() {
-    CompareModels<ModelType, BackgroundType> calc = calculator();
+    CompareModels<ModelType, BackgroundType> calc = new CompareModels<>(firstPWM, secondPWM, background, discretizer, calc_alignment());
     double thresholdFirst = thresholdFirst();
     double thresholdSecond = thresholdSecond();
     double firstCount = new FindPvalueAPE<>(firstPWM, background, discretizer)

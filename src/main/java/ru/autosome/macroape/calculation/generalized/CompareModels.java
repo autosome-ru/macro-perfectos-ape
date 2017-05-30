@@ -11,23 +11,27 @@ import ru.autosome.macroape.model.PairAligned;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
-abstract public class CompareModels<ModelType extends Alignable<ModelType> & Discretable<ModelType>,
-                                    BackgroundType extends GeneralizedBackgroundModel> {
+public class CompareModels<ModelType extends Alignable<ModelType> & Discretable<ModelType>,
+                           BackgroundType extends GeneralizedBackgroundModel> {
 
   public final ModelType firstPWM; // here we store discreted PWMs
   public final ModelType secondPWM;
   public final BackgroundType background;
   // PWMs are already stored discreted, disretization needed in order to upscale thresholds
   public final Discretizer discretizer;
+  public final Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calculatorOfAligned;
 
   public CompareModels(ModelType firstPWM, ModelType secondPWM,
                        BackgroundType background,
-                       Discretizer discretizer) {
+                       Discretizer discretizer,
+                       Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calculatorOfAligned) {
     this.firstPWM = firstPWM.discrete(discretizer);
     this.secondPWM = secondPWM.discrete(discretizer);
     this.background = background;
     this.discretizer = discretizer;
+    this.calculatorOfAligned = calculatorOfAligned;
   }
 
   private List<Position> relative_alignments() {
@@ -66,15 +70,12 @@ abstract public class CompareModels<ModelType extends Alignable<ModelType> & Dis
                                                     double firstCount, double secondCount,
                                                     Position position) {
     PairAligned<ModelType> alignment = new PairAligned<>(firstPWM, secondPWM, position);
-    double intersection = calculator(alignment).count_in_intersection(discretizer.upscale(thresholdFirst),
-                                                                      discretizer.upscale(thresholdSecond));
+    double intersection = calculatorOfAligned.apply(alignment).count_in_intersection(discretizer.upscale(thresholdFirst),
+                                                                                     discretizer.upscale(thresholdSecond));
 
     double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
     double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
 
     return new ComparisonSimilarityInfo(alignment, intersection, firstCountRenormed, secondCountRenormed);
   }
-
-  protected abstract AlignedModelIntersection calculator(PairAligned<ModelType> alignment);
-
 }

@@ -10,10 +10,12 @@ import ru.autosome.commons.importer.DiPWMFromMonoImporter;
 import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.macroape.calculation.di.CompareModels;
+import ru.autosome.macroape.calculation.di.AlignedModelIntersection;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
+import ru.autosome.macroape.model.PairAligned;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSimilarity<DiPWM, DiBackgroundModel> {
   @Override
@@ -94,9 +96,8 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
     return result;
   }
 
-  @Override
-  protected CompareModels calculator() {
-    return new CompareModels(firstPWM, secondPWM, background, discretizer);
+  protected Function<PairAligned<DiPWM>, AlignedModelIntersection> calc_alignment() {
+    return (PairAligned<DiPWM> alignment) -> new AlignedModelIntersection(alignment, background);
   }
 
   public static void main(String[] args) {

@@ -8,9 +8,12 @@ import ru.autosome.commons.importer.DiPWMImporter;
 import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
+import ru.autosome.macroape.calculation.di.AlignedModelIntersection;
+import ru.autosome.macroape.model.PairAligned;
 import ru.autosome.macroape.model.ScanningSimilarityInfo;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCollection<DiPWM, DiBackgroundModel> {
 
@@ -89,20 +92,10 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     return importer.loadMotif(queryPMFilename);
   }
 
-  protected ru.autosome.macroape.calculation.di.ScanCollection calculator() {
-    ru.autosome.macroape.calculation.di.ScanCollection calculator;
-    calculator = new ru.autosome.macroape.calculation.di.ScanCollection(pwmCollection, queryPWM);
-    calculator.pvalue = pvalue;
-    calculator.queryPredefinedThreshold = queryPredefinedThreshold;
-    calculator.roughDiscretizer = roughDiscretizer;
-    calculator.preciseDiscretizer = preciseDiscretizer;
-    calculator.background = background;
-    calculator.pvalueBoundaryType = pvalueBoundaryType;
-    calculator.similarityCutoff = similarityCutoff;
-    calculator.preciseRecalculationCutoff = preciseRecalculationCutoff;
-    return calculator;
+  @Override
+  protected Function<PairAligned<DiPWM>, AlignedModelIntersection> calc_alignment() {
+    return (PairAligned<DiPWM> alignment) -> new AlignedModelIntersection(alignment, background);
   }
-
 
   public static void main(String[] args) {
     try {

@@ -13,16 +13,20 @@ import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.macroape.calculation.generalized.AlignedModelIntersection;
 import ru.autosome.macroape.calculation.generalized.CompareModels;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
+import ru.autosome.macroape.model.PairAligned;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
-public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>, BackgroundType extends GeneralizedBackgroundModel> {
+public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
+                                            BackgroundType extends GeneralizedBackgroundModel> {
   class PWMWithThreshold {
     final Named<ModelType> pwm;
     final double roughThreshold;
@@ -191,12 +195,12 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   }
 
   protected double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) {
-    CompareModels calc = calculator(first.pwm.getObject(), second.pwm.getObject(), roughDiscretizer);
+    CompareModels calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background, roughDiscretizer, calc_alignment());
     ComparisonSimilarityInfo info = calc.jaccard(first.roughThreshold, second.roughThreshold,
                                                  first.roughCount, second.roughCount);
 
     if (preciseRecalculationCutoff != null && info.similarity() > preciseRecalculationCutoff) {
-      calc = calculator(first.pwm.getObject(), second.pwm.getObject(), preciseDiscretizer);
+      calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background, preciseDiscretizer, calc_alignment());
       info = calc.jaccard(first.preciseThreshold, second.preciseThreshold,
                           first.preciseCount, second.preciseCount);
     }
@@ -239,6 +243,6 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     }
   }
 
-  abstract protected CompareModels<ModelType, BackgroundType> calculator(ModelType firstModel, ModelType secondModel, Discretizer discretizer);
+  abstract protected Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calc_alignment();
   abstract protected BackgroundType extract_background(String str);
 }

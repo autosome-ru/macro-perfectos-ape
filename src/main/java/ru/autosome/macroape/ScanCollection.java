@@ -6,9 +6,12 @@ import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
+import ru.autosome.macroape.calculation.mono.AlignedModelIntersection;
+import ru.autosome.macroape.model.PairAligned;
 import ru.autosome.macroape.model.ScanningSimilarityInfo;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCollection<PWM, BackgroundModel> {
 
@@ -48,20 +51,10 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
   }
 
 
-  protected ru.autosome.macroape.calculation.mono.ScanCollection calculator() {
-    ru.autosome.macroape.calculation.mono.ScanCollection calculator;
-    calculator = new ru.autosome.macroape.calculation.mono.ScanCollection(pwmCollection, queryPWM);
-    calculator.pvalue = pvalue;
-    calculator.queryPredefinedThreshold = queryPredefinedThreshold;
-    calculator.roughDiscretizer = roughDiscretizer;
-    calculator.preciseDiscretizer = preciseDiscretizer;
-    calculator.background = background;
-    calculator.pvalueBoundaryType = pvalueBoundaryType;
-    calculator.similarityCutoff = similarityCutoff;
-    calculator.preciseRecalculationCutoff = preciseRecalculationCutoff;
-    return calculator;
-   }
-
+  @Override
+  protected Function<PairAligned<PWM>, AlignedModelIntersection> calc_alignment() {
+    return (PairAligned<PWM> alignment) -> new AlignedModelIntersection(alignment, background);
+  }
 
   public static void main(String[] args) {
     try {

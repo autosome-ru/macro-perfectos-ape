@@ -18,6 +18,9 @@ import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
+import ru.autosome.macroape.calculation.generalized.AlignedModelIntersection;
+import ru.autosome.macroape.calculation.generalized.ScanningCollection;
+import ru.autosome.macroape.model.PairAligned;
 import ru.autosome.macroape.model.ScanningSimilarityInfo;
 import ru.autosome.macroape.model.SingleThresholdEvaluator;
 import ru.autosome.macroape.model.ThresholdEvaluator;
@@ -28,8 +31,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
-public abstract class ScanCollection<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> &Alignable<ModelType>,
+public abstract class ScanCollection<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
                                      BackgroundType extends GeneralizedBackgroundModel> {
 
   protected DataModel collectionDataModel;
@@ -301,7 +305,21 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     pwmCollection = load_collection_of_pwms();
   }
 
-  protected abstract ru.autosome.macroape.calculation.generalized.ScanCollection<ModelType,BackgroundType> calculator();
+  protected ScanningCollection<ModelType, BackgroundType> calculator() {
+    ScanningCollection<ModelType, BackgroundType> calculator;
+    calculator = new ScanningCollection<>(pwmCollection, queryPWM, calc_alignment());
+    calculator.pvalue = pvalue;
+    calculator.queryPredefinedThreshold = queryPredefinedThreshold;
+    calculator.roughDiscretizer = roughDiscretizer;
+    calculator.preciseDiscretizer = preciseDiscretizer;
+    calculator.background = background;
+    calculator.pvalueBoundaryType = pvalueBoundaryType;
+    calculator.similarityCutoff = similarityCutoff;
+    calculator.preciseRecalculationCutoff = preciseRecalculationCutoff;
+    return calculator;
+  }
+
+  protected abstract Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calc_alignment();
   protected abstract List<Named<ModelType>> loadMotifCollection();
   protected abstract ModelType loadQueryMotif();
 }

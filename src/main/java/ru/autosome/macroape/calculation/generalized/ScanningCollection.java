@@ -10,15 +10,14 @@ import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.macroape.model.ComparisonSimilarityInfo;
-import ru.autosome.macroape.model.ScanningSimilarityInfo;
-import ru.autosome.macroape.model.SingleThresholdEvaluator;
-import ru.autosome.macroape.model.ThresholdEvaluator;
+import ru.autosome.macroape.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
-public abstract class ScanCollection <ModelType extends Alignable<ModelType> & Discretable<ModelType> &ScoreDistribution<BackgroundType>, BackgroundType extends GeneralizedBackgroundModel> {
+public class ScanningCollection<ModelType extends Alignable<ModelType> & Discretable<ModelType> & ScoreDistribution<BackgroundType>,
+                                BackgroundType extends GeneralizedBackgroundModel> {
 
   protected final List<ThresholdEvaluator<ModelType>> thresholdEvaluators;
 
@@ -30,24 +29,20 @@ public abstract class ScanCollection <ModelType extends Alignable<ModelType> & D
   public BoundaryType pvalueBoundaryType;
   public Double similarityCutoff;
   public Double preciseRecalculationCutoff; // null means that no recalculation will be performed
+  public final Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calculatorOfAligned;
 
-
-  public ScanCollection(List<ThresholdEvaluator<ModelType>> thresholdEvaluators, ModelType queryPWM) {
+  public ScanningCollection(List<ThresholdEvaluator<ModelType>> thresholdEvaluators, ModelType queryPWM, Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calculatorOfAligned) {
     this.thresholdEvaluators = thresholdEvaluators;
     this.queryPWM = queryPWM;
+    this.calculatorOfAligned = calculatorOfAligned;
   }
-
-  abstract protected CompareModels<ModelType, BackgroundType> calculator(ModelType firstMotif,
-                                                                         ModelType secondMotif,
-                                                                         BackgroundType background,
-                                                                         Discretizer discretizer);
 
   public ComparisonSimilarityInfo comparisonInfo(CanFindPvalue queryPvalueEvaluator,
                                                  double queryThreshold,
                                                  SingleThresholdEvaluator<ModelType> knownMotifEvaluator,
                                                  Discretizer discretizer) {
     CompareModels<ModelType, BackgroundType> calc;
-    calc = calculator(queryPWM, knownMotifEvaluator.pwm, background, discretizer);
+    calc = new CompareModels<>(queryPWM, knownMotifEvaluator.pwm, background, discretizer, calculatorOfAligned);
 
     Double collectionThreshold = knownMotifEvaluator.thresholdCalculator
                                           .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;

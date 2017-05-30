@@ -8,8 +8,11 @@ import ru.autosome.commons.cli.Reporter;
 import ru.autosome.commons.cli.TextReporter;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.macroape.calculation.mono.CompareModels;
+import ru.autosome.macroape.calculation.mono.AlignedModelIntersection;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
+import ru.autosome.macroape.model.PairAligned;
+
+import java.util.function.Function;
 
 public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSimilarity<PWM, BackgroundModel> {
   @Override
@@ -49,8 +52,8 @@ public class EvalSimilarity extends ru.autosome.macroape.cli.generalized.EvalSim
   }
 
   @Override
-  protected CompareModels calculator() {
-    return new CompareModels(firstPWM, secondPWM, background, discretizer);
+  protected Function<PairAligned<PWM>, AlignedModelIntersection> calc_alignment() {
+    return (PairAligned<PWM> alignment) -> new AlignedModelIntersection(alignment, background);
   }
 
   public static void main(String[] args) {
