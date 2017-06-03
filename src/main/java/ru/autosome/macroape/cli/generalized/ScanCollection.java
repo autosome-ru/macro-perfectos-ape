@@ -227,9 +227,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     infos.add_table_parameter("overlap", ScanningSimilarityInfo::overlap);
     infos.add_table_parameter("orientation", ScanningSimilarityInfo::orientation);
     if (preciseRecalculationCutoff != null) {
-      infos.add_table_parameter("precise mode", (ScanningSimilarityInfo cell) -> {
-          return cell.precise ? "*" : ".";
-        });
+      infos.add_table_parameter("precise mode", (ScanningSimilarityInfo cell) -> cell.precise ? "*" : ".");
     }
     return infos;
   }
