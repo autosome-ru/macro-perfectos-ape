@@ -51,7 +51,7 @@ public class FindPvalueExact<ModelType extends HasLength & ScoreDistribution<Bac
     layout.add_table_parameter("T", "threshold", (FoundedPvalueInfo cell) -> cell.threshold);
     if (background.is_wordwise()) {
       layout.add_table_parameter("W", "number of recognized words", (FoundedPvalueInfo cell) -> {
-        double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.length());
+        double numberOfRecognizedWords = cell.numberOfRecognizedWords(background.volume(), motif.length());
         return (long)numberOfRecognizedWords;
       });
     }

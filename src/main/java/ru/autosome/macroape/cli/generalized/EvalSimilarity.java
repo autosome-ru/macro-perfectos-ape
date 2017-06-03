@@ -244,10 +244,10 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     double thresholdSecond = thresholdSecond();
     double firstCount = new FindPvalueAPE<>(firstPWM, background, discretizer)
                             .pvalueByThreshold(thresholdFirst)
-                            .numberOfRecognizedWords(background, firstPWM.length());
+                            .numberOfRecognizedWords(background.volume(), firstPWM.length());
     double secondCount = new FindPvalueAPE<>(secondPWM, background, discretizer)
                              .pvalueByThreshold(thresholdSecond)
-                             .numberOfRecognizedWords(background, secondPWM.length());
+                             .numberOfRecognizedWords(background.volume(), secondPWM.length());
     if (alignment == null) {
       return calc.jaccard(thresholdFirst, thresholdSecond, firstCount, secondCount);
     } else {

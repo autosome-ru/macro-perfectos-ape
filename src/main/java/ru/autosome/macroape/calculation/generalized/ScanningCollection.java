@@ -49,11 +49,11 @@ public class ScanningCollection<ModelType extends Alignable<ModelType> & Discret
 
     double query_count = queryPvalueEvaluator
                       .pvalueByThreshold(queryThreshold)
-                      .numberOfRecognizedWords(background, queryPWM.length());
+                      .numberOfRecognizedWords(background.volume(), queryPWM.length());
 
     double known_count = knownMotifEvaluator.pvalueCalculator
                              .pvalueByThreshold(collectionThreshold)
-                             .numberOfRecognizedWords(background, knownMotifEvaluator.pwm.length());
+                             .numberOfRecognizedWords(background.volume(), knownMotifEvaluator.pwm.length());
     return calc.jaccard(queryThreshold, collectionThreshold, query_count, known_count);
   }
 
