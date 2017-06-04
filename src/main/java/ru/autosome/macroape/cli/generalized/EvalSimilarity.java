@@ -73,7 +73,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
 
   protected Double cacheFirstThreshold, cacheSecondThreshold;
 
-  protected Position alignment; // if null, all orientations are shifts and orientations are tested
+  private Position relativePosition; // if null, all orientations are shifts and orientations are tested
   protected boolean transposeFirst, transposeSecond;
 
   protected abstract BackgroundType extract_background(String str);
@@ -133,7 +133,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     transposeSecond = false;
 
     pvalueBoundary = BoundaryType.WEAK;
-    alignment = null;
+    relativePosition = null;
   }
 
   protected void extract_option(List<String> argv) {
@@ -185,7 +185,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
       String[] pos_tokens = pos_string.split(",");
       Integer shift = Integer.valueOf(pos_tokens[0]);
       String orientation = pos_tokens[1];
-      alignment = new Position(shift, orientation);
+      relativePosition = new Position(shift, orientation);
     } else if (opt.equals("--transpose")) {
       transposeFirst = true;
       transposeSecond = true;
@@ -242,16 +242,17 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     CompareModels<ModelType> calc = new CompareModels<>(firstPWM, secondPWM, background.volume(), discretizer, calc_alignment());
     double thresholdFirst = thresholdFirst();
     double thresholdSecond = thresholdSecond();
+
     double firstCount = new FindPvalueAPE<>(firstPWM, background, discretizer)
                             .pvalueByThreshold(thresholdFirst)
                             .numberOfRecognizedWords(background.volume(), firstPWM.length());
     double secondCount = new FindPvalueAPE<>(secondPWM, background, discretizer)
                              .pvalueByThreshold(thresholdSecond)
                              .numberOfRecognizedWords(background.volume(), secondPWM.length());
-    if (alignment == null) {
+    if (relativePosition == null) {
       return calc.jaccard(thresholdFirst, thresholdSecond, firstCount, secondCount);
     } else {
-      return calc.jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, alignment);
+      return calc.jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, relativePosition);
     }
   }
 
