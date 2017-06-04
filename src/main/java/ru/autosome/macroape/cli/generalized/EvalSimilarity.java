@@ -1,6 +1,7 @@
 package ru.autosome.macroape.cli.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
+import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
@@ -242,17 +243,14 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     CompareModels<ModelType> calc = new CompareModels<>(firstPWM, secondPWM, background.volume(), discretizer, calc_alignment());
     double thresholdFirst = thresholdFirst();
     double thresholdSecond = thresholdSecond();
-
-    double firstCount = new FindPvalueAPE<>(firstPWM, background, discretizer)
-                            .pvalueByThreshold(thresholdFirst)
-                            .numberOfRecognizedWords(background.volume(), firstPWM.length());
-    double secondCount = new FindPvalueAPE<>(secondPWM, background, discretizer)
-                             .pvalueByThreshold(thresholdSecond)
-                             .numberOfRecognizedWords(background.volume(), secondPWM.length());
+    FoundedPvalueInfo countByThresholdFirst = new FindPvalueAPE<>(firstPWM, background, discretizer)
+                                                  .pvalueByThreshold(thresholdFirst);
+    FoundedPvalueInfo countByThresholdSecond = new FindPvalueAPE<>(secondPWM, background, discretizer)
+                                                   .pvalueByThreshold(thresholdSecond);
     if (relativePosition == null) {
-      return calc.jaccard(thresholdFirst, thresholdSecond, firstCount, secondCount);
+      return calc.jaccard(countByThresholdFirst, countByThresholdSecond);
     } else {
-      return calc.jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, relativePosition);
+      return calc.jaccardAtPosition(countByThresholdFirst, countByThresholdSecond, relativePosition);
     }
   }
 

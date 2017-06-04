@@ -2,6 +2,7 @@ package ru.autosome.macroape.calculation.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
+import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
@@ -47,14 +48,9 @@ public class ScanningCollection<ModelType extends Alignable<ModelType> & Discret
     Double collectionThreshold = knownMotifEvaluator.thresholdCalculator
                                           .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
 
-    double query_count = queryPvalueEvaluator
-                      .pvalueByThreshold(queryThreshold)
-                      .numberOfRecognizedWords(background.volume(), queryPWM.length());
-
-    double known_count = knownMotifEvaluator.pvalueCalculator
-                             .pvalueByThreshold(collectionThreshold)
-                             .numberOfRecognizedWords(background.volume(), knownMotifEvaluator.pwm.length());
-    return calc.jaccard(queryThreshold, collectionThreshold, query_count, known_count);
+    FoundedPvalueInfo countByThresholdQuery = queryPvalueEvaluator.pvalueByThreshold(queryThreshold);
+    FoundedPvalueInfo countByThresholdKnown = knownMotifEvaluator.pvalueCalculator.pvalueByThreshold(collectionThreshold);
+    return calc.jaccard(countByThresholdQuery, countByThresholdKnown);
   }
 
 

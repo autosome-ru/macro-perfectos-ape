@@ -1,5 +1,6 @@
 package ru.autosome.macroape.calculation.generalized;
 
+import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.macroape.model.AlignmentGenerator;
@@ -22,29 +23,18 @@ public class CompareModelsExact<ModelType extends Alignable<ModelType>> {
     this.alignmentGenerator = new AlignmentGenerator<>(firstPWM, secondPWM);
   }
 
-  private double firstCountRenormMultiplier(PairAligned alignment) {
-    return Math.pow(backgroundVolume, alignment.firstComplementLength());
-  }
-  private double secondCountRenormMultiplier(PairAligned alignment) {
-    return Math.pow(backgroundVolume, alignment.secondComplementLength());
-  }
 
-  public ComparisonSimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,
-                                          double firstCount, double secondCount) {
+  public ComparisonSimilarityInfo jaccard(FoundedPvalueInfo first, FoundedPvalueInfo second) {
     return alignmentGenerator.relative_positions().map(
-        (Position position) -> jaccardAtPosition(thresholdFirst, thresholdSecond, firstCount, secondCount, position)
+        (Position position) -> jaccardAtPosition(first, second, position)
     ).max(Comparator.comparingDouble(ComparisonSimilarityInfo::similarity)).get();
   }
 
-  public ComparisonSimilarityInfo jaccardAtPosition(double thresholdFirst, double thresholdSecond,
-                                                    double firstCount, double secondCount,
-                                                    Position position) {
+  public ComparisonSimilarityInfo jaccardAtPosition(FoundedPvalueInfo first, FoundedPvalueInfo second, Position position) {
     PairAligned<ModelType> alignment = alignmentGenerator.alignment(position);
-    double intersection = calculatorOfAligned.apply(alignment).count_in_intersection(thresholdFirst, thresholdSecond);
+    double intersection = calculatorOfAligned.apply(alignment).count_in_intersection(first.threshold, second.threshold);
+    double vocabularySize = Math.pow(backgroundVolume, alignment.length());
 
-    double firstCountRenormed = firstCount * firstCountRenormMultiplier(alignment);
-    double secondCountRenormed = secondCount * secondCountRenormMultiplier(alignment);
-
-    return new ComparisonSimilarityInfo(alignment, intersection, firstCountRenormed, secondCountRenormed);
+    return new ComparisonSimilarityInfo(alignment, intersection, first.pvalue * vocabularySize, second.pvalue * vocabularySize);
   }
 }

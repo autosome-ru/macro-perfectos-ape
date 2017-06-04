@@ -1,5 +1,6 @@
 package ru.autosome.macroape.cli.generalized;
 
+import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
@@ -29,18 +30,13 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
                                             BackgroundType extends GeneralizedBackgroundModel> {
   class PWMWithThreshold {
     final Named<ModelType> pwm;
-    final double roughThreshold;
-    final double roughCount;
-    final double preciseThreshold;
-    final double preciseCount;
-    PWMWithThreshold(Named<ModelType> pwm,
-                     double roughThreshold, double roughCount,
-                     double preciseThreshold, double preciseCount) {
+    final FoundedPvalueInfo roughInfos;
+    final FoundedPvalueInfo preciseInfos;
+
+    PWMWithThreshold(Named<ModelType> pwm, FoundedThresholdInfo rough, FoundedThresholdInfo precise) {
       this.pwm = pwm;
-      this.roughThreshold = roughThreshold;
-      this.roughCount = roughCount;
-      this.preciseThreshold = preciseThreshold;
-      this.preciseCount = preciseCount;
+      this.roughInfos = new FoundedPvalueInfo(rough.threshold, rough.real_pvalue);
+      this.preciseInfos = new FoundedPvalueInfo(precise.threshold, precise.real_pvalue);
     }
   }
 
@@ -179,30 +175,22 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     for (Named<ModelType> pwm: pwmCollection) {
       CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, roughDiscretizer);
       FoundedThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
-      double roughThreshold = roughThresholdInfo.threshold;
-      double roughCount = roughThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());
 
       CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, preciseDiscretizer);
       FoundedThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
-      double preciseThreshold = preciseThresholdInfo.threshold;
-      double preciseCount = preciseThresholdInfo.numberOfRecognizedWords(background, pwm.getObject().length());
 
-      result.add(new PWMWithThreshold(pwm,
-                                      roughThreshold, roughCount,
-                                      preciseThreshold, preciseCount));
+      result.add(new PWMWithThreshold(pwm, roughThresholdInfo, preciseThresholdInfo));
     }
     return result;
   }
 
   protected double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) {
     CompareModels<ModelType> calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background.volume(), roughDiscretizer, calc_alignment());
-    ComparisonSimilarityInfo info = calc.jaccard(first.roughThreshold, second.roughThreshold,
-                                                 first.roughCount, second.roughCount);
+    ComparisonSimilarityInfo info = calc.jaccard(first.roughInfos, second.roughInfos);
 
     if (preciseRecalculationCutoff != null && info.similarity() > preciseRecalculationCutoff) {
       calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background.volume(), preciseDiscretizer, calc_alignment());
-      info = calc.jaccard(first.preciseThreshold, second.preciseThreshold,
-                          first.preciseCount, second.preciseCount);
+      info = calc.jaccard(first.preciseInfos, second.preciseInfos);
     }
     return info.distance();
   }

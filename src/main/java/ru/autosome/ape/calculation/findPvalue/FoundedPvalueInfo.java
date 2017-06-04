@@ -18,4 +18,8 @@ public class FoundedPvalueInfo {
   public FoundedPvalueInfo downscale(Discretizer discretizer) {
     return new FoundedPvalueInfo(discretizer.downscale(threshold), pvalue);
   }
+
+  public FoundedPvalueInfo upscale(Discretizer discretizer) {
+    return new FoundedPvalueInfo(discretizer.upscale(threshold), pvalue);
+  }
 }
