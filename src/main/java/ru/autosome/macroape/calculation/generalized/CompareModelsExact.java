@@ -10,8 +10,6 @@ import java.util.Comparator;
 import java.util.function.Function;
 
 public class CompareModelsExact<ModelType extends Alignable<ModelType>> {
-  private final ModelType firstPWM; // here we store discreted PWMs
-  private final ModelType secondPWM;
   private final AlignmentGenerator<ModelType> alignmentGenerator;
   private final int backgroundVolume;
   private final Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calculatorOfAligned;
@@ -19,18 +17,16 @@ public class CompareModelsExact<ModelType extends Alignable<ModelType>> {
   public CompareModelsExact(ModelType firstPWM, ModelType secondPWM,
                             int backgroundVolume,
                             Function<PairAligned<ModelType>, ? extends AlignedModelIntersection> calculatorOfAligned) {
-    this.firstPWM = firstPWM;
-    this.secondPWM = secondPWM;
     this.backgroundVolume = backgroundVolume;
     this.calculatorOfAligned = calculatorOfAligned;
     this.alignmentGenerator = new AlignmentGenerator<>(firstPWM, secondPWM);
   }
 
   private double firstCountRenormMultiplier(PairAligned alignment) {
-    return Math.pow(backgroundVolume, alignment.length() - firstPWM.length());
+    return Math.pow(backgroundVolume, alignment.firstComplementLength());
   }
   private double secondCountRenormMultiplier(PairAligned alignment) {
-    return Math.pow(backgroundVolume, alignment.length() - secondPWM.length());
+    return Math.pow(backgroundVolume, alignment.secondComplementLength());
   }
 
   public ComparisonSimilarityInfo jaccard(double thresholdFirst, double thresholdSecond,

@@ -33,6 +33,14 @@ public class PairAligned<ModelType extends Alignable<ModelType>> {
     secondModelAligned = second_tmp.rightAugment(length() - second_tmp.length());
   }
 
+  public int firstComplementLength() {
+    return length() - first_length;
+  }
+
+  public int secondComplementLength() {
+    return length() - second_length;
+  }
+
   public int shift() {
     return relative_position.position();
   }
