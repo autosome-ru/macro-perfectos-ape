@@ -4,6 +4,7 @@ import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
 import ru.autosome.ape.model.PvalueBsearchList;
+import ru.autosome.ape.model.ThresholdPvaluePair;
 import ru.autosome.ape.model.progression.GeometricProgression;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -41,9 +42,9 @@ public class PrecalculateThresholdList<ModelType extends  Discretable<ModelType>
   public PvalueBsearchList bsearch_list_for_pwm(ModelType motif) {
     List<FoundedThresholdInfo> infos = find_threshold_calculator(motif).thresholdsByPvalues(pvalues, pvalue_boundary);
 
-    List<PvalueBsearchList.ThresholdPvaluePair> pairs = new ArrayList<>(infos.size() + 2);
+    List<ThresholdPvaluePair> pairs = new ArrayList<>(infos.size() + 2);
     for (FoundedThresholdInfo info: infos) {
-      pairs.add(new PvalueBsearchList.ThresholdPvaluePair(info));
+      pairs.add(new ThresholdPvaluePair(info));
     }
 
     double worstScore = motif.worst_score();
@@ -53,8 +54,8 @@ public class PrecalculateThresholdList<ModelType extends  Discretable<ModelType>
       eps = bestScore - worstScore;
     }
     eps *= 0.1;
-    pairs.add(new PvalueBsearchList.ThresholdPvaluePair(worstScore, 1.0)); // every score is >= than worst score
-    pairs.add(new PvalueBsearchList.ThresholdPvaluePair(bestScore + eps, 0.0));  // no score is >= than best score + eps
+    pairs.add(new ThresholdPvaluePair(worstScore, 1.0)); // every score is >= than worst score
+    pairs.add(new ThresholdPvaluePair(bestScore + eps, 0.0));  // no score is >= than best score + eps
 
     return new PvalueBsearchList(pairs);
   }

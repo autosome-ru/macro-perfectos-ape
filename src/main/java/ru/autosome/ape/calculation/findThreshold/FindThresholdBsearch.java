@@ -1,6 +1,7 @@
 package ru.autosome.ape.calculation.findThreshold;
 
 import ru.autosome.ape.model.PvalueBsearchList;
+import ru.autosome.ape.model.ThresholdPvaluePair;
 import ru.autosome.commons.model.BoundaryType;
 
 import java.io.File;
@@ -20,7 +21,7 @@ public class FindThresholdBsearch implements CanFindThreshold  {
 
   @Override
   public FoundedThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) {
-    PvalueBsearchList.ThresholdPvaluePair info = bsearchList.thresholdInfoByPvalue(pvalue, boundaryType);
+    ThresholdPvaluePair info = bsearchList.thresholdInfoByPvalue(pvalue, boundaryType);
     double threshold = info.threshold;
     double real_pvalue = info.pvalue;
     return new FoundedThresholdInfo(threshold, real_pvalue, pvalue);
