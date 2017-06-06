@@ -1,6 +1,5 @@
 package ru.autosome.macroape.model;
 
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.Orientation;
 
 public class ComparisonSimilarityInfo {
@@ -16,12 +15,12 @@ public class ComparisonSimilarityInfo {
     this.alignment = alignment;
   }
 
-  public Double realPvalueFirst(GeneralizedBackgroundModel background) {
-    double vocabularyVolume = Math.pow(background.volume(), alignment.length());
+  public Double realPvalueFirst(int backgroundVolume) {
+    double vocabularyVolume = Math.pow(backgroundVolume, alignment.length());
     return recognizedByFirst / vocabularyVolume;
   }
-  public Double realPvalueSecond(GeneralizedBackgroundModel background) {
-    double vocabularyVolume = Math.pow(background.volume(), alignment.length());
+  public Double realPvalueSecond(int backgroundVolume) {
+    double vocabularyVolume = Math.pow(backgroundVolume, alignment.length());
     return recognizedBySecond / vocabularyVolume;
   }
 
@@ -58,4 +57,25 @@ public class ComparisonSimilarityInfo {
     }
   }
 
+  public int length() {
+    return alignment.length();
+  }
+
+  public String first_model_alignment() {
+    return alignment.first_model_alignment();
+  }
+
+  public String second_model_alignment() {
+    return alignment.second_model_alignment();
+  }
+
+  public double getRecognizedByBoth() {
+    return recognizedByBoth;
+  }
+  public double getRecognizedByFirst() {
+    return recognizedByFirst;
+  }
+  public double getRecognizedBySecond() {
+    return recognizedBySecond;
+  }
 }
