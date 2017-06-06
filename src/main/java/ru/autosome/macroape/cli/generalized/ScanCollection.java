@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class ScanCollection<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
                                      BackgroundType extends GeneralizedBackgroundModel> {
@@ -240,9 +241,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   }
 
   protected List<ScanningSimilarityInfo> process() {
-    List<ScanningSimilarityInfo> infos;
-    infos = calculator().similarityInfos();
-    return infos;
+    return calculator().similarityInfos().collect(Collectors.toList());
   }
 
   // TODO: Refactor usage of one-stage and two-stage search
