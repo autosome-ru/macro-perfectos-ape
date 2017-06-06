@@ -29,12 +29,14 @@ import java.util.function.Function;
 public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
                                             BackgroundType extends GeneralizedBackgroundModel> {
   class PWMWithThreshold {
-    final Named<ModelType> pwm;
+    final String name;
+    final ModelType pwm;
     final FoundedPvalueInfo roughInfos;
     final FoundedPvalueInfo preciseInfos;
 
     PWMWithThreshold(Named<ModelType> pwm, FoundedThresholdInfo rough, FoundedThresholdInfo precise) {
-      this.pwm = pwm;
+      this.name = pwm.getName();
+      this.pwm = pwm.getObject();
       this.roughInfos = rough.toFoundedPvalueInfo();
       this.preciseInfos = precise.toFoundedPvalueInfo();
     }
@@ -185,11 +187,11 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   }
 
   protected double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) {
-    CompareModels<ModelType> calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background.volume(), roughDiscretizer, calc_alignment());
+    CompareModels<ModelType> calc = new CompareModels<>(first.pwm, second.pwm, background.volume(), roughDiscretizer, calc_alignment());
     ComparisonSimilarityInfo info = calc.jaccard(first.roughInfos, second.roughInfos);
 
     if (preciseRecalculationCutoff != null && info.similarity() > preciseRecalculationCutoff) {
-      calc = new CompareModels<>(first.pwm.getObject(), second.pwm.getObject(), background.volume(), preciseDiscretizer, calc_alignment());
+      calc = new CompareModels<>(first.pwm, second.pwm, background.volume(), preciseDiscretizer, calc_alignment());
       info = calc.jaccard(first.preciseInfos, second.preciseInfos);
     }
     return info.distance();
@@ -198,20 +200,20 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
   public void process() {
     int taskNum = 0;
     List<PWMWithThreshold> thresholds = collectThreshold();
-    thresholds.sort(Comparator.comparing(o -> o.pwm.getName()));
+    thresholds.sort(Comparator.comparing(o -> o.name));
 
     System.out.print("Motif name"+ "\t");
     for(PWMWithThreshold second: thresholds) {
-      System.out.print(second.pwm.getName() + "\t");
+      System.out.print(second.name + "\t");
     }
     System.out.println();
     for(PWMWithThreshold first: thresholds) {
-      System.out.print(first.pwm.getName() + "\t");
+      System.out.print(first.name + "\t");
       for(PWMWithThreshold second: thresholds) {
 
         if (taskNum % numOfThreads == numThread % numOfThreads) {
           // so that numThread in range 0..(n-1) was equal to 1..n
-          int cmp = first.pwm.getName().compareTo(second.pwm.getName());
+          int cmp = first.name.compareTo(second.name);
           if (cmp == 0) {
             System.out.print("0.0\t");
           } else if (cmp < 0) {
