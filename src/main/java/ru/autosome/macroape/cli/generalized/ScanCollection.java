@@ -1,7 +1,5 @@
 package ru.autosome.macroape.cli.generalized;
 
-import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
-import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearch;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearch;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
@@ -255,10 +253,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
       if (thresholds_folder != null) {
         File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
         try {
-          SingleThresholdEvaluator<ModelType> evaluator = new SingleThresholdEvaluator<>(pwm,
-                                          new FindThresholdBsearch(thresholds_file),
-                                          new FindPvalueBsearch(thresholds_file)
-          );
+          SingleThresholdEvaluator<ModelType> evaluator = new SingleThresholdEvaluator<>(pwm, new FindThresholdBsearch(thresholds_file));
           result.add(new ThresholdEvaluator<>(namedModel.getName(), evaluator, null));
           bsearch_evaluator_succeed = true;
         } catch (FileNotFoundException e) {
@@ -268,15 +263,9 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
 
       if (!bsearch_evaluator_succeed){
         SingleThresholdEvaluator<ModelType> roughEvaluator =
-            new SingleThresholdEvaluator<>(pwm,
-                                            new FindThresholdAPE<>(pwm, background, roughDiscretizer),
-                                            new FindPvalueAPE<>(pwm, background, roughDiscretizer)
-        );
+            new SingleThresholdEvaluator<>(pwm, new FindThresholdAPE<>(pwm, background, roughDiscretizer));
         SingleThresholdEvaluator<ModelType> preciseEvaluator =
-            new SingleThresholdEvaluator<>(pwm,
-                                            new FindThresholdAPE<>(pwm, background, preciseDiscretizer),
-                                            new FindPvalueAPE<>(pwm, background, preciseDiscretizer)
-            );
+            new SingleThresholdEvaluator<>(pwm, new FindThresholdAPE<>(pwm, background, preciseDiscretizer));
 
         result.add(new ThresholdEvaluator<>(namedModel.getName(), roughEvaluator, preciseEvaluator));
       }

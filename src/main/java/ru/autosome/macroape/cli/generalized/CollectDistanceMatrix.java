@@ -35,8 +35,8 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
 
     PWMWithThreshold(Named<ModelType> pwm, FoundedThresholdInfo rough, FoundedThresholdInfo precise) {
       this.pwm = pwm;
-      this.roughInfos = new FoundedPvalueInfo(rough.threshold, rough.real_pvalue);
-      this.preciseInfos = new FoundedPvalueInfo(precise.threshold, precise.real_pvalue);
+      this.roughInfos = rough.toFoundedPvalueInfo();
+      this.preciseInfos = precise.toFoundedPvalueInfo();
     }
   }
 

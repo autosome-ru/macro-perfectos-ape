@@ -1,6 +1,6 @@
 package ru.autosome.ape.calculation.findThreshold;
 
-import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.commons.model.Discretizer;
 
 public class FoundedThresholdInfo {
@@ -14,12 +14,16 @@ public class FoundedThresholdInfo {
     this.expected_pvalue = expected_pvalue;
   }
 
-  public double numberOfRecognizedWords(GeneralizedBackgroundModel background, int length) {
-    return real_pvalue * Math.pow(background.volume(), length);
+  public double numberOfRecognizedWords(int backgroundVolume, int length) {
+    return real_pvalue * Math.pow(backgroundVolume, length);
   }
 
   // generate infos for non-discreeted matrix from infos for discreeted matrix
   public FoundedThresholdInfo downscale(Discretizer discretizer) {
     return new FoundedThresholdInfo(discretizer.downscale(threshold), real_pvalue, expected_pvalue);
+  }
+
+  public FoundedPvalueInfo toFoundedPvalueInfo() {
+    return new FoundedPvalueInfo(threshold, real_pvalue);
   }
 }

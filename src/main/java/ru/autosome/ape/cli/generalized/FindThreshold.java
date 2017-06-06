@@ -178,7 +178,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
 
     if (background.is_wordwise()) {
       infos.add_table_parameter("W", "number of recognized words", (FoundedThresholdInfo cell) -> {
-          double numberOfRecognizedWords = cell.numberOfRecognizedWords(background, motif.getObject().length());
+          double numberOfRecognizedWords = cell.numberOfRecognizedWords(background.volume(), motif.getObject().length());
           return (long)numberOfRecognizedWords;
         });
     }

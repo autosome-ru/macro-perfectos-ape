@@ -5,6 +5,7 @@ import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
 import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
+import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -46,11 +47,11 @@ public class ScanningCollection<ModelType extends Alignable<ModelType> & Discret
     CompareModels<ModelType> calc;
     calc = new CompareModels<>(queryPWM, knownMotifEvaluator.pwm, background.volume(), discretizer, calculatorOfAligned);
 
-    Double collectionThreshold = knownMotifEvaluator.thresholdCalculator
-                                          .thresholdByPvalue(pvalue, pvalueBoundaryType).threshold;
+    FoundedThresholdInfo knownInfo = knownMotifEvaluator.thresholdCalculator
+                                         .thresholdByPvalue(pvalue, pvalueBoundaryType);
 
     FoundedPvalueInfo countByThresholdQuery = queryPvalueEvaluator.pvalueByThreshold(queryThreshold);
-    FoundedPvalueInfo countByThresholdKnown = knownMotifEvaluator.pvalueCalculator.pvalueByThreshold(collectionThreshold);
+    FoundedPvalueInfo countByThresholdKnown = knownInfo.toFoundedPvalueInfo();
     return calc.jaccard(countByThresholdQuery, countByThresholdKnown);
   }
 
