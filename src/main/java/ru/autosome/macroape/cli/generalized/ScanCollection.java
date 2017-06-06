@@ -1,5 +1,6 @@
 package ru.autosome.macroape.cli.generalized;
 
+import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearch;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
@@ -20,7 +21,6 @@ import ru.autosome.macroape.calculation.generalized.AlignedModelIntersection;
 import ru.autosome.macroape.calculation.generalized.ScanningCollection;
 import ru.autosome.macroape.model.PairAligned;
 import ru.autosome.macroape.model.ScanningSimilarityInfo;
-import ru.autosome.macroape.model.SingleThresholdEvaluator;
 import ru.autosome.macroape.model.ThresholdEvaluator;
 
 import java.io.File;
@@ -253,8 +253,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
       if (thresholds_folder != null) {
         File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
         try {
-          SingleThresholdEvaluator<ModelType> evaluator = new SingleThresholdEvaluator<>(pwm, new FindThresholdBsearch(thresholds_file));
-          result.add(new ThresholdEvaluator<>(namedModel.getName(), evaluator, null));
+          result.add(new ThresholdEvaluator<>(namedModel.getName(), pwm, new FindThresholdBsearch(thresholds_file), null));
           bsearch_evaluator_succeed = true;
         } catch (FileNotFoundException e) {
           System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculations");
@@ -262,12 +261,9 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
       }
 
       if (!bsearch_evaluator_succeed){
-        SingleThresholdEvaluator<ModelType> roughEvaluator =
-            new SingleThresholdEvaluator<>(pwm, new FindThresholdAPE<>(pwm, background, roughDiscretizer));
-        SingleThresholdEvaluator<ModelType> preciseEvaluator =
-            new SingleThresholdEvaluator<>(pwm, new FindThresholdAPE<>(pwm, background, preciseDiscretizer));
-
-        result.add(new ThresholdEvaluator<>(namedModel.getName(), roughEvaluator, preciseEvaluator));
+        CanFindThreshold roughEvaluator = new FindThresholdAPE<>(pwm, background, roughDiscretizer);
+        CanFindThreshold preciseEvaluator = new FindThresholdAPE<>(pwm, background, preciseDiscretizer);
+        result.add(new ThresholdEvaluator<>(namedModel.getName(), pwm, roughEvaluator, preciseEvaluator));
       }
     }
     return result;

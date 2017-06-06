@@ -12,7 +12,10 @@ import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.macroape.model.*;
+import ru.autosome.macroape.model.ComparisonSimilarityInfo;
+import ru.autosome.macroape.model.PairAligned;
+import ru.autosome.macroape.model.ScanningSimilarityInfo;
+import ru.autosome.macroape.model.ThresholdEvaluator;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,36 +43,30 @@ public class ScanningCollection<ModelType extends Alignable<ModelType> & Discret
     this.calculatorOfAligned = calculatorOfAligned;
   }
 
-  public ComparisonSimilarityInfo comparisonInfo(CanFindPvalue queryPvalueEvaluator,
-                                                 double queryThreshold,
-                                                 SingleThresholdEvaluator<ModelType> knownMotifEvaluator,
+  public ComparisonSimilarityInfo comparisonInfo(FoundedPvalueInfo countByThresholdQuery,
+                                                 ModelType pwmKnown,
+                                                 CanFindThreshold thresholdCalculatorKnown,
                                                  Discretizer discretizer) {
     CompareModels<ModelType> calc;
-    calc = new CompareModels<>(queryPWM, knownMotifEvaluator.pwm, background.volume(), discretizer, calculatorOfAligned);
+    calc = new CompareModels<>(queryPWM, pwmKnown, background.volume(), discretizer, calculatorOfAligned);
 
-    FoundedThresholdInfo knownInfo = knownMotifEvaluator.thresholdCalculator
-                                         .thresholdByPvalue(pvalue, pvalueBoundaryType);
-
-    FoundedPvalueInfo countByThresholdQuery = queryPvalueEvaluator.pvalueByThreshold(queryThreshold);
+    FoundedThresholdInfo knownInfo = thresholdCalculatorKnown.thresholdByPvalue(pvalue, pvalueBoundaryType);
     FoundedPvalueInfo countByThresholdKnown = knownInfo.toFoundedPvalueInfo();
     return calc.jaccard(countByThresholdQuery, countByThresholdKnown);
   }
 
-
-  public ScanningSimilarityInfo similarityInfo(CanFindPvalue roughQueryPvalueEvaluator,
-                                               CanFindPvalue preciseQueryPvalueEvaluator,
-                                               double roughQueryThreshold,
-                                               double preciseQueryThreshold,
+  public ScanningSimilarityInfo similarityInfo(FoundedPvalueInfo roughCountByThresholdQuery,
+                                               FoundedPvalueInfo preciseCountByThresholdQuery,
                                                ThresholdEvaluator<ModelType> knownMotifEvaluator) {
     ComparisonSimilarityInfo info;
     boolean precise = false;
 
-    info = comparisonInfo(roughQueryPvalueEvaluator, roughQueryThreshold, knownMotifEvaluator.rough, roughDiscretizer);
+    info = comparisonInfo(roughCountByThresholdQuery, knownMotifEvaluator.pwm, knownMotifEvaluator.rough, roughDiscretizer);
 
     if (preciseRecalculationCutoff != null &&
             info.similarity() >= preciseRecalculationCutoff &&
-            knownMotifEvaluator.precise.thresholdCalculator != null) {
-      info = comparisonInfo(preciseQueryPvalueEvaluator, preciseQueryThreshold, knownMotifEvaluator.precise, preciseDiscretizer);
+            knownMotifEvaluator.precise != null) {
+      info = comparisonInfo(preciseCountByThresholdQuery, knownMotifEvaluator.pwm, knownMotifEvaluator.precise, preciseDiscretizer);
       precise = true;
     }
     if (similarityCutoff == null || info.similarity() >= similarityCutoff) {
@@ -86,10 +83,12 @@ public class ScanningCollection<ModelType extends Alignable<ModelType> & Discret
     double roughQueryThreshold = queryThreshold(roughDiscretizer);
     double preciseQueryThreshold = queryThreshold(preciseDiscretizer);
 
+    FoundedPvalueInfo roughCountByThresholdQuery = roughQueryPvalueEvaluator.pvalueByThreshold(roughQueryThreshold);
+    FoundedPvalueInfo preciseCountByThresholdQuery = preciseQueryPvalueEvaluator.pvalueByThreshold(preciseQueryThreshold);
+
     return thresholdEvaluators.stream()
         .map((ThresholdEvaluator<ModelType> knownMotifEvaluator)->
-            similarityInfo(roughQueryPvalueEvaluator, preciseQueryPvalueEvaluator,
-                          roughQueryThreshold, preciseQueryThreshold, knownMotifEvaluator))
+            similarityInfo(roughCountByThresholdQuery, preciseCountByThresholdQuery, knownMotifEvaluator))
         .filter(Objects::nonNull);
   }
 

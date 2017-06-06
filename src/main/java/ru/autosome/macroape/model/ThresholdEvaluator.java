@@ -1,15 +1,20 @@
 package ru.autosome.macroape.model;
 
+import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
+
 public class ThresholdEvaluator<ModelType> {
   public final String name;
-  public final SingleThresholdEvaluator<ModelType> rough;
-  public final SingleThresholdEvaluator<ModelType> precise;
-//  List<SingleThresholdEvaluator<ModelType>> consequentEvaluators;
+  public final ModelType pwm;
+  public final CanFindThreshold rough;
+  public final CanFindThreshold precise;
+//  List<CanFindThreshold> consequentEvaluators;
 
   public ThresholdEvaluator(String name,
-                            SingleThresholdEvaluator<ModelType> rough,
-                            SingleThresholdEvaluator<ModelType> precise) {
+                            ModelType pwm,
+                            CanFindThreshold rough,
+                            CanFindThreshold precise) {
     this.name = name;
+    this.pwm = pwm;
     this.rough = rough;
     this.precise = precise;
 //    consequentEvaluators = new ArrayList<>();
