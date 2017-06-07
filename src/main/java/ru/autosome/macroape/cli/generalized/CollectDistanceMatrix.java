@@ -1,6 +1,5 @@
 package ru.autosome.macroape.cli.generalized;
 
-import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
@@ -17,6 +16,7 @@ import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.macroape.calculation.generalized.AlignedModelIntersection;
 import ru.autosome.macroape.calculation.generalized.CompareModels;
 import ru.autosome.macroape.model.ComparisonSimilarityInfo;
+import ru.autosome.macroape.model.PWMWithThreshold;
 import ru.autosome.macroape.model.PairAligned;
 
 import java.io.File;
@@ -28,19 +28,6 @@ import java.util.function.Function;
 
 public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelType> & ScoreDistribution<BackgroundType> & Alignable<ModelType>,
                                             BackgroundType extends GeneralizedBackgroundModel> {
-  class PWMWithThreshold {
-    final String name;
-    final ModelType pwm;
-    final FoundedPvalueInfo roughInfos;
-    final FoundedPvalueInfo preciseInfos;
-
-    PWMWithThreshold(Named<ModelType> pwm, FoundedThresholdInfo rough, FoundedThresholdInfo precise) {
-      this.name = pwm.getName();
-      this.pwm = pwm.getObject();
-      this.roughInfos = rough.toFoundedPvalueInfo();
-      this.preciseInfos = precise.toFoundedPvalueInfo();
-    }
-  }
 
   protected CollectDistanceMatrix() {
     initialize_defaults();
@@ -172,8 +159,8 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     }
   }
 
-  protected List<PWMWithThreshold> collectThreshold() {
-    List<PWMWithThreshold> result = new ArrayList<>();
+  protected List<PWMWithThreshold<ModelType>> collectThreshold() {
+    List<PWMWithThreshold<ModelType>> result = new ArrayList<>();
     for (Named<ModelType> pwm: pwmCollection) {
       CanFindThreshold roughThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, roughDiscretizer);
       FoundedThresholdInfo roughThresholdInfo = roughThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
@@ -181,12 +168,12 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
       CanFindThreshold preciseThresholdCalculator = new FindThresholdAPE<>(pwm.getObject(), background, preciseDiscretizer);
       FoundedThresholdInfo preciseThresholdInfo = preciseThresholdCalculator.thresholdByPvalue(pvalue, pvalueBoundary);
 
-      result.add(new PWMWithThreshold(pwm, roughThresholdInfo, preciseThresholdInfo));
+      result.add(new PWMWithThreshold<>(pwm, roughThresholdInfo, preciseThresholdInfo));
     }
     return result;
   }
 
-  protected double calculateDistance(PWMWithThreshold first, PWMWithThreshold second) {
+  protected double calculateDistance(PWMWithThreshold<ModelType> first, PWMWithThreshold<ModelType> second) {
     CompareModels<ModelType> calc = new CompareModels<>(first.pwm, second.pwm, background.volume(), roughDiscretizer, calc_alignment());
     ComparisonSimilarityInfo info = calc.jaccard(first.roughInfos, second.roughInfos);
 
@@ -199,7 +186,7 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
 
   public void process() {
     int taskNum = 0;
-    List<PWMWithThreshold> thresholds = collectThreshold();
+    List<PWMWithThreshold<ModelType>> thresholds = collectThreshold();
     thresholds.sort(Comparator.comparing(o -> o.name));
 
     System.out.print("Motif name"+ "\t");
