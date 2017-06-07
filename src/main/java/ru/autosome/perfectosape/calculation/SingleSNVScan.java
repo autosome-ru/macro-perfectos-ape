@@ -5,61 +5,35 @@ import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.scoringModel.ScoringModel;
 import ru.autosome.perfectosape.model.PositionWithScore;
+import ru.autosome.perfectosape.model.RegionAffinityVariantInfo;
 import ru.autosome.perfectosape.model.Sequence;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.model.SequenceWithSNV;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 
-public class SingleSNPScan<SequenceType extends EncodedSequenceType,
+public class SingleSNVScan<SequenceType extends EncodedSequenceType,
                            SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
                            ModelType extends ScoringModel<SequenceType>> {
   private final ModelType pwm;
-  private final SequenceWithSNP sequenceWithSNP;
+  private final SequenceWithSNV sequenceWithSNV;
   private final SequenceWithSNVType encodedSequenceWithSNP;
   private final CanFindPvalue pvalueCalculator;
   private final int expandRegionLength;
 
-  public SingleSNPScan(ModelType pwm, SequenceWithSNP sequenceWithSNP, SequenceWithSNVType encodedSequenceWithSNP, CanFindPvalue pvalueCalculator, int expandRegionLength) {
-    if (sequenceWithSNP.length() < pwm.length()) {
-      throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") with motif of length " + pwm.length());
+  public SingleSNVScan(ModelType pwm, SequenceWithSNV sequenceWithSNV, SequenceWithSNVType encodedSequenceWithSNP, CanFindPvalue pvalueCalculator, int expandRegionLength) {
+    if (sequenceWithSNV.length() < pwm.length()) {
+      throw new IllegalArgumentException("Can't scan sequence '" + sequenceWithSNV + "' (length " + sequenceWithSNV.length() + ") with motif of length " + pwm.length());
     }
     this.pwm = pwm;
-    this.sequenceWithSNP = sequenceWithSNP;
+    this.sequenceWithSNV = sequenceWithSNV;
     this.encodedSequenceWithSNP = encodedSequenceWithSNP; // Another representation of the same sequence with SNP (not checked they are in accordance due to performance reasons
     this.pvalueCalculator = pvalueCalculator;
     this.expandRegionLength = expandRegionLength;
-    if (sequenceWithSNP.length() < pwm.length()) {
-      throw new IllegalArgumentException("Can't estimate affinity to sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") for motif of length " + pwm.length());
+    if (sequenceWithSNV.length() < pwm.length()) {
+      throw new IllegalArgumentException("Can't estimate affinity to sequence '" + sequenceWithSNV + "' (length " + sequenceWithSNV.length() + ") for motif of length " + pwm.length());
     }
-    if (sequenceWithSNP.num_cases() != 2) {
-      throw new IllegalArgumentException("Unable to process more than two variants of nucleotide for SNP " + sequenceWithSNP);
-    }
-  }
-
-  public static class RegionAffinityVariantInfo {
-    final Position position;
-    final Sequence word;
-    final Character allele;
-    final double pvalue;
-
-    public Position getPosition() {
-      return position;
-    }
-    public Sequence getWord() {
-      return word;
-    }
-    public Character getAllele() {
-      return allele;
-    }
-    public double getPvalue() {
-      return pvalue;
-    }
-
-    RegionAffinityVariantInfo(Position position, Character allele, double pvalue, Sequence word) {
-      this.position = position;
-      this.allele = allele;
-      this.pvalue = pvalue;
-      this.word = word;
+    if (sequenceWithSNV.num_cases() != 2) {
+      throw new IllegalArgumentException("Unable to process more than two variants of nucleotide for SNP " + sequenceWithSNV);
     }
   }
 
@@ -117,7 +91,7 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
   }
 
   PositionInterval positionsToCheck() {
-    return sequenceWithSNP.positionsOverlappingSNV(pwm.length()).expand(expandRegionLength);
+    return sequenceWithSNV.positionsOverlappingSNV(pwm.length()).expand(expandRegionLength);
   }
 
   public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) {
@@ -125,12 +99,12 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
     PositionWithScore bestPositionWithScore = positionsToCheck().findBestPosition(encodedSequence, pwm);
 
     Position pos = bestPositionWithScore.getPosition();
-    Position pos_centered = new Position(pos.position() - sequenceWithSNP.left.length(), pos.orientation());
+    Position pos_centered = new Position(pos.position() - sequenceWithSNV.left.length(), pos.orientation());
 
     double score = bestPositionWithScore.getScore();
     double pvalue = pvalueCalculator.pvalueByThreshold(score).pvalue;
-    Character allele = sequenceWithSNP.mid[allele_number];
-    Sequence sequence = sequenceWithSNP.sequence_variants()[allele_number];
+    Character allele = sequenceWithSNV.mid[allele_number];
+    Sequence sequence = sequenceWithSNV.sequence_variants()[allele_number];
     Sequence word = sequence.substring(pos, pwm.length());
     return new RegionAffinityVariantInfo(pos_centered, allele, pvalue, word);
   }

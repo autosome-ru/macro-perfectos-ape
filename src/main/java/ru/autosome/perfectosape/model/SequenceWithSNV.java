@@ -4,18 +4,12 @@ import gnu.trove.set.TCharSet;
 import gnu.trove.set.hash.TCharHashSet;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
-import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
-import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNPDiEncoded;
-import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
-import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SequenceWithSNP {
+public class SequenceWithSNV {
   // Duplicated in class Sequence
   private static final TCharSet allowedLetters = new TCharHashSet(new char[]{'A','C','G','T','a','c','g','t', 'n', 'N'});
   static Pattern SNVSequencePattern = Pattern.compile("([ACGTN]*)\\[([ACGTN](?:/[ACGTN])+)\\]([ACGTN]*)", Pattern.CASE_INSENSITIVE);
@@ -29,7 +23,7 @@ public class SequenceWithSNP {
   // Example:
   // input:  "GATTCAAAGGTTCTGAATTCCACAAC[a/g]GCTTTCCTGTGTTTTTGCAGCCAGA"
   // possible SNP formats: [a/g]; [ag]; a/g; a/g/c; [agc]; [a/g/c] and so on
-  public SequenceWithSNP(String left, char[] mid, String right) {
+  public SequenceWithSNV(String left, char[] mid, String right) {
     if ( !allowedLetters.containsAll(left.toCharArray()) ) {
       throw new IllegalArgumentException("Sequence '" + left + "' (left part of SNP) contains unallowed character (only A,C,G,T,N letters are allowed).");
     }
@@ -50,7 +44,7 @@ public class SequenceWithSNP {
     this.right = right.toLowerCase();
   }
 
-  public static SequenceWithSNP fromString(String seq_w_snp) {
+  public static SequenceWithSNV fromString(String seq_w_snp) {
 
     Matcher matcher = SNVSequencePattern.matcher(seq_w_snp);
     if (matcher.find()) {
@@ -58,7 +52,7 @@ public class SequenceWithSNP {
       String mid_str = matcher.group(2);
       char[] mid = mid_str.replaceAll("/", "").toCharArray();
       String right = matcher.group(3);
-      return new SequenceWithSNP(left, mid, right);
+      return new SequenceWithSNV(left, mid, right);
     } else {
       throw new IllegalArgumentException("Can't parse sequence with SNPs: " + seq_w_snp);
     }
@@ -77,6 +71,7 @@ public class SequenceWithSNP {
   public Sequence[] sequence_variants() {
     if (cache_sequence_variants == null) {
       cache_sequence_variants = new Sequence[num_cases()];
+
       for (int i = 0; i < num_cases(); ++i) {
         cache_sequence_variants[i] = new Sequence(left + mid[i] + right, true);
       }
@@ -107,22 +102,6 @@ public class SequenceWithSNP {
     return left + "[" + mid_variants + "]" + right;
   }
 
-  public SequenceWithSNPMonoEncoded monoEncode() {
-    List<SequenceMonoEncoded> encodedVariants = new ArrayList<>(num_cases());
-    for (Sequence seq: sequence_variants()) {
-      encodedVariants.add(seq.monoEncode());
-    }
-    return new SequenceWithSNPMonoEncoded(encodedVariants);
-  }
-
-  public SequenceWithSNPDiEncoded diEncode() {
-    List<SequenceDiEncoded> encodedVariants = new ArrayList<>(num_cases());
-    for (Sequence seq: sequence_variants()) {
-      encodedVariants.add(seq.diEncode());
-    }
-    return new SequenceWithSNPDiEncoded(encodedVariants);
-  }
-
   private String polyNString(int len) {
     char[] buf = new char[len];
     Arrays.fill(buf, 'N');
@@ -131,10 +110,10 @@ public class SequenceWithSNP {
 
   // Expands sequence with poly-N flanks if necessary
   // sequenceRadius includes substitution position
-  public SequenceWithSNP expandFlanksUpTo(int sequenceRadius) {
+  public SequenceWithSNV expandFlanksUpTo(int sequenceRadius) {
     int leftExpansionLength = Math.max(sequenceRadius - 1 - left.length(), 0);
     int rightExpansionLength = Math.max(sequenceRadius - 1 - right.length(), 0);
-    return new SequenceWithSNP(polyNString(leftExpansionLength) + left,
+    return new SequenceWithSNV(polyNString(leftExpansionLength) + left,
                                mid,
                                right + polyNString(rightExpansionLength));
   }

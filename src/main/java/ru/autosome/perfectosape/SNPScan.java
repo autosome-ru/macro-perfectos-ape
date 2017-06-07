@@ -7,13 +7,13 @@ import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.scoringModel.PWMOnBackground;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.model.SequenceWithSNV;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
-import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNPMonoEncoded;
+import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNVMonoEncoded;
 
 import java.util.List;
 
-public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<SequenceMonoEncoded, SequenceWithSNPMonoEncoded, PWM, PWMOnBackground, BackgroundModel> {
+public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<SequenceMonoEncoded, SequenceWithSNVMonoEncoded, PWM, PWMOnBackground, BackgroundModel> {
   @Override
   protected String DOC_run_string(){
     return "java ru.autosome.perfectosape.SNPScan";
@@ -38,8 +38,8 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
     return importer.loadMotifCollectionWithNames(path_to_collection_of_pwms);
   }
 
-  protected SequenceWithSNPMonoEncoded encodeSequenceWithSNV(SequenceWithSNP sequenceWithSNV){
-    return sequenceWithSNV.monoEncode();
+  protected SequenceWithSNVMonoEncoded encodeSequenceWithSNV(SequenceWithSNV sequenceWithSNV){
+    return SequenceWithSNVMonoEncoded.encode(sequenceWithSNV);
   }
 
   protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(String[] args) {

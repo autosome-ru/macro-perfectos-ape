@@ -1,13 +1,16 @@
 package ru.autosome.perfectosape.model.encoded.di;
 
+import ru.autosome.perfectosape.model.Sequence;
+import ru.autosome.perfectosape.model.SequenceWithSNV;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SequenceWithSNPDiEncoded implements EncodedSequenceWithSNVType<SequenceDiEncoded> {
+public class SequenceWithSNVDiEncoded implements EncodedSequenceWithSNVType<SequenceDiEncoded> {
   final private List<SequenceDiEncoded> sequenceVariants;
   final private int length;
-  public SequenceWithSNPDiEncoded(List<SequenceDiEncoded> sequenceVariants) {
+  public SequenceWithSNVDiEncoded(List<SequenceDiEncoded> sequenceVariants) {
     if(sequenceVariants.size() < 2) {
       throw new IllegalArgumentException("There should be at least two sequences in SequenceWithSNVMonoEncoded");
     }
@@ -25,5 +28,13 @@ public class SequenceWithSNPDiEncoded implements EncodedSequenceWithSNVType<Sequ
   }
   public int length() {
     return this.length + 1;
+  }
+
+  public static SequenceWithSNVDiEncoded encode(SequenceWithSNV sequenceWithSNV) {
+    List<SequenceDiEncoded> encodedVariants = new ArrayList<>(sequenceWithSNV.num_cases());
+    for (Sequence seq: sequenceWithSNV.sequence_variants()) {
+      encodedVariants.add(SequenceDiEncoded.encode(seq));
+    }
+    return new SequenceWithSNVDiEncoded(encodedVariants);
   }
 }

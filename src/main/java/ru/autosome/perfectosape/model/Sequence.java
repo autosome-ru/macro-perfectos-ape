@@ -53,7 +53,11 @@ public class Sequence {
     return new Sequence(revCompSeq.toString(), true);
   }
 
-  private String reverseComplementString() {
+  public String sequenceString() {
+    return sequence;
+  }
+
+  public String reverseComplementString() {
     if (cache_reverseComplementString == null) {
       String revSeq = new StringBuilder(sequence).reverse().toString();
       StringBuilder revCompSeq = new StringBuilder(revSeq.length());
@@ -89,14 +93,6 @@ public class Sequence {
 //    return Position.positions_between(0, length(), subsequence_length);
 //  }
 
-  public SequenceMonoEncoded monoEncode() {
-    if (cache_monoEncode == null) {
-      byte[] directSeq = Alphabet.monoACGTN.convertString(sequence);
-      byte[] revcompSeq = Alphabet.monoACGTN.convertString(reverseComplementString());
-      cache_monoEncode = new SequenceMonoEncoded(directSeq, revcompSeq);
-    }
-    return cache_monoEncode;
-  }
 
   public SequenceDiEncoded diEncode() {
     if (cache_diEncode == null) {

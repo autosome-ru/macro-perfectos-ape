@@ -1,6 +1,7 @@
 package ru.autosome.perfectosape.model.encoded.mono;
 
 import ru.autosome.commons.model.Alphabet;
+import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
 
 public class SequenceMonoEncoded implements EncodedSequenceType {
@@ -23,5 +24,11 @@ public class SequenceMonoEncoded implements EncodedSequenceType {
   @Override
   public String toString() {
     return Alphabet.monoACGTN.decodeString(directSequence);
+  }
+
+  public static SequenceMonoEncoded encode(Sequence sequenceToEncode) {
+    byte[] directSeq = Alphabet.monoACGTN.convertString(sequenceToEncode.sequenceString());
+    byte[] revcompSeq = Alphabet.monoACGTN.convertString(sequenceToEncode.reverseComplementString());
+    return new SequenceMonoEncoded(directSeq, revcompSeq);
   }
 }

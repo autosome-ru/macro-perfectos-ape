@@ -14,8 +14,8 @@ import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.scoringModel.ScoringModel;
-import ru.autosome.perfectosape.calculation.SingleSNPScan;
-import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.calculation.SingleSNVScan;
+import ru.autosome.perfectosape.model.SequenceWithSNV;
 import ru.autosome.perfectosape.model.ThresholdEvaluator;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
@@ -222,14 +222,14 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     return true;
   }
 
-  protected abstract SequenceWithSNVType encodeSequenceWithSNV(SequenceWithSNP sequenceWithSNV);
+  protected abstract SequenceWithSNVType encodeSequenceWithSNV(SequenceWithSNV sequenceWithSNV);
 
-  boolean pvalueSignificant(SingleSNPScan.RegionAffinityInfos affinityInfos) {
+  boolean pvalueSignificant(SingleSNVScan.RegionAffinityInfos affinityInfos) {
     return affinityInfos.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
             affinityInfos.getInfo_2().getPvalue() <= max_pvalue_cutoff;
   }
 
-  boolean foldChangeSignificant(SingleSNPScan.RegionAffinityInfos affinityInfos) {
+  boolean foldChangeSignificant(SingleSNVScan.RegionAffinityInfos affinityInfos) {
     if (useLogFoldChange) {
       double logFoldChange = affinityInfos.logFoldChange();
       return (logFoldChange >= min_fold_change_cutoff) || (logFoldChange <= - min_fold_change_cutoff);
@@ -239,17 +239,17 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     }
   }
 
-  boolean affinityChangeSignificant(SingleSNPScan.RegionAffinityInfos affinityInfos) {
+  boolean affinityChangeSignificant(SingleSNVScan.RegionAffinityInfos affinityInfos) {
     return pvalueSignificant(affinityInfos) && foldChangeSignificant(affinityInfos);
   }
 
-  protected void process_snp(String snp_name, SequenceWithSNP seq_w_snp, SequenceWithSNVType encodedSequenceWithSNP) {
+  protected void process_snp(String snp_name, SequenceWithSNV seq_w_snp, SequenceWithSNVType encodedSequenceWithSNP) {
     for (ThresholdEvaluator<SequenceType, ModelType> motifEvaluator: pwmCollection) {
       ModelType pwm = motifEvaluator.pwm;
 
       if (seq_w_snp.length() >= pwm.length()) {
-        SingleSNPScan.RegionAffinityInfos affinityInfos;
-        affinityInfos = new SingleSNPScan<>(pwm, seq_w_snp, encodedSequenceWithSNP, motifEvaluator.pvalueCalculator, expand_region_length).affinityInfos();
+        SingleSNVScan.RegionAffinityInfos affinityInfos;
+        affinityInfos = new SingleSNVScan<>(pwm, seq_w_snp, encodedSequenceWithSNP, motifEvaluator.pvalueCalculator, expand_region_length).affinityInfos();
         if (affinityChangeSignificant(affinityInfos)) {
           if (shortFormat) {
             System.out.println(snp_name + "\t" + motifEvaluator.name + "\t" + affinityInfos.toStringShort());
@@ -282,8 +282,8 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
         if (line.trim().isEmpty() || line.charAt(0) == '#') continue;
         String[] input_parts = line.split("\\s+", 3);
         String snp_name = input_parts[0];
-        SequenceWithSNP seq_w_snp = SequenceWithSNP.fromString(input_parts[1]);
-        SequenceWithSNP seq_extended = seq_w_snp.expandFlanksUpTo(necessaryLength);
+        SequenceWithSNV seq_w_snp = SequenceWithSNV.fromString(input_parts[1]);
+        SequenceWithSNV seq_extended = seq_w_snp.expandFlanksUpTo(necessaryLength);
         process_snp(snp_name,
             seq_extended,
             encodeSequenceWithSNV(seq_extended));
