@@ -35,20 +35,17 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
 
   @Override
   protected CanFindPvalue calculator() {
-    if (cache_calculator == null) {
-      if (thresholds_folder == null) {
-        cache_calculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer);
-      } else {
-        File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
-        try {
-          cache_calculator = new FindPvalueBsearch(thresholds_file);
-        } catch (FileNotFoundException e) {
-          System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculation of P-value");
-          cache_calculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer);
-        }
+    if (thresholds_folder == null) {
+      return new FindPvalueAPE<>(motif.getObject(), background, discretizer);
+    } else {
+      File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
+      try {
+        return new FindPvalueBsearch(thresholds_file);
+      } catch (FileNotFoundException e) {
+        System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculation of P-value");
+        return new FindPvalueAPE<>(motif.getObject(), background, discretizer);
       }
     }
-    return cache_calculator;
   }
 
   @Override

@@ -58,7 +58,6 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   protected BackgroundType background;
 
   protected File thresholds_folder;
-  protected CanFindPvalue cache_calculator;
 
   abstract protected CanFindPvalue calculator();
   protected abstract void initialize_default_background();
@@ -157,8 +156,9 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   }
 
   protected String report() {
-    List<FoundedPvalueInfo> results = calculator().pvaluesByThresholds(thresholds);
-    ReportListLayout<FoundedPvalueInfo> layout = calculator().report_table_layout();
+    CanFindPvalue calc = calculator();
+    List<FoundedPvalueInfo> results = calc.pvaluesByThresholds(thresholds);
+    ReportListLayout<FoundedPvalueInfo> layout = calc.report_table_layout();
     ListReporter<FoundedPvalueInfo> reporter = new TextListReporter<>();
     return reporter.report(results, layout);
   }

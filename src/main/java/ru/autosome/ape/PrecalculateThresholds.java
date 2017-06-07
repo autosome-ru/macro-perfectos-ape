@@ -42,15 +42,15 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
     return "java ru.autosome.ape.PrecalculateThresholds";
   }
 
-  protected static ru.autosome.ape.PrecalculateThresholds from_arglist(String[] args) {
-    ru.autosome.ape.PrecalculateThresholds result = new ru.autosome.ape.PrecalculateThresholds();
+  protected static PrecalculateThresholds from_arglist(String[] args) {
+    PrecalculateThresholds result = new PrecalculateThresholds();
     result.setup_from_arglist(args);
     return result;
   }
 
   public static void main(String[] args) {
     try {
-      ru.autosome.ape.PrecalculateThresholds calculation = ru.autosome.ape.PrecalculateThresholds.from_arglist(args);
+      PrecalculateThresholds calculation = PrecalculateThresholds.from_arglist(args);
       calculation.calculate_thresholds_for_collection();
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");

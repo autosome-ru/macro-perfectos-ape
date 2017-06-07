@@ -63,7 +63,6 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   protected BackgroundType background;
   protected Named<ModelType> motif;
   protected File thresholds_folder;
-  protected CanFindThreshold cache_calculator;
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
@@ -188,7 +187,8 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   }
 
   protected String report() {
-    List<FoundedThresholdInfo> results = calculator().thresholdsByPvalues(pvalues, pvalue_boundary);
+    CanFindThreshold calc = calculator();
+    List<FoundedThresholdInfo> results = calc.thresholdsByPvalues(pvalues, pvalue_boundary);
     ReportListLayout<FoundedThresholdInfo> layout = report_table_layout();
     ListReporter<FoundedThresholdInfo> reporter = new TextListReporter<>();
     return reporter.report(results, layout);

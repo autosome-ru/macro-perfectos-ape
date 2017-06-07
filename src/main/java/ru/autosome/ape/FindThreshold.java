@@ -40,20 +40,17 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
 
   @Override
   protected CanFindThreshold calculator() {
-    if (cache_calculator == null) {
-      if (thresholds_folder == null) {
-        cache_calculator = new FindThresholdAPE<>(motif.getObject(), background, discretizer);
-      } else {
-        File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
-        try {
-          cache_calculator = new FindThresholdBsearch(thresholds_file);
-        } catch (FileNotFoundException e) {
-          System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculation of threshold");
-          cache_calculator = new FindThresholdAPE<>(motif.getObject(), background, discretizer);
-        }
+    if (thresholds_folder == null) {
+      return new FindThresholdAPE<>(motif.getObject(), background, discretizer);
+    } else {
+      File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
+      try {
+        return new FindThresholdBsearch(thresholds_file);
+      } catch (FileNotFoundException e) {
+        System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculation of threshold");
+        return new FindThresholdAPE<>(motif.getObject(), background, discretizer);
       }
     }
-    return cache_calculator;
   }
 
   private static FindThreshold from_arglist(String[] args) {
