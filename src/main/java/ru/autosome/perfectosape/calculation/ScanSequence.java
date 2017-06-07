@@ -1,18 +1,18 @@
 package ru.autosome.perfectosape.calculation;
 
-import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.scoringModel.ScoringModel;
+import ru.autosome.perfectosape.model.BestPositionWithScore;
 
 public class ScanSequence<SequenceType extends HasLength> {
   private final SequenceType sequence;
   private final ScoringModel<SequenceType> pwm;
-  final PositionInterval positions_to_check;
-  Boolean cacheBest;
-  Position cache_bestPosition;
-  double cache_bestScore;
+  private final PositionInterval positions_to_check;
+  private Boolean cacheBest;
+  private Position cache_bestPosition;
+  private double cache_bestScore;
 
   public ScanSequence(SequenceType sequence, ScoringModel<SequenceType> pwm, PositionInterval positions_to_check) {
     if (sequence.length() < pwm.length()) {
@@ -42,26 +42,4 @@ public class ScanSequence<SequenceType extends HasLength> {
     return cache_bestScore;
   }
 
-  public static class BestPositionWithScore {
-    private int position;
-    private Orientation orientation;
-    private double score;
-
-    public BestPositionWithScore() {
-      score = Double.NEGATIVE_INFINITY;
-    }
-    public void updateBestScore(int newPosition, Orientation newOrientation, double newScore) {
-      if (newScore > score) {
-        score = newScore;
-        position = newPosition;
-        orientation = newOrientation;
-      }
-    }
-    public double getScore() {
-      return score;
-    }
-    public Position getPosition() {
-      return new Position(position, orientation);
-    }
-  }
 }

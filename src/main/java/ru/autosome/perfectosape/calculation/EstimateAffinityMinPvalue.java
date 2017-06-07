@@ -24,7 +24,7 @@ public class EstimateAffinityMinPvalue<SequenceType extends HasLength,
     this.positions_to_check = positions_to_check;
   }
 
-  ScanSequence scanSequence() {
+  private ScanSequence scanSequence() {
     if (cache_scanSequence == null) {
       cache_scanSequence = new ScanSequence<>(sequence, pwm, positions_to_check);
     }

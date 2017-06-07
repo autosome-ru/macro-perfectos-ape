@@ -12,11 +12,11 @@ import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 public class SingleSNPScan<SequenceType extends EncodedSequenceType,
                            SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
                            ModelType extends ScoringModel<SequenceType>> {
-  final ModelType pwm;
-  final SequenceWithSNP sequenceWithSNP;
-  final SequenceWithSNVType encodedSequenceWithSNP;
-  final CanFindPvalue pvalueCalculator;
-  final int expandRegionLength;
+  private final ModelType pwm;
+  private final SequenceWithSNP sequenceWithSNP;
+  private final SequenceWithSNVType encodedSequenceWithSNP;
+  private final CanFindPvalue pvalueCalculator;
+  private final int expandRegionLength;
 
   public SingleSNPScan(ModelType pwm, SequenceWithSNP sequenceWithSNP, SequenceWithSNVType encodedSequenceWithSNP, CanFindPvalue pvalueCalculator, int expandRegionLength) {
     if (sequenceWithSNP.length() < pwm.length()) {
@@ -119,9 +119,9 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
   public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) {
     EstimateAffinityMinPvalue affinity_calculator;
     affinity_calculator = new EstimateAffinityMinPvalue<>(pwm,
-                                                             encodedSequenceWithSNP.sequenceVariant(allele_number),
-                                                             pvalueCalculator,
-                                                             positionsToCheck());
+                                                         encodedSequenceWithSNP.sequenceVariant(allele_number),
+                                                         pvalueCalculator,
+                                                         positionsToCheck());
     Position pos = affinity_calculator.bestPosition();
     Position pos_centered = new Position(pos.position() - sequenceWithSNP.left.length(), pos.orientation());
 

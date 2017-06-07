@@ -16,6 +16,7 @@ import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.scoringModel.ScoringModel;
 import ru.autosome.perfectosape.calculation.SingleSNPScan;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
+import ru.autosome.perfectosape.model.ThresholdEvaluator;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 
@@ -29,19 +30,6 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
                               MotifType extends HasLength & Discretable<MotifType> & ScoreDistribution<BackgroundType> & BackgroundAppliable<BackgroundType, ModelType>,
                               ModelType extends ScoringModel<SequenceType>,
                               BackgroundType extends GeneralizedBackgroundModel> {
-  public static class ThresholdEvaluator<SequenceType,
-                                         SequenceWithSNVType,
-                                         ModelType extends ScoringModel<SequenceType>> {
-    public final ModelType pwm;
-    public final CanFindPvalue pvalueCalculator;
-    public final String name;
-
-    public ThresholdEvaluator(ModelType pwm, CanFindPvalue pvalueCalculator, String name) {
-      this.pwm = pwm;
-      this.pvalueCalculator = pvalueCalculator;
-      this.name = name;
-    }
-  }
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String s);
@@ -114,7 +102,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected PseudocountCalculator pseudocount;
   protected File thresholds_folder;
 
-  protected List<ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType>> pwmCollection;
+  protected List<ThresholdEvaluator<SequenceType, ModelType>> pwmCollection;
 
   protected double max_pvalue_cutoff;
   protected Double min_fold_change_cutoff; // It can be either linear of logarithmic cutoff (to be refactored later)
@@ -256,7 +244,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   }
 
   protected void process_snp(String snp_name, SequenceWithSNP seq_w_snp, SequenceWithSNVType encodedSequenceWithSNP) {
-    for (ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType> motifEvaluator: pwmCollection) {
+    for (ThresholdEvaluator<SequenceType, ModelType> motifEvaluator: pwmCollection) {
       ModelType pwm = motifEvaluator.pwm;
 
       if (seq_w_snp.length() >= pwm.length()) {
@@ -305,7 +293,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
   int necessaryFlankLength() {
     int maxMotifLength = 1;
-    for (ThresholdEvaluator<SequenceType, SequenceWithSNVType, ModelType> evaluator : pwmCollection) {
+    for (ThresholdEvaluator<SequenceType, ModelType> evaluator : pwmCollection) {
       maxMotifLength = Math.max(maxMotifLength, evaluator.pwm.length());
     }
     return maxMotifLength + expand_region_length;
