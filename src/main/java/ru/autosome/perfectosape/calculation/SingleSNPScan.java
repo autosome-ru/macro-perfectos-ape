@@ -4,6 +4,7 @@ import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.scoringModel.ScoringModel;
+import ru.autosome.perfectosape.model.BestPositionWithScore;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
@@ -27,6 +28,9 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
     this.encodedSequenceWithSNP = encodedSequenceWithSNP; // Another representation of the same sequence with SNP (not checked they are in accordance due to performance reasons
     this.pvalueCalculator = pvalueCalculator;
     this.expandRegionLength = expandRegionLength;
+    if (sequenceWithSNP.length() < pwm.length()) {
+      throw new IllegalArgumentException("Can't estimate affinity to sequence '" + sequenceWithSNP + "' (length " + sequenceWithSNP.length() + ") for motif of length " + pwm.length());
+    }
     if (sequenceWithSNP.num_cases() != 2) {
       throw new IllegalArgumentException("Unable to process more than two variants of nucleotide for SNP " + sequenceWithSNP);
     }
@@ -117,15 +121,14 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
   }
 
   public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) {
-    EstimateAffinityMinPvalue affinity_calculator;
-    affinity_calculator = new EstimateAffinityMinPvalue<>(pwm,
-                                                         encodedSequenceWithSNP.sequenceVariant(allele_number),
-                                                         pvalueCalculator,
-                                                         positionsToCheck());
-    Position pos = affinity_calculator.bestPosition();
+    SequenceType encodedSequence = encodedSequenceWithSNP.sequenceVariant(allele_number);
+    BestPositionWithScore bestPositionWithScore = positionsToCheck().findBestPosition(encodedSequence, pwm);
+
+    Position pos = bestPositionWithScore.getPosition();
     Position pos_centered = new Position(pos.position() - sequenceWithSNP.left.length(), pos.orientation());
 
-    double pvalue = affinity_calculator.affinity();
+    double score = bestPositionWithScore.getScore();
+    double pvalue = pvalueCalculator.pvalueByThreshold(score).pvalue;
     Character allele = sequenceWithSNP.mid[allele_number];
     Sequence sequence = sequenceWithSNP.sequence_variants()[allele_number];
     Sequence word = sequence.substring(pos, pwm.length());
