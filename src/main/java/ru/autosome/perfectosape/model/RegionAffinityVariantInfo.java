@@ -3,20 +3,11 @@ package ru.autosome.perfectosape.model;
 import ru.autosome.commons.model.Position;
 
 public class RegionAffinityVariantInfo {
-  public final Position position;
-  public final Sequence word;
-  public final Character allele;
-  public final double pvalue;
+  final Position position;
+  final Sequence word;
+  final Character allele;
+  final double pvalue;
 
-  public Position getPosition() {
-    return position;
-  }
-  public Sequence getWord() {
-    return word;
-  }
-  public Character getAllele() {
-    return allele;
-  }
   public double getPvalue() {
     return pvalue;
   }

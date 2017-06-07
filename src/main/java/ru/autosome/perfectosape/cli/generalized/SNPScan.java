@@ -15,6 +15,7 @@ import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.scoringModel.ScoringModel;
 import ru.autosome.perfectosape.calculation.SingleSNVScan;
+import ru.autosome.perfectosape.model.RegionAffinityInfos;
 import ru.autosome.perfectosape.model.SequenceWithSNV;
 import ru.autosome.perfectosape.model.ThresholdEvaluator;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
@@ -224,12 +225,11 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
   protected abstract SequenceWithSNVType encodeSequenceWithSNV(SequenceWithSNV sequenceWithSNV);
 
-  boolean pvalueSignificant(SingleSNVScan.RegionAffinityInfos affinityInfos) {
-    return affinityInfos.getInfo_1().getPvalue() <= max_pvalue_cutoff ||
-            affinityInfos.getInfo_2().getPvalue() <= max_pvalue_cutoff;
+  private boolean pvalueSignificant(RegionAffinityInfos affinityInfos) {
+    return affinityInfos.hasSiteOnAnyAllele(max_pvalue_cutoff);
   }
 
-  boolean foldChangeSignificant(SingleSNVScan.RegionAffinityInfos affinityInfos) {
+  private boolean foldChangeSignificant(RegionAffinityInfos affinityInfos) {
     if (useLogFoldChange) {
       double logFoldChange = affinityInfos.logFoldChange();
       return (logFoldChange >= min_fold_change_cutoff) || (logFoldChange <= - min_fold_change_cutoff);
@@ -239,7 +239,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     }
   }
 
-  boolean affinityChangeSignificant(SingleSNVScan.RegionAffinityInfos affinityInfos) {
+  private boolean affinityChangeSignificant(RegionAffinityInfos affinityInfos) {
     return pvalueSignificant(affinityInfos) && foldChangeSignificant(affinityInfos);
   }
 
@@ -248,7 +248,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       ModelType pwm = motifEvaluator.pwm;
 
       if (seq_w_snp.length() >= pwm.length()) {
-        SingleSNVScan.RegionAffinityInfos affinityInfos;
+        RegionAffinityInfos affinityInfos;
         affinityInfos = new SingleSNVScan<>(pwm, seq_w_snp, encodedSequenceWithSNP, motifEvaluator.pvalueCalculator, expand_region_length).affinityInfos();
         if (affinityChangeSignificant(affinityInfos)) {
           if (shortFormat) {
