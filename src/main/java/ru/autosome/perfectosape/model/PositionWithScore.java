@@ -3,15 +3,15 @@ package ru.autosome.perfectosape.model;
 import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
 
-public class BestPositionWithScore {
+public class PositionWithScore {
   private int position;
   private Orientation orientation;
   private double score;
 
-  public BestPositionWithScore() {
+  public PositionWithScore() {
     score = Double.NEGATIVE_INFINITY;
   }
-  public void updateBestScore(int newPosition, Orientation newOrientation, double newScore) {
+  public void replaceIfBetter(int newPosition, Orientation newOrientation, double newScore) {
     if (newScore > score) {
       score = newScore;
       position = newPosition;

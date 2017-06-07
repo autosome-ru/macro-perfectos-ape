@@ -2,7 +2,7 @@ package ru.autosome.commons.model;
 
 import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.scoringModel.ScoringModel;
-import ru.autosome.perfectosape.model.BestPositionWithScore;
+import ru.autosome.perfectosape.model.PositionWithScore;
 
 public class PositionInterval {
   public final int left; // [left; right]
@@ -16,12 +16,13 @@ public class PositionInterval {
   }
 
 
-  public <SequenceType extends HasLength> BestPositionWithScore findBestPosition(SequenceType sequence, ScoringModel<SequenceType> scoringModel) {
-    BestPositionWithScore bestPos = new BestPositionWithScore();
+  public <SequenceType extends HasLength> PositionWithScore findBestPosition(SequenceType sequence, ScoringModel<SequenceType> scoringModel) {
+    PositionWithScore bestPos = new PositionWithScore();
 
     for (int pos = Math.max(left, 0); pos <= Math.min(right, sequence.length() - scoringModel.length()); ++pos) {
-      bestPos.updateBestScore(pos, Orientation.direct, scoringModel.score(sequence, Orientation.direct, pos));
-      bestPos.updateBestScore(pos, Orientation.revcomp, scoringModel.score(sequence, Orientation.revcomp, pos));
+      // We don't use here a stream of PositionWithScore objects but change them in place for perfomance reasons
+      bestPos.replaceIfBetter(pos, Orientation.direct, scoringModel.score(sequence, Orientation.direct, pos));
+      bestPos.replaceIfBetter(pos, Orientation.revcomp, scoringModel.score(sequence, Orientation.revcomp, pos));
     }
     return bestPos;
   }

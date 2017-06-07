@@ -4,7 +4,7 @@ import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
 import ru.autosome.commons.scoringModel.ScoringModel;
-import ru.autosome.perfectosape.model.BestPositionWithScore;
+import ru.autosome.perfectosape.model.PositionWithScore;
 import ru.autosome.perfectosape.model.Sequence;
 import ru.autosome.perfectosape.model.SequenceWithSNP;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
@@ -122,7 +122,7 @@ public class SingleSNPScan<SequenceType extends EncodedSequenceType,
 
   public RegionAffinityVariantInfo affinityVariantInfo(int allele_number) {
     SequenceType encodedSequence = encodedSequenceWithSNP.sequenceVariant(allele_number);
-    BestPositionWithScore bestPositionWithScore = positionsToCheck().findBestPosition(encodedSequence, pwm);
+    PositionWithScore bestPositionWithScore = positionsToCheck().findBestPosition(encodedSequence, pwm);
 
     Position pos = bestPositionWithScore.getPosition();
     Position pos_centered = new Position(pos.position() - sequenceWithSNP.left.length(), pos.orientation());
