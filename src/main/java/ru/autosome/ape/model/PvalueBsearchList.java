@@ -7,52 +7,24 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 // List of pvalue-threshold pairs sorted by threshold ascending
 public class PvalueBsearchList {
   private final List<ThresholdPvaluePair> list;
 
   public PvalueBsearchList(List<ThresholdPvaluePair> infos) {
-    infos.sort(ThresholdPvaluePair.thresholdComparator);
-    this.list = without_consequent_duplicates(without_inf_nan_scores(without_zero_pvalue(infos)));
-  }
-
-  private List<ThresholdPvaluePair> without_consequent_duplicates(List<ThresholdPvaluePair> infos) {
-    List<ThresholdPvaluePair> reduced_infos;
-    reduced_infos = new ArrayList<>();
-    if (infos.isEmpty()) {
-      return reduced_infos;
-    }
-    reduced_infos.add(infos.get(0));
-    for (int i = 1; i < infos.size(); ++i) {
-      if (!infos.get(i).equals(infos.get(i - 1))) {
-        reduced_infos.add(infos.get(i));
-      }
-    }
-    return reduced_infos;
-  }
-
-  private List<ThresholdPvaluePair> without_zero_pvalue(List<ThresholdPvaluePair> infos) {
-    List<ThresholdPvaluePair> reduced_infos;
-    reduced_infos = new ArrayList<>();
-    for (ThresholdPvaluePair info: infos) {
-      if (info.pvalue != 0) {
-        reduced_infos.add(info);
-      }
-    }
-    return reduced_infos;
-  }
-
-  private List<ThresholdPvaluePair> without_inf_nan_scores(List<ThresholdPvaluePair> infos) {
-    List<ThresholdPvaluePair> reduced_infos;
-    reduced_infos = new ArrayList<>();
-    for (ThresholdPvaluePair info: infos) {
-      Double score = info.threshold;
-      if (!score.isNaN() && !score.isInfinite()) {
-        reduced_infos.add(info);
-      }
-    }
-    return reduced_infos;
+    this.list = infos.stream()
+                    .filter((ThresholdPvaluePair info) -> info.pvalue != 0)
+                    .filter((ThresholdPvaluePair info) -> {
+                      Double score = info.threshold;
+                      return !score.isNaN() && !score.isInfinite();
+                    })
+                    .distinct()
+                    .sorted(ThresholdPvaluePair.thresholdComparator)
+                    .collect(Collectors.toList());
   }
 
   public double combine_pvalues(double pvalue_1, double pvalue_2) {
