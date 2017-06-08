@@ -9,12 +9,12 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.scoringModel.PWMOnBackground;
 
-public class CountingPWM extends ScoringModelDistributions {
+public class PWMScoresGenerator extends ScoringDistributionGenerator {
 
   final PWM pwm;
   final BackgroundModel background;
 
-  public CountingPWM(PWM pwm, BackgroundModel background) {
+  public PWMScoresGenerator(PWM pwm, BackgroundModel background) {
     this.pwm = pwm;
     this.background = background;
   }

@@ -10,12 +10,12 @@ import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.scoringModel.DiPWMOnBackground;
 
-public class CountingDiPWM extends ScoringModelDistributions {
+public class DiPWMScoresGenerator extends ScoringDistributionGenerator {
 
   private final DiPWM dipwm;
   private final DiBackgroundModel dibackground;
 
-  public CountingDiPWM(DiPWM dipwm, DiBackgroundModel dibackground) {
+  public DiPWMScoresGenerator(DiPWM dipwm, DiBackgroundModel dibackground) {
     this.dipwm = dipwm;
     this.dibackground = dibackground;
   }

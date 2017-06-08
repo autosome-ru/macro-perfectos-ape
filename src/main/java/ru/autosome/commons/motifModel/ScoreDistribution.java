@@ -1,7 +1,7 @@
 package ru.autosome.commons.motifModel;
 
-import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
+import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringDistributionGenerator;
 
 public interface ScoreDistribution<BackgroundType> {
-  ScoringModelDistributions scoringModel(BackgroundType background);
+  ScoringDistributionGenerator scoringModel(BackgroundType background);
 }

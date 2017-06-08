@@ -1,7 +1,7 @@
 package ru.autosome.commons.motifModel.mono;
 
-import ru.autosome.ape.calculation.ScoringModelDistributions.CountingPWM;
-import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
+import ru.autosome.ape.calculation.ScoringModelDistributions.PWMScoresGenerator;
+import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringDistributionGenerator;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
@@ -98,8 +98,8 @@ public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWM
   }
 
   @Override
-  public ScoringModelDistributions scoringModel(BackgroundModel background) {
-    return new CountingPWM(this, background);
+  public ScoringDistributionGenerator scoringModel(BackgroundModel background) {
+    return new PWMScoresGenerator(this, background);
   }
 
   @Override

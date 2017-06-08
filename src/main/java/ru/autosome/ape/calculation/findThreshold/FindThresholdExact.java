@@ -1,6 +1,6 @@
 package ru.autosome.ape.calculation.findThreshold;
 
-import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
+import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringDistributionGenerator;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 
@@ -18,13 +18,13 @@ public class FindThresholdExact<ModelType extends ScoreDistribution<BackgroundTy
 
   @Override
   public FoundedThresholdInfo thresholdByPvalue(double pvalue, BoundaryType boundaryType) {
-    ScoringModelDistributions scoringModel = motif.scoringModel(background);
+    ScoringDistributionGenerator scoringModel = motif.scoringModel(background);
     return scoringModel.threshold(pvalue, boundaryType);
   }
 
   @Override
   public List<FoundedThresholdInfo> thresholdsByPvalues(List<Double> pvalues, BoundaryType boundaryType) {
-    ScoringModelDistributions scoringModel = motif.scoringModel(background);
+    ScoringDistributionGenerator scoringModel = motif.scoringModel(background);
     return scoringModel.thresholds(pvalues, boundaryType);
   }
 }

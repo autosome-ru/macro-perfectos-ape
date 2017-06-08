@@ -9,7 +9,7 @@ import ru.autosome.commons.support.ArrayExtensions;
 
 import java.util.List;
 
-abstract public class ScoringModelDistributions {
+abstract public class ScoringDistributionGenerator {
   abstract GaussianThresholdEstimator gaussianThresholdEstimator();
   protected abstract ScoreDistributionTop score_distribution_above_threshold(double threshold);
 

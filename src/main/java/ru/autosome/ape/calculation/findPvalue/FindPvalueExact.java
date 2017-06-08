@@ -1,7 +1,7 @@
 package ru.autosome.ape.calculation.findPvalue;
 
 import gnu.trove.map.TDoubleDoubleMap;
-import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
+import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringDistributionGenerator;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.ReportListLayout;
 import ru.autosome.commons.motifModel.HasLength;
@@ -24,7 +24,7 @@ public class FindPvalueExact<ModelType extends HasLength & ScoreDistribution<Bac
   @Override
   public List<FoundedPvalueInfo> pvaluesByThresholds(List<Double> thresholds) {
     double vocabularyVolume = Math.pow(background.volume(), motif.length());
-    ScoringModelDistributions scoringModel = motif.scoringModel(background);
+    ScoringDistributionGenerator scoringModel = motif.scoringModel(background);
     TDoubleDoubleMap counts = scoringModel.counts_above_thresholds(thresholds);
 
     List<FoundedPvalueInfo> infos = new ArrayList<>();

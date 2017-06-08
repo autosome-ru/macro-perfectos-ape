@@ -1,7 +1,7 @@
 package ru.autosome.commons.motifModel.di;
 
-import ru.autosome.ape.calculation.ScoringModelDistributions.CountingDiPWM;
-import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringModelDistributions;
+import ru.autosome.ape.calculation.ScoringModelDistributions.DiPWMScoresGenerator;
+import ru.autosome.ape.calculation.ScoringModelDistributions.ScoringDistributionGenerator;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
@@ -128,8 +128,8 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
   }
 
   @Override
-  public ScoringModelDistributions scoringModel(DiBackgroundModel background) {
-    return new CountingDiPWM(this, background);
+  public ScoringDistributionGenerator scoringModel(DiBackgroundModel background) {
+    return new DiPWMScoresGenerator(this, background);
   }
 
   @Override
