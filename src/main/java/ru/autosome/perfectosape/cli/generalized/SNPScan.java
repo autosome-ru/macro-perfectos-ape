@@ -13,7 +13,7 @@ import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.HasLength;
 import ru.autosome.commons.motifModel.ScoreDistribution;
 import ru.autosome.commons.motifModel.types.DataModel;
-import ru.autosome.commons.scoringModel.ScoringModel;
+import ru.autosome.commons.scoringModel.SequenceScoringModel;
 import ru.autosome.perfectosape.calculation.SingleSNVScan;
 import ru.autosome.perfectosape.model.RegionAffinityInfos;
 import ru.autosome.perfectosape.model.SequenceWithSNV;
@@ -29,7 +29,7 @@ import java.util.List;
 abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLength,
                               SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
                               MotifType extends HasLength & Discretable<MotifType> & ScoreDistribution<BackgroundType> & BackgroundAppliable<BackgroundType, ModelType>,
-                              ModelType extends ScoringModel<SequenceType>,
+                              ModelType extends SequenceScoringModel<SequenceType>,
                               BackgroundType extends GeneralizedBackgroundModel> {
 
   protected abstract void initialize_default_background();

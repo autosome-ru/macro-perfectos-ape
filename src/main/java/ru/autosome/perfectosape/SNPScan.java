@@ -6,14 +6,14 @@ import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
 import ru.autosome.commons.importer.PWMImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.commons.scoringModel.PWMOnBackground;
+import ru.autosome.commons.scoringModel.PWMSequenceScoring;
 import ru.autosome.perfectosape.model.SequenceWithSNV;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNVMonoEncoded;
 
 import java.util.List;
 
-public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<SequenceMonoEncoded, SequenceWithSNVMonoEncoded, PWM, PWMOnBackground, BackgroundModel> {
+public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<SequenceMonoEncoded, SequenceWithSNVMonoEncoded, PWM, PWMSequenceScoring, BackgroundModel> {
   @Override
   protected String DOC_run_string(){
     return "java ru.autosome.perfectosape.SNPScan";

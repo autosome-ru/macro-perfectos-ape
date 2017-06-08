@@ -8,12 +8,12 @@ import ru.autosome.commons.model.indexingScheme.DiIndexingScheme;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
-import ru.autosome.commons.scoringModel.DiPWMOnBackground;
+import ru.autosome.commons.scoringModel.DiPWMSequenceScoring;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundModel, DiPWMOnBackground>,
+public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundModel, DiPWMSequenceScoring>,
                                             Discretable<DiPWM>,
                                             ScoreDistribution<DiBackgroundModel>,
                                             PositionWeightModel, Alignable<DiPWM>,
@@ -172,7 +172,7 @@ public class DiPWM extends DiPM implements  BackgroundAppliable<DiBackgroundMode
   }
 
   @Override
-  public DiPWMOnBackground onBackground(DiBackgroundModel background) {
-    return new DiPWMOnBackground(this, background);
+  public DiPWMSequenceScoring onBackground(DiBackgroundModel background) {
+    return new DiPWMSequenceScoring(this, background);
   }
 }

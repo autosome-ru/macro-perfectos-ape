@@ -10,12 +10,12 @@ import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
 
 import static ru.autosome.commons.model.indexingScheme.DiIndexingSchemeIUPAC.N_index;
 
-public class DiPWMOnBackground implements ScoreStatistics, ScoringModel<SequenceDiEncoded> {
+public class DiPWMSequenceScoring implements ScoreStatistics, SequenceScoringModel<SequenceDiEncoded> {
 
   private final DiPWM dipwm;
   private final DiBackgroundModel dibackground;
   private final double[][] matrixIUPAC;
-  public DiPWMOnBackground(DiPWM dipwm, DiBackgroundModel dibackground) {
+  public DiPWMSequenceScoring(DiPWM dipwm, DiBackgroundModel dibackground) {
     this.dipwm = dipwm;
     this.dibackground = dibackground;
     this.matrixIUPAC = calculateMatrixIUPAC();

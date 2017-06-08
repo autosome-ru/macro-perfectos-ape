@@ -3,14 +3,14 @@ package ru.autosome.perfectosape.calculation;
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.model.PositionInterval;
-import ru.autosome.commons.scoringModel.ScoringModel;
+import ru.autosome.commons.scoringModel.SequenceScoringModel;
 import ru.autosome.perfectosape.model.*;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceType;
 import ru.autosome.perfectosape.model.encoded.EncodedSequenceWithSNVType;
 
 public class SingleSNVScan<SequenceType extends EncodedSequenceType,
                            SequenceWithSNVType extends EncodedSequenceWithSNVType<SequenceType>,
-                           ModelType extends ScoringModel<SequenceType>> {
+                           ModelType extends SequenceScoringModel<SequenceType>> {
   private final ModelType pwm;
   private final SequenceWithSNV sequenceWithSNV;
   private final SequenceWithSNVType encodedSequenceWithSNP;

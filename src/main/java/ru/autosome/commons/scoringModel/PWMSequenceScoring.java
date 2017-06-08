@@ -6,13 +6,13 @@ import ru.autosome.commons.motifModel.ScoreStatistics;
 import ru.autosome.commons.motifModel.mono.PWM;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 
-public class PWMOnBackground implements ScoreStatistics, ScoringModel<SequenceMonoEncoded> {
+public class PWMSequenceScoring implements ScoreStatistics, SequenceScoringModel<SequenceMonoEncoded> {
   private final PWM pwm;
   private final BackgroundModel background;
   private final double[][] matrixIUPAC;
   private final int length;
 
-  public PWMOnBackground(PWM pwm, BackgroundModel background) {
+  public PWMSequenceScoring(PWM pwm, BackgroundModel background) {
     this.pwm = pwm;
     this.background = background;
     this.matrixIUPAC = calculateMatrixIUPAC();

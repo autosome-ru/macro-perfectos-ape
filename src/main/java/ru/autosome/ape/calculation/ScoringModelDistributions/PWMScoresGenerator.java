@@ -7,7 +7,7 @@ import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.motifModel.mono.PWM;
-import ru.autosome.commons.scoringModel.PWMOnBackground;
+import ru.autosome.commons.scoringModel.PWMSequenceScoring;
 
 public class PWMScoresGenerator extends ScoringDistributionGenerator {
 
@@ -20,7 +20,7 @@ public class PWMScoresGenerator extends ScoringDistributionGenerator {
   }
 
   @Override
-  GaussianThresholdEstimator<PWMOnBackground> gaussianThresholdEstimator() {
+  GaussianThresholdEstimator<PWMSequenceScoring> gaussianThresholdEstimator() {
     return new GaussianThresholdEstimator<>(pwm.onBackground(background));
   }
 

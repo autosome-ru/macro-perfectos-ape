@@ -8,7 +8,7 @@ import ru.autosome.ape.calculation.findThreshold.GaussianThresholdEstimator;
 import ru.autosome.ape.model.ScoreDistributionTop;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.motifModel.di.DiPWM;
-import ru.autosome.commons.scoringModel.DiPWMOnBackground;
+import ru.autosome.commons.scoringModel.DiPWMSequenceScoring;
 
 public class DiPWMScoresGenerator extends ScoringDistributionGenerator {
 
@@ -21,7 +21,7 @@ public class DiPWMScoresGenerator extends ScoringDistributionGenerator {
   }
 
   @Override
-  GaussianThresholdEstimator<DiPWMOnBackground> gaussianThresholdEstimator() {
+  GaussianThresholdEstimator<DiPWMSequenceScoring> gaussianThresholdEstimator() {
     return new GaussianThresholdEstimator<>(dipwm.onBackground(dibackground));
   }
 

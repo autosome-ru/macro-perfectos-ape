@@ -6,10 +6,10 @@ import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.model.Discretizer;
 import ru.autosome.commons.motifModel.*;
 import ru.autosome.commons.motifModel.types.PositionWeightModel;
-import ru.autosome.commons.scoringModel.PWMOnBackground;
+import ru.autosome.commons.scoringModel.PWMSequenceScoring;
 import ru.autosome.commons.support.ArrayExtensions;
 
-public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWMOnBackground>,
+public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWMSequenceScoring>,
                                         Discretable<PWM>,
                                         ScoreDistribution<BackgroundModel>,
                                         PositionWeightModel, Alignable<PWM>,
@@ -103,7 +103,7 @@ public class PWM extends PM implements  BackgroundAppliable<BackgroundModel, PWM
   }
 
   @Override
-  public PWMOnBackground onBackground(BackgroundModel background) {
-    return new PWMOnBackground(this, background);
+  public PWMSequenceScoring onBackground(BackgroundModel background) {
+    return new PWMSequenceScoring(this, background);
   }
 }
