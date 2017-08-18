@@ -127,7 +127,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     } else if (opt.equals("--transpose")) {
       transpose = true;
     } else if (opt.equals("--thresholds-from-stdin")) {
-      should_extract_values_from_stdin = true;
+      // Pass; It's already processed, before thresholds extraction
     } else {
       if (failed_to_recognize_additional_options(opt, argv)) {
         throw new IllegalArgumentException("Unknown option '" + opt + "'");
@@ -142,6 +142,9 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   protected void setup_from_arglist(List<String> argv) {
     Helper.print_help_if_requested(argv, documentString());
     extract_pm_filename(argv);
+    if (argv.contains("--thresholds-from-stdin")) {
+      should_extract_values_from_stdin = true;
+    }
     extract_threshold_lists(argv);
     while (argv.size() > 0) {
       extract_option(argv);
