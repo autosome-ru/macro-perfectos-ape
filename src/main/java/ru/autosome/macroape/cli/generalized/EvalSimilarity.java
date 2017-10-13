@@ -48,7 +48,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
     "  [--first-threshold <threshold for the first matrix>]\n" +
     "  [--second-threshold <threshold for the second matrix>]\n" +
-    "  [--position <shift>,<direct|revcomp>] - specify relative alignment to test. By default every alignment tested (example: --position -3,revcomp). Comma not allowed.\n" +
+    "  [--position <shift>,<direct|revcomp>] - specify relative alignment to test. By default every alignment tested (example: --position -3,revcomp).\n" +
     "                                          --position all,<direct|revcomp> allows to scan all positions on the fixed strand.\n" +
     "  [--[first-|second-]transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
     DOC_additional_options() +
