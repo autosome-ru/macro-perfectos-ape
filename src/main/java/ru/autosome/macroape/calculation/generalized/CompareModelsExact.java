@@ -1,6 +1,7 @@
 package ru.autosome.macroape.calculation.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
+import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.macroape.model.AlignmentGenerator;
@@ -26,6 +27,12 @@ public class CompareModelsExact<ModelType extends Alignable<ModelType>> {
 
   public ComparisonSimilarityInfo jaccard(FoundedPvalueInfo first, FoundedPvalueInfo second) {
     return alignmentGenerator.relative_positions().map(
+        (Position position) -> jaccardAtPosition(first, second, position)
+    ).max(Comparator.comparingDouble(ComparisonSimilarityInfo::similarity)).get();
+  }
+
+  public ComparisonSimilarityInfo jaccardFixedStrand(FoundedPvalueInfo first, FoundedPvalueInfo second, Orientation strand) {
+    return alignmentGenerator.relative_positions_fixed_strand(strand).map(
         (Position position) -> jaccardAtPosition(first, second, position)
     ).max(Comparator.comparingDouble(ComparisonSimilarityInfo::similarity)).get();
   }

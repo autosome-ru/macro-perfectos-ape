@@ -7,10 +7,7 @@ import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ReportLayout;
-import ru.autosome.commons.model.BoundaryType;
-import ru.autosome.commons.model.Discretizer;
-import ru.autosome.commons.model.Position;
-import ru.autosome.commons.model.PseudocountCalculator;
+import ru.autosome.commons.model.*;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreDistribution;
@@ -52,6 +49,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     "  [--first-threshold <threshold for the first matrix>]\n" +
     "  [--second-threshold <threshold for the second matrix>]\n" +
     "  [--position <shift>,<direct|revcomp>] - specify relative alignment to test. By default every alignment tested (example: --position -3,revcomp). Comma not allowed.\n" +
+    "                                          --position all,<direct|revcomp> allows to scan all positions on the fixed strand.\n" +
     "  [--[first-|second-]transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
     DOC_additional_options() +
     "\n" +
@@ -75,6 +73,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
   protected Double cacheFirstThreshold, cacheSecondThreshold;
 
   private Position relativePosition; // if null, all orientations are shifts and orientations are tested
+  private Orientation fixedStrand; // if not null, only positions on this strand will be considered
   protected boolean transposeFirst, transposeSecond;
 
   protected abstract BackgroundType extract_background(String str);
@@ -135,6 +134,7 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
 
     pvalueBoundary = BoundaryType.WEAK;
     relativePosition = null;
+    fixedStrand = null;
   }
 
   protected void extract_option(List<String> argv) {
@@ -184,9 +184,13 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
     } else if (opt.equals("--position")) {
       String pos_string = argv.remove(0);
       String[] pos_tokens = pos_string.split(",");
-      Integer shift = Integer.valueOf(pos_tokens[0]);
-      String orientation = pos_tokens[1];
-      relativePosition = new Position(shift, orientation);
+      if (pos_tokens[0].equals("all") || pos_tokens[0].equals("any")) {
+        fixedStrand = Orientation.valueOf(pos_tokens[1]);
+      } else {
+        Integer shift = Integer.valueOf(pos_tokens[0]);
+        String orientation = pos_tokens[1];
+        relativePosition = new Position(shift, orientation);
+      }
     } else if (opt.equals("--transpose")) {
       transposeFirst = true;
       transposeSecond = true;
@@ -247,10 +251,12 @@ public abstract class EvalSimilarity<ModelType extends Discretable<ModelType> & 
                                                   .pvalueByThreshold(thresholdFirst);
     FoundedPvalueInfo countByThresholdSecond = new FindPvalueAPE<>(secondPWM, background, discretizer)
                                                    .pvalueByThreshold(thresholdSecond);
-    if (relativePosition == null) {
-      return calc.jaccard(countByThresholdFirst, countByThresholdSecond);
-    } else {
+    if (relativePosition != null) {
       return calc.jaccardAtPosition(countByThresholdFirst, countByThresholdSecond, relativePosition);
+    } else if (fixedStrand != null) {
+      return calc.jaccardFixedStrand(countByThresholdFirst, countByThresholdSecond, fixedStrand);
+    } else {
+      return calc.jaccard(countByThresholdFirst, countByThresholdSecond);
     }
   }
 

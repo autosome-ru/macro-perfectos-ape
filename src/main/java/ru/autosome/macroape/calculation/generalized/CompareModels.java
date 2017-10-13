@@ -2,6 +2,7 @@ package ru.autosome.macroape.calculation.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.commons.model.Discretizer;
+import ru.autosome.commons.model.Orientation;
 import ru.autosome.commons.model.Position;
 import ru.autosome.commons.motifModel.Alignable;
 import ru.autosome.commons.motifModel.Discretable;
@@ -28,6 +29,10 @@ public class CompareModels<ModelType extends Alignable<ModelType> & Discretable<
 
   public ComparisonSimilarityInfo jaccard(FoundedPvalueInfo first, FoundedPvalueInfo second) {
     return evaluator.jaccard(first.upscale(discretizer), second.upscale(discretizer));
+  }
+
+  public ComparisonSimilarityInfo jaccardFixedStrand(FoundedPvalueInfo first, FoundedPvalueInfo second, Orientation strand) {
+    return evaluator.jaccardFixedStrand(first.upscale(discretizer), second.upscale(discretizer), strand);
   }
 
   public ComparisonSimilarityInfo jaccardAtPosition(FoundedPvalueInfo first, FoundedPvalueInfo second, Position position) {

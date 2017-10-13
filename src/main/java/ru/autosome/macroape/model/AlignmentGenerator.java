@@ -23,6 +23,14 @@ public class AlignmentGenerator<ModelType extends Alignable<ModelType>> {
     return builder.build();
   }
 
+  public Stream<Position> relative_positions_fixed_strand(Orientation strand) {
+    Stream.Builder<Position> builder = Stream.builder();
+    for(int shift = -secondModel.length(); shift <= firstModel.length(); ++shift) {
+      builder.accept(new Position(shift, strand));
+    }
+    return builder.build();
+  }
+
   public PairAligned<ModelType> alignment(Position position) {
     return new PairAligned<>(firstModel, secondModel, position);
   }
