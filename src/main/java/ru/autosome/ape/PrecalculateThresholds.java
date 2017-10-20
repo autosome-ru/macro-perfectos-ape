@@ -22,11 +22,6 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
   }
 
   @Override
-  protected PrecalculateThresholdList<PWM, BackgroundModel> calculator() {
-    return new PrecalculateThresholdList<>(pvalues, discretizer, background, pvalue_boundary);
-  }
-
-  @Override
   protected Named<PWM> loadMotif(File file){
     PWMImporter importer = new PWMImporter(background, data_model, effective_count, transpose, pseudocount);
     return importer.loadMotifWithName(file);

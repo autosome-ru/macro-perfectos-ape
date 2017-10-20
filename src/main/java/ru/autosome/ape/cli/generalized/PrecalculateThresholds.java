@@ -4,6 +4,7 @@ import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.ape.model.progression.Progression;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
+import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -12,6 +13,7 @@ import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreBoundaries;
 import ru.autosome.commons.motifModel.ScoreDistribution;
+import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.io.File;
@@ -37,11 +39,14 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String s);
-  protected abstract PrecalculateThresholdList<ModelType, BackgroundType> calculator();
   protected abstract String DOC_background_option();
   protected abstract String DOC_run_string();
 
   abstract protected Named<ModelType> loadMotif(File file);
+
+  protected PrecalculateThresholdList<ModelType, BackgroundType> calculator() {
+    return new PrecalculateThresholdList<>(pvalues, discretizer, background, pvalue_boundary);
+  }
 
   protected void initialize_defaults() {
     initialize_default_background();
