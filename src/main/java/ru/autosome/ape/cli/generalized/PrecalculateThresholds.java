@@ -60,13 +60,13 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     transpose = false;
   }
 
-  protected void setup_from_arglist(String[] args) {
+  protected void setup_from_arglist(String[] args) throws IOException {
     ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }
 
-  protected void setup_from_arglist(List<String> argv) {
+  protected void setup_from_arglist(List<String> argv) throws IOException {
     Helper.print_help_if_requested(argv, documentString());
     File[] collection_folder = extract_collection_files(argv);
     extract_output_folder_name(argv);
@@ -101,9 +101,10 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     }
   }
 
-  protected void create_results_folder() {
+  protected void create_results_folder() throws IOException {
+    results_dir.mkdirs();
     if (!results_dir.exists()) {
-      results_dir.mkdir();
+      throw new IOException("Can't create output folder " + results_dir.getAbsolutePath());
     }
   }
 

@@ -11,6 +11,7 @@ import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.PrecalculateThresholds<DiPWM,DiBackgroundModel> {
@@ -68,7 +69,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
     }
   }
 
-  protected static ru.autosome.ape.di.PrecalculateThresholds from_arglist(String[] args) {
+  protected static ru.autosome.ape.di.PrecalculateThresholds from_arglist(String[] args) throws IOException {
     ru.autosome.ape.di.PrecalculateThresholds result = new ru.autosome.ape.di.PrecalculateThresholds();
     result.setup_from_arglist(args);
     return result;
