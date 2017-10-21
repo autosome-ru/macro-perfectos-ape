@@ -4,7 +4,6 @@ import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.ape.model.PvalueBsearchList;
 import ru.autosome.ape.model.progression.Progression;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
-import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.model.BoundaryType;
 import ru.autosome.commons.model.Discretizer;
@@ -13,11 +12,11 @@ import ru.autosome.commons.model.PseudocountCalculator;
 import ru.autosome.commons.motifModel.Discretable;
 import ru.autosome.commons.motifModel.ScoreBoundaries;
 import ru.autosome.commons.motifModel.ScoreDistribution;
-import ru.autosome.commons.motifModel.di.DiPWM;
 import ru.autosome.commons.motifModel.types.DataModel;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +30,8 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
   protected PseudocountCalculator pseudocount;
   protected boolean silenceLog;
 
-  protected java.io.File results_dir;
+  protected File results_dir;
+  protected Named<ModelType> single_motif;
   protected List<Double> pvalues;
   protected boolean transpose;
 
@@ -68,15 +68,30 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
 
   protected void setup_from_arglist(List<String> argv) throws IOException {
     Helper.print_help_if_requested(argv, documentString());
-    File[] collection_folder = extract_collection_files(argv);
-    extract_output_folder_name(argv);
+    if (argv.remove("--single-motif")) {
+      String motif_filename = argv.remove(0);
+      File single_motif_file = new File(motif_filename);
+      this.single_motif = loadMotif(single_motif_file);
+      if (argv.isEmpty() || argv.get(0).startsWith("-")) { // params: <motif> --single-motif [options]
+        // do nothing
+      } else { // params: <motif> <output folder> --single-motif [options]
+        extract_output_folder_name(argv);
+        create_results_folder();
+      }
+      while (argv.size() > 0) {
+        extract_option(argv);
+      }
+    } else { // params: <collection folder> <output folder> [options]
+      File[] collection_folder = extract_collection_files(argv);
+      extract_output_folder_name(argv);
+      create_results_folder();
 
-    while (argv.size() > 0) {
-      extract_option(argv);
+      while (argv.size() > 0) {
+        extract_option(argv);
+      }
+
+      motifList = loadMotifs(collection_folder);
     }
-
-    motifList = loadMotifs(collection_folder);
-    create_results_folder();
   }
 
   protected File[] extract_collection_files(List<String> argv) {
@@ -150,22 +165,37 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     return results;
   }
 
-  protected void calculate_thresholds_for_collection() throws IOException {
-    for (Named<ModelType> motif: motifList) {
-      if (!silenceLog) {
-        System.err.println(motif.getName());
+  protected void calculate_thresholds() throws IOException {
+    if (single_motif != null) { // work with single motif
+      PvalueBsearchList bsearchList = calculator().bsearch_list_for_pwm(single_motif.getObject());
+      if (results_dir != null) { // save results to a specified folder and with standardized filename
+        File result_filename = new File(results_dir, single_motif.getName() + ".thr");
+        bsearchList.save_to_file(result_filename);
+      } else { // output results only to stdout
+        bsearchList.print_to_stream(new OutputStreamWriter(System.out));
       }
-      File result_filename = new File(results_dir, motif.getName() + ".thr");
-      PvalueBsearchList bsearchList = calculator().bsearch_list_for_pwm(motif.getObject());
-      bsearchList.save_to_file(result_filename);
+    } else { // work with collection of motifs
+      for (Named<ModelType> motif : motifList) {
+        if (!silenceLog) {
+          System.err.println(motif.getName());
+        }
+        PvalueBsearchList bsearchList = calculator().bsearch_list_for_pwm(motif.getObject());
+        File result_filename = new File(results_dir, motif.getName() + ".thr");
+        bsearchList.save_to_file(result_filename);
+      }
     }
   }
 
   public String documentString() {
     return "Command-line format:\n" +
       DOC_run_string() + " <collection folder> <output folder> [options]\n" +
+      "  or\n" +
+      DOC_run_string() + " <motif file> <output_folder> --single-motif [options]\n" +
+      DOC_run_string() + " <motif file> --single-motif [options]\n" +
+      "  (the latter variant outputs threshold - P-value list to stdin)\n" +
       "\n" +
       "Options:\n" +
+      "  [--single-motif] - calculate thresholds for a single motif, not a motif collection\n" +
       "  [--discretization <discretization level>] or [-d]\n" +
       "  [--pcm] - treat the input files as Position Count Matrix. PCM-to-PWM transformation to be done internally.\n" +
       "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +

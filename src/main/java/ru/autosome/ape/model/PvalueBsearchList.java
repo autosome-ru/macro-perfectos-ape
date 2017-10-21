@@ -88,12 +88,16 @@ public class PvalueBsearchList {
     }
   }
 
-
-  public void save_to_file(File file) throws IOException {
-    FileWriter fw = new FileWriter(file);
+  public void print_to_stream(Writer fw) throws IOException {
     for (ThresholdPvaluePair info : list) {
       fw.write(info + "\n");
     }
+    fw.flush();
+  }
+
+  public void save_to_file(File file) throws IOException {
+    FileWriter fw = new FileWriter(file);
+    print_to_stream(fw);
     fw.close();
   }
 

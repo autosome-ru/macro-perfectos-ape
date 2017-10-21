@@ -1,6 +1,5 @@
 package ru.autosome.ape;
 
-import ru.autosome.ape.calculation.PrecalculateThresholdList;
 import ru.autosome.commons.backgroundModel.mono.Background;
 import ru.autosome.commons.backgroundModel.mono.BackgroundModel;
 import ru.autosome.commons.backgroundModel.mono.WordwiseBackground;
@@ -47,7 +46,7 @@ public class PrecalculateThresholds extends ru.autosome.ape.cli.generalized.Prec
   public static void main(String[] args) {
     try {
       PrecalculateThresholds calculation = PrecalculateThresholds.from_arglist(args);
-      calculation.calculate_thresholds_for_collection();
+      calculation.calculate_thresholds();
     } catch (Exception err) {
       System.err.println("\n" + err.getMessage() + "\n--------------------------------------\n");
       err.printStackTrace();
