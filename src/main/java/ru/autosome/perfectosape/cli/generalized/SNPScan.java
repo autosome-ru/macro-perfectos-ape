@@ -36,7 +36,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected abstract void extract_background(String s);
   protected abstract List<Named<MotifType>> load_collection_of_pwms();
 
-  protected void load_collection_of_pwms_with_evaluators() {
+  protected void load_collection_of_pwms_with_evaluators() throws FileNotFoundException {
     List<Named<MotifType>> motifList = load_collection_of_pwms();
 
     pwmCollection = new ArrayList<>();
@@ -46,12 +46,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
         pvalueCalculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer);
       } else {
         File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
-        try {
-          pvalueCalculator = new FindPvalueBsearch(thresholds_file);
-        } catch (FileNotFoundException e) {
-          System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculation of P-value");
-          pvalueCalculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer);
-        }
+        pvalueCalculator = new FindPvalueBsearch(thresholds_file);
       }
       pwmCollection.add(new ThresholdEvaluator<>(motif.getObject().onBackground(background), pvalueCalculator, motif.getName()));
     }

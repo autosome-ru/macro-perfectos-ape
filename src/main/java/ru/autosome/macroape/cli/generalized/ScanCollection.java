@@ -248,27 +248,19 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
   }
 
   // TODO: Refactor usage of one-stage and two-stage search
-  protected List<ThresholdEvaluator<ModelType>> load_collection_of_pwms() {
+  protected List<ThresholdEvaluator<ModelType>> load_collection_of_pwms() throws FileNotFoundException {
     List<Named<ModelType>> pwmList = loadMotifCollection();
     List<ThresholdEvaluator<ModelType>> result;
     result = new ArrayList<>();
     for (Named<ModelType> namedModel: pwmList) {
-      boolean bsearch_evaluator_succeed = false;
       ModelType pwm = namedModel.getObject();
-      if (thresholds_folder != null) {
-        File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
-        try {
-          result.add(new ThresholdEvaluator<>(namedModel.getName(), pwm, new FindThresholdBsearch(thresholds_file), null));
-          bsearch_evaluator_succeed = true;
-        } catch (FileNotFoundException e) {
-          System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculations");
-        }
-      }
-
-      if (!bsearch_evaluator_succeed){
+      if (thresholds_folder == null) {
         CanFindThreshold roughEvaluator = new FindThresholdAPE<>(pwm, background, roughDiscretizer);
         CanFindThreshold preciseEvaluator = new FindThresholdAPE<>(pwm, background, preciseDiscretizer);
         result.add(new ThresholdEvaluator<>(namedModel.getName(), pwm, roughEvaluator, preciseEvaluator));
+      } else {
+        File thresholds_file = new File(thresholds_folder, namedModel.getName() + ".thr");
+        result.add(new ThresholdEvaluator<>(namedModel.getName(), pwm, new FindThresholdBsearch(thresholds_file), null));
       }
     }
     return result;
