@@ -81,6 +81,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     "                               overlap the nucleotide substitution position.\n" +
     "  [--compact] - use compact output format.\n" +
     "  [--log-fold-change] - use logarithmic (log2) fold change scale (both in output and in cutoff setup).\n" +
+    "  [--without-header] - don't print results table header\n" +
      DOC_additional_options() +
     "\n" +
     "Examples:\n" +
@@ -113,6 +114,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
   protected boolean shortFormat;
   protected boolean useLogFoldChange;
+  protected boolean printHeader;
 
   void extract_path_to_collection_of_pwms(List<String> argv) {
     try {
@@ -144,6 +146,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     transpose = false;
     shortFormat = false;
     useLogFoldChange = false;
+    printHeader = true;
   }
 
   protected SNPScan() {
@@ -217,6 +220,8 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       shortFormat = true;
     }  else if(opt.equals("--log-fold-change")) {
       useLogFoldChange = true;
+    } else if(opt.equals("--without-header")) {
+      printHeader = false;
     } else {
       if (failed_to_recognize_additional_options(opt, argv)) {
         throw new IllegalArgumentException("Unknown option '" + opt + "'");
@@ -269,13 +274,15 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   }
 
   public void process() throws IOException {
-    if (shortFormat) {
-      System.out.println("# SNP name\tmotif\tP-value 1\tP-value 2\tposition 1\torientation 1\tposition 2\torientation 2");
-    } else {
-      if (useLogFoldChange) {
-        System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change (log2 scale)");
+    if (printHeader) {
+      if (shortFormat) {
+        System.out.println("# SNP name\tmotif\tP-value 1\tP-value 2\tposition 1\torientation 1\tposition 2\torientation 2");
       } else {
-        System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
+        if (useLogFoldChange) {
+          System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change (log2 scale)");
+        } else {
+          System.out.println("# SNP name\tmotif\tposition 1\torientation 1\tword 1\tposition 2\torientation 2\tword 2\tallele 1/allele 2\tP-value 1\tP-value 2\tFold change");
+        }
       }
     }
 
