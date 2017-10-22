@@ -2,7 +2,6 @@ package ru.autosome.ape.di;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
 import ru.autosome.ape.calculation.findThreshold.FindThresholdAPE;
-import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearch;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
@@ -12,7 +11,6 @@ import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -71,21 +69,15 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
   }
 
   @Override
-  protected CanFindThreshold calculator() {
+  protected CanFindThreshold calculator() throws FileNotFoundException {
     if (thresholds_folder == null) {
       return new FindThresholdAPE<>(motif.getObject(), background, discretizer);
     } else {
-      File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
-      try {
-        return new FindThresholdBsearch(thresholds_file);
-      } catch (FileNotFoundException e) {
-        System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculation of threshold");
-        return new FindThresholdAPE<>(motif.getObject(), background, discretizer);
-      }
+      return bsearchCalculator();
     }
   }
 
-  protected static FindThreshold from_arglist(String[] args) {
+  protected static FindThreshold from_arglist(String[] args) throws FileNotFoundException {
     FindThreshold result = new FindThreshold();
     result.setup_from_arglist(args);
     return result;

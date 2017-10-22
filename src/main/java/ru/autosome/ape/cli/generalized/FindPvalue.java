@@ -1,6 +1,7 @@
 package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
+import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearch;
 import ru.autosome.ape.calculation.findPvalue.FoundedPvalueInfo;
 import ru.autosome.commons.cli.Helper;
 import ru.autosome.commons.cli.ListReporter;
@@ -13,6 +14,7 @@ import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.support.IOExtensions;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +61,17 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
 
   protected File thresholds_folder;
 
-  abstract protected CanFindPvalue calculator();
+  abstract protected CanFindPvalue calculator() throws FileNotFoundException;
+
+  protected CanFindPvalue bsearchCalculator() throws FileNotFoundException {
+    if (thresholds_folder.isFile()) {
+      return new FindPvalueBsearch(thresholds_folder);
+    } else {
+      File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
+      return new FindPvalueBsearch(thresholds_file);
+    }
+  }
+
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
   abstract protected Named<ModelType> loadMotif(String filename);
@@ -108,7 +120,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
   }
 
 
-  protected void extract_option(List<String> argv) {
+  protected void extract_option(List<String> argv) throws FileNotFoundException {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));
@@ -124,6 +136,9 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
       pseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
+      if (!thresholds_folder.exists()) {
+        throw new FileNotFoundException("Thresholds file/folder not specified");
+      }
     } else if (opt.equals("--transpose")) {
       transpose = true;
     } else if (opt.equals("--thresholds-from-stdin")) {
@@ -139,7 +154,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     return true;
   }
 
-  protected void setup_from_arglist(List<String> argv) {
+  protected void setup_from_arglist(List<String> argv) throws FileNotFoundException {
     Helper.print_help_if_requested(argv, documentString());
     extract_pm_filename(argv);
     if (argv.contains("--thresholds-from-stdin")) {
@@ -152,13 +167,13 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     motif = loadMotif(pm_filename);
   }
 
-  protected void setup_from_arglist(String[] args) {
+  protected void setup_from_arglist(String[] args) throws FileNotFoundException {
     ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }
 
-  protected String report() {
+  protected String report() throws FileNotFoundException {
     CanFindPvalue calc = calculator();
     List<FoundedPvalueInfo> results = calc.pvaluesByThresholds(thresholds);
     ReportListLayout<FoundedPvalueInfo> layout = calc.report_table_layout();

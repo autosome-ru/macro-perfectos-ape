@@ -2,7 +2,6 @@ package ru.autosome.ape.di;
 
 import ru.autosome.ape.calculation.findPvalue.CanFindPvalue;
 import ru.autosome.ape.calculation.findPvalue.FindPvalueAPE;
-import ru.autosome.ape.calculation.findPvalue.FindPvalueBsearch;
 import ru.autosome.commons.backgroundModel.di.DiBackground;
 import ru.autosome.commons.backgroundModel.di.DiBackgroundModel;
 import ru.autosome.commons.backgroundModel.di.DiWordwiseBackground;
@@ -12,7 +11,6 @@ import ru.autosome.commons.importer.MotifImporter;
 import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -34,17 +32,11 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
   boolean fromMononucleotide;
 
   @Override
-  protected CanFindPvalue calculator() {
+  protected CanFindPvalue calculator() throws FileNotFoundException {
     if (thresholds_folder == null) {
       return new FindPvalueAPE<>(motif.getObject(), background, discretizer);
     } else {
-      File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
-      try {
-        return new FindPvalueBsearch(thresholds_file);
-      } catch (FileNotFoundException e) {
-        System.err.println("Thresholds file `" + thresholds_file + "` not found. Fallback to APE-calculation of P-value");
-        return new FindPvalueAPE<>(motif.getObject(), background, discretizer);
-      }
+      return bsearchCalculator();
     }
   }
 
@@ -84,7 +76,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<DiPWM
     return importer.loadMotifWithName(filename);
   }
 
-  protected static FindPvalue from_arglist(String[] args) {
+  protected static FindPvalue from_arglist(String[] args) throws FileNotFoundException {
     FindPvalue result = new FindPvalue();
     result.setup_from_arglist(args);
     return result;

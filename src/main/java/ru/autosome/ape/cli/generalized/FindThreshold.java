@@ -1,6 +1,7 @@
 package ru.autosome.ape.cli.generalized;
 
 import ru.autosome.ape.calculation.findThreshold.CanFindThreshold;
+import ru.autosome.ape.calculation.findThreshold.FindThresholdBsearch;
 import ru.autosome.ape.calculation.findThreshold.FoundedThresholdInfo;
 import ru.autosome.commons.backgroundModel.GeneralizedBackgroundModel;
 import ru.autosome.commons.cli.Helper;
@@ -16,6 +17,7 @@ import ru.autosome.commons.motifModel.types.DataModel;
 import ru.autosome.commons.support.IOExtensions;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,7 +69,16 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
   protected abstract void initialize_default_background();
   protected abstract void extract_background(String str);
   protected abstract Named<ModelType> loadMotif(String filename);
-  protected abstract CanFindThreshold calculator();
+  protected abstract CanFindThreshold calculator() throws FileNotFoundException;
+
+  protected CanFindThreshold bsearchCalculator() throws FileNotFoundException {
+    if (thresholds_folder.isFile()) {
+      return new FindThresholdBsearch(thresholds_folder);
+    } else {
+      File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
+      return new FindThresholdBsearch(thresholds_file);
+    }
+  }
 
   protected void initialize_defaults() {
     initialize_default_background();
@@ -84,7 +95,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     pvalues.add(0.0005);
   }
 
-  protected void setup_from_arglist(List<String> argv) {
+  protected void setup_from_arglist(List<String> argv) throws FileNotFoundException {
     Helper.print_help_if_requested(argv, documentString());
     extract_pm_filename(argv);
     if (argv.contains("--pvalues-from-stdin")) {
@@ -97,13 +108,13 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     motif = loadMotif(pm_filename);
   }
 
-  protected void setup_from_arglist(String[] args) {
+  protected void setup_from_arglist(String[] args) throws FileNotFoundException {
     ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }
 
-  protected void extract_option(List<String> argv) {
+  protected void extract_option(List<String> argv) throws FileNotFoundException {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));
@@ -121,6 +132,9 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
       pseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
+      if (!thresholds_folder.exists()) {
+        throw new FileNotFoundException("Thresholds file/folder not specified");
+      }
     } else if (opt.equals("--transpose")) {
       transpose = true;
     } else if (opt.equals("--pvalues-from-stdin")) {
@@ -189,7 +203,7 @@ public abstract class FindThreshold<ModelType extends HasLength, BackgroundType 
     return infos;
   }
 
-  protected String report() {
+  protected String report() throws FileNotFoundException {
     CanFindThreshold calc = calculator();
     List<FoundedThresholdInfo> results = calc.thresholdsByPvalues(pvalues, pvalue_boundary);
     ReportListLayout<FoundedThresholdInfo> layout = report_table_layout();
