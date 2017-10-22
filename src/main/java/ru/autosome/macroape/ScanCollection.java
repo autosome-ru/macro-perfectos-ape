@@ -10,6 +10,7 @@ import ru.autosome.macroape.calculation.mono.AlignedModelIntersection;
 import ru.autosome.macroape.model.PairAligned;
 import ru.autosome.macroape.model.ScanningSimilarityInfo;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.function.Function;
 
@@ -34,7 +35,7 @@ public class ScanCollection extends ru.autosome.macroape.cli.generalized.ScanCol
     background = new WordwiseBackground();
   }
 
-  private static ScanCollection from_arglist(String[] args) {
+  private static ScanCollection from_arglist(String[] args) throws FileNotFoundException {
     ScanCollection result = new ScanCollection();
     result.setup_from_arglist(args);
     return result;

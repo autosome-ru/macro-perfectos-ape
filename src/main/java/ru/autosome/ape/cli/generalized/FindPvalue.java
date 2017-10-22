@@ -137,7 +137,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
       if (!thresholds_folder.exists()) {
-        throw new FileNotFoundException("Thresholds file/folder not specified");
+        throw new FileNotFoundException("Specified file/folder with thresholds `" + thresholds_folder + "` not exists");
       }
     } else if (opt.equals("--transpose")) {
       transpose = true;

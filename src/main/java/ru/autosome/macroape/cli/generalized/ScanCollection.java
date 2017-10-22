@@ -132,7 +132,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     collectionTranspose = false;
   }
 
-  protected void extract_option(List<String> argv) {
+  protected void extract_option(List<String> argv) throws FileNotFoundException {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       background = extractBackground(argv.remove(0));
@@ -174,6 +174,11 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
       collectionPseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
+      if (!thresholds_folder.exists()) {
+        throw new FileNotFoundException("Specified folder with thresholds `" + thresholds_folder + "` not exists");
+      } else if (!thresholds_folder.isDirectory()) {
+        throw new FileNotFoundException("`" + thresholds_folder + "` is not a directory");
+      }
     } else if(opt.equals("-p") || opt.equals("--pvalue")) {
       pvalue = Double.valueOf(argv.remove(0));
     } else if(opt.equals("--predefined-threshold")) {
@@ -269,13 +274,13 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
     return result;
   }
 
-  protected void setup_from_arglist(String[] args) {
+  protected void setup_from_arglist(String[] args) throws FileNotFoundException {
     ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }
 
-  protected void setup_from_arglist(List<String> argv) {
+  protected void setup_from_arglist(List<String> argv) throws FileNotFoundException {
     Helper.print_help_if_requested(argv, documentString());
     extract_query_pm_filename(argv);
     extract_path_to_collection_of_pwms(argv);

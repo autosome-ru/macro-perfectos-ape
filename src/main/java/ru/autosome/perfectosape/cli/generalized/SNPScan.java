@@ -150,13 +150,13 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     initialize_defaults();
   }
 
-  protected void setup_from_arglist(String[] args) {
+  protected void setup_from_arglist(String[] args) throws FileNotFoundException {
     ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);
   }
 
-  protected void setup_from_arglist(List<String> argv) {
+  protected void setup_from_arglist(List<String> argv) throws FileNotFoundException {
     Helper.print_help_if_requested(argv, documentString());
     extract_path_to_collection_of_pwms(argv);
     extract_path_to_file_w_snps(argv);
@@ -184,7 +184,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     load_collection_of_pwms_with_evaluators();
   }
 
-  protected void extract_option(List<String> argv) {
+  protected void extract_option(List<String> argv) throws FileNotFoundException {
     String opt = argv.remove(0);
     if (opt.equals("-b") || opt.equals("--background")) {
       extract_background(argv.remove(0));
@@ -200,6 +200,11 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
       pseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--precalc")) {
       thresholds_folder = new File(argv.remove(0));
+      if (!thresholds_folder.exists()) {
+        throw new FileNotFoundException("Specified folder with thresholds `" + thresholds_folder + "` not exists");
+      } else if (!thresholds_folder.isDirectory()) {
+        throw new FileNotFoundException("`" + thresholds_folder + "` is not a directory");
+      }
     } else if(opt.equals("--pvalue-cutoff") || opt.equals("-P")) {
       max_pvalue_cutoff = Double.valueOf(argv.remove(0));
     } else if(opt.equals("--fold-change-cutoff") || opt.equals("-F")) {

@@ -13,6 +13,7 @@ import ru.autosome.perfectosape.model.SequenceWithSNV;
 import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
 import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNVDiEncoded;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<SequenceDiEncoded, SequenceWithSNVDiEncoded, DiPWM, DiPWMSequenceScoring, DiBackgroundModel> {
@@ -72,7 +73,7 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
     return SequenceWithSNVDiEncoded.encode(sequenceWithSNV);
   }
 
-  protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(String[] args) {
+  protected static ru.autosome.perfectosape.cli.generalized.SNPScan from_arglist(String[] args) throws FileNotFoundException {
     ru.autosome.perfectosape.di.SNPScan result = new ru.autosome.perfectosape.di.SNPScan();
     result.setup_from_arglist(args);
     return result;
