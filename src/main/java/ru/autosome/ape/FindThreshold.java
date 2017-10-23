@@ -10,6 +10,7 @@ import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold<PWM, BackgroundModel> {
   @Override
@@ -45,7 +46,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
     }
   }
 
-  private static FindThreshold from_arglist(String[] args) throws FileNotFoundException {
+  private static FindThreshold from_arglist(String[] args) throws IOException {
     FindThreshold result = new FindThreshold();
     result.setup_from_arglist(args);
     return result;

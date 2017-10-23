@@ -12,6 +12,7 @@ import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.di.DiPWM;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold<DiPWM, DiBackgroundModel> {
@@ -77,7 +78,7 @@ public class FindThreshold extends ru.autosome.ape.cli.generalized.FindThreshold
     }
   }
 
-  protected static FindThreshold from_arglist(String[] args) throws FileNotFoundException {
+  protected static FindThreshold from_arglist(String[] args) throws IOException {
     FindThreshold result = new FindThreshold();
     result.setup_from_arglist(args);
     return result;

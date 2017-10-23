@@ -95,7 +95,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     pm_filename = argv.remove(0);
   }
 
-  protected void extract_threshold_lists(List<String> argv) {
+  protected void extract_threshold_lists(List<String> argv) throws IOException {
     ArrayList<Double> thresholds_list = new ArrayList<>();
 
     try {
@@ -106,10 +106,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     } catch (NumberFormatException e) { }
 
     if (should_extract_values_from_stdin) {
-      try {
-        IOExtensions.extract_doubles_from_input_stream(System.in, thresholds_list);
-      } catch (IOException e) {
-      }
+      IOExtensions.extract_doubles_from_input_stream(System.in, thresholds_list);
     }
 
 
@@ -154,7 +151,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     return true;
   }
 
-  protected void setup_from_arglist(List<String> argv) throws FileNotFoundException {
+  protected void setup_from_arglist(List<String> argv) throws IOException {
     Helper.print_help_if_requested(argv, documentString());
     extract_pm_filename(argv);
     if (argv.contains("--thresholds-from-stdin")) {
@@ -167,7 +164,7 @@ public abstract class FindPvalue<ModelType, BackgroundType> {
     motif = loadMotif(pm_filename);
   }
 
-  protected void setup_from_arglist(String[] args) throws FileNotFoundException {
+  protected void setup_from_arglist(String[] args) throws IOException {
     ArrayList<String> argv = new ArrayList<>();
     Collections.addAll(argv, args);
     setup_from_arglist(argv);

@@ -10,6 +10,7 @@ import ru.autosome.commons.model.Named;
 import ru.autosome.commons.motifModel.mono.PWM;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, BackgroundModel> {
   @Override
@@ -46,7 +47,7 @@ public class FindPvalue extends ru.autosome.ape.cli.generalized.FindPvalue<PWM, 
     return importer.loadMotifWithName(filename);
   }
 
-  protected static FindPvalue from_arglist(String[] args) throws FileNotFoundException {
+  protected static FindPvalue from_arglist(String[] args) throws IOException {
     FindPvalue result = new FindPvalue();
     result.setup_from_arglist(args);
     return result;
