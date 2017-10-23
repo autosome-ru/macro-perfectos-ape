@@ -190,13 +190,13 @@ public abstract class CollectDistanceMatrix<ModelType extends Discretable<ModelT
     thresholds.sort(Comparator.comparing(o -> o.name));
 
     System.out.print("Motif name"+ "\t");
-    for(PWMWithThreshold second: thresholds) {
+    for(PWMWithThreshold<ModelType> second: thresholds) {
       System.out.print(second.name + "\t");
     }
     System.out.println();
-    for(PWMWithThreshold first: thresholds) {
+    for(PWMWithThreshold<ModelType> first: thresholds) {
       System.out.print(first.name + "\t");
-      for(PWMWithThreshold second: thresholds) {
+      for(PWMWithThreshold<ModelType> second: thresholds) {
 
         if (taskNum % numOfThreads == numThread % numOfThreads) {
           // so that numThread in range 0..(n-1) was equal to 1..n
