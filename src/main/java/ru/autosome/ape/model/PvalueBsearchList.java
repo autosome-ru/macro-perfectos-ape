@@ -1,10 +1,8 @@
 package ru.autosome.ape.model;
 
-import ru.autosome.commons.importer.InputExtensions;
 import ru.autosome.commons.model.BoundaryType;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -99,22 +97,19 @@ public class PvalueBsearchList {
     fw.close();
   }
 
-  private static List<ThresholdPvaluePair> load_thresholds_list(List<String> lines) {
-    List<ThresholdPvaluePair> result = new ArrayList<>();
-    for (String s : lines) {
-      String[] line_tokens = s.replaceAll("\\s+", "\t").split("\t");
-      if (line_tokens.length < 2) continue;
-      double threshold = Double.valueOf(line_tokens[0]);
-      double pvalue = Double.valueOf(line_tokens[1]);
-      result.add(new ThresholdPvaluePair(threshold, pvalue));
-    }
-    return result;
+  private static List<ThresholdPvaluePair> load_thresholds_list(BufferedReader reader) {
+    return reader.lines()
+               .map(line -> line.replaceAll("\\s+", "\t").split("\t"))
+               .filter(tokens -> tokens.length >= 2)
+               .map(tokens -> {
+                 double threshold = Double.valueOf(tokens[0]);
+                 double pvalue = Double.valueOf(tokens[1]);
+                 return new ThresholdPvaluePair(threshold, pvalue);
+               }).collect(Collectors.toList());
   }
 
   public static List<ThresholdPvaluePair> load_thresholds_list(File file) throws FileNotFoundException {
-    InputStream reader = new FileInputStream(file);
-    List<String> lines = InputExtensions.readLinesFromInputStream(reader);
-    return load_thresholds_list(lines);
+    return load_thresholds_list(new BufferedReader(new FileReader(file)));
   }
 
   public static PvalueBsearchList load_from_file(File file) throws FileNotFoundException {

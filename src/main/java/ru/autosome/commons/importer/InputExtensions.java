@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 public class InputExtensions {
 
@@ -11,18 +12,11 @@ public class InputExtensions {
     InputStream reader = new FileInputStream(file);
     return readLinesFromInputStream(reader);
   }
+
   static public List<String> readLinesFromInputStream(InputStream in) {
-    List<String> lines = new ArrayList<>();
-    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-    String line;
     String newline = System.getProperty("line.separator");
-    try {
-      while ((line = reader.readLine()) != null) {
-        lines.add(line + newline);
-      }
-    } catch (IOException e) {
-    }
-    return lines;
+    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+    return reader.lines().map(line -> line + newline).collect(Collectors.toList());
   }
 
   public static boolean startWithDouble(String s) {
