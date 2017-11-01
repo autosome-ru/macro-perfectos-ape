@@ -71,7 +71,6 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     if (argv.remove("--single-motif")) {
       String motif_filename = argv.remove(0);
       File single_motif_file = new File(motif_filename);
-      this.single_motif = loadMotif(single_motif_file);
       if (argv.isEmpty() || argv.get(0).startsWith("-")) { // params: <motif> --single-motif [options]
         // do nothing
       } else { // params: <motif> <output folder> --single-motif [options]
@@ -81,6 +80,8 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
       while (argv.size() > 0) {
         extract_option(argv);
       }
+
+      single_motif = loadMotif(single_motif_file);
     } else { // params: <collection folder> <output folder> [options]
       File[] collection_folder = extract_collection_files(argv);
       extract_output_folder_name(argv);
