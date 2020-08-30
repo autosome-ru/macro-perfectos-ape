@@ -13,7 +13,7 @@ public class PPM extends PM implements PositionFrequencyModel {
         sum += pos[letter];
       }
       if (Math.abs(sum - 1.0) > 0.001) {
-        throw new IllegalArgumentException("sum of each column should be 1.0(+-0.001), but was " + sum);
+        System.err.println("Warning! Sum of each column of a PFM should be 1.0(+-0.001), but was " + sum);
       }
     }
   }
