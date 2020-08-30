@@ -213,7 +213,7 @@ public abstract class ScanCollection<ModelType extends Discretable<ModelType> & 
 
   public ReportListLayout<ScanningSimilarityInfo> report_table_layout() {
     ReportListLayout<ScanningSimilarityInfo> infos = new ReportListLayout<>();
-    infos.add_parameter("MS", "minimal similarity to output", similarityCutoff);
+    infos.add_parameter("MS", "minimal similarity to show", similarityCutoff);
     infos.add_parameter("P", "P-value", pvalue);
     infos.add_parameter("PB", "P-value boundary", pvalueBoundaryType);
     if (preciseRecalculationCutoff != null) {
