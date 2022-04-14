@@ -72,9 +72,15 @@ public abstract class MotifImporter<ModelType> {
       return result;
     }
     for (File file : files) {
-      Named<ModelType> motif = loadMotifWithName(file);
-      if (motif != null) {
-        result.add(motif);
+      if (!file.isFile()) continue;
+      try {
+        Named<ModelType> motif = loadMotifWithName(file);
+        if (motif != null) {
+          result.add(motif);
+        }
+      } catch (Exception exception) {
+        System.err.println("Skip file " + file.getAbsolutePath() + ". Exception ignored:");
+        exception.printStackTrace(System.err);
       }
     }
     return result;

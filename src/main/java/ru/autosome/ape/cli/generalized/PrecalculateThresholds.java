@@ -161,7 +161,16 @@ public abstract class PrecalculateThresholds<ModelType extends Discretable<Model
     List<Named<ModelType>> results = new ArrayList<>();
 
     for (File file : files) {
-      results.add(loadMotif(file));
+      if (!file.isFile()) continue;
+      try {
+        Named<ModelType> motif = loadMotif(file);
+        if (motif != null) {
+          results.add(motif);
+        }
+      } catch (Exception exception) {
+        System.err.println("Skip file " + file.getAbsolutePath() + ". Exception ignored:");
+        exception.printStackTrace(System.err);
+      }
     }
     return results;
   }
