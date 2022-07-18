@@ -56,7 +56,9 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected abstract String DOC_run_string();
   protected String documentString() {
     return "Command-line format:\n" +
-    DOC_run_string() + " <folder with pwms> <file with SNPs> [options]\n" +
+    DOC_run_string() + " <folder with PWMs> <file with SNPs> [options]\n" +
+    "  or\n" +
+    DOC_run_string() + " <PWM file> <file with SNPs> --single-motif [options]\n" +
     "\n" +
     "Options:\n" +
     "  [--pvalue-cutoff <maximal pvalue to be considered>] or [-P] - drop results having both allele-variant pvalues greater than given\n" +
@@ -110,12 +112,17 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected boolean shortFormat;
   protected boolean useLogFoldChange;
   protected boolean printHeader;
+  protected boolean singleMotifInCollection;
 
   void extract_path_to_collection_of_pwms(List<String> argv) {
     try {
       path_to_collection_of_pwms = new File(argv.remove(0));
     } catch (IndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("Specify PWM-collection folder", e);
+      if (singleMotifInCollection) {
+        throw new IllegalArgumentException("Specify PWM file", e);
+      } else {
+        throw new IllegalArgumentException("Specify PWM-collection folder", e);
+      }
     }
   }
 
@@ -142,6 +149,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     shortFormat = false;
     useLogFoldChange = false;
     printHeader = true;
+    singleMotifInCollection = false;
   }
 
   protected SNPScan() {
@@ -156,6 +164,9 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
 
   protected void setup_from_arglist(List<String> argv) throws FileNotFoundException {
     Helper.print_help_if_requested(argv, documentString());
+    if (argv.remove("--single-motif")) {
+      singleMotifInCollection = true;
+    }
     extract_path_to_collection_of_pwms(argv);
     extract_path_to_file_w_snps(argv);
 

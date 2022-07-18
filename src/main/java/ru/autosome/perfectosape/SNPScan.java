@@ -12,6 +12,7 @@ import ru.autosome.perfectosape.model.encoded.mono.SequenceMonoEncoded;
 import ru.autosome.perfectosape.model.encoded.mono.SequenceWithSNVMonoEncoded;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<SequenceMonoEncoded, SequenceWithSNVMonoEncoded, PWM, PWMSequenceScoring, BackgroundModel> {
@@ -36,7 +37,14 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
   @Override
   protected List<Named<PWM>> load_collection_of_pwms() {
     PWMImporter importer = new PWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
-    return importer.loadMotifCollectionWithNames(path_to_collection_of_pwms);
+    if (singleMotifInCollection) {
+      Named<PWM> named_motif = importer.loadMotifWithName(path_to_collection_of_pwms);
+      List<Named<PWM>> result = new ArrayList<>();
+      result.add(named_motif);
+      return result;
+    } else {
+      return importer.loadMotifCollectionWithNames(path_to_collection_of_pwms);
+    }
   }
 
   protected SequenceWithSNVMonoEncoded encodeSequenceWithSNV(SequenceWithSNV sequenceWithSNV){

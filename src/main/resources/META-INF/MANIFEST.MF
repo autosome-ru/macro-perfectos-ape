@@ -1,2 +1,2 @@
-Manifest-Version: 3.0.4
+Manifest-Version: 3.0.5
 Main-Class: ru.autosome.perfectosape.SNPScan

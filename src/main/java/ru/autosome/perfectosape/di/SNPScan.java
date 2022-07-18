@@ -14,6 +14,7 @@ import ru.autosome.perfectosape.model.encoded.di.SequenceDiEncoded;
 import ru.autosome.perfectosape.model.encoded.di.SequenceWithSNVDiEncoded;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<SequenceDiEncoded, SequenceWithSNVDiEncoded, DiPWM, DiPWMSequenceScoring, DiBackgroundModel> {
@@ -66,7 +67,14 @@ public class SNPScan extends ru.autosome.perfectosape.cli.generalized.SNPScan<Se
     } else {
       importer = new DiPWMImporter(background, dataModel, effectiveCount, transpose, pseudocount);
     }
-    return importer.loadMotifCollectionWithNames(path_to_collection_of_pwms);
+    if (singleMotifInCollection) {
+      Named<DiPWM> named_motif = importer.loadMotifWithName(path_to_collection_of_pwms);
+      List<Named<DiPWM>> result = new ArrayList<>();
+      result.add(named_motif);
+      return result;
+    } else {
+      return importer.loadMotifCollectionWithNames(path_to_collection_of_pwms);
+    }
   }
 
   protected SequenceWithSNVDiEncoded encodeSequenceWithSNV(SequenceWithSNV sequenceWithSNV){
