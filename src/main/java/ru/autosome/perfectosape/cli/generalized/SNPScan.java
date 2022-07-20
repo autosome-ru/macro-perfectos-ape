@@ -42,10 +42,12 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     pwmCollection = new ArrayList<>();
     for (Named<MotifType> motif: motifList) {
       CanFindPvalue pvalueCalculator;
-      if (thresholds_folder == null) {
+      if (thresholds_path == null) {
         pvalueCalculator = new FindPvalueAPE<>(motif.getObject(), background, discretizer);
+      } else if (singleMotifInCollection) {
+        pvalueCalculator = new FindPvalueBsearch(thresholds_path);
       } else {
-        File thresholds_file = new File(thresholds_folder, motif.getName() + ".thr");
+        File thresholds_file = new File(thresholds_path, motif.getName() + ".thr");
         pvalueCalculator = new FindPvalueBsearch(thresholds_file);
       }
       pwmCollection.add(new ThresholdEvaluator<>(motif.getObject().onBackground(background), pvalueCalculator, motif.getName()));
@@ -71,7 +73,8 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     "  [--ppm] or [--pfm] - treat the input file as Position Frequency Matrix. PPM-to-PWM transformation to be done internally.\n" +
     "  [--effective-count <count>] - effective samples set size for PPM-to-PWM conversion (default: 100). \n" +
     "  [--background <background probabilities>] or [-b] " + DOC_background_option() + "\n" +
-    "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n" +
+    "  [--precalc <folder>] - specify folder with thresholds for PWM collection (for fast-and-rough calculation).\n"+
+    "                         In --single-motif mode a single file should be specified instead.\n" +
     "  [--transpose] - load motif from transposed matrix (nucleotides in lines).\n" +
     "  [--expand-region <length>] - expand the region to scan for PWM hits by <length> positions\n" +
     "                               from each side allowing PWM to be located nearby but not necessarily\n"+
@@ -99,7 +102,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
   protected DataModel dataModel;
   protected double effectiveCount;
   protected PseudocountCalculator pseudocount;
-  protected File thresholds_folder;
+  protected File thresholds_path;
 
   protected List<ThresholdEvaluator<SequenceType, ModelType>> pwmCollection;
 
@@ -142,7 +145,7 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     dataModel = DataModel.PWM;
     effectiveCount = 100;
     pseudocount = PseudocountCalculator.logPseudocount;
-    thresholds_folder = null;
+    thresholds_path = null;
     max_pvalue_cutoff = 0.0005;
     min_fold_change_cutoff = null;
     transpose = false;
@@ -208,11 +211,17 @@ abstract public class SNPScan<SequenceType extends EncodedSequenceType & HasLeng
     } else if (opt.equals("--pseudocount")) {
       pseudocount = PseudocountCalculator.fromString(argv.remove(0));
     } else if (opt.equals("--precalc")) {
-      thresholds_folder = new File(argv.remove(0));
-      if (!thresholds_folder.exists()) {
-        throw new FileNotFoundException("Specified folder with thresholds `" + thresholds_folder + "` not exists");
-      } else if (!thresholds_folder.isDirectory()) {
-        throw new FileNotFoundException("`" + thresholds_folder + "` is not a directory");
+      thresholds_path = new File(argv.remove(0));
+      if (!thresholds_path.exists()) {
+        throw new FileNotFoundException("Specified folder with thresholds `" + thresholds_path + "` not exists");
+      } else if (singleMotifInCollection) {
+        if (thresholds_path.isDirectory()) {
+          throw new FileNotFoundException("`" + thresholds_path + "` is a directory but should be a single file in --single-motif mode");
+        }
+      } else {
+        if (!thresholds_path.isDirectory()) {
+          throw new FileNotFoundException("`" + thresholds_path + "` is not a directory");
+        }
       }
     } else if(opt.equals("--pvalue-cutoff") || opt.equals("-P")) {
       max_pvalue_cutoff = Double.valueOf(argv.remove(0));
